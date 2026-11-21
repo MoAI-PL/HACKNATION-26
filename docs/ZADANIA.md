@@ -53,7 +53,7 @@ Kolejność: najpierw ★, potem pozostałe P0, potem P1 (w kolejności z tabeli
 | ★Z21 | Baza wiedzy (przepisy, poradniki, ustawa z ISAP, BM25) | Z02 | gotowe | suzanne0401 | `z21-baza-wiedzy` |
 | ★Z22 | Asystent formalny ze źródłami i odmową | Z20, Z21 | gotowe | suzanne0401 | `z20-z22-asystent` |
 | ★Z23 | Analiza OSP: propozycja kryteriów dodatkowych z cytatem | Z06, Z20 | gotowe | Nadia | `z23-analiza-osp` |
-| Z24 | Asystent rozmowy | Z20, Z14 | w toku | Nadia | `z24-asystent-rozmowy` |
+| Z24 | Asystent rozmowy | Z20, Z14 | gotowe | Nadia | `z24-asystent-rozmowy` |
 | Z25 | Zestaw testowy asystenta (`npm run eval`) | Z22 | gotowe | bartektymochowicz-collab | `bartek/z25-eval-asystenta` |
 
 ## F. Jakość, wdrożenie, zgłoszenie
@@ -77,7 +77,7 @@ Kolejność: najpierw ★, potem pozostałe P0, potem P1 (w kolejności z tabeli
 | Z36 | Lustro oceniającego | Z09, Z13, Z18 | gotowe | geoglof | `z36-lustro` |
 | Z42 | Przepisy w kontekście („ⓘ Dlaczego?”) | Z10, Z21 | wolne | | |
 | Z43 | Tryb rozmowy | Z24, Z15 | wolne | | |
-| Z34 | Pseudonimizacja przed LLM | Z20 | wolne | | |
+| Z34 | Pseudonimizacja przed LLM | Z20 | w toku | geoglof | `z34-pseudonimizacja` |
 | Z35 | Dziennik audytu z eksportem CSV | Z14 | gotowe | geoglof | `z35-dziennik-audytu` |
 | Z37 | Oś czasu procesu pracownika | Z08 | wolne | | |
 | Z38 | REST API `/api/v1` (eksport JSON) | Z15 | gotowe | geoglof | `z38-rest-api` |
@@ -88,4 +88,4 @@ Kolejność: najpierw ★, potem pozostałe P0, potem P1 (w kolejności z tabeli
 |---|---|---|---|---|
 | Z39 | Tryb „5 minut przed rozmową” | wolne | | |
 | Z45 | Przypomnienia o regularnych notatkach | wolne | | |
-| Z46 | Ekran ocenianego „Moje oceny” – lista i podgląd własnych ocen, potwierdzenie zapoznania się (dodane: luka widoczna dla jury) | w toku | suzanne0401 | `z46-moje-oceny` |
+| Z46 | Ekran ocenianego „Moje oceny” – lista i podgląd własnych ocen, potwierdzenie zapoznania się (dodane: luka widoczna dla jury) | gotowe | suzanne0401 | `z46-moje-oceny` |

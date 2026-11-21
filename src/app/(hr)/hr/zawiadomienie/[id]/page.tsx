@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PageHeader } from "@/components/layout/AppShell";
-import { PrintButton } from "@/components/hr/PrintButton";
+import { PrintButton } from "@/components/ui/print-button";
 import { buttonVariants } from "@/components/ui/button";
 import { requirePageRole } from "@/lib/auth/guard";
 import { todayIso } from "@/lib/domain/daty";

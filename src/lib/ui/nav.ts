@@ -57,7 +57,6 @@ const NAV_BY_ROLE: Record<Role, NavItem[]> = {
       label: "Asystent rozmowy",
       icon: "asystent-rozmowy",
       description: "Rozmowa, informacja zwrotna, rozwój",
-      pending: "Z24",
     },
   ],
   // Asystent formalny leży we wspólnej grupie (wspolne) – dostęp jak obszar „/asystent” w role.ts.

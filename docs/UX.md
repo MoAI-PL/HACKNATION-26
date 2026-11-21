@@ -1,7 +1,7 @@
 # Zasady UX i komponenty
 
 Użytkownik korzysta z systemu kilka razy w roku i nie przejdzie szkolenia. **Każdy ekran ma być zrozumiały w 5 sekund.**
-Podgląd wszystkich komponentów: **`/komponenty`** (dane fikcyjne).
+Podgląd wszystkich komponentów: **`/komponenty`** (po zalogowaniu dowolnym kontem, dane fikcyjne).
 
 ## Dziesięć zasad
 
@@ -48,16 +48,21 @@ Kolorów statusów nie używamy do dekoracji. Nowy kolor dodajemy tylko jako tok
 | `Skeleton` | `components/ui/skeleton.tsx` | ładowanie |
 | `PropozycjaAI` | `components/asystent/PropozycjaAI.tsx` | **każda** propozycja AI (sekcja niżej) |
 
-### Układ ekranu (dla Z04 i zadań ekranów)
+### Układ ekranu i menu
 
-Grupy tras `(przelozony)`, `(hr)`, `(oceniany)` nie zmieniają adresu URL, więc ekrany mają prawdziwe segmenty (`/pulpit`, `/ocena-okresowa`, `/hr`…, lista w `src/lib/ui/nav.ts`). Layout grupy (Z04) sprawdza rolę i owija treść:
+Layouty grup tras `(przelozony)`, `(kierujacy)`, `(hr)`, `(oceniany)` sprawdzają rolę (Z04) i owijają treść w `AppShell`:
 
 ```tsx
-const user = await getCurrentUser(); // Z04
-return <AppShell user={{ name: user.name, role: user.role }} userMenu={<WylogujButton />}>{children}</AppShell>;
+const user = await requirePageRole("PRZELOZONY");
+return <AppShell user={shellUser(user)} userMenu={<LogoutButton />}>{children}</AppShell>;
 ```
 
-Ekran zaczyna się od `<PageHeader title="…" description="…" action={<Button>…</Button>} />`.
+- `AppShell` dostarcza jedyny `<main>`. Strona go **nie** dodaje: zaczyna się od `<PageHeader title="…" description="…" action={<Button>…</Button>} />`.
+- Menu jest w `src/lib/ui/nav.ts`. Adresy leżą w obszarach ról z `src/lib/auth/role.ts` (test to sprawdza).
+- **Bez martwych linków:** pozycja z `pending: "Z12"` jest ukryta, dopóki ekranu nie ma. Zadanie ekranu usuwa `pending` w commicie, który dodaje stronę.
+- Docelowe menu przełożonego: Pulpit (`/pulpit`), Pierwsza ocena (`/ocena/pierwsza`, Z17), Ocena okresowa (`/ocena/okresowa`, Z12), Dziennik obserwacji (`/obserwacje`, Z13), Asystent formalny (`/asystent`), Asystent rozmowy (`/ocena/rozmowa`, Z24).
+- Przycisk „Notatka” i skrót `N` są wyłączone do czasu Z41: Z41 ustawia `FEATURES.quickNote = true` w `nav.ts`.
+- Asystent formalny (`/asystent`) jest na razie tylko w menu przełożonego, bo strona leży w grupie `(przelozony)`. Gdy trafi do wspólnego layoutu, dodajemy go też HR i kierującemu.
 
 ### `<PropozycjaAI>` – wspólny wzorzec AI (sekcja 4.2)
 
@@ -80,8 +85,8 @@ Gdy model nie odpowiada, ustaw `state="niedostepna"`. Komunikat jest spokojny i 
 
 | Klawisz | Działanie | Gdzie | Jak podpiąć |
 |---|---|---|---|
-| `N` | szybka notatka | wszędzie (przełożony) | `useShortcutEvent(SHORTCUT_EVENTS.quickNote, otwórz)` – Z41 |
-| `/` | asystent formalny | wszędzie | `useShortcutEvent(SHORTCUT_EVENTS.assistant, otwórz)` – Z22 |
+| `N` | szybka notatka | wszędzie (przełożony, po włączeniu w Z41) | `useShortcutEvent(SHORTCUT_EVENTS.quickNote, (e) => { e.preventDefault(); otwórz(); })` |
+| `/` | asystent formalny | wszędzie (role z asystentem) | domyślnie przejście na `/asystent`; panel boczny może przejąć skrót: `useShortcutEvent(SHORTCUT_EVENTS.assistant, (e) => { e.preventDefault(); otwórz(); })` |
 | `?` | lista skrótów | wszędzie | gotowe w `AppShell` |
 | `←` `→` | poprzedni / następny wskaźnik | ocena wskaźników | `useShortcut("ArrowRight", …)` – Z14 |
 | `1`–`5`, `0` | wybór zachowania / brak obserwacji | ocena wskaźników | `useShortcut("3", …)` – Z14 |

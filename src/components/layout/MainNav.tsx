@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   CalendarDays,
+  FileSignature,
   FileText,
   LayoutDashboard,
   MessagesSquare,
@@ -25,6 +26,7 @@ const ICONS: Record<NavIcon, LucideIcon> = {
   "asystent-rozmowy": MessagesSquare,
   hr: ShieldCheck,
   moje: UserRoundCheck,
+  podpis: FileSignature,
 };
 
 /** Menu główne – poziome, zawija się przy 768 px. Aktywna pozycja ma aria-current="page". */

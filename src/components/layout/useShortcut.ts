@@ -25,20 +25,27 @@ export function useShortcut(key: string, handler: (event: KeyboardEvent) => void
   }, [key, enabled]);
 }
 
-/** Nasłuch globalnego skrótu, np. useShortcutEvent(SHORTCUT_EVENTS.quickNote, () => setOtwarte(true)). */
-export function useShortcutEvent(event: ShortcutEvent, handler: () => void) {
+/**
+ * Nasłuch globalnego skrótu, np. useShortcutEvent(SHORTCUT_EVENTS.quickNote, (e) => { e.preventDefault(); setOtwarte(true); }).
+ * preventDefault() oznacza „obsłużone” – wtedy AppShell nie wykonuje akcji domyślnej
+ * (dla „/” akcją domyślną jest przejście na stronę asystenta; panel boczny może ją przejąć).
+ */
+export function useShortcutEvent(event: ShortcutEvent, handler: (e: Event) => void) {
   const ref = React.useRef(handler);
   React.useEffect(() => {
     ref.current = handler;
   });
   React.useEffect(() => {
-    const listener = () => ref.current();
+    const listener = (e: Event) => ref.current(e);
     window.addEventListener(event, listener);
     return () => window.removeEventListener(event, listener);
   }, [event]);
 }
 
-/** Wywołanie globalnej akcji z przycisku (np. „Notatka (N)” w nagłówku) – to samo, co skrót. */
-export function dispatchShortcut(event: ShortcutEvent) {
-  window.dispatchEvent(new CustomEvent(event));
+/**
+ * Wywołanie globalnej akcji z przycisku albo skrótu.
+ * Zwraca true, gdy któryś ekran ją obsłużył (wywołał preventDefault).
+ */
+export function dispatchShortcut(event: ShortcutEvent): boolean {
+  return !window.dispatchEvent(new CustomEvent(event, { cancelable: true }));
 }

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { globalShortcutFor, isTypingTarget, matchesShortcut, SHORTCUT_EVENTS } from "@/lib/ui/shortcuts";
 import { autosaveText, deadlineText, urgencyFromDaysLeft, URGENCY_TONE, wizardStepLabel } from "@/lib/ui/status";
-import { isActivePath, navForRole, roleHasQuickNote } from "@/lib/ui/nav";
+import { ASSISTANT_HREF, isActivePath, navForRole, plannedNavForRole, roleHasAssistant, roleHasQuickNote } from "@/lib/ui/nav";
 import { ROLES } from "@/lib/domain/types";
 
 const pole = (tagName: string) => ({ tagName, getAttribute: () => null });
@@ -66,17 +66,29 @@ describe("nawigacja", () => {
     for (const r of ROLES) expect(navForRole(r).length).toBeGreaterThan(0);
   });
 
-  it("przełożony ma ścieżki z grafiki MC", () => {
-    const etykiety = navForRole("PRZELOZONY").map((i) => i.label);
+  it("docelowe menu przełożonego ma ścieżki z grafiki MC", () => {
+    const etykiety = plannedNavForRole("PRZELOZONY").map((i) => i.label);
     expect(etykiety).toEqual(
       expect.arrayContaining(["Pierwsza ocena", "Ocena okresowa", "Asystent formalny", "Asystent rozmowy"]),
     );
   });
 
-  it("oceniany nie widzi ekranów przełożonego ani szybkiej notatki", () => {
+  it("menu ukrywa ekrany w budowie (bez martwych linków)", () => {
+    expect(navForRole("PRZELOZONY").every((i) => !i.pending)).toBe(true);
+    expect(navForRole("PRZELOZONY").map((i) => i.href)).toEqual(["/pulpit", ASSISTANT_HREF]);
+  });
+
+  it("adresy menu leżą w obszarach ról z Z04", async () => {
+    const { canAccessPath } = await import("@/lib/auth/role");
+    for (const r of ROLES) for (const i of plannedNavForRole(r)) expect(canAccessPath(r, i.href), `${r} ${i.href}`).toBe(true);
+  });
+
+  it("oceniany nie widzi ekranów przełożonego, asystenta ani szybkiej notatki", () => {
     expect(navForRole("OCENIANY").map((i) => i.href)).toEqual(["/moje-oceny"]);
-    expect(roleHasQuickNote("OCENIANY")).toBe(false);
-    expect(roleHasQuickNote("PRZELOZONY")).toBe(true);
+    expect(roleHasAssistant("OCENIANY")).toBe(false);
+    expect(roleHasQuickNote("OCENIANY", true)).toBe(false);
+    expect(roleHasQuickNote("PRZELOZONY", true)).toBe(true);
+    expect(roleHasQuickNote("PRZELOZONY", false)).toBe(false);
   });
 
   it("aktywna pozycja obejmuje podstrony, ale nie podobne adresy", () => {

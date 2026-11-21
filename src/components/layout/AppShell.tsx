@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Compass } from "lucide-react";
 import type { Role } from "@/lib/domain/types";
 import { ROLE_LABELS } from "@/lib/domain/slownik";
-import { navForRole, roleHasQuickNote } from "@/lib/ui/nav";
+import { navForRole, roleHasAssistant, roleHasQuickNote } from "@/lib/ui/nav";
 import { MainNav } from "./MainNav";
 import { HeaderActions } from "./HeaderActions";
 import { GlobalShortcuts } from "./Shortcuts";
@@ -11,13 +11,18 @@ import { GlobalShortcuts } from "./Shortcuts";
 // Układ aplikacji po zalogowaniu (Z10): link „Przejdź do treści”, nagłówek z nazwą, rolą i akcjami,
 // menu według grafiki MC, treść z jednym <main>.
 //
-// Użycie w layoutach grup tras (Z04 dostarcza użytkownika z sesji):
-//   const user = await getCurrentUser();
-//   return <AppShell user={{ name: user.name, role: user.role }} userMenu={<WylogujButton />}>{children}</AppShell>;
+// Użycie w layoutach grup tras (rola sprawdzana przez Z04):
+//   const user = await requirePageRole("PRZELOZONY");
+//   return <AppShell user={shellUser(user)} userMenu={<LogoutButton />}>{children}</AppShell>;
 
 export interface ShellUser {
   name: string;
   role: Role;
+}
+
+/** Dane do nagłówka z użytkownika sesji (Z04). */
+export function shellUser(user: { name?: string | null; email?: string | null; role: Role }): ShellUser {
+  return { name: user.name || user.email || "Użytkownik", role: user.role };
 }
 
 export function AppShell({
@@ -30,6 +35,8 @@ export function AppShell({
   userMenu?: React.ReactNode;
   children: React.ReactNode;
 }) {
+  const quickNote = roleHasQuickNote(user.role);
+  const assistant = roleHasAssistant(user.role);
   return (
     <div className="flex min-h-screen flex-col">
       <a
@@ -47,7 +54,7 @@ export function AppShell({
           </Link>
 
           <div className="flex flex-wrap items-center gap-2">
-            <HeaderActions quickNote={roleHasQuickNote(user.role)} />
+            <HeaderActions quickNote={quickNote} assistant={assistant} />
             <div className="flex items-center gap-2 border-l pl-3">
               <div className="flex flex-col text-right leading-tight">
                 <span className="text-sm font-medium">{user.name}</span>
@@ -64,7 +71,7 @@ export function AppShell({
         {children}
       </main>
 
-      <GlobalShortcuts />
+      <GlobalShortcuts quickNote={quickNote} assistant={assistant} />
     </div>
   );
 }

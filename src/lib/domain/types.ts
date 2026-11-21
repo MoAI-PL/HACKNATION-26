@@ -158,9 +158,11 @@ export interface CompetencyDefinition {
 }
 
 export interface CompetencyModel {
-  /** Skąd zaimportowano (nazwa pliku) i kiedy. */
+  /** Skąd zaimportowano (nazwa pliku) i kiedy (data "RRRR-MM-DD"). */
   source: string;
-  importedAt: string;
+  importedAt: IsoDate;
+  /** Wskazówki z arkusza „Model kompetencji” – wyświetlane przy ocenie wskaźników (Z14). */
+  guidance: string[];
   competencies: CompetencyDefinition[];
 }
 

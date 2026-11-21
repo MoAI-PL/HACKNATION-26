@@ -23,7 +23,7 @@ docs/               tablica zadań, założenia, dokumentacja
 
 ## Publiczne demo
 
-Adres demo: _(uzupełnić po wdrożeniu)_. Wdrożenie: Vercel + Neon – instrukcja w [`docs/WDROZENIE.md`](docs/WDROZENIE.md).
+**Adres demo: https://hacknation-26.vercel.app** – konta demo poniżej (logowanie jednym kliknięciem na ekranie logowania). Wdrożenie: Vercel + Neon – instrukcja w [`docs/WDROZENIE.md`](docs/WDROZENIE.md).
 
 ## Uruchomienie lokalne
 

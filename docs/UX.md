@@ -112,7 +112,8 @@ Skróty jednoklawiszowe nie działają podczas pisania w polu ani z Ctrl/Cmd/Alt
 | 21.11 | kontrast tokenów kolorów (obliczenie WCAG) | 22 z 23 par spełnia AA; wyjątek: ramka niezaznaczonej karty wyboru 1,4:1 (punkt 4 niżej) |
 | 21.11 | `/obserwacje`, `/obserwacje/nowa`, edycja (Z13) przy 768 i 1440 px na danych demo | brak poziomego przewijania, 1 `h1`, 1 `main`, etykiety połączone z polami (`label for`, `aria-describedby`), błędy jako `role="alert"` i `aria-invalid`, wpisany tekst zostaje po błędzie walidacji, okno usuwania łapie fokus i mówi, że operacji nie można cofnąć |
 | 21.11 | `/hr` i `/hr/zawiadomienie/[id]` (Z18) przy 768 i 1440 px na danych demo, jako HR | brak poziomego przewijania strony i tabeli (odznaki etapu zawijają tekst), 1 `h1`, 1 `main`, tabela z `caption`, nagłówkami kolumn i wierszy, terminy kolorem i tekstem, „Dlaczego ten termin?” jako `details`, komunikaty po akcji jako `role="status"` |
-| — | axe / Lighthouse (Z30) | do uzupełnienia |
+| 21.11, 23:00 | axe-core (WCAG 2.1 A/AA) automatycznie, Playwright: 18 ekranów × 4 role (logowanie, pulpit, karta pracownika, ocena okresowa – lista, część I, ocena wskaźników, podsumowanie; dziennik, asystent, panel HR, kierujący, moje oceny, komponenty) | **0 naruszeń**; 36 widoków (768 i 1440 px): 0 błędów konsoli, bez poziomego przewijania, 1 `h1`, 1 `main`, wylogowanie działa w każdej roli. Poprawione przy przeglądzie: przyciski kont demo na logowaniu przy 768 px wychodziły poza karty |
+| — | Lighthouse (Z30) | do uzupełnienia |
 | — | pomiar „pełna ocena w 15 minut” (Z30) | do uzupełnienia |
 
 ## Z10 – co zostało do 100%
@@ -130,5 +131,7 @@ Przegląd 21.11 wieczorem: Z10 działa i jest scalone, ale te punkty zostały ot
 | 7 | `/komponenty`: użytkownik z sesji zamiast stałej „Ewy”, a na produkcji tylko przy `DEMO_MODE` | każda rola widzi tam menu przełożonego; strona nie jest dla jury | HR na `/komponenty` widzi menu HR; bez `DEMO_MODE` – 404 |
 | 8 | Asystent formalny dla HR i kierującego – decyzja z Z04/Z22 | `role.ts` wpuszcza HR i kierującego na `/asystent`, ale strona leży w grupie `(przelozony)`, więc ich przekierowuje; w menu na razie tylko przełożony | po przeniesieniu strony do wspólnego layoutu dodać `ASYSTENT_FORMALNY` do menu HR i kierującego w `src/lib/ui/nav.ts` |
 | 9 | Krótki przewodnik po pierwszym logowaniu (3 dymki, sekcja 4.3) | nie jest przypisany do żadnego zadania; Z10 dał komponenty, przewodnika nie ma | po pierwszym logowaniu przełożonej 3 pomijalne dymki, potem już nie |
+
+**Stan punktów po przeglądzie 21.11, 23:00 (geoglof, gałąź `z10-poprawki`):** 1 – zrobione (audyt wszystkich ról przy 768 i 1440 px, poprawione logowanie przy 768 px); 2 – zrobione (`onDecision` obowiązkowy, wspólna akcja `logAiDecision` w `src/lib/audit/decyzje-ai.ts`); 3 – axe zrobione (0 naruszeń), Lighthouse zostaje w Z30; 4 – zrobione (`border-input`); 5 – zrobione (czytnik słyszy tylko „Zapisano …” i błąd); 6 – zrobione (skróty globalne nie działają przy otwartym oknie); 7 – zrobione (użytkownik z sesji, na produkcji tylko przy `DEMO_MODE`); 8 – zrobione (asystent w grupie `(wspolne)`, w menu HR i kierującego); 9 – otwarte.
 
 **Zależne od innych zadań (bez zmian w Z10):** Z41 włącza „Notatkę” i skrót N (`FEATURES.quickNote = true` w `src/lib/ui/nav.ts`); każde zadanie ekranu (Z12, Z13, Z17, Z24) usuwa `pending` ze swojej pozycji menu w tym samym commicie, który dodaje stronę.

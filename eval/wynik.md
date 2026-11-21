@@ -1,6 +1,6 @@
 # Wynik zestawu testowego asystenta formalnego
 
-Data: 21.11.2026, 18:31:32 · baza wiedzy: 406 fragmentów · pytania: 25 w zakresie + 5 spoza zakresu (`eval/pytania.json`)
+Data: 21.11.2026, 18:34:37 · baza wiedzy: 406 fragmentów · pytania: 25 w zakresie + 5 spoza zakresu (`eval/pytania.json`)
 
 | Miara | Wynik |
 |---|---|

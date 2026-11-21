@@ -218,7 +218,7 @@ Przełożony widzi wyłącznie swoich podwładnych: zapytania filtrujemy po `sup
 ## Szybka notatka (Z41)
 
 - Okno `src/components/asystent/SzybkaNotatka.tsx`, montowane w `AppShell` dla przełożonego (`FEATURES.quickNote`), otwierane skrótem `N` i przyciskiem „Notatka” (zdarzenie `SHORTCUT_EVENTS.quickNote`).
-- Logika: `src/lib/ai/funkcje/szybka-notatka.ts` – pseudonimizacja (`pseudonymize`, `restoreNames`), propozycja (`proposeQuickNote`, z modelem i bez), walidacja zapisu (`validateQuickNote`; bez wskaźnika i SDR notatka też się zapisze – do przypięcia).
+- Logika: `src/lib/ai/funkcje/szybka-notatka.ts` – pseudonimizacja (`pseudonymize`, `restoreNames` ze wspólnego modułu `src/lib/ai/pseudonimizacja.ts`, Z34), propozycja (`proposeQuickNote`, z modelem i bez), walidacja zapisu (`validateQuickNote`; bez wskaźnika i SDR notatka też się zapisze – do przypięcia).
 - Akcje serwerowe: `src/lib/obserwacje/szybka-notatka.ts` – tylko rola przełożonego i tylko własni podwładni; zapis do `Observation` (`originalText`, źródło `SZYBKA_AI` albo `RECZNA`) i decyzji AI do `AuditLog`.
 - Szybka notatka (Z41) zapisze obserwację z `source = SZYBKA_AI` i `originalText`; dziennik już ją pokazuje (odznaka „Szybka notatka”, sekcja „Nieprzypięte do wskaźnika”).
 

@@ -91,7 +91,7 @@ Uwagi do pomiaru:
 ## Szybka notatka (Z41) – jak ogranicza błędy i chroni dane
 
 1. **Skrót `N` albo przycisk „Notatka”** w nagłówku (tylko przełożony) otwiera okno z jednym polem. Ctrl + Enter wysyła notatkę do asystenta, Enter na „Zapisz notatkę” kończy – cel: 10 sekund.
-2. **Pseudonimizacja przed modelem (prosta wersja, pełna w Z34):** imiona i nazwiska podwładnych – z odmianą („Kasią”, „Nowakowi”, „Marcie”) i zdrobnieniami („Anka”, „Piotrek”, „Ola”) – są zamieniane na znaczniki `[OSOBA_1]`. Model nie dostaje żadnego imienia; w oknie widać dokładnie, jaki tekst trafił do modelu. Słowo pasujące do dwóch osób (dwie Marty) dostaje neutralny znacznik i osobę wybiera przełożony.
+2. **Pseudonimizacja przed modelem (wspólny moduł Z34, opis niżej):** imiona i nazwiska podwładnych – z odmianą („Kasią”, „Nowakowi”, „Marcie”) i zdrobnieniami („Anka”, „Piotrek”, „Ola”) – są zamieniane na znaczniki `[OSOBA_1]`. Model nie dostaje żadnego imienia; w oknie widać dokładnie, jaki tekst trafił do modelu. Słowo pasujące do dwóch osób (dwie Marty) dostaje neutralny znacznik i osobę wybiera przełożony.
 3. **Osoba rozpoznawana bez AI:** to samo dopasowanie imion wskazuje pracownika, gdy notatka dotyczy jednej osoby – działa także w trybie bez modelu.
 4. **Wskaźnik tylko z modelu kompetencji:** model dostaje katalog 49 wskaźników i zwraca identyfikator; wskaźnik spoza katalogu jest odrzucany. Poziom zachowania (1–5) tylko przy wskaźniku – w oknie pokazujemy opis zachowania, nie liczbę.
 5. **Sytuacja – Działanie – Rezultat wyłącznie z faktów z notatki:** prompt zabrania dopisywania faktów i ocen charakteru; brak informacji = puste pole. Gdy model nie wypełni SDR, tekst notatki trafia do „Działania” – nic nie przepada.
@@ -103,17 +103,37 @@ Uwagi do pomiaru:
 
 **Wynik (21.11, `gemini-3.5-flash-lite`): 5/5** – właściwa osoba i sensowny wskaźnik dla każdego zdania, ok. 1 s na notatkę (np. „Kasia … poprowadziła spotkanie z DSI, mimo że strony się kłóciły” → Współpraca: dbanie o dobrą atmosferę i otwartość, „Piotrek … oddał raport po terminie i z błędami” → Rzetelność). Pierwsza wersja promptu przypinała spotkanie z innym departamentem do wystąpień publicznych; prompt każe teraz najpierw rozważać kompetencje obowiązkowe.
 
+## Pseudonimizacja przed modelem (Z34)
+
+Wspólny moduł `src/lib/ai/pseudonimizacja.ts`; każda funkcja AI, która przekazuje modelowi tekst użytkownika, najpierw go pseudonimizuje.
+
+| Co | Przykład | Znacznik |
+|---|---|---|
+| podwładni (z odmianą i zdrobnieniami) | „Kasią”, „Nowakowi”, „Piotrek” | `[OSOBA_1]` → id pracownika |
+| osoby spoza zespołu: po „pan / pani” (stanowisko pomijamy), popularne imię, nazwisko o typowej końcówce (-ski, -cka, -wicz, -czyk) | „pani Dyrektor Zielińska”, „z Markiem Kowalskim” | `[OSOBA_2]` |
+| komórki organizacyjne jako nazwa własna | „w Departamencie Analiz i Strategii” | `[KOMORKA_1]` |
+| e-mail, telefon, PESEL, numer konta, numer dowodu | „k.wojcik@urzad.gov.pl”, „+48 600 123 456” | `[EMAIL_1]`, `[TELEFON_1]`… |
+
+- Ta sama osoba w innej formie dostaje ten sam znacznik („Kowalski” … „Kowalskiego”), imię i nazwisko – jeden znacznik.
+- Oryginały znaczników zostają na serwerze; w odpowiedzi modelu wracają (podwładny – imieniem, reszta – oryginalnym tekstem).
+- **Gdzie działa:** szybka notatka (Z41), asystent formalny (pytanie przed wyszukiwaniem, modelem i zapisem w dzienniku zapytań – w dzienniku zostaje wersja bez danych), analiza OSP (zadania i cel; nazw komórek tu nie ukrywamy, bo opisują stanowisko, a cytaty wracają w oryginalnym brzmieniu).
+- **Ostatnia linia obrony:** dostawca modelu (`openai-compatible.ts`) usuwa identyfikatory (e-mail, telefon, PESEL, konto, dowód) z każdego zapytania – także w przyszłych funkcjach, które zapomną o pseudonimizacji.
+- **Widać, co wyszło:** pod odpowiedzią asystenta i w oknie notatki: „Przed wysłaniem do modelu ukryto: 1 osobę, 1 adres e-mail. Asystent dostał: „…””.
+- **Testy (`tests/ai/pseudonimizacja.test.ts`):** każdy rodzaj danych osobno, przypadki negatywne (przymiotniki „Polski”, „Niski”, stanowiska „Pan Minister”, „ani”, „jasne”, nazwy instytucji), cała baza wiedzy (406 fragmentów) i trzy OSP z materiałów MC bez zmian, zapytania wysyłane do modelu bez imion.
+- **Ograniczenie:** osoby spoza zespołu rozpoznajemy heurystycznie (założenie #21) – nazwisko bez imienia i bez typowej końcówki („Nowak” u kogoś spoza zespołu) może przejść. Dlatego funkcje operujące na danych pracowników zawsze dostają listę podwładnych, a docelowo model działa lokalnie.
+- **Dla nowych funkcji AI (Z24, Z40):** `pseudonymize(tekst, podwladni)` przed `chatJson`, `restoreNames(odpowiedź, p.tags, podwladni, p.hidden)` po; `describeHidden(p.counts)` do komunikatu dla użytkownika.
+
 ## Gdzie przetwarzane są dane
 
 | Wariant | Gdzie trafia pytanie | Dane osobowe |
 |---|---|---|
 | lokalny (Ollama) | serwer urzędu | nie opuszczają urzędu |
-| demo (API w chmurze) | dostawca API | tylko dane fikcyjne; pytania asystenta formalnego dotyczą procedury, nie osób; do analizy OSP wysyłamy treść stanowiska (zadania, cel, kompetencje), bez imion i nazwisk pracowników |
+| demo (API w chmurze) | dostawca API | tylko dane fikcyjne; każdy tekst użytkownika jest pseudonimizowany przed wysłaniem (Z34): osoby, komórki i identyfikatory zastępują znaczniki |
 
 ## Do zrobienia przed wdrożeniem produkcyjnym
 
 - **model lokalny** w infrastrukturze urzędu (Ollama z polskim modelem, np. Bielik / PLLuM) zamiast API w chmurze – zmiana wyłącznie w `.env`, potem ponowny pomiar `npm run eval`;
-- pseudonimizacja danych osobowych przed wysłaniem do modelu w funkcjach, które w przyszłości będą operować na danych pracowników (notatki, informacja zwrotna);
+- przegląd słownika imion i wyjątków pseudonimizacji (Z34) na tekstach z praktyki urzędu; rozpoznawanie nazwisk bez typowej końcówki przez listę pracowników urzędu, nie tylko podwładnych;
 - dodanie ustawy o służbie cywilnej (tekst jednolity z ISAP) do bazy wiedzy i ponowny pomiar;
 - uzupełnienie bazy wiedzy o zestaw pytań i odpowiedzi MC i wewnętrzne procedury urzędu;
 - limit zapytań we współdzielonym magazynie (np. Redis) przy wielu instancjach;

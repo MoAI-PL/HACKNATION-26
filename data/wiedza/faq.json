@@ -66,6 +66,30 @@
     "basis": "§ 7 pkt 3 i § 9 ust. 1 rozporządzenia o pierwszej ocenie"
   },
   {
+    "id": "arkusze",
+    "question": "Kiedy stosuje się arkusz B, a kiedy arkusz C?",
+    "answer": "Arkusz B służy do oceny osoby zatrudnionej na stanowisku, na którym praca polega na bezpośrednim kierowaniu pracownikami (innym niż kierownik urzędu). Arkusz C służy do oceny osób na pozostałych stanowiskach. Arkusz A dotyczy kierownika urzędu.",
+    "basis": "§ 3 ust. 2–4 rozporządzenia o ocenach okresowych"
+  },
+  {
+    "id": "kryteria-obowiazkowe",
+    "question": "Jakie są kryteria obowiązkowe w arkuszach B i C?",
+    "answer": "Arkusz B (stanowiska kierownicze): zarządzanie ludźmi; podejmowanie decyzji i odpowiedzialność; organizacja pracy i orientacja na osiąganie celów; współpraca; komunikacja. Arkusz C (pozostałe stanowiska): wykorzystywanie wiedzy i doskonalenie zawodowe; rzetelność; organizacja pracy i orientacja na osiąganie celów; współpraca; komunikacja. Kryterium dodatkowe nie może powtarzać kryterium obowiązkowego.",
+    "basis": "§ 4 ust. 2 i 3 rozporządzenia o ocenach okresowych"
+  },
+  {
+    "id": "rozmowa-oceniajaca",
+    "question": "Co omawia się na rozmowie oceniającej?",
+    "answer": "Przed sporządzeniem oceny na piśmie oceniający omawia z ocenianym: główne obowiązki wykonywane w okresie oceny i sposób ich realizacji z uwzględnieniem ustalonych kryteriów, sposób realizowania wyznaczonych celów (jeśli je wyznaczono) oraz kierunki dalszego rozwoju zawodowego i potrzeby w zakresie podnoszenia kwalifikacji. Wnioski z rozmowy oceniający bierze pod uwagę przy sporządzaniu oceny.",
+    "basis": "§ 10 i § 11 ust. 2 rozporządzenia o ocenach okresowych"
+  },
+  {
+    "id": "czesc-i-podpis",
+    "question": "Czy oceniany podpisuje część I arkusza?",
+    "answer": "Tak. Oceniany potwierdza podpisem przeprowadzenie rozmowy rozpoczynającej oraz zapoznanie się z kryteriami oceny i terminem sporządzenia oceny na piśmie. Następnie oryginał arkusza włącza się do akt osobowych, a kopię części I oceniający doręcza ocenianemu.",
+    "basis": "§ 6 ust. 2 i 3 rozporządzenia o ocenach okresowych"
+  },
+  {
     "id": "uzasadnienie",
     "question": "Czy uzasadnienie oceny okresowej jest obowiązkowe?",
     "answer": "Uzasadnienie jest obowiązkowe przy ocenie negatywnej. Przy ocenie pozytywnej oceniający może je sporządzić. Uzasadnienie może polegać na ogólnym omówieniu oceny albo na odniesieniu się do wszystkich lub niektórych ocen cząstkowych.",

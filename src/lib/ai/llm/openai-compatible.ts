@@ -42,6 +42,7 @@ export class OpenAICompatibleProvider implements LLMProvider {
           temperature: options.temperature ?? 0.1,
           ...(options.maxTokens ? { max_tokens: options.maxTokens } : {}),
           ...(options.json ? { response_format: { type: "json_object" } } : {}),
+          ...(this.config.reasoningEffort ? { reasoning_effort: this.config.reasoningEffort } : {}),
           stream: false,
         }),
         signal: timeout.signal,

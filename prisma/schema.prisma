@@ -1,5 +1,6 @@
-// Model danych Kompasu Kompetencji.
-// Szkielet z Z02 – modele domenowe dodaje Z03 (kontrakt wspólny: zmiany małymi commitami i ogłaszamy zespołowi).
+// Model danych Kompasu Kompetencji (Z03).
+// KONTRAKT WSPÓLNY: zmiany małymi, osobnymi commitami i zawsze ogłaszamy zespołowi.
+// Wartości enumów muszą być identyczne z listami w src/lib/domain/types.ts (pilnuje tego test tests/domain/kontrakt.test.ts).
 
 generator client {
   provider = "prisma-client-js"
@@ -10,8 +11,465 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Tymczasowy model techniczny, żeby migracje i klient działały przed Z03.
-// Z03 może go usunąć.
+// ---------------------------------------------------------------------------
+// Enumy
+// ---------------------------------------------------------------------------
+
+enum Role {
+  PRZELOZONY
+  HR
+  OCENIANY
+  KIERUJACY_KOMORKA
+}
+
+enum EvaluationType {
+  PIERWSZA
+  OKRESOWA
+}
+
+enum Sheet {
+  A
+  B
+  C
+  PIERWSZA
+}
+
+enum EvaluationStatus {
+  DO_ROZPOCZECIA
+  W_OKRESIE_OCENY
+  W_OCENIE
+  CZEKA_NA_ZAPOZNANIE
+  ZAKONCZONA
+}
+
+enum CriterionKind {
+  OBOWIAZKOWE
+  DODATKOWE
+}
+
+enum EvaluationResult {
+  POZYTYWNA
+  NEGATYWNA
+}
+
+enum Level {
+  ZNACZNIE_PONIZEJ
+  PONIZEJ
+  NA_POZIOMIE
+  POWYZEJ
+  ZNACZNIE_POWYZEJ
+}
+
+enum ConversationType {
+  WSTEPNA
+  ROZPOCZYNAJACA
+  OCENIAJACA
+  BIEZACA
+}
+
+enum ObservationSource {
+  RECZNA
+  SZYBKA_AI
+}
+
+enum SubordinateOption {
+  BRAK
+  DO_4
+  OD_5_DO_9
+  POWYZEJ_9
+  PODLEGAJA_KIERUJACY
+}
+
+enum AbsenceKind {
+  ZWOLNIENIE_LEKARSKIE
+  URLOP_MACIERZYNSKI
+  URLOP_RODZICIELSKI
+  URLOP_OJCOWSKI
+  URLOP_WYCHOWAWCZY
+  URLOP_BEZPLATNY
+  INNA
+}
+
+enum ExamResult {
+  ZDANY
+  NIEZDANY
+  NIE_DOTYCZY
+}
+
+enum ExamExemption {
+  ABSOLWENT_KSAP
+  ZASTEPSTWO
+  WYZSZE_STANOWISKO
+}
+
+enum CompetencyCode {
+  RZETELNOSC
+  KOMUNIKACJA
+  WIEDZA
+  ORGANIZACJA
+  KREATYWNOSC
+  WSPOLPRACA
+  ANALITYCZNE
+  NEGOCJOWANIE
+  WYSTAPIENIA
+  KLIENT
+  KRYZYS
+  STRATEGICZNE
+  LUDZIE
+  DECYZJE
+}
+
+// ---------------------------------------------------------------------------
+// Użytkownicy i struktura urzędu
+// ---------------------------------------------------------------------------
+
+model User {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  passwordHash String
+  name         String
+  role         Role
+  /// Powiązanie z kartoteką pracownika (rola OCENIANY, a także przełożony, który sam podlega ocenie).
+  employeeId   String?   @unique
+  employee     Employee? @relation("UserEmployee", fields: [employeeId], references: [id])
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  subordinates     Employee[]       @relation("Supervisor")
+  headedEmployees  Employee[]       @relation("UnitHead")
+  evaluations      Evaluation[]     @relation("Evaluator")
+  observations     Observation[]
+  reminders        Reminder[]
+  auditLogs        AuditLog[]
+  assistantQueries AssistantQuery[]
+}
+
+/// Komórka organizacyjna (departament, wydział). Potrzebna do Lustra (średnia w komórce) i panelu HR.
+model OrgUnit {
+  id        String     @id @default(cuid())
+  name      String
+  shortName String?
+  parentId  String?
+  parent    OrgUnit?   @relation("OrgUnitTree", fields: [parentId], references: [id])
+  children  OrgUnit[]  @relation("OrgUnitTree")
+  employees Employee[]
+  positions Position[]
+}
+
+model Employee {
+  id               String    @id @default(cuid())
+  firstName        String
+  lastName         String
+  /// true = urzędnik służby cywilnej (część III arkusza), false = pracownik służby cywilnej.
+  isCivilServant   Boolean   @default(false)
+  /// Część III arkusza (tylko urzędnik): rok mianowania, posiadany stopień służbowy (numer) i data jego przyznania.
+  appointmentYear  Int?
+  serviceGrade     Int?
+  serviceGradeDate DateTime? @db.Date
+  /// Nawiązanie stosunku pracy (pierwsza ocena: rozmowa wstępna w 21 dni).
+  employmentStart  DateTime  @db.Date
+  /// Zatrudnienie na czas nieokreślony (start 24-miesięcznego okresu oceny okresowej).
+  permanentFrom    DateTime? @db.Date
+  /// Koniec umowy na czas określony (pierwsza ocena najpóźniej miesiąc przed końcem).
+  contractEnd      DateTime? @db.Date
+  orgUnitId        String?
+  orgUnit          OrgUnit?  @relation(fields: [orgUnitId], references: [id])
+  positionId       String?
+  position         Position? @relation(fields: [positionId], references: [id])
+  /// Bezpośredni przełożony = oceniający.
+  supervisorId     String?
+  supervisor       User?     @relation("Supervisor", fields: [supervisorId], references: [id])
+  /// Kierujący komórką (podpis w pierwszej ocenie).
+  unitHeadId       String?
+  unitHead         User?     @relation("UnitHead", fields: [unitHeadId], references: [id])
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  user          User?          @relation("UserEmployee")
+  evaluations   Evaluation[]
+  observations  Observation[]
+  conversations Conversation[]
+  absences        Absence[]
+  positionChanges PositionChange[]
+  reminders       Reminder[]
+
+  @@index([supervisorId])
+}
+
+/// Opis stanowiska pracy (OSP) – wynik importu Z06.
+model Position {
+  id                   String            @id @default(cuid())
+  title                String
+  orgUnitId            String?
+  orgUnit              OrgUnit?          @relation(fields: [orgUnitId], references: [id])
+  purpose              String            @db.Text
+  /// string[] – zadania dominujące
+  dominantTasks        Json
+  /// string[] – zadania pozostałe
+  otherTasks           Json
+  subordinates         SubordinateOption
+  authorizations       String?           @db.Text
+  /// string[] – wymagane kompetencje z OSP
+  requiredCompetencies Json
+  rawText              String?           @db.Text
+  sourceFileName       String?
+  createdAt            DateTime          @default(now())
+
+  employees Employee[]
+}
+
+// ---------------------------------------------------------------------------
+// Ocena
+// ---------------------------------------------------------------------------
+
+model Evaluation {
+  id              String           @id @default(cuid())
+  employeeId      String
+  employee        Employee         @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  evaluatorId     String
+  evaluator       User             @relation("Evaluator", fields: [evaluatorId], references: [id])
+  type            EvaluationType
+  sheet           Sheet
+  /// true, gdy przełożony zmienił arkusz zaproponowany na podstawie OSP (powód w AuditLog).
+  sheetOverridden Boolean          @default(false)
+  status          EvaluationStatus @default(DO_ROZPOCZECIA)
+
+  /// Okres podlegania ocenie: od zapoznania z kryteriami do sporządzenia oceny.
+  periodStart    DateTime? @db.Date
+  periodEnd      DateTime? @db.Date
+  /// Termin sporządzenia oceny na piśmie (z silnika terminów, po wydłużeniach).
+  dueDate        DateTime? @db.Date
+  /// Rozmowa rozpoczynająca (okresowa) albo wstępna (pierwsza) – kryteria ustalone.
+  criteriaSetAt  DateTime? @db.Date
+  /// Lista kontrolna rozmowy rozpoczynającej (4 tematy z § 5 ust. 1): { obowiazki, kryteria, oczekiwania, cele }.
+  startChecklist Json?
+  expectations   String?   @db.Text
+  goals          String?   @db.Text
+  /// Ocena po ocenie negatywnej (ponowna po 6 miesiącach).
+  isReevaluation Boolean   @default(false)
+
+  evaluatedAt     DateTime?         @db.Date
+  acknowledgedAt  DateTime?         @db.Date
+  result          EvaluationResult?
+  overallLevel    Level?
+  average         Float?
+  justification   String?           @db.Text
+  /// Wnioski do IPRZ (okresowa) / wnioski dotyczące rozwoju zawodowego (pierwsza).
+  developmentPlan String?           @db.Text
+
+  /// Dane poprzedniej oceny wpisywane do arkusza.
+  previousResult EvaluationResult?
+  previousLevel  Level?
+  previousDate   DateTime?         @db.Date
+
+  /// Część III – wniosek o kolejny stopień służbowy (tylko urzędnik, ocena pozytywna).
+  promotionRequest       Boolean @default(false)
+  promotionJustification String? @db.Text
+  /// Numer stopnia służbowego, o który wnioskuje oceniający (art. 89 ust. 1 ustawy).
+  requestedGrade         Int?
+
+  /// Pierwsza ocena: egzamin ze służby przygotowawczej.
+  examResult    ExamResult?
+  examExemption ExamExemption?
+
+  /// Kreator: ostatni krok i stan, do którego wracamy po wyjściu (autozapis).
+  lastWizardStep String?
+  wizardState    Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  criteria      EvaluationCriterion[]
+  conversations Conversation[]
+  report        FirstEvalReport?
+  reminders     Reminder[]
+
+  @@index([employeeId])
+  @@index([evaluatorId, status])
+}
+
+/// Kryterium oceny okresowej albo element pierwszej oceny.
+model EvaluationCriterion {
+  id              String         @id @default(cuid())
+  evaluationId    String
+  evaluation      Evaluation     @relation(fields: [evaluationId], references: [id], onDelete: Cascade)
+  competency      CompetencyCode
+  kind            CriterionKind
+  /// Uzasadnienie wyboru kryterium dodatkowego (np. cytat zadania z OSP).
+  selectionReason String?        @db.Text
+  /// Ostateczna ocena cząstkowa przełożonego (1/3/5/7/9 albo 3/5/7).
+  score           Int?
+  /// Sugestia systemu (Z09) w chwili decyzji.
+  suggestedScore  Int?
+  /// Wymagane, gdy score ≠ suggestedScore.
+  overrideReason  String?        @db.Text
+  order           Int            @default(0)
+
+  ratings IndicatorRating[]
+
+  @@unique([evaluationId, competency])
+}
+
+/// Wybór karty zachowania przy wskaźniku behawioralnym.
+model IndicatorRating {
+  id          String              @id @default(cuid())
+  criterionId String
+  criterion   EvaluationCriterion @relation(fields: [criterionId], references: [id], onDelete: Cascade)
+  /// "KOD.nr", np. "KOMUNIKACJA.2" (data/model-kompetencji.json)
+  indicatorId String
+  /// 1–5; null = „brak okazji do obserwacji”.
+  level       Int?
+  note        String?             @db.Text
+  updatedAt   DateTime            @updatedAt
+
+  @@unique([criterionId, indicatorId])
+}
+
+// ---------------------------------------------------------------------------
+// Dziennik obserwacji i rozmowy
+// ---------------------------------------------------------------------------
+
+model Observation {
+  id            String            @id @default(cuid())
+  employeeId    String
+  employee      Employee          @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  authorId      String
+  author        User              @relation(fields: [authorId], references: [id])
+  date          DateTime          @db.Date
+  /// Opcjonalne do czasu przypięcia notatki do wskaźnika.
+  competency    CompetencyCode?
+  indicatorId   String?
+  /// Poziom zachowania najbliższy obserwacji (1–5), jeśli wskazany.
+  behaviorLevel Int?
+  situation     String?           @db.Text
+  action        String?           @db.Text
+  outcome       String?           @db.Text
+  /// Tekst wpisany przez przełożonego (szybka notatka).
+  originalText  String?           @db.Text
+  source        ObservationSource @default(RECZNA)
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+
+  @@index([employeeId, date])
+  @@index([indicatorId])
+}
+
+model Conversation {
+  id           String           @id @default(cuid())
+  employeeId   String
+  employee     Employee         @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  evaluationId String?
+  evaluation   Evaluation?      @relation(fields: [evaluationId], references: [id], onDelete: SetNull)
+  type         ConversationType
+  date         DateTime         @db.Date
+  notes        String?          @db.Text
+  createdAt    DateTime         @default(now())
+}
+
+/// Sprawozdanie do pierwszej oceny (§ 6 rozp. o pierwszej ocenie).
+model FirstEvalReport {
+  id           String     @id @default(cuid())
+  evaluationId String     @unique
+  evaluation   Evaluation @relation(fields: [evaluationId], references: [id], onDelete: Cascade)
+  /// Wyznaczony termin na złożenie sprawozdania (data początkowa i końcowa – § 4 ust. 1).
+  dueFrom      DateTime   @db.Date
+  dueTo        DateTime   @db.Date
+  submittedAt  DateTime?  @db.Date
+  content      String?    @db.Text
+  fileName     String?
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+}
+
+// ---------------------------------------------------------------------------
+// Terminy, przypomnienia, audyt, asystent
+// ---------------------------------------------------------------------------
+
+model Absence {
+  id         String      @id @default(cuid())
+  employeeId String
+  employee   Employee    @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  kind       AbsenceKind
+  from       DateTime    @db.Date
+  to         DateTime    @db.Date
+  note       String?
+  createdAt  DateTime    @default(now())
+
+  @@index([employeeId])
+}
+
+/// Zmiana stanowiska pracownika – wejście silnika terminów (Z08):
+/// < 6 mies. od ustalenia kryteriów → ponowne kryteria w 30 dni (§ 9 ust. 1),
+/// ≥ 6 mies. → ocena od 7 dni przed do 30 dni po zmianie (art. 81 ust. 6 ustawy, § 9 ust. 2).
+model PositionChange {
+  id                      String   @id @default(cuid())
+  employeeId              String
+  employee                Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  date                    DateTime @db.Date
+  /// Terminy zmienia tylko zmiana stanowiska z istotną zmianą obowiązków.
+  significantDutiesChange Boolean  @default(true)
+  newPositionTitle        String?
+  note                    String?
+  createdAt               DateTime @default(now())
+
+  @@index([employeeId])
+}
+
+model Reminder {
+  id           String      @id @default(cuid())
+  recipientId  String
+  recipient    User        @relation(fields: [recipientId], references: [id], onDelete: Cascade)
+  employeeId   String?
+  employee     Employee?   @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  evaluationId String?
+  evaluation   Evaluation? @relation(fields: [evaluationId], references: [id], onDelete: Cascade)
+  /// Rodzaj terminu (DeadlineKind z types.ts).
+  kind         String
+  dueDate      DateTime    @db.Date
+  subject      String
+  body         String      @db.Text
+  /// Symulacja wysyłki: data „wysłano”.
+  sentAt       DateTime?
+  createdAt    DateTime    @default(now())
+}
+
+/// Dziennik decyzji: każda propozycja AI obok decyzji człowieka, zmiany arkusza, sugestii, przepisów.
+model AuditLog {
+  id            String   @id @default(cuid())
+  userId        String?
+  user          User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  /// np. "AI_WSTAW", "AI_ODRZUC", "ZMIANA_ARKUSZA", "ZMIANA_SUGESTII", "EDYCJA_PRZEPISOW"
+  action        String
+  entity        String
+  entityId      String?
+  aiProposal    Json?
+  humanDecision Json?
+  oldValue      Json?
+  newValue      Json?
+  reason        String?  @db.Text
+  createdAt     DateTime @default(now())
+
+  @@index([entity, entityId])
+  @@index([createdAt])
+}
+
+model AssistantQuery {
+  id         String   @id @default(cuid())
+  userId     String?
+  user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  question   String   @db.Text
+  /// [{ document, unit, quote, score }]
+  sources    Json
+  answer     String   @db.Text
+  refused    Boolean  @default(false)
+  /// Krok ścieżki, z którego zadano pytanie (podpowiedzi zależne od kroku).
+  step       String?
+  model      String?
+  durationMs Int?
+  createdAt  DateTime @default(now())
+}
+
+// Tymczasowy model techniczny z Z02 (używa go prisma/seed.ts) – Z26 może go usunąć razem z seedem.
 model AppInfo {
   id        Int      @id @default(autoincrement())
   key       String   @unique

@@ -17,7 +17,7 @@ Kolejność: najpierw ★, potem pozostałe P0, potem P1 (w kolejności z tabeli
 
 | ID | Zadanie | Zależy od | Status | Kto | Gałąź |
 |---|---|---|---|---|---|
-| ★Z05 | Import modelu kompetencji (xlsx → JSON) | Z02 | w toku | Nadia | |
+| ★Z05 | Import modelu kompetencji (xlsx → JSON) | Z02 | do przeglądu | Nadia | `z05-import-modelu` |
 | ★Z06 | Import OSP (docx) i automatyczny wybór arkusza B/C | Z03 | wolne | | |
 | ★Z26 | Dane demo (seed) wokół persony przełożonej | Z03 | wolne | | |
 

@@ -42,7 +42,19 @@ Przy `DEMO_MODE="true"` ekran logowania pokazuje karty kont demo – wystarczy k
 | Oceniany | `jan.nowak@demo.kompas.test` | `Kompas2026!` |
 | Kierujący komórką | `kierujacy@demo.kompas.test` | `Kompas2026!` |
 
-Konta tworzy `npm run seed`. Na produkcji ustaw `DEMO_MODE="false"` – karty i logowanie jednym kliknięciem znikają.
+Konta i dane demo tworzy `npm run seed` (można uruchamiać wielokrotnie – dane demo są odtwarzane od nowa, daty liczone od dnia uruchomienia).
+
+**Scenariusze w danych demo** (wszystkie osoby fikcyjne, stanowiska z OSP dostarczonych przez MC):
+
+| Osoba | Stanowisko | Scenariusz |
+|---|---|---|
+| Katarzyna Wójcik | radca (arkusz C) | ocena za kilka dni, 10 obserwacji w dzienniku – główna ścieżka oceny wskaźników |
+| Piotr Lewandowski | naczelnik wydziału (arkusz B) | okres oceny, kryteria dodatkowe z OSP |
+| Jan Nowak (konto ocenianego) | starszy specjalista (arkusz C) | L4 44 dni wydłuża termin; większość notatek z ostatniego miesiąca |
+| Marcin Wróbel | starszy specjalista (arkusz C) | po ocenie negatywnej – ponowna ocena po 6 miesiącach |
+| Aleksandra Mazur | starszy specjalista | nowa pracownica – pierwsza ocena, rozmowa wstępna w 21 dni |
+| Marta Kamińska | radca (arkusz C) | zatrudniona na czas nieokreślony – ocena do rozpoczęcia od OSP |
+ Na produkcji ustaw `DEMO_MODE="false"` – karty i logowanie jednym kliknięciem znikają.
 
 ## Skrypty
 

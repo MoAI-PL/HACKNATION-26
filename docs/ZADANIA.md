@@ -19,7 +19,7 @@ Kolejność: najpierw ★, potem pozostałe P0, potem P1 (w kolejności z tabeli
 |---|---|---|---|---|---|
 | ★Z05 | Import modelu kompetencji (xlsx → JSON) | Z02 | gotowe | Nadia | `z05-import-modelu` |
 | ★Z06 | Import OSP (docx) i automatyczny wybór arkusza B/C | Z03 | wolne | | |
-| ★Z26 | Dane demo (seed) wokół persony przełożonej | Z03 | w toku | suzanne0401 | `z26-dane-demo` |
+| ★Z26 | Dane demo (seed) wokół persony przełożonej | Z03 | gotowe | suzanne0401 | `z26-dane-demo` |
 
 ## C. Silnik reguł
 

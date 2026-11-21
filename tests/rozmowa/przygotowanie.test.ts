@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildConversationPrep, illustrativeObservation, indicatorEvidence, type PrepInput } from "@/lib/rozmowa/przygotowanie";
+import { buildConversationPrep, illustrativeObservation, indicatorEvidence, roundLevel, type PrepInput } from "@/lib/rozmowa/przygotowanie";
 import { buildMessages, formatProposal, polishConversation, pseudonymize } from "@/lib/rozmowa/ai";
 import { allowedKinds, currentEvaluation, suggestedKind } from "@/lib/rozmowa/repo";
 import type { HrEvaluationRecord } from "@/lib/hr/panel";
@@ -34,7 +34,7 @@ const base: PrepInput = {
 describe("poziomy wskaźników: ocena z Z14 ma pierwszeństwo przed notatkami", () => {
   it("średnia z notatek z poziomem zachowania, tylko kryteria oceny", () => {
     const ev = indicatorEvidence({ ...base, observations: [...base.observations, obs("x", "KRYZYS.1", 1)] });
-    expect(ev.find((e) => e.indicatorId === "KOMUNIKACJA.4")).toMatchObject({ level: 1.5, source: "NOTATKI", levelLabel: "poniżej oczekiwań" });
+    expect(ev.find((e) => e.indicatorId === "KOMUNIKACJA.4")).toMatchObject({ level: 1.5, source: "NOTATKI", levelLabel: "znacznie poniżej oczekiwań" }); // remis w dół, jak w Z09
     expect(ev.some((e) => e.indicatorId === "KRYZYS.1")).toBe(false); // KRYZYS nie jest kryterium tej oceny
     expect(ev.find((e) => e.indicatorId === "ANALITYCZNE.3")!.name).toBe("Formułowanie wniosków"); // bez kropki
   });
@@ -172,6 +172,32 @@ describe("następna rozmowa według etapu oceny", () => {
     const records = [r("zapoznanie", "CZEKA_NA_ZAPOZNANIE"), r("nowa", "DO_ROZPOCZECIA"), r("stara", "W_OCENIE"), r("inna", "W_OCENIE", "jan")];
     expect(currentEvaluation(records, "kasia")?.id).toBe("nowa");
     expect(currentEvaluation([r("z", "ZAKONCZONA")], "kasia")).toBeUndefined();
+  });
+});
+
+describe("etap oceny a otwarta rozmowa", () => {
+  it("remis poziomu (4,5) w dół – jak sugestia w Z09", () => {
+    expect([roundLevel(4.5), roundLevel(4.51), roundLevel(2.5), roundLevel(1), roundLevel(5)]).toEqual([4, 5, 2, 1, 5]);
+    const ev = indicatorEvidence({ ...base, observations: [obs("p", "WSPOLPRACA.2", 4), obs("q", "WSPOLPRACA.2", 5)] });
+    expect(ev[0]).toMatchObject({ level: 4.5, levelLabel: "powyżej oczekiwań" });
+  });
+
+  it("rozmowa oceniająca przed ustaleniem kryteriów – informacja, bez terminu innego etapu", () => {
+    const p = buildConversationPrep({ ...base, observations: [], stage: { status: "DO_ROZPOCZECIA", suggested: "ROZPOCZYNAJACA" } });
+    expect(p.notes).toHaveLength(1);
+    expect(p.notes[0]).toMatch(/Kryteria tej oceny nie są jeszcze ustalone/);
+    expect(p.checklist.join(" ")).not.toMatch(/Termin:/);
+  });
+
+  it("rozmowa rozpoczynająca po jej odbyciu – przypomnienie ustaleń z datą", () => {
+    const p = buildConversationPrep({ ...base, kind: "ROZPOCZYNAJACA", stage: { status: "W_OCENIE", suggested: "OCENIAJACA", criteriaSetAt: "2024-12-11" } });
+    expect(p.notes).toEqual(["Rozmowa rozpoczynająca odbyła się 11 grudnia 2024 – ten widok przypomina jej ustalenia."]);
+  });
+
+  it("rozmowa zgodna z etapem – bez informacji, z terminem", () => {
+    const p = buildConversationPrep({ ...base, stage: { status: "W_OCENIE", suggested: "OCENIAJACA" } });
+    expect(p.notes).toEqual([]);
+    expect(p.checklist).toContain("Termin: ocena okresowa do pon. 30.11.");
   });
 });
 

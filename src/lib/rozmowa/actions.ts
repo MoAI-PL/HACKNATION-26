@@ -54,7 +54,8 @@ export async function logConversationAiDecisionAction(employeeId: string, raw: u
       action: input.decision === "WSTAW" ? "AI_WSTAW" : "AI_ODRZUC",
       entity: "Employee",
       entityId: employee.id,
-      aiProposal: { funkcja: "ASYSTENT_ROZMOWY", rozmowa: input.kind, propozycja: input.proposal },
+      // Ten sam format co wspólne logAiDecision (Z10) – eksport dziennika (Z35) czyta wszystkie decyzje AI jednakowo.
+      aiProposal: { funkcja: "ASYSTENT_ROZMOWY", tryb: "AI", rozmowa: input.kind, propozycja: input.proposal },
       humanDecision: { decyzja: input.decision, wstawiono: input.final ?? null },
     },
   });

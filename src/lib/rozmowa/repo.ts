@@ -128,6 +128,13 @@ export async function loadPrepData(supervisorId: string, employeeId: string): Pr
       previousResult: (record?.previousResult as EvaluationResult | null) ?? null,
       isReevaluation: record?.isReevaluation ?? false,
       deadline: info ? { date: info.deadline.date, label: `${info.text.charAt(0).toLocaleLowerCase("pl")}${info.text.slice(1)}` } : null,
+      stage: record
+        ? {
+            status: record.status as "DO_ROZPOCZECIA" | "W_OKRESIE_OCENY" | "W_OCENIE",
+            suggested: suggestedKind(record.type, record.status),
+            criteriaSetAt: record.criteriaSetAt,
+          }
+        : null,
     },
   };
 }

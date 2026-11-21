@@ -100,9 +100,11 @@ export default async function PrzygotowanieRozmowyPage({
         <p className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
           Zakres rozmowy: {prep.legalBasis}
           {source && (
-            <InfoTip legalBasis={prep.legalBasis} quote={source.text.length > 600 ? `${source.text.slice(0, 600)}…` : source.text}>
-              Przepis określa, o czym trzeba porozmawiać.
-            </InfoTip>
+            <span className="print:hidden">
+              <InfoTip legalBasis={prep.legalBasis} quote={source.text.length > 600 ? `${source.text.slice(0, 600)}…` : source.text}>
+                Przepis określa, o czym trzeba porozmawiać.
+              </InfoTip>
+            </span>
           )}
         </p>
         {prep.notes.map((n) => (

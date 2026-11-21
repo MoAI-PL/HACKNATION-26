@@ -38,6 +38,8 @@ export interface PrepInput {
   isReevaluation?: boolean;
   /** Termin rozmowy albo oceny, np. „do pt. 28.11” – do przypomnienia w ściądze. */
   deadline?: { date: IsoDate; label: string } | null;
+  /** Etap bieżącej oceny i rozmowa, która według niego jest następna (gdy przełożony otworzy inną – informacja). */
+  stage?: { status: "DO_ROZPOCZECIA" | "W_OKRESIE_OCENY" | "W_OCENIE"; suggested: ConversationKind; criteriaSetAt?: IsoDate | null } | null;
 }
 
 export interface IndicatorEvidence {
@@ -96,7 +98,9 @@ export interface ConversationPrep {
   notes: string[];
 }
 
-const levelLabel = (level: number) => LEVEL_LABELS[BEHAVIOR_LEVEL_TO_LEVEL[Math.min(5, Math.max(1, Math.round(level))) as BehaviorLevel]];
+/** Poziom do etykiety: najbliższy, a remis (np. 4,5) w dół – tak samo jak sugestia poziomu w Z09 (wariant ostrożny). */
+export const roundLevel = (level: number) => Math.min(5, Math.max(1, Math.ceil(level - 0.5))) as BehaviorLevel;
+const levelLabel = (level: number) => LEVEL_LABELS[BEHAVIOR_LEVEL_TO_LEVEL[roundLevel(level)]];
 const shorten = (t: string, max = 140) => (t.length > max ? `${t.slice(0, max).replace(/\s+\S*$/, "")}…` : t);
 
 /** Poziom każdego wskaźnika: ocena z Z14 ma pierwszeństwo, w przeciwnym razie średnia z notatek z poziomem zachowania. */
@@ -154,7 +158,7 @@ function feedbackFrom(e: IndicatorEvidence, model: CompetencyModelIndex): Feedba
   const o = illustrativeObservation(e, growth ? "growth" : "strength", (x) => Boolean(x.action && x.outcome));
   if (!o) return null;
   const ind = model.getIndicator(e.indicatorId)!;
-  const next = Math.round(e.level) + 1;
+  const next = roundLevel(e.level) + 1;
   const expectation = growth
     ? `Oczekuję zachowania na poziomie oczekiwań: ${ind.levels[3]}`
     : next <= 5
@@ -268,6 +272,21 @@ export function buildConversationPrep(input: PrepInput, model: CompetencyModelIn
     if (ev.length === 0) notes.push("Nie ma jeszcze ocen wskaźników ani notatek z poziomem zachowania – pytania są ogólne. Dodaj obserwacje w dzienniku albo oceń wskaźniki w kreatorze oceny.");
   }
 
+  // Rozmowa otwarta nie na tym etapie oceny – mówimy to wprost, zamiast udawać, że to właściwy moment.
+  if (input.stage && input.stage.suggested !== input.kind) {
+    if (input.kind === "OCENIAJACA" && input.stage.status === "DO_ROZPOCZECIA") {
+      // Ta informacja wyjaśnia też brak ocen i notatek – zastępuje ogólny komunikat o braku danych.
+      notes.length = 0;
+      notes.push("Kryteria tej oceny nie są jeszcze ustalone. Rozmowa oceniająca odbywa się pod koniec okresu oceny – teraz najpierw rozmowa rozpoczynająca.");
+    } else if (input.kind === "ROZPOCZYNAJACA" && input.stage.status !== "DO_ROZPOCZECIA") {
+      notes.push(
+        input.stage.criteriaSetAt
+          ? `Rozmowa rozpoczynająca odbyła się ${formatDatePl(input.stage.criteriaSetAt)} – ten widok przypomina jej ustalenia.`
+          : "Rozmowa rozpoczynająca już się odbyła – ten widok przypomina jej ustalenia.",
+      );
+    }
+  }
+
   if (input.isReevaluation || input.previousResult === "NEGATYWNA") {
     difficult.unshift({
       situation: "Poprzednia ocena była negatywna",
@@ -305,7 +324,8 @@ export function buildConversationPrep(input: PrepInput, model: CompetencyModelIn
     checklist: [
       "Zarezerwuj 45–60 minut w spokojnym miejscu, bez telefonów i poczty.",
       input.kind === "OCENIAJACA" ? "Przejrzyj notatki z całego okresu oceny, nie tylko z ostatnich tygodni." : "Miej pod ręką opis stanowiska pracy (OSP).",
-      ...(input.deadline ? [`Termin: ${input.deadline.label}.`] : []),
+      // Termin dotyczy bieżącego etapu – pokazujemy go tylko przy rozmowie, która jest teraz następna.
+      ...(input.deadline && (!input.stage || input.stage.suggested === input.kind) ? [`Termin: ${input.deadline.label}.`] : []),
       input.kind === "OCENIAJACA" ? "Po rozmowie zapisz ustalenia – przydadzą się w ocenie i we wnioskach do IPRZ." : "Po rozmowie zapisz ustalenia – przydadzą się w ocenie.",
     ],
     notes,

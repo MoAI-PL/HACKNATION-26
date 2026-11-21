@@ -29,7 +29,7 @@ describe("zapis decyzji „Wstaw / Odrzuć”", () => {
       action: "AI_WSTAW",
       entity: "Employee",
       entityId: "kasia",
-      aiProposal: { funkcja: "ASYSTENT_ROZMOWY", rozmowa: "OCENIAJACA", propozycja: "P" },
+      aiProposal: { funkcja: "ASYSTENT_ROZMOWY", tryb: "AI", rozmowa: "OCENIAJACA", propozycja: "P" },
       humanDecision: { decyzja: "WSTAW", wstawiono: "P2" },
     });
   });

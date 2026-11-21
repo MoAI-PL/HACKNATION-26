@@ -90,6 +90,8 @@ Przełożony widzi wyłącznie swoich podwładnych: zapytania filtrujemy po `sup
 - Reguły wyboru: lista i ściąga biorą tę samą ocenę (`currentEvaluation`: najnowsza w toku, bez zakończonych i czekających na zapoznanie). Pierwsza ocena ma wyłącznie rozmowę wstępną (`allowedKinds`) – inny rodzaj w adresie jest ignorowany. Notatki do rozmowy oceniającej tylko z okresu oceny (od `periodStart`). Pytanie i informacja zwrotna przy obszarze do rozwoju odwołują się do notatki z najsłabszym zachowaniem, przy mocnej stronie – z najmocniejszym.
 - Notatki przełożonego: szkic w `localStorage` tej przeglądarki (osobno dla pracownika i rodzaju rozmowy), na wydruku pełna treść; nic nie trafia do bazy. Limit redakcji AI: 10 na minutę na przełożonego; decyzje „Wstaw / Odrzuć” walidowane zod na serwerze (treść do 10 000 znaków).
 - Zakres treści zgodny z przepisem rozmowy: działania rozwojowe tylko w rozmowie oceniającej (§ 10 pkt 3); po ocenie negatywnej cele na okres do ponownej oceny (6 miesięcy, art. 81 ust. 9).
+- Etap a rozmowa: gdy przełożony otworzy rozmowę inną niż następna według etapu, ściąga mówi to wprost (np. „Kryteria tej oceny nie są jeszcze ustalone…”, „Rozmowa rozpoczynająca odbyła się 14 grudnia 2024…”) i nie pokazuje terminu innego etapu. Poziom z notatek do etykiety: remis w dół, jak sugestia w Z09.
+- Decyzje AI: własna akcja ekranu (sprawdza, że pracownik jest podwładnym), zapis w tym samym formacie co wspólne `logAiDecision` z Z10 (`funkcja`, `tryb`, `propozycja`).
 
 ## Zabezpieczenia demo (Z44)
 

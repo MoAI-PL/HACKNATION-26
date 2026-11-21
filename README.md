@@ -26,10 +26,35 @@ docs/               tablica zadań, założenia, dokumentacja
 Wymagania: Node.js 20+, Docker.
 
 1. `npm install`
-2. `cp .env.example .env` (na Windows: `copy .env.example .env`) i uzupełnij `AUTH_SECRET`
+2. `cp .env.example .env` (na Windows: `copy .env.example .env`) i uzupełnij `AUTH_SECRET` (dowolny losowy ciąg, np. wynik `npx auth secret`)
 3. `npm run db:up` – uruchamia PostgreSQL w Dockerze
 4. `npm run db:migrate` i `npm run seed`
 5. `npm run dev` – aplikacja pod http://localhost:3000
+
+## Konta demo
+
+Przy `DEMO_MODE="true"` ekran logowania pokazuje karty kont demo – wystarczy kliknąć „Zaloguj jako…”. Dane są fikcyjne.
+
+| Rola | E-mail | Hasło |
+|---|---|---|
+| Przełożona (Ewa Kowalczyk) | `ewa.kowalczyk@demo.kompas.test` | `Kompas2026!` |
+| HR / administrator | `hr@demo.kompas.test` | `Kompas2026!` |
+| Oceniany | `jan.nowak@demo.kompas.test` | `Kompas2026!` |
+| Kierujący komórką | `kierujacy@demo.kompas.test` | `Kompas2026!` |
+
+Konta i dane demo tworzy `npm run seed` (można uruchamiać wielokrotnie – dane demo są odtwarzane od nowa, daty liczone od dnia uruchomienia).
+
+**Scenariusze w danych demo** (wszystkie osoby fikcyjne, stanowiska z OSP dostarczonych przez MC):
+
+| Osoba | Stanowisko | Scenariusz |
+|---|---|---|
+| Katarzyna Wójcik | radca (arkusz C) | ocena za kilka dni, 10 obserwacji w dzienniku – główna ścieżka oceny wskaźników |
+| Piotr Lewandowski | naczelnik wydziału (arkusz B) | okres oceny, kryteria dodatkowe z OSP |
+| Jan Nowak (konto ocenianego) | starszy specjalista (arkusz C) | L4 44 dni wydłuża termin; większość notatek z ostatniego miesiąca |
+| Marcin Wróbel | starszy specjalista (arkusz C) | po ocenie negatywnej – ponowna ocena po 6 miesiącach |
+| Aleksandra Mazur | starszy specjalista | nowa pracownica – pierwsza ocena, rozmowa wstępna w 21 dni |
+| Marta Kamińska | radca (arkusz C) | zatrudniona na czas nieokreślony – ocena do rozpoczęcia od OSP |
+ Na produkcji ustaw `DEMO_MODE="false"` – karty i logowanie jednym kliknięciem znikają.
 
 ## Skrypty
 
@@ -42,6 +67,7 @@ Wymagania: Node.js 20+, Docker.
 | `npm run seed` | dane demo |
 | `npm run wiedza` | buduje bazę wiedzy asystenta z PDF-ów (`data/wiedza/fragmenty.json`) |
 | `npm run eval` | zestaw testowy asystenta formalnego |
+| `npm run model` | import modelu kompetencji: `materialy/Model_kompetencji.xlsx` → `data/model-kompetencji.json` (`-- --check` sprawdza aktualność) |
 | `npm run db:up` / `db:migrate` / `db:generate` | baza danych: start, migracje, klient Prisma |
 
 ## Materiały źródłowe

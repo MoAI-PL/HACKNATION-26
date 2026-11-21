@@ -11,23 +11,23 @@ Kolejność: najpierw ★, potem pozostałe P0, potem P1 (w kolejności z tabeli
 | ★Z01 | Porządek w repozytorium, `materialy/`, tablica zadań | — | gotowe | suzanne0401 | `z01-porzadek-repo` |
 | ★Z02 | Szkielet aplikacji (Next.js 15, TS, Tailwind, shadcn/ui, Prisma, docker compose, Vitest) | Z01 | gotowe | suzanne0401 | `z02-szkielet` |
 | ★Z03 | Kontrakt domeny (`types.ts`, `slownik.ts`, `schema.prisma`, `przepisy.json`) | Z02 | gotowe | Kamson2077 | `z03-kontrakt-domeny` |
-| ★Z04 | Logowanie i role, konta demo na ekranie logowania | Z03 | w toku | bartektymochowicz-collab | `bartek/z04-logowanie-role` |
+| ★Z04 | Logowanie i role, konta demo na ekranie logowania | Z03 | gotowe | suzanne0401 | `z04-logowanie` |
 
 ## B. Dane i import
 
 | ID | Zadanie | Zależy od | Status | Kto | Gałąź |
 |---|---|---|---|---|---|
-| ★Z05 | Import modelu kompetencji (xlsx → JSON) | Z02 | w toku | Nadia | |
+| ★Z05 | Import modelu kompetencji (xlsx → JSON) | Z02 | gotowe | Nadia | `z05-import-modelu` |
 | ★Z06 | Import OSP (docx) i automatyczny wybór arkusza B/C | Z03 | wolne | | |
-| ★Z26 | Dane demo (seed) wokół persony przełożonej | Z03 | wolne | | |
+| ★Z26 | Dane demo (seed) wokół persony przełożonej | Z03 | gotowe | suzanne0401 | `z26-dane-demo` |
 
 ## C. Silnik reguł
 
 | ID | Zadanie | Zależy od | Status | Kto | Gałąź |
 |---|---|---|---|---|---|
-| ★Z07 | Silnik punktacji (§11, §10), walidacja kryteriów dodatkowych | Z03 | w toku | geoglof | `z07-silnik-punktacji` |
-| ★Z08 | Silnik terminów (KC 112/115, święta, nieobecności) | Z03 | wolne | | |
-| ★Z09 | Sugerowany poziom kompetencji i dane do „Dlaczego ten poziom?” | Z05, Z07 | wolne | | |
+| ★Z07 | Silnik punktacji (§11, §10), walidacja kryteriów dodatkowych | Z03 | gotowe | geoglof | `z07-silnik-punktacji` |
+| ★Z08 | Silnik terminów (KC 112/115, święta, nieobecności) | Z03 | gotowe | geoglof | `z08-silnik-terminow` |
+| ★Z09 | Sugerowany poziom kompetencji i dane do „Dlaczego ten poziom?” | Z05, Z07 | gotowe | Nadia | `z09-sugerowany-poziom` |
 
 ## D. Interfejs i ścieżki
 
@@ -49,9 +49,9 @@ Kolejność: najpierw ★, potem pozostałe P0, potem P1 (w kolejności z tabeli
 
 | ID | Zadanie | Zależy od | Status | Kto | Gałąź |
 |---|---|---|---|---|---|
-| ★Z20 | Warstwa LLM (`LLMProvider`, konfiguracja w `.env`) | Z02 | wolne | | |
+| ★Z20 | Warstwa LLM (`LLMProvider`, konfiguracja w `.env`) | Z02 | gotowe | suzanne0401 | `z20-z22-asystent` |
 | ★Z21 | Baza wiedzy (przepisy, poradniki, ustawa z ISAP, BM25) | Z02 | gotowe | suzanne0401 | `z21-baza-wiedzy` |
-| ★Z22 | Asystent formalny ze źródłami i odmową | Z20, Z21 | wolne | | |
+| ★Z22 | Asystent formalny ze źródłami i odmową | Z20, Z21 | gotowe | suzanne0401 | `z20-z22-asystent` |
 | ★Z23 | Analiza OSP: propozycja kryteriów dodatkowych z cytatem | Z06, Z20 | wolne | | |
 | Z24 | Asystent rozmowy | Z20, Z14 | wolne | | |
 | Z25 | Zestaw testowy asystenta (`npm run eval`) | Z22 | wolne | | |
@@ -61,8 +61,8 @@ Kolejność: najpierw ★, potem pozostałe P0, potem P1 (w kolejności z tabeli
 | ID | Zadanie | Zależy od | Status | Kto | Gałąź |
 |---|---|---|---|---|---|
 | ★Z27 | Pytania do mentorów (`docs/ZALOZENIA.md`) | — | wolne | | |
-| ★Z28 | Szkic w HackTribe – **wysłać przed 19:30** | Z01 | wolne | | |
-| ★Z29 | Publiczne demo | Z04, Z26 | wolne | | |
+| ★Z28 | Szkic w HackTribe – **wysłać przed 19:30** | Z01 | w toku | geoglof | — |
+| ★Z29 | Publiczne demo | Z04, Z26 | w toku | suzanne0401 | |
 | ★Z44 | Reset danych demo i działanie bez AI | Z20, Z26 | wolne | | |
 | Z30 | Testy ręczne, Playwright, dostępność, pomiar czasu oceny | Z15, Z16 | wolne | | |
 | Z31 | Dokumentacja (`README`, `docs/`) | całość | wolne | | |

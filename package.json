@@ -16,15 +16,20 @@
     "db:up": "docker compose up -d",
     "db:migrate": "prisma migrate dev",
     "db:generate": "prisma generate",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "model": "tsx scripts/import-modelu.ts"
   },
   "dependencies": {
     "@prisma/client": "^6.19.3",
+    "bcryptjs": "^3.0.3",
     "class-variance-authority": "^0.7.1",
     "cn": "^0.5.2",
+    "fast-xml-parser": "^5.12.1",
+    "fflate": "^0.8.3",
     "lucide-react": "^1.77.0",
     "minisearch": "^7.2.0",
     "next": "15.5.29",
+    "next-auth": "^5.0.0-beta.32",
     "radix-ui": "^1.8.1",
     "react": "19.1.0",
     "react-dom": "19.1.0",

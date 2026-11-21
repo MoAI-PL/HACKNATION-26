@@ -346,7 +346,8 @@ function competencyModelFragments(): KnowledgeFragment[] {
       documentShort: "model kompetencji",
       unit: `${c.name} – ${ind.name}`,
       sourceFile: "materialy/Model_kompetencji.xlsx",
-      text: `${c.name}. Wskaźnik: ${ind.name}.\n${([1, 2, 3, 4, 5] as const).map((lvl) => `${labels[lvl - 1]}: ${ind.levels[lvl]}`).join("\n")}`,
+      // Nazwy wskaźników w modelu kończą się kropką (jak w załączniku nr 1) – bez dopisywania drugiej.
+      text: `${c.name}. Wskaźnik: ${ind.name.replace(/\.$/, "")}.\n${([1, 2, 3, 4, 5] as const).map((lvl) => `${labels[lvl - 1]}: ${ind.levels[lvl]}`).join("\n")}`,
     })),
   );
 }

@@ -31,6 +31,7 @@ export function RozmowaAI({ employeeId, kind }: { employeeId: string; kind: stri
   const [state, setState] = React.useState<ProposalState | null>(null);
   const [proposal, setProposal] = React.useState("");
   const [reason, setReason] = React.useState<string | null>(null);
+  const [checks, setChecks] = React.useState<string[]>([]);
   const [notes, setNotes] = React.useState("");
   const cancelled = React.useRef(false);
 
@@ -44,11 +45,13 @@ export function RozmowaAI({ employeeId, kind }: { employeeId: string; kind: stri
   const ask = async () => {
     cancelled.current = false;
     setReason(null);
+    setChecks([]);
     setState("ladowanie");
     const r = await polishConversationAction(employeeId, kind);
     if (cancelled.current) return;
     if (r.ok && r.text) {
       setProposal(r.text);
+      setChecks([r.notice, r.privacy].filter((x): x is string => Boolean(x)));
       setState("gotowa");
     } else {
       setReason(r.reason ?? null);
@@ -85,6 +88,13 @@ export function RozmowaAI({ employeeId, kind }: { employeeId: string; kind: stri
             onRetry={ask}
           />
           {state === "niedostepna" && reason && <p className="mt-2 text-sm text-muted-foreground">{reason}</p>}
+          {state === "gotowa" && checks.length > 0 && (
+            <ul className="mt-2 flex flex-col gap-1 text-sm text-muted-foreground">
+              {checks.map((c) => (
+                <li key={c}>{c}</li>
+              ))}
+            </ul>
+          )}
         </div>
       )}
       <div className="print:hidden">

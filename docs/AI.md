@@ -13,7 +13,7 @@ AI w Kompasie Kompetencji **wspiera** przełożonego – wyszukuje przepisy, red
 | Asystent formalny (pytania o procedurę) | tak | odpowiedź wyłącznie z fragmentów przepisów i poradników, zawsze ze źródłem |
 | Punktacja, wynik, terminy, wybór arkusza | **nie** | silnik reguł z testami |
 | Propozycja kryteriów dodatkowych z OSP (Z23) | tak | do 3 kryteriów z uzasadnieniem i cytatem zadania; kryteria i cytaty sprawdza kod, bez modelu działa propozycja ze słów kluczowych |
-| Asystent rozmowy (Z24) | tak, opcjonalnie | AI redaguje tylko otwarcie i informację zwrotną z gotowej ściągi; imię i nazwisko osoby ocenianej (także odmienione) zamieniane na „osoba oceniana” – zdrobnień i nazwisk innych osób z notatek jeszcze nie (pełna pseudonimizacja: Z34); ściąga powstaje bez AI z przepisów, ocen i notatek |
+| Asystent rozmowy (Z24) | tak, opcjonalnie | AI przeredagowuje tylko otwarcie i informację zwrotną z gotowej ściągi na zwrot bezpośredni („Zestawiła Pani…”); pseudonimizacja Z34 (cały zespół przełożonego, komórki, identyfikatory), bez poziomów wskaźników; kontrola odpowiedzi: każdy punkt wskazuje przykład z notatek, nowe liczby lub nowa treść → brzmienie z notatek, zdania z oceną usuwane; ściąga powstaje bez AI z przepisów, ocen i notatek |
 | Sugerowany poziom kompetencji | **nie** | średnia z wybranych opisów zachowań, wzór widoczny w panelu „Dlaczego ten poziom?” |
 
 ## Model

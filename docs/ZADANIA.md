@@ -34,7 +34,7 @@ Kolejność: najpierw ★, potem pozostałe P0, potem P1 (w kolejności z tabeli
 | ID | Zadanie | Zależy od | Status | Kto | Gałąź |
 |---|---|---|---|---|---|
 | ★Z10 | Układ i system wizualny, komponenty bazowe, `<PropozycjaAI>` | Z02 | gotowe | Kamson2077 | `z10-uklad-ui` |
-| ★Z11 | Pulpit przełożonego z kartą „Do zrobienia” | Z04, Z08, Z10 | w toku | Kamson2077 | |
+| ★Z11 | Pulpit przełożonego z kartą „Do zrobienia” | Z04, Z08, Z10 | gotowe | Kamson2077 | `z11-pulpit` |
 | ★Z12 | Kreator oceny okresowej, część 1 (OSP, arkusz, kryteria, rozmowa rozpoczynająca) | Z06, Z07, Z08, Z10 | gotowe | geoglof | `z12-kreator-okresowej` |
 | ★Z13 | Dziennik obserwacji (SDR) | Z03, Z10 | gotowe | Nadia | `z13-dziennik-obserwacji` |
 | ★Z41 | Szybka notatka w 10 sekund | Z13, Z20 | wolne | | |

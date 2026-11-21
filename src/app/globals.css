@@ -45,6 +45,7 @@
   --color-success-soft: var(--success-soft);
   --color-warning: var(--warning);
   --color-warning-soft: var(--warning-soft);
+  --color-warning-strong: var(--warning-strong);
   --color-danger: var(--danger);
   --color-danger-soft: var(--danger-soft);
   --color-info: var(--info);
@@ -89,6 +90,8 @@
   --success-soft: #e7f4ea;
   --warning: #8a4b00;
   --warning-soft: #fff3dc;
+  /* Pomarańcz do grafiki (pasek pilności) – 5,2:1 na bieli; do tekstu używamy --warning. */
+  --warning-strong: #c2410c;
   --danger: #a61b1b;
   --danger-soft: #fdeceb;
   --info: #1f4e8c;

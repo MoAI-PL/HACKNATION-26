@@ -34,23 +34,43 @@ const TONE_ICONS: Record<Tone, LucideIcon> = {
   ai: Sparkles,
 };
 
+export type BadgeSize = "sm" | "md";
+
+const SIZE_CLASSES: Record<BadgeSize, { box: string; icon: string }> = {
+  sm: { box: "gap-1 px-2.5 py-0.5 text-xs font-medium", icon: "size-3.5" },
+  // Większa odznaka do miejsc, gdzie pilność jest najważniejszą informacją (karta „Do zrobienia”).
+  md: { box: "gap-1.5 px-3 py-1 text-sm font-semibold", icon: "size-4" },
+};
+
+/** Kolor lewego paska wiersza według tonu (np. wiersz w „Do zrobienia”) – zawsze razem z odznaką z tekstem. */
+export const TONE_STRIPE: Record<Tone, string> = {
+  neutral: "border-l-border",
+  info: "border-l-info",
+  success: "border-l-success",
+  warning: "border-l-warning-strong",
+  danger: "border-l-danger",
+  ai: "border-l-ai",
+};
+
 export interface StatusBadgeProps extends React.ComponentProps<"span"> {
   tone?: Tone;
   icon?: LucideIcon | null;
+  size?: BadgeSize;
 }
 
-export function StatusBadge({ tone = "neutral", icon, className, children, ...props }: StatusBadgeProps) {
+export function StatusBadge({ tone = "neutral", icon, size = "sm", className, children, ...props }: StatusBadgeProps) {
   const Icon = icon === null ? null : (icon ?? TONE_ICONS[tone]);
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-xs font-medium whitespace-nowrap",
+        "inline-flex items-center rounded-full border whitespace-nowrap",
+        SIZE_CLASSES[size].box,
         TONE_CLASSES[tone],
         className,
       )}
       {...props}
     >
-      {Icon && <Icon className="size-3.5 shrink-0" aria-hidden />}
+      {Icon && <Icon className={cn("shrink-0", SIZE_CLASSES[size].icon)} aria-hidden />}
       {children}
     </span>
   );
@@ -61,17 +81,19 @@ export function DeadlineBadge({
   daysLeft,
   urgency,
   label,
+  size,
   className,
 }: {
   daysLeft: number;
   urgency: DeadlineUrgency;
   /** Własny tekst zamiast domyślnego, np. „do pt. 28.11”. */
   label?: string;
+  size?: BadgeSize;
   className?: string;
 }) {
   const tone = URGENCY_TONE[urgency];
   return (
-    <StatusBadge tone={tone} icon={urgency === "PO_TERMINIE" ? XCircle : undefined} className={className}>
+    <StatusBadge tone={tone} size={size} icon={urgency === "PO_TERMINIE" ? XCircle : undefined} className={className}>
       {label ?? deadlineText(daysLeft)}
     </StatusBadge>
   );

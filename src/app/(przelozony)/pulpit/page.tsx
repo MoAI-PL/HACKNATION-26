@@ -3,7 +3,8 @@ import Link from "next/link";
 import { CalendarCheck2, NotebookPen, Users } from "lucide-react";
 import { PageHeader } from "@/components/layout/AppShell";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { DeadlineBadge, EvaluationStatusBadge, StatusBadge } from "@/components/ui/status-badge";
+import { DeadlineBadge, EvaluationStatusBadge, StatusBadge, TONE_STRIPE } from "@/components/ui/status-badge";
+import { URGENCY_TONE } from "@/lib/ui/status";
 import { EmptyState } from "@/components/ui/empty-state";
 import { InfoTip } from "@/components/ui/info-tip";
 import { Button } from "@/components/ui/button";
@@ -57,16 +58,15 @@ export default async function PulpitPage() {
                 description="Gdy zbliży się termin rozmowy lub oceny któregoś z podwładnych, zobaczysz go tutaj."
               />
             ) : (
-              <ol className="flex flex-col divide-y">
+              <ol className="flex flex-col gap-3">
                 {todo.map((item) => (
-                  <li key={`${item.employeeId}-${item.deadline.kind}`} className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 py-3">
-                    <div className="flex min-w-0 flex-col gap-1">
+                  <li
+                    key={`${item.employeeId}-${item.deadline.kind}`}
+                    className={`grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 rounded-lg border border-l-[6px] bg-card py-3 pr-3 pl-4 ${TONE_STRIPE[URGENCY_TONE[item.urgency]]}`}
+                  >
+                    <div className="flex min-w-0 flex-col items-start gap-2">
+                      <DeadlineBadge size="md" daysLeft={daysBetween(today, item.deadline.date)} urgency={item.urgency} />
                       <span className="font-medium">{item.title}</span>
-                      <DeadlineBadge
-                        className="self-start"
-                        daysLeft={daysBetween(today, item.deadline.date)}
-                        urgency={item.urgency}
-                      />
                     </div>
                     <Button variant="outline" asChild>
                       <Link href={item.href} className="no-underline">

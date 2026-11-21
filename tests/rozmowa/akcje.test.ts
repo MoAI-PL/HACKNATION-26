@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const { authMock, prismaMock } = vi.hoisted(() => ({
   authMock: vi.fn(),
-  prismaMock: { employee: { findFirst: vi.fn() }, auditLog: { create: vi.fn() } },
+  prismaMock: { employee: { findFirst: vi.fn(), findMany: vi.fn() }, auditLog: { create: vi.fn() } },
 }));
 vi.mock("@/auth", () => ({ auth: authMock }));
 vi.mock("@/lib/db", () => ({ prisma: prismaMock }));

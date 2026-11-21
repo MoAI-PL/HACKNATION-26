@@ -93,7 +93,7 @@ Pełna specyfikacja: [`openapi.yaml`](openapi.yaml). Każdy endpoint (poza statu
 | `POST /api/asystent/formalny` | przełożony, HR, kierujący | pytanie → odpowiedź ze źródłami albo odmowa |
 | `POST /api/asystent/kryteria` | przełożony, HR | propozycja kryteriów dodatkowych z OSP (plik albo pracownik z bazy) |
 
-Ekrany zapisują dane akcjami serwerowymi Next.js (z walidacją zod i autoryzacją w każdej akcji). Integracja z EZD i systemem kadrowym (np. QNT): eksport oceny w JSON działa (`/api/v1/oceny/{id}`); import pracowników i OSP z systemu kadrowego oraz arkusz w PDF przez API są opisane w specyfikacji jako planowane.
+Ekrany zapisują dane akcjami serwerowymi Next.js (z walidacją zod i autoryzacją w każdej akcji). Integracja z EZD i systemem kadrowym (np. QNT): eksport oceny w JSON działa (`/api/v1/oceny/{id}`); arkusz B / C w PDF działa (`/api/v1/oceny/{id}/pdf`, Z16); import pracowników i OSP z systemu kadrowego jest opisany w specyfikacji jako planowany.
 
 ## Wdrożenie i skalowanie
 
@@ -196,7 +196,7 @@ Przełożony widzi wyłącznie swoich podwładnych: zapytania filtrujemy po `sup
 
 - Ekrany przełożonego: `/ocena/rozmowa` (podwładni z rozmową, która jest następna według etapu oceny, i terminem z silnika Z08) oraz `/ocena/rozmowa/[pracownik]?typ=WSTEPNA|ROZPOCZYNAJACA|OCENIAJACA` – ściąga do przeczytania i wydruku (nagłówek aplikacji ukryty przy druku).
 - Logika bez bazy i bez AI: `src/lib/rozmowa/przygotowanie.ts` – zakres rozmowy z przepisu (§ 3 rozp. o pierwszej ocenie, § 5 ust. 1 i § 10 rozp. o ocenach okresowych, treść z bazy wiedzy w „Dlaczego?”), agenda, mocne strony i obszary do rozwoju (ocena wskaźnika z Z14, a gdy jej brak – średnia z poziomów zachowań w notatkach Z13), pytania odwołujące się do konkretnych notatek i celu, informacja zwrotna zachowanie–skutek–oczekiwanie (oczekiwanie = opis zachowania z modelu), działania rozwojowe (`rozwoj.ts`, kierunki rozwoju zawsze – § 10 pkt 3), trudne sytuacje (sprzeciw – art. 83, po ocenie negatywnej – art. 81 ust. 9).
-- AI (`src/lib/rozmowa/ai.ts`) tylko redaguje otwarcie i informację zwrotną w `<PropozycjaAI>`; do modelu nie trafia imię i nazwisko (zamiana na „osoba oceniana”), „Wstaw” dopisuje tekst do notatek na ekranie, „Wstaw” i „Odrzuć” trafiają do `AuditLog` (`funkcja: ASYSTENT_ROZMOWY`). Bez modelu ściąga jest kompletna.
+- AI (`src/lib/rozmowa/ai.ts`) tylko przeredagowuje otwarcie i informację zwrotną na zwrot bezpośredni („Pani/Pan”) w `<PropozycjaAI>`; dane przechodzą przez `pseudonymize` (Z34), a odpowiedź przez kontrolę `groundReply` (punkt = numer przykładu z notatek; liczby spoza źródła albo wyraźnie nowa treść → brzmienie z notatek; punkty spoza notatek odrzucane; zdania z oceną w otwarciu i zamknięciu usuwane – informacja o tym pod propozycją), „Wstaw” dopisuje tekst do notatek na ekranie, „Wstaw” i „Odrzuć” trafiają do `AuditLog` (`funkcja: ASYSTENT_ROZMOWY`). Bez modelu ściąga jest kompletna.
 - Szkice uzasadnienia i wniosków do IPRZ wstawia się do arkusza w podsumowaniu oceny (Z15); asystent rozmowy podsuwa do nich działania rozwojowe.
 - Reguły wyboru: lista i ściąga biorą tę samą ocenę (`currentEvaluation`: najnowsza w toku, bez zakończonych i czekających na zapoznanie). Pierwsza ocena ma wyłącznie rozmowę wstępną (`allowedKinds`) – inny rodzaj w adresie jest ignorowany. Notatki do rozmowy oceniającej tylko z okresu oceny (od `periodStart`). Pytanie i informacja zwrotna przy obszarze do rozwoju odwołują się do notatki z najsłabszym zachowaniem, przy mocnej stronie – z najmocniejszym.
 - Notatki przełożonego: szkic w `localStorage` tej przeglądarki (osobno dla pracownika i rodzaju rozmowy), na wydruku pełna treść; nic nie trafia do bazy. Limit redakcji AI: 10 na minutę na przełożonego; decyzje „Wstaw / Odrzuć” walidowane zod na serwerze (treść do 10 000 znaków).
@@ -309,6 +309,14 @@ Przełożony widzi wyłącznie swoich podwładnych: zapytania filtrujemy po `sup
 ## Spójność zapisu
 
 - Zmiany etapu oceny (zatwierdzenie części I, sporządzenie, zapoznanie się) zapisujemy `updateMany` z warunkiem na bieżący etap w transakcji. Drugi, równoczesny zapis nie zmienia już niczego i zwraca komunikat „odśwież stronę” – bez zdublowanych rozmów, ocen i wpisów w dzienniku.
+
+## PDF arkuszy B i C (Z16)
+
+- `@react-pdf/renderer` (MIT) z czcionką Noto Sans (OFL-1.1) – pliki TTF w `src/lib/pdf/czcionki/`, dołączane do funkcji serwerowej przez `outputFileTracingIncludes` w `next.config.ts` (Vercel). Bez zewnętrznych narzędzi (LaTeX, przeglądarka) – działa w zwykłej funkcji Node.
+- `src/lib/pdf/arkusz.ts` – czysta logika: dane z oceny (części I–III), warunki wydania (`sheetProblem`), zakres dostępu (`sheetScope`, jak w eksporcie Z38), linki do pobrania. `teksty-arkusza.ts` – stałe teksty i 18 przypisów ze wzorów. `ArkuszOkresowyPdf.tsx` – układ dokumentu.
+- `GET /api/v1/oceny/{id}/pdf?wariant=pelny|czesc-i`: pełny arkusz po sporządzeniu oceny (§ 12 ust. 2), część I po ustaleniu kryteriów (§ 6 ust. 3). Przyciski: część I oceny (Z12), podsumowanie (Z15), „Moje oceny” (Z46).
+- Dane pochodzą z oceny zapisanej przez Z12, Z14 i Z15. Pole bez danych (np. komórka i stanowisko oceniającego, gdy konto nie ma kartoteki pracownika; data przyznania stopnia) drukujemy jako wykropkowaną linię do wpisania ręcznie – jak we wzorze papierowym. Data rozmowy oceniającej: ostatnia rozmowa typu `OCENIAJACA`. Oceny sporządzone przed systemem (np. poprzednie w danych demo) nie mają `criteriaSetAt` – datą „od” jest wtedy początek okresu (przypis 6).
+- Testy: `tests/pdf/arkusz.test.ts` – mapowanie danych, warunki wydania, dostęp i odczyt tekstu z gotowego PDF (polskie znaki, „X” w polach, pouczenie, część III).
 
 ## Struktura katalogów
 

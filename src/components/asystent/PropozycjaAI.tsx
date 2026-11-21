@@ -157,7 +157,7 @@ export function PropozycjaAI({
                     id={textId}
                     value={text}
                     onChange={(e) => setText(e.target.value)}
-                    className="min-h-24 w-full rounded-md border border-input bg-card px-3 py-2 text-base leading-relaxed"
+                    className="min-h-24 max-h-[28rem] w-full rounded-md border border-input bg-card px-3 py-2 text-base leading-relaxed [field-sizing:content]"
                   />
                 </>
               ) : (

@@ -128,13 +128,25 @@ paths:
 
   /oceny/{id}/pdf:
     get:
-      summary: Arkusz oceny w PDF (do EZD)
-      x-status: planowane
-      description: Docelowo ten sam PDF co w aplikacji (Z16), do dołączenia do sprawy w EZD.
+      summary: Arkusz oceny okresowej B / C w PDF (Z16)
+      description: |
+        Ten sam PDF co w aplikacji (przyciski „Pobierz arkusz” i „Pobierz część I”), np. do dołączenia do sprawy w EZD.
+        Układ wzorów z rozporządzenia (załączniki nr 3 i 4): część I, część II z pouczeniem (art. 83), część III tylko przy wniosku o stopień.
+        Dostęp jak w eksporcie oceny; oceniany – pełny arkusz po sporządzeniu oceny (§ 12 ust. 2), część I po ustaleniu kryteriów (§ 6 ust. 3).
       parameters:
         - { name: id, in: path, required: true, schema: { type: string } }
+        - name: wariant
+          in: query
+          required: false
+          schema: { type: string, enum: [pelny, czesc-i], default: pelny }
+          description: pelny – części I–III po sporządzeniu oceny; czesc-i – kopia części I po ustaleniu kryteriów.
       responses:
-        "501": { description: Jeszcze niedostępne }
+        "200": { description: Plik PDF, content: { application/pdf: { schema: { type: string, format: binary } } } }
+        "400": { description: Niepoprawny wariant, content: { application/json: { schema: { $ref: "#/components/schemas/Blad" } } } }
+        "401": { $ref: "#/components/responses/BrakSesji" }
+        "403": { $ref: "#/components/responses/BrakDostepu" }
+        "404": { description: Nie znaleziono oceny w zakresie użytkownika, content: { application/json: { schema: { $ref: "#/components/schemas/Blad" } } } }
+        "409": { description: "Wydruk jeszcze niedostępny (np. kryteria nieustalone, ocena niesporządzona) albo ocena nie dotyczy arkusza B/C", content: { application/json: { schema: { $ref: "#/components/schemas/Blad" } } } }
 
   /asystent/formalny:
     servers: [{ url: /api }]

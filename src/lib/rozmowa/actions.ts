@@ -30,7 +30,11 @@ export async function polishConversationAction(employeeId: string, kind: string)
   if (!data) return { ok: false, reason: "Nie znaleziono pracownika wśród Twoich podwładnych." };
   if (!data.allowed.includes(kind)) return { ok: false, reason: "Ten rodzaj rozmowy nie dotyczy oceny tego pracownika." };
   const prep = buildConversationPrep({ ...data.input, kind });
-  return polishConversation(prep, data.input.employeeName);
+  // Cały zespół przełożonego – notatki mogą wymieniać innych podwładnych; pseudonimizacja ukrywa wszystkich.
+  const team = await prisma.employee.findMany({ where: { supervisorId: user.id }, select: { id: true, firstName: true, lastName: true } });
+  const employee = team.find((e) => e.id === employeeId);
+  if (!employee) return { ok: false, reason: "Nie znaleziono pracownika wśród Twoich podwładnych." };
+  return polishConversation(prep, employee, team);
 }
 
 // Dane z przeglądarki – walidacja na serwerze (typy TypeScript nie chronią przed spreparowanym zapytaniem).

@@ -1,0 +1,321 @@
+openapi: 3.1.0
+info:
+  title: Kompas Kompetencji – REST API
+  version: "1"
+  description: |
+    API pod integrację z EZD i systemem kadrowym (Z38). Wszystkie odpowiedzi w JSON.
+    Konwencja: klucze po angielsku, wartości domenowe po polsku (kody jak w `src/lib/domain/types.ts`), daty `RRRR-MM-DD`.
+    Autoryzacja: sesja Auth.js (ciasteczko po zalogowaniu). Bez sesji – 401, rola bez dostępu – 403,
+    zasób spoza zakresu użytkownika – 404 (bez ujawniania, że istnieje).
+    Zakres danych: HR – wszystko; przełożony – swoi podwładni; oceniany – własne oceny po sporządzeniu.
+    Endpointy oznaczone `x-status: planowane` są opisem docelowej integracji i nie są jeszcze zaimplementowane.
+servers:
+  - url: /api/v1
+security:
+  - sesja: []
+
+paths:
+  /status:
+    get:
+      summary: Kontrola działania aplikacji
+      security: []
+      responses:
+        "200":
+          description: Aplikacja działa
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: { type: string, example: ok }
+                  aplikacja: { type: string }
+
+  /me:
+    get:
+      summary: Zalogowany użytkownik
+      responses:
+        "200":
+          description: Dane użytkownika z sesji
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id: { type: string }
+                  name: { type: string }
+                  email: { type: string }
+                  role: { $ref: "#/components/schemas/Role" }
+        "401": { $ref: "#/components/responses/BrakSesji" }
+
+  /pracownicy:
+    get:
+      summary: Lista pracowników
+      description: HR – wszyscy, przełożony – bezpośredni podwładni.
+      responses:
+        "200":
+          description: Pracownicy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id: { type: string }
+                        firstName: { type: string }
+                        lastName: { type: string }
+                        orgUnit: { type: [object, "null"], properties: { name: { type: string } } }
+                        position: { type: [object, "null"], properties: { title: { type: string } } }
+        "401": { $ref: "#/components/responses/BrakSesji" }
+        "403": { $ref: "#/components/responses/BrakDostepu" }
+
+  /pracownicy/import:
+    post:
+      summary: Import pracowników z systemu kadrowego
+      x-status: planowane
+      description: |
+        Docelowo: system kadrowy (np. QNT) przekazuje dane zatrudnienia (data nawiązania stosunku pracy, zatrudnienie
+        na czas nieokreślony, koniec umowy, stanowisko z OSP, nieobecności), a Kompas wylicza z nich terminy (Z08).
+        Dziś pracownika dodaje się z pulpitu przełożonego albo z danych demo.
+      responses:
+        "501": { description: Jeszcze niedostępne }
+
+  /oceny:
+    get:
+      summary: Lista ocen
+      parameters:
+        - { name: status, in: query, schema: { $ref: "#/components/schemas/EvaluationStatus" } }
+        - { name: typ, in: query, schema: { $ref: "#/components/schemas/EvaluationType" } }
+        - { name: pracownikId, in: query, schema: { type: string } }
+      responses:
+        "200":
+          description: Oceny w zakresie użytkownika, od najnowszych
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  apiVersion: { type: string, example: "1" }
+                  data:
+                    type: array
+                    items: { $ref: "#/components/schemas/EvaluationListItem" }
+        "400": { description: Niepoprawny filtr, content: { application/json: { schema: { $ref: "#/components/schemas/Blad" } } } }
+        "401": { $ref: "#/components/responses/BrakSesji" }
+        "403": { $ref: "#/components/responses/BrakDostepu" }
+
+  /oceny/{id}:
+    get:
+      summary: Eksport oceny (JSON)
+      description: |
+        Pełny arkusz: część I (arkusz, kryteria z powodem wyboru, termin), część II (oceny cząstkowe, oceny wskaźników,
+        średnia, poziom ogólny, wynik, uzasadnienie, wnioski do IPRZ, poprzednia ocena), część III (wniosek o stopień),
+        rozmowy oraz daty sporządzenia, zapoznania i termin sprzeciwu (art. 83 ustawy).
+        Bez danych wewnętrznych (szkic kreatora, dziennik decyzji).
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: Ocena
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/EvaluationExport" }
+        "401": { $ref: "#/components/responses/BrakSesji" }
+        "403": { $ref: "#/components/responses/BrakDostepu" }
+        "404": { description: Nie znaleziono oceny w zakresie użytkownika, content: { application/json: { schema: { $ref: "#/components/schemas/Blad" } } } }
+
+  /oceny/{id}/pdf:
+    get:
+      summary: Arkusz oceny w PDF (do EZD)
+      x-status: planowane
+      description: Docelowo ten sam PDF co w aplikacji (Z16), do dołączenia do sprawy w EZD.
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        "501": { description: Jeszcze niedostępne }
+
+  /asystent/formalny:
+    servers: [{ url: /api }]
+    post:
+      summary: Pytanie do asystenta formalnego (Z22)
+      description: Odpowiedź wyłącznie na podstawie przepisów i poradników KPRM, ze źródłami; poza zakresem – odmowa.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [pytanie]
+              properties:
+                pytanie: { type: string, maxLength: 500 }
+                krok: { type: string }
+      responses:
+        "200": { description: Odpowiedź albo odmowa ze źródłami }
+        "429": { description: Zbyt wiele pytań w krótkim czasie }
+
+  /asystent/kryteria:
+    servers: [{ url: /api }]
+    post:
+      summary: Propozycja kryteriów dodatkowych z OSP (Z23)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [pracownikId]
+              properties:
+                pracownikId: { type: string }
+                arkusz: { type: string, enum: [B, C] }
+          multipart/form-data:
+            schema:
+              type: object
+              required: [plik]
+              properties:
+                plik: { type: string, format: binary, description: OSP w formacie .docx }
+                arkusz: { type: string, enum: [B, C] }
+      responses:
+        "200": { description: Do 3 kryteriów z uzasadnieniem i cytatem zadania z OSP }
+
+components:
+  securitySchemes:
+    sesja:
+      type: apiKey
+      in: cookie
+      name: authjs.session-token
+
+  responses:
+    BrakSesji:
+      description: Brak sesji
+      content: { application/json: { schema: { $ref: "#/components/schemas/Blad" } } }
+    BrakDostepu:
+      description: Rola bez dostępu
+      content: { application/json: { schema: { $ref: "#/components/schemas/Blad" } } }
+
+  schemas:
+    Blad:
+      type: object
+      properties:
+        error: { type: string, description: Komunikat po polsku }
+    Role:
+      type: string
+      enum: [PRZELOZONY, HR, OCENIANY, KIERUJACY_KOMORKA]
+    EvaluationType:
+      type: string
+      enum: [PIERWSZA, OKRESOWA]
+    EvaluationStatus:
+      type: string
+      enum: [DO_ROZPOCZECIA, W_OKRESIE_OCENY, W_OCENIE, CZEKA_NA_ZAPOZNANIE, ZAKONCZONA]
+    Level:
+      type: string
+      enum: [ZNACZNIE_PONIZEJ, PONIZEJ, NA_POZIOMIE, POWYZEJ, ZNACZNIE_POWYZEJ]
+    Result:
+      type: string
+      enum: [POZYTYWNA, NEGATYWNA]
+    IsoDate:
+      type: string
+      format: date
+      example: "2026-11-30"
+
+    EvaluationListItem:
+      type: object
+      properties:
+        id: { type: string }
+        type: { $ref: "#/components/schemas/EvaluationType" }
+        sheet: { type: string, enum: [A, B, C, PIERWSZA] }
+        status: { $ref: "#/components/schemas/EvaluationStatus" }
+        dueDate: { oneOf: [{ $ref: "#/components/schemas/IsoDate" }, { type: "null" }] }
+        evaluatedAt: { oneOf: [{ $ref: "#/components/schemas/IsoDate" }, { type: "null" }] }
+        result: { oneOf: [{ $ref: "#/components/schemas/Result" }, { type: "null" }] }
+        employee:
+          type: object
+          properties:
+            id: { type: string }
+            firstName: { type: string }
+            lastName: { type: string }
+        links:
+          type: object
+          properties:
+            self: { type: string, example: /api/v1/oceny/abc123 }
+
+    EvaluationExport:
+      type: object
+      properties:
+        apiVersion: { type: string, example: "1" }
+        exportedAt: { type: string, format: date-time }
+        legalBasis: { type: string, description: Rozporządzenie, według którego sporządzono ocenę }
+        evaluation:
+          type: object
+          properties:
+            id: { type: string }
+            type: { $ref: "#/components/schemas/EvaluationType" }
+            sheet: { type: string }
+            status: { $ref: "#/components/schemas/EvaluationStatus" }
+            isReevaluation: { type: boolean, description: Ponowna ocena po ocenie negatywnej (art. 81 ust. 9 ustawy) }
+            periodStart: { type: [string, "null"], format: date }
+            periodEnd: { type: [string, "null"], format: date }
+            criteriaSetAt: { type: [string, "null"], format: date }
+            dueDate: { type: [string, "null"], format: date }
+            evaluatedAt: { type: [string, "null"], format: date }
+            acknowledgedAt: { type: [string, "null"], format: date }
+            objectionDeadline: { type: [string, "null"], format: date, description: Termin sprzeciwu (art. 83 ustawy) }
+            result: { oneOf: [{ $ref: "#/components/schemas/Result" }, { type: "null" }] }
+            overallLevel: { oneOf: [{ $ref: "#/components/schemas/Level" }, { type: "null" }] }
+            average: { type: [number, "null"] }
+            justification: { type: [string, "null"] }
+            developmentPlan: { type: [string, "null"], description: Wnioski do IPRZ }
+            previous:
+              type: [object, "null"]
+              properties:
+                result: { $ref: "#/components/schemas/Result" }
+                level: { oneOf: [{ $ref: "#/components/schemas/Level" }, { type: "null" }] }
+                date: { $ref: "#/components/schemas/IsoDate" }
+            promotion:
+              type: [object, "null"]
+              description: Część III – wniosek o kolejny stopień służbowy
+              properties:
+                requestedGrade: { type: [integer, "null"] }
+                justification: { type: [string, "null"] }
+        employee:
+          type: object
+          properties:
+            id: { type: string }
+            firstName: { type: string }
+            lastName: { type: string }
+            position: { type: [string, "null"] }
+            orgUnit: { type: [string, "null"] }
+            isCivilServant: { type: boolean }
+        evaluator:
+          type: object
+          properties:
+            id: { type: string }
+            name: { type: string }
+        criteria:
+          type: array
+          items:
+            type: object
+            properties:
+              competency: { type: string, example: KOMUNIKACJA }
+              name: { type: string, example: Komunikacja }
+              kind: { type: string, enum: [OBOWIAZKOWE, DODATKOWE] }
+              selectionReason: { type: [string, "null"] }
+              score: { type: [integer, "null"], description: Ocena cząstkowa 1/3/5/7/9 albo 3/5/7 }
+              suggestedScore: { type: [integer, "null"] }
+              overrideReason: { type: [string, "null"] }
+              indicators:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id: { type: string, example: KOMUNIKACJA.2 }
+                    name: { type: string }
+                    behaviorLevel: { type: [integer, "null"], description: 1–5; null = brak okazji do obserwacji }
+                    observed: { type: boolean }
+        conversations:
+          type: array
+          items:
+            type: object
+            properties:
+              type: { type: string, enum: [WSTEPNA, ROZPOCZYNAJACA, OCENIAJACA, BIEZACA] }
+              date: { $ref: "#/components/schemas/IsoDate" }

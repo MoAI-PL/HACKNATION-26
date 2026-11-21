@@ -21,6 +21,8 @@ export function GlobalShortcuts({ quickNote, assistant }: { quickNote: boolean; 
     const onKey = (e: KeyboardEvent) => {
       const event = globalShortcutFor(e);
       if (!event) return;
+      // Przy otwartym oknie (np. „Dodaj pracownika”) skróty globalne nie mogą przenosić na inną stronę.
+      if (document.querySelector('[role="dialog"], [role="alertdialog"]')) return;
       if (event === SHORTCUT_EVENTS.quickNote && !quickNote) return;
       if (event === SHORTCUT_EVENTS.assistant && !assistant) return;
       e.preventDefault();

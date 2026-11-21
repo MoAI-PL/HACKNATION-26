@@ -34,13 +34,13 @@ Kolejność: najpierw ★, potem pozostałe P0, potem P1 (w kolejności z tabeli
 | ID | Zadanie | Zależy od | Status | Kto | Gałąź |
 |---|---|---|---|---|---|
 | ★Z10 | Układ i system wizualny, komponenty bazowe, `<PropozycjaAI>` | Z02 | gotowe | Kamson2077 | `z10-uklad-ui` |
-| ★Z11 | Pulpit przełożonego z kartą „Do zrobienia” | Z04, Z08, Z10 | w toku | Kamson2077 | |
+| ★Z11 | Pulpit przełożonego z kartą „Do zrobienia” | Z04, Z08, Z10 | gotowe | Kamson2077 | `z11-pulpit` |
 | ★Z12 | Kreator oceny okresowej, część 1 (OSP, arkusz, kryteria, rozmowa rozpoczynająca) | Z06, Z07, Z08, Z10 | gotowe | geoglof | `z12-kreator-okresowej` |
 | ★Z13 | Dziennik obserwacji (SDR) | Z03, Z10 | gotowe | Nadia | `z13-dziennik-obserwacji` |
-| ★Z41 | Szybka notatka w 10 sekund | Z13, Z20 | do przeglądu | bartektymochowicz-collab | `bartek/z41-szybka-notatka` |
+| ★Z41 | Szybka notatka w 10 sekund | Z13, Z20 | gotowe | bartektymochowicz-collab | `bartek/z41-szybka-notatka` |
 | ★Z14 | Zakończenie oceny: karty zachowań, sugestia, decyzja przełożonego | Z09, Z13 | gotowe | geoglof | `z14-zakonczenie-oceny` |
 | ★Z15 | Podsumowanie i wynik, uzasadnienie, IPRZ | Z07, Z14 | gotowe | geoglof | `z15-podsumowanie` |
-| ★Z16 | PDF arkuszy B i C | Z07, Z15 | wolne | | |
+| ★Z16 | PDF arkuszy B i C | Z07, Z15 | w toku | Kamson2077 | |
 | Z17 | Ścieżka pierwszej oceny | Z07, Z08, Z14, Z16 | wolne | | |
 | Z18 | Panel HR, część 1 (oceny, terminy, przypomnienia) | Z04, Z08, Z10 | gotowe | Nadia | `z18-panel-hr` |
 | Z19 | Panel HR, część 2 (edycja modelu i przepisów) | Z05, Z18 | wolne | | |
@@ -65,7 +65,7 @@ Kolejność: najpierw ★, potem pozostałe P0, potem P1 (w kolejności z tabeli
 | ★Z29 | Publiczne demo | Z04, Z26 | gotowe | suzanne0401 | `z29-publiczne-demo` |
 | ★Z44 | Reset danych demo i działanie bez AI | Z20, Z26 | gotowe | Nadia | `z44-zabezpieczenia-demo` |
 | Z30 | Testy ręczne, Playwright, dostępność, pomiar czasu oceny | Z15, Z16 | wolne | | |
-| Z31 | Dokumentacja (`README`, `docs/`) | całość | wolne | | |
+| Z31 | Dokumentacja (`README`, `docs/`) | całość | gotowe (aktualizacja przed zgłoszeniem) | suzanne0401 | `z31-dokumentacja` |
 | Z32 | Prezentacja, film, pitch | Z25, Z30 | wolne | | |
 | ★Z33 | Zgłoszenie finalne w HackTribe (ok. 08:00) | Z29, Z31, Z32 | wolne | | |
 
@@ -74,13 +74,13 @@ Kolejność: najpierw ★, potem pozostałe P0, potem P1 (w kolejności z tabeli
 | ID | Zadanie | Zależy od | Status | Kto | Gałąź |
 |---|---|---|---|---|---|
 | Z40 | Asystent języka (opis zachowania zamiast opisu osoby) | Z15, Z20 | wolne | | |
-| Z36 | Lustro oceniającego | Z09, Z13, Z18 | wolne | | |
+| Z36 | Lustro oceniającego | Z09, Z13, Z18 | gotowe | geoglof | `z36-lustro` |
 | Z42 | Przepisy w kontekście („ⓘ Dlaczego?”) | Z10, Z21 | wolne | | |
 | Z43 | Tryb rozmowy | Z24, Z15 | wolne | | |
 | Z34 | Pseudonimizacja przed LLM | Z20 | wolne | | |
-| Z35 | Dziennik audytu z eksportem CSV | Z14 | wolne | | |
+| Z35 | Dziennik audytu z eksportem CSV | Z14 | gotowe | geoglof | `z35-dziennik-audytu` |
 | Z37 | Oś czasu procesu pracownika | Z08 | wolne | | |
-| Z38 | REST API `/api/v1` (eksport JSON) | Z15 | wolne | | |
+| Z38 | REST API `/api/v1` (eksport JSON) | Z15 | gotowe | geoglof | `z38-rest-api` |
 
 ## H. P2
 

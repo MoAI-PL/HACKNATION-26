@@ -122,14 +122,19 @@ export async function saveQuickNoteAction(input: {
 
   if (input.fromAi && input.proposal) {
     const p = input.proposal;
+    // Ten sam kształt co wspólna akcja logAiDecision (Z10), żeby dziennik decyzji (Z35) pokazywał wszystko jednolicie.
     const aiProposal = {
-      pracownik: p.employeeId ?? null,
-      wskaznik: p.indicatorId ?? null,
-      poziom: p.behaviorLevel ?? null,
-      sytuacja: p.situation ?? "",
-      dzialanie: p.action ?? "",
-      rezultat: p.outcome ?? "",
-      model: p.model ?? null,
+      funkcja: "SZYBKA_NOTATKA",
+      tryb: "AI",
+      propozycja: {
+        pracownik: p.employeeId ?? null,
+        wskaznik: p.indicatorId ?? null,
+        poziom: p.behaviorLevel ?? null,
+        sytuacja: p.situation ?? "",
+        dzialanie: p.action ?? "",
+        rezultat: p.outcome ?? "",
+        model: p.model ?? null,
+      },
     } satisfies Prisma.InputJsonValue;
     const final = {
       pracownik: d.employeeId,
@@ -158,7 +163,11 @@ export async function rejectQuickNoteProposalAction(proposal: Partial<QuickNoteP
         userId: user.id,
         action: "AI_ODRZUC",
         entity: "Observation",
-        aiProposal: { wskaznik: proposal.indicatorId ?? null, poziom: proposal.behaviorLevel ?? null, model: proposal.model ?? null },
+        aiProposal: {
+          funkcja: "SZYBKA_NOTATKA",
+          tryb: "AI",
+          propozycja: { wskaznik: proposal.indicatorId ?? null, poziom: proposal.behaviorLevel ?? null, model: proposal.model ?? null },
+        },
         reason: "Szybka notatka (Z41)",
       },
     })

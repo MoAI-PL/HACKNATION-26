@@ -25,6 +25,7 @@ import {
   suggestionFor,
 } from "@/lib/ocena/zakonczenie-oceny";
 import type { AutosaveState } from "@/lib/ui/status";
+import { evaluatorMirror, type MirrorSignal } from "@/lib/rules/lustro";
 import { saveDecision, saveRating, saveStep } from "@/app/(przelozony)/ocena/okresowa/[id]/ocena/actions";
 
 const BEHAVIOR_LEVELS: BehaviorLevel[] = [1, 2, 3, 4, 5];
@@ -76,7 +77,7 @@ export function ZakonczenieOceny({ data }: { data: AssessmentData }) {
       <WizardProgress steps={steps} current={step + 1} onStepClick={(n) => goTo(n - 1)} />
 
       {review ? (
-        <Przeglad evaluationId={data.evaluationId} criteria={criteria} noteCounts={noteCounts} headingRef={headingRef} onGoTo={goTo} />
+        <Przeglad data={data} criteria={criteria} noteCounts={noteCounts} headingRef={headingRef} onGoTo={goTo} />
       ) : (
         <KryteriumKrok
           key={criteria[step]!.competency}
@@ -418,24 +419,44 @@ function PanelSugestii({ suggestion: s }: { suggestion: LevelSuggestion }) {
 // ---------------------------------------------------------------------------
 
 function Przeglad({
-  evaluationId,
+  data,
   criteria,
   noteCounts,
   headingRef,
   onGoTo,
 }: {
-  evaluationId: string;
+  data: AssessmentData;
   criteria: CriterionData[];
   noteCounts: Map<string, number>;
   headingRef: React.RefObject<HTMLHeadingElement | null>;
   onGoTo: (step: number) => void;
 }) {
+  const evaluationId = data.evaluationId;
   const issues = assessmentIssues(criteria);
+  const signals = React.useMemo(() => {
+    const indicators = criteria.flatMap((c) =>
+      c.indicators.flatMap((i) => {
+        const v = c.ratings[i.id];
+        return typeof v === "number" ? [{ name: i.name, level: v, hasNote: (noteCounts.get(i.id) ?? 0) > 0 }] : [];
+      }),
+    );
+    const scores = criteria.map((c) => c.score);
+    const current = scores.every((s) => s !== null) && scores.length ? (scores as number[]).reduce((a, b) => a + b, 0) / scores.length : null;
+    return evaluatorMirror({
+      noteDates: data.observations.filter((o) => o.employeeId === data.employee.id).map((o) => o.date),
+      reference: data.today,
+      periodStart: data.periodStart,
+      indicators,
+      supervisorAverages: current === null ? [] : [...data.mirror.supervisorAverages, current],
+      unitAverages: data.mirror.unitAverages,
+    });
+  }, [criteria, noteCounts, data]);
   return (
     <div className="flex flex-col gap-4">
       <h2 ref={headingRef} tabIndex={-1} className="text-xl font-semibold outline-none">
         Przegląd ocen cząstkowych
       </h2>
+      <Lustro signals={signals} />
       <Card>
         <CardContent className="overflow-x-auto py-4">
           <table className="w-full text-left text-sm">
@@ -509,5 +530,36 @@ function Przeglad({
         </Notice>
       )}
     </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Lustro oceniającego (Z36) – sygnały informacyjne, nigdy nie blokują
+// ---------------------------------------------------------------------------
+
+function Lustro({ signals }: { signals: MirrorSignal[] }) {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex flex-wrap items-center gap-2 text-base">
+          Lustro oceniającego
+          <InfoTip legalBasis="dobre praktyki oceniania (poradnik KPRM)">
+            Sygnały typowych błędów oceniania: efekt świeżości, efekt aureoli, łagodność lub surowość na tle komórki i ocena skrajna bez
+            przykładu. To tylko podpowiedź – nie blokuje zamknięcia oceny.
+          </InfoTip>
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="flex flex-col gap-3">
+        {signals.length === 0 ? (
+          <p className="text-sm text-muted-foreground">Nie widać typowych błędów oceniania. Możesz przejść dalej.</p>
+        ) : (
+          signals.map((s) => (
+            <Notice key={s.code} tone="info" title={s.title}>
+              {s.text}
+            </Notice>
+          ))
+        )}
+      </CardContent>
+    </Card>
   );
 }

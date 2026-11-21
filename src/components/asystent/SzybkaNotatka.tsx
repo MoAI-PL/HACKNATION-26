@@ -332,6 +332,7 @@ export function SzybkaNotatka() {
           title="Przypinanie notatki"
           onInsert={() => undefined}
           onReject={() => undefined}
+          onDecision={() => undefined}
           onCancel={() => {
             request.current++;
             setStep("pisanie");
@@ -346,9 +347,11 @@ export function SzybkaNotatka() {
           title="Notatka przypięta do wskaźnika"
           insertLabel={saving ? "Zapisywanie…" : "Zapisz notatkę"}
           onInsert={() => void save()}
-          onReject={() => {
-            void rejectQuickNoteProposalAction(proposal);
-            manual("Propozycja odrzucona – uzupełnij pola sam albo zapisz notatkę bez przypięcia.");
+          onReject={() => manual("Propozycja odrzucona – uzupełnij pola sam albo zapisz notatkę bez przypięcia.")}
+          // „Zapisz” trafia do AuditLog po zapisie na serwerze (saveQuickNoteAction – z ostateczną wersją i id notatki),
+          // „Odrzuć” – od razu tutaj.
+          onDecision={(d) => {
+            if (d.decision === "ODRZUC") void rejectQuickNoteProposalAction(proposal);
           }}
         >
           {fields}

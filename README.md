@@ -2,53 +2,85 @@
 
 **Ocena oparta na zachowaniach, nie na wrażeniach.**
 
-Aplikacja prowadzi przełożonego w służbie cywilnej krok po kroku przez pierwszą ocenę i ocenę okresową (arkusze B i C): od analizy opisu stanowiska, przez wybór kryteriów i dziennik obserwacji, po ocenę opartą na 49 wskaźnikach behawioralnych modelu kompetencji. System proponuje poziom kompetencji i wyjaśnia, skąd się wziął, ale decyzję zawsze podejmuje przełożony. Wynik, terminy i formularz PDF liczone są zgodnie z rozporządzeniami.
+Kompas Kompetencji prowadzi przełożonego w służbie cywilnej krok po kroku przez ocenę okresową (arkusze B i C), a przy pierwszej ocenie pilnuje terminów i odpowiada na pytania o procedurę: od opisu stanowiska pracy, przez wybór kryteriów i dziennik obserwacji, po ocenę opartą na **49 wskaźnikach behawioralnych** modelu kompetencji. System proponuje poziom kompetencji i pokazuje, skąd się wziął, ale **decyzję zawsze podejmuje przełożony**. Punkty, wynik i terminy liczy kod zgodnie z rozporządzeniami, a asystent AI odpowiada na pytania o procedurę **wyłącznie na podstawie przepisów i poradników KPRM, zawsze ze wskazaniem źródła**.
 
-Projekt powstaje podczas HackNation 2026 w ramach zadania Ministerstwa Cyfryzacji (Biuro Dyrektora Generalnego) „Kompas Kompetencji”.
+Rozwiązanie zadania Ministerstwa Cyfryzacji (Biuro Dyrektora Generalnego) „Kompas Kompetencji” – HackNation 2026.
 
-## Stan
+## Demo
 
-Prace w toku – postęp na tablicy zadań: [`docs/ZADANIA.md`](docs/ZADANIA.md).
+**https://hacknation-26.vercel.app** – logowanie jednym kliknięciem na karcie konta demo (dane są fikcyjne).
 
-## Struktura repozytorium
+| Rola | E-mail | Hasło | Co zobaczyć |
+|---|---|---|---|
+| **Przełożona – Ewa Kowalczyk** | `ewa.kowalczyk@demo.kompas.test` | `Kompas2026!` | pulpit „Do zrobienia”, ocena okresowa, dziennik obserwacji, asystent |
+| HR / administrator | `hr@demo.kompas.test` | `Kompas2026!` | panel HR: terminy z wydłużeniami, przypomnienia, reset danych demo |
+| Oceniany – Jan Nowak | `jan.nowak@demo.kompas.test` | `Kompas2026!` | rola z najwęższymi uprawnieniami – próba wejścia na ekrany przełożonego albo do API wraca na własny ekran / 403 |
+| Kierujący komórką | `kierujacy@demo.kompas.test` | `Kompas2026!` | asystent formalny; rola do podpisu arkusza pierwszej oceny |
 
-```
-materialy/          materiały źródłowe od organizatora (tylko do odczytu)
-  zadanie/          treść i regulamin zadania
-  ocena-okresowa/   arkusze B i C, poradnik, rozporządzenie z 2016 r.
-  pierwsza-ocena/   arkusz, poradnik, rozporządzenie z 2015 r.
-  OSP/              przykładowe opisy stanowisk pracy
-docs/               tablica zadań, założenia, dokumentacja
-```
+Scenariusz krok po kroku dla jury (ok. 10 minut): **[`docs/DEMO.md`](docs/DEMO.md)**.
 
-## Publiczne demo
+![Pulpit przełożonej z kartą „Do zrobienia”](docs/zrzuty/01-pulpit.jpg)
 
-**Adres demo: https://hacknation-26.vercel.app** – konta demo poniżej (logowanie jednym kliknięciem na ekranie logowania). Wdrożenie: Vercel + Neon – instrukcja w [`docs/WDROZENIE.md`](docs/WDROZENIE.md).
+## Najważniejsze funkcje
+
+| | Funkcja | Jak działa |
+|---|---|---|
+| 🗂 | **Pulpit „Do zrobienia”** | najpilniejsze sprawy z terminami liczonymi z przepisów (art. 81 ustawy, § 7, KC 112/115, święta), kolor + tekst pilności, jeden przycisk akcji |
+| 📄 | **Opis stanowiska → arkusz** | wgranie OSP (.docx) – system odczytuje cel, zadania i liczbę podległych i sam wybiera arkusz B lub C z wyjaśnieniem (§ 3) |
+| ✨ | **Kryteria dodatkowe z OSP** | AI proponuje do 3 kryteriów z uzasadnieniem i **dosłownym cytatem zadania z OSP**; kod sprawdza listę, limit i cytat; przełożony wstawia albo odrzuca |
+| 📝 | **Dziennik obserwacji (SDR)** | notatki Sytuacja – Działanie – Rezultat przypięte do wskaźnika, przez cały okres oceny |
+| 🃏 | **Ocena przez wybór zachowania** | przy każdym wskaźniku 5 opisów zachowań z modelu MC (bez liczb) + „brak okazji do obserwacji”, obok notatki z dziennika; klawisze 1–5 |
+| 🧭 | **„Dlaczego ten poziom?”** | sugerowany poziom kryterium z rozkładem wyborów, wzorem i ostrzeżeniami; zmiana sugestii wymaga jednego zdania powodu – oba wpisy trafiają do dziennika decyzji |
+| ⚖️ | **Wynik zgodny z § 11** | średnia, poziom ogólny, wynik pozytywny/negatywny z wyjaśnieniem i podstawą prawną; uzasadnienie obowiązkowe przy ocenie negatywnej, IPRZ, część III, termin sprzeciwu |
+| 💬 | **Asystent formalny** | odpowiedzi tylko z 406 fragmentów przepisów i poradników, zawsze ze źródłem; uczciwa odmowa poza zakresem; **25/25 trafnych, 5/5 odmów** w zestawie testowym |
+| 🏛 | **Panel HR** | wszystkie oceny z terminami i wydłużeniami (np. „+44 dni: zwolnienie lekarskie”), przypomnienia, wzór zawiadomienia o zmianie terminu, ostrzeżenie z art. 71 |
+| 🔐 | **Role i bezpieczeństwo** | przełożony, HR, oceniany, kierujący; autoryzacja w każdym API i akcji serwerowej (401/403), przełożony widzi wyłącznie swoich podwładnych |
+
+| ![Ocena wskaźników kartami zachowań](docs/zrzuty/03-ocena-wskaznikow.jpg) | ![Asystent formalny ze źródłami](docs/zrzuty/04-asystent.jpg) |
+|---|---|
+| Ocena wskaźników opisami zachowań z modelu MC | Asystent formalny – odpowiedź z przepisu i źródła |
+
+## Zasady projektu
+
+1. **Przepisy liczy kod, nie model językowy.** Wybór arkusza, punkty, średnie, wynik i terminy to deterministyczne funkcje z testami (`src/lib/rules/`), z parametrami w `data/przepisy.json` (edytowalne bez zmian w kodzie).
+2. **AI nigdy nie ustala oceny.** Każda propozycja AI jest oznaczona, edytowalna i wymaga decyzji człowieka; decyzje trafiają do dziennika.
+3. **Aplikacja działa także bez AI.** Brak modelu albo jego błąd nie blokuje żadnego kroku – asystent pokazuje wtedy pasujące fragmenty przepisów.
+4. **Zmiana modelu bez zmiany kodu.** Jeden interfejs zgodny z API OpenAI: lokalnie Ollama (np. Bielik, PLLuM – dane nie wychodzą z urzędu), na demo darmowy Gemini.
+
+## Dokumentacja
+
+| Dokument | Zawartość |
+|---|---|
+| [`docs/DEMO.md`](docs/DEMO.md) | scenariusz demo krok po kroku |
+| [`docs/ARCHITEKTURA.md`](docs/ARCHITEKTURA.md) | architektura, model danych, API, wdrożenie i skalowanie, opis modułów |
+| [`docs/AI.md`](docs/AI.md) | gdzie jest AI, a gdzie celowo go nie ma; model; ograniczanie halucynacji; wynik testu asystenta; dane |
+| [`docs/BEZPIECZENSTWO.md`](docs/BEZPIECZENSTWO.md) | uwierzytelnianie, role, ochrona danych, zabezpieczenia AI, przygotowanie do produkcji |
+| [`docs/UX.md`](docs/UX.md) | zasady UX, komponenty, skróty klawiaturowe, przegląd dostępności (WCAG 2.1 AA) |
+| [`docs/openapi.yaml`](docs/openapi.yaml) | specyfikacja REST API: eksport oceny w JSON, lista ocen i pracowników, asystent (pod EZD i system kadrowy) |
+| [`docs/WDROZENIE.md`](docs/WDROZENIE.md) | wdrożenie publicznego demo (Vercel + Neon) |
+| [`docs/LICENCJE.md`](docs/LICENCJE.md) | licencje zależności (wyłącznie permisywne) |
+| [`docs/ZALOZENIA.md`](docs/ZALOZENIA.md) | założenia interpretacyjne i pytania do MC |
+| [`docs/ZADANIA.md`](docs/ZADANIA.md) | tablica zadań zespołu |
+
+## Technologie
+
+Next.js 15 (App Router) i TypeScript · Tailwind CSS 4 i shadcn/ui · PostgreSQL i Prisma 6 · Auth.js (next-auth v5) · zod · MiniSearch (BM25) · Vitest. Szczegóły i uzasadnienie wyborów: [`docs/ARCHITEKTURA.md`](docs/ARCHITEKTURA.md).
 
 ## Uruchomienie lokalne
 
-Wymagania: Node.js 20+, Docker.
+Wymagania: Node.js 20+ i PostgreSQL (najprościej Docker).
 
 1. `npm install`
-2. `cp .env.example .env` (na Windows: `copy .env.example .env`) i uzupełnij `AUTH_SECRET` (dowolny losowy ciąg, np. wynik `npx auth secret`)
-3. `npm run db:up` – uruchamia PostgreSQL w Dockerze
-4. `npm run db:migrate` i `npm run seed`
+2. `cp .env.example .env` (Windows: `copy .env.example .env`) i ustaw `AUTH_SECRET` (dowolny losowy ciąg, np. `npx auth secret`)
+3. `npm run db:up` – PostgreSQL w Dockerze (albo własny serwer i `DATABASE_URL` w `.env`)
+4. `npm run db:migrate` i `npm run seed` – schemat bazy, konta i dane demo
 5. `npm run dev` – aplikacja pod http://localhost:3000
 
-## Konta demo
+Model AI jest opcjonalny: bez `LLM_BASE_URL` i `LLM_MODEL` aplikacja działa w trybie bez AI. Przykłady konfiguracji (Ollama, Gemini, Groq) są w `.env.example`.
 
-Przy `DEMO_MODE="true"` ekran logowania pokazuje karty kont demo – wystarczy kliknąć „Zaloguj jako…”. Dane są fikcyjne.
+### Dane demo
 
-| Rola | E-mail | Hasło |
-|---|---|---|
-| Przełożona (Ewa Kowalczyk) | `ewa.kowalczyk@demo.kompas.test` | `Kompas2026!` |
-| HR / administrator | `hr@demo.kompas.test` | `Kompas2026!` |
-| Oceniany | `jan.nowak@demo.kompas.test` | `Kompas2026!` |
-| Kierujący komórką | `kierujacy@demo.kompas.test` | `Kompas2026!` |
-
-Konta i dane demo tworzy `npm run seed` (można uruchamiać wielokrotnie – dane demo są odtwarzane od nowa, daty liczone od dnia uruchomienia).
-
-**Scenariusze w danych demo** (wszystkie osoby fikcyjne, stanowiska z OSP dostarczonych przez MC):
+`npm run seed` tworzy konta i dane wokół persony przełożonej (osoby fikcyjne, stanowiska z OSP dostarczonych przez MC). Daty liczone są od dnia uruchomienia, więc terminy są zawsze aktualne; seed można uruchamiać wielokrotnie. Na produkcji `DEMO_MODE="false"` wyłącza karty kont demo i reset danych.
 
 | Osoba | Stanowisko | Scenariusz |
 |---|---|---|
@@ -58,24 +90,38 @@ Konta i dane demo tworzy `npm run seed` (można uruchamiać wielokrotnie – dan
 | Marcin Wróbel | starszy specjalista (arkusz C) | po ocenie negatywnej – ponowna ocena po 6 miesiącach |
 | Aleksandra Mazur | starszy specjalista | nowa pracownica – pierwsza ocena, rozmowa wstępna w 21 dni |
 | Marta Kamińska | radca (arkusz C) | zatrudniona na czas nieokreślony – ocena do rozpoczęcia od OSP |
- Na produkcji ustaw `DEMO_MODE="false"` – karty i logowanie jednym kliknięciem znikają.
 
-## Skrypty
+### Skrypty
 
 | Polecenie | Co robi |
 |---|---|
-| `npm run dev` | serwer deweloperski |
-| `npm test` | testy (Vitest) |
+| `npm run dev` / `npm run build` | serwer deweloperski / build produkcyjny |
+| `npm test` | testy (Vitest); testy na bazie danych uruchamia `TEST_DATABASE_URL` |
 | `npm run typecheck` / `npm run lint` | kontrola typów / lint |
-| `npm run build` | build produkcyjny |
-| `npm run seed` | dane demo |
-| `npm run wiedza` | buduje bazę wiedzy asystenta z PDF-ów (`data/wiedza/fragmenty.json`) |
+| `npm run seed` | konta i dane demo |
 | `npm run eval` | zestaw testowy asystenta formalnego (`-- --bez-ai`: tylko wyszukiwanie); wynik w `eval/wynik.md` |
 | `npm run eval:notatki` | szybka notatka: czy 5 przykładowych zdań trafia w sensowny wskaźnik (wymaga modelu); wynik w `eval/notatki-wynik.md` |
-| `npm run osp -- plik.docx` | podgląd importu opisu stanowiska pracy: co system odczyta i jaki arkusz (B/C) wybierze |
-| `npm run model` | import modelu kompetencji: `materialy/Model_kompetencji.xlsx` → `data/model-kompetencji.json` (`-- --check` sprawdza aktualność) |
+| `npm run wiedza` | buduje bazę wiedzy asystenta z PDF-ów (`data/wiedza/fragmenty.json`) |
+| `npm run model` | import modelu kompetencji `materialy/Model_kompetencji.xlsx` → `data/model-kompetencji.json` |
+| `npm run osp -- plik.docx` | podgląd importu opisu stanowiska pracy i wybranego arkusza |
 | `npm run db:up` / `db:migrate` / `db:generate` | baza danych: start, migracje, klient Prisma |
 
-## Materiały źródłowe
+## Struktura repozytorium
 
-Pliki w `materialy/` pochodzą od organizatora zadania (Ministerstwo Cyfryzacji) i zostały udostępnione na potrzeby hackathonu.
+```
+materialy/   materiały od organizatora (rozporządzenia, poradniki KPRM, arkusze, model kompetencji, OSP)
+data/        model kompetencji (JSON), parametry przepisów, baza wiedzy asystenta, zapasowe odpowiedzi demo
+prisma/      schemat bazy, migracje, seed i dane demo
+src/app/     ekrany według ról i API
+src/lib/     silnik reguł, import, AI, autoryzacja, logika ekranów
+tests/       testy (Vitest)
+eval/        zestaw testowy asystenta i wynik
+docs/        dokumentacja
+```
+
+## Materiały źródłowe i licencje
+
+- Pliki w `materialy/` pochodzą od organizatora zadania (Ministerstwo Cyfryzacji) i zostały udostępnione na potrzeby hackathonu: rozporządzenie Prezesa Rady Ministrów z 4.04.2016 r. w sprawie ocen okresowych (Dz.U. 2016 poz. 470), rozporządzenie Prezesa Rady Ministrów z 23.07.2015 r. w sprawie pierwszej oceny (Dz.U. 2015 poz. 1144), poradniki Departamentu Służby Cywilnej KPRM (wrzesień 2016), wzory arkuszy, model kompetencji i przykładowe opisy stanowisk pracy.
+- Baza wiedzy asystenta to fragmenty tych dokumentów z oznaczeniem źródła (dokument, jednostka redakcyjna, strona).
+- Zależności – wyłącznie licencje permisywne (MIT, Apache-2.0, BSD, ISC; czcionka Noto Sans – OFL): [`docs/LICENCJE.md`](docs/LICENCJE.md).
+- Wszystkie osoby w danych demo są fikcyjne.

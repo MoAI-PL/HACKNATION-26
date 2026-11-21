@@ -4,7 +4,7 @@
 //   <AsystentFormalny krok="OCENA" />
 
 import { useEffect, useId, useRef, useState } from "react";
-import { AlertTriangle, BookOpen, Loader2, SendHorizontal, Sparkles } from "lucide-react";
+import { AlertTriangle, BookOpen, Loader2, SendHorizontal, ShieldCheck, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { AssistantAnswer } from "@/lib/ai/funkcje/asystent-formalny";
 import { cn } from "@/lib/utils";
@@ -156,6 +156,7 @@ function Odpowiedz({ odp }: { odp: AssistantAnswer }) {
       <div className="rounded-lg border border-dashed px-3 py-2 text-sm">
         <p className="font-medium">{odp.answer}</p>
         <p className="mt-1 text-muted-foreground">Asystent odpowiada tylko na pytania o procedurę oceny, na które jest odpowiedź w przepisach i poradnikach.</p>
+        <Prywatnosc odp={odp} />
       </div>
     );
   }
@@ -174,6 +175,7 @@ function Odpowiedz({ odp }: { odp: AssistantAnswer }) {
         )}
       </p>
       <p className="whitespace-pre-line">{odp.answer}</p>
+      <Prywatnosc odp={odp} />
       {odp.notice && (
         <p className="mt-2 flex items-start gap-1.5 text-xs text-amber-800 dark:text-amber-300">
           <AlertTriangle className="mt-0.5 size-3.5 shrink-0" aria-hidden /> {odp.notice}
@@ -197,5 +199,18 @@ function Odpowiedz({ odp }: { odp: AssistantAnswer }) {
         </div>
       )}
     </div>
+  );
+}
+
+/** Z34: co ukryto przed modelem i jaki tekst pytania dostał asystent. */
+function Prywatnosc({ odp }: { odp: AssistantAnswer }) {
+  if (odp.mode !== "AI" || !odp.privacy || !odp.sentQuestion) return null;
+  return (
+    <p className="mt-2 flex items-start gap-1.5 text-xs text-muted-foreground">
+      <ShieldCheck className="mt-0.5 size-3.5 shrink-0" aria-hidden />
+      <span>
+        {odp.privacy} Asystent dostał: „{odp.sentQuestion}”
+      </span>
+    </p>
   );
 }

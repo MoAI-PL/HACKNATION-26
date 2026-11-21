@@ -12,6 +12,7 @@ import { answerFormalQuestion, MAX_QUESTION_LENGTH } from "@/lib/ai/funkcje/asys
 import { logAssistantQuery } from "@/lib/ai/funkcje/dziennik-zapytan";
 import { suggestionsFor } from "@/lib/ai/funkcje/podpowiedzi";
 import { getLLM } from "@/lib/ai/llm";
+import type { PseudoPerson } from "@/lib/ai/pseudonimizacja";
 
 export const dynamic = "force-dynamic";
 
@@ -35,6 +36,20 @@ function rateLimited(key: string): boolean {
   recent.push(now);
   hits.set(key, recent);
   return recent.length > MAX_PER_WINDOW;
+}
+
+/**
+ * Z34: podwładni przełożonego – ich imiona i nazwiska w pytaniu zostaną ukryte przed modelem.
+ * Brak bazy nie blokuje odpowiedzi (wtedy działa samo rozpoznawanie imion i nazwisk ze słownika).
+ */
+async function subordinatesOf(user: { id: string; role: Role }): Promise<PseudoPerson[]> {
+  if (user.role !== "PRZELOZONY" || !process.env.DATABASE_URL) return [];
+  try {
+    const { prisma } = await import("@/lib/db");
+    return await prisma.employee.findMany({ where: { supervisorId: user.id }, select: { id: true, firstName: true, lastName: true } });
+  } catch {
+    return [];
+  }
 }
 
 /** Role z dostępem do asystenta formalnego (te same co ekran /asystent w src/lib/auth/role.ts). */
@@ -66,7 +81,7 @@ export const POST = withRole(ASSISTANT_ROLES, async (req, _ctx, user) => {
     return NextResponse.json({ blad: parsed.error.issues[0]?.message ?? "Niepoprawne pytanie." }, { status: 400 });
   }
 
-  const answer = await answerFormalQuestion(parsed.data.pytanie);
+  const answer = await answerFormalQuestion(parsed.data.pytanie, { people: await subordinatesOf(user) });
   await logAssistantQuery(answer, { userId: user.id, step: parsed.data.krok });
   return NextResponse.json(answer);
 });

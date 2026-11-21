@@ -39,6 +39,19 @@ export interface AssessmentData {
   guidance: string[];
   /** Kryterium, do którego wracamy (indeks od 0). */
   resumeCriterion: number;
+  /** Dane do Lustra oceniającego (Z36): średnie wcześniejszych ocen przełożonego i ocen w komórce (bez nazwisk). */
+  mirror: { supervisorAverages: number[]; unitAverages: number[] };
+}
+
+/** Średnie sporządzonych ocen okresowych: przełożonego (oceniającego) i w komórce ocenianego – bez bieżącej oceny. */
+async function mirrorContext(evaluationId: string, evaluatorId: string, orgUnitId: string | null) {
+  const done = { type: "OKRESOWA" as const, id: { not: evaluationId }, average: { not: null }, evaluatedAt: { not: null } };
+  const [own, unit] = await Promise.all([
+    prisma.evaluation.findMany({ where: { ...done, evaluatorId }, select: { average: true } }),
+    orgUnitId ? prisma.evaluation.findMany({ where: { ...done, employee: { orgUnitId } }, select: { average: true } }) : Promise.resolve([]),
+  ]);
+  const avgs = (rows: { average: number | null }[]) => rows.map((r) => r.average).filter((a): a is number => a !== null);
+  return { supervisorAverages: avgs(own), unitAverages: avgs(unit) };
 }
 
 /** Statusy, w których można oceniać wskaźniki. */
@@ -92,5 +105,6 @@ export async function loadAssessment(evaluationId: string, userId: string): Prom
     observations,
     guidance: competencyModel.model.guidance ?? [],
     resumeCriterion,
+    mirror: await mirrorContext(ev.id, ev.evaluatorId, ev.employee.orgUnitId),
   };
 }

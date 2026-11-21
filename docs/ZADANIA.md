@@ -25,8 +25,8 @@ Kolejność: najpierw ★, potem pozostałe P0, potem P1 (w kolejności z tabeli
 
 | ID | Zadanie | Zależy od | Status | Kto | Gałąź |
 |---|---|---|---|---|---|
-| ★Z07 | Silnik punktacji (§11, §10), walidacja kryteriów dodatkowych | Z03 | w toku | geoglof | `z07-silnik-punktacji` |
-| ★Z08 | Silnik terminów (KC 112/115, święta, nieobecności) | Z03 | wolne | | |
+| ★Z07 | Silnik punktacji (§11, §10), walidacja kryteriów dodatkowych | Z03 | gotowe | geoglof | `z07-silnik-punktacji` |
+| ★Z08 | Silnik terminów (KC 112/115, święta, nieobecności) | Z03 | w toku | geoglof | `z08-silnik-terminow` |
 | ★Z09 | Sugerowany poziom kompetencji i dane do „Dlaczego ten poziom?” | Z05, Z07 | wolne | | |
 
 ## D. Interfejs i ścieżki

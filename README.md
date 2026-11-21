@@ -53,6 +53,7 @@ Konta tworzy `npm run seed`. Na produkcji ustaw `DEMO_MODE="false"` – karty i 
 | `npm run typecheck` / `npm run lint` | kontrola typów / lint |
 | `npm run build` | build produkcyjny |
 | `npm run seed` | dane demo |
+| `npm run wiedza` | buduje bazę wiedzy asystenta z PDF-ów (`data/wiedza/fragmenty.json`) |
 | `npm run eval` | zestaw testowy asystenta formalnego |
 | `npm run db:up` / `db:migrate` / `db:generate` | baza danych: start, migracje, klient Prisma |
 

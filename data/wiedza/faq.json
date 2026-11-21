@@ -1,0 +1,98 @@
+[
+  {
+    "id": "kryteria-dodatkowe",
+    "question": "Ile kryteriów dodatkowych można wybrać w ocenie okresowej?",
+    "answer": "Oceniający może wybrać z wykazu kryteriów oceny nie więcej niż 3 kryteria dodatkowe, najistotniejsze ze względu na charakter obowiązków wynikających z opisu stanowiska pracy ocenianego. Kryteria dodatkowe wpisuje się do części I arkusza po rozmowie rozpoczynającej.",
+    "basis": "§ 5 ust. 2 i 3 rozporządzenia o ocenach okresowych"
+  },
+  {
+    "id": "ocena-negatywna",
+    "question": "Kiedy ocena okresowa jest negatywna?",
+    "answer": "Ocenę negatywną przyznaje się, gdy ogólny poziom spełniania kryteriów (średnia arytmetyczna ocen cząstkowych) wynosi „poniżej oczekiwań” albo „znacznie poniżej oczekiwań” (średnia do 4 punktów), a także gdy oceniany uzyskał co najmniej jedną ocenę cząstkową na poziomie „znacznie poniżej oczekiwań” (1 punkt). Przy ocenie negatywnej uzasadnienie jest obowiązkowe.",
+    "basis": "§ 11 ust. 1 pkt 2 i 4 oraz § 11 ust. 3 rozporządzenia o ocenach okresowych"
+  },
+  {
+    "id": "skala-ocen",
+    "question": "Jaka jest skala punktowa oceny okresowej i jak wylicza się poziom ogólny?",
+    "answer": "Oceny cząstkowe: znacznie poniżej oczekiwań – 1 pkt, poniżej – 3 pkt, na poziomie – 5 pkt, powyżej – 7 pkt, znacznie powyżej – 9 pkt. Poziom ogólny to średnia arytmetyczna ocen cząstkowych: od 1 do 2 pkt – znacznie poniżej, powyżej 2 do 4 – poniżej, powyżej 4 do 6 – na poziomie, powyżej 6 do 8 – powyżej, powyżej 8 do 9 – znacznie powyżej oczekiwań.",
+    "basis": "§ 11 ust. 1 pkt 1 i 2 rozporządzenia o ocenach okresowych"
+  },
+  {
+    "id": "sprzeciw",
+    "question": "W jakim terminie i do kogo można złożyć sprzeciw od oceny okresowej?",
+    "answer": "Od oceny okresowej służy sprzeciw do dyrektora generalnego urzędu w terminie 7 dni od dnia zapoznania się z oceną. W urzędzie, w którym nie tworzy się stanowiska dyrektora generalnego, sprzeciw składa się do kierownika urzędu. Pouczenie o tym prawie jest częścią arkusza oceny.",
+    "basis": "art. 83 ust. 1 ustawy o służbie cywilnej; pouczenie we wzorach arkuszy (załączniki nr 2–4 do rozporządzenia o ocenach okresowych); poradnik KPRM o ocenach okresowych, rozdz. 7"
+  },
+  {
+    "id": "nieobecnosc",
+    "question": "Co wydłuża termin sporządzenia oceny okresowej?",
+    "answer": "Usprawiedliwiona nieobecność ocenianego w pracy trwająca dłużej niż miesiąc wydłuża 24-miesięczny termin sporządzenia oceny o czas tej nieobecności. Termin zmienia się też przy zmianie stanowiska wiążącej się z istotną zmianą zakresu obowiązków. O zmianie terminu oceniający niezwłocznie zawiadamia ocenianego na piśmie, a kopię pisma dołącza do arkusza.",
+    "basis": "art. 81 ust. 6 i 7 ustawy o służbie cywilnej; § 8 i § 9 rozporządzenia o ocenach okresowych; poradnik KPRM o ocenach okresowych, rozdz. 5.1"
+  },
+  {
+    "id": "rozmowa-rozpoczynajaca",
+    "question": "W jakim terminie przeprowadza się rozmowę rozpoczynającą ocenę okresową i co się na niej omawia?",
+    "answer": "Rozmowę przeprowadza się w terminie 30 dni od dnia sporządzenia na piśmie poprzedniej oceny lub od dnia zatrudnienia na czas nieokreślony, a po ocenie negatywnej – w terminie 7 dni od jej sporządzenia. Omawia się: główne obowiązki z opisu stanowiska pracy, kryteria obowiązkowe i dodatkowe, oczekiwania oceniającego co do sposobu spełniania kryteriów oraz cele, jeśli ich określenie jest uzasadnione.",
+    "basis": "§ 5 ust. 1 i § 7 rozporządzenia o ocenach okresowych"
+  },
+  {
+    "id": "rozmowa-wstepna",
+    "question": "Kiedy przeprowadza się rozmowę wstępną przy pierwszej ocenie?",
+    "answer": "Bezpośredni przełożony przeprowadza rozmowę wstępną w terminie 21 dni od dnia nawiązania stosunku pracy (przy zatrudnieniu w celu zastępstwa – 21 dni od ustalenia, że oceniany będzie podlegać pierwszej ocenie). Na rozmowie zapoznaje ocenianego ze sposobem dokonywania pierwszej oceny, omawia obowiązki i oczekiwania oraz wyznacza termin na złożenie sprawozdania.",
+    "basis": "§ 3 rozporządzenia o pierwszej ocenie"
+  },
+  {
+    "id": "egzamin",
+    "question": "Kiedy egzamin ze służby przygotowawczej nie jest wymagany do pozytywnej pierwszej oceny?",
+    "answer": "Warunku zaliczenia egzaminu ze służby przygotowawczej nie stosuje się do: absolwenta Krajowej Szkoły Administracji Publicznej, który nie złożył wniosku o mianowanie; pracownika zatrudnionego w celu zastępstwa nieobecnego członka korpusu służby cywilnej, podlegającego pierwszej ocenie; pracownika zatrudnionego na wyższym stanowisku w służbie cywilnej.",
+    "basis": "§ 10 ust. 3 rozporządzenia o pierwszej ocenie"
+  },
+  {
+    "id": "pierwsza-pozytywna",
+    "question": "Jakie warunki trzeba spełnić, żeby pierwsza ocena była pozytywna?",
+    "answer": "Łącznie: zaliczenie egzaminu ze służby przygotowawczej (chyba że nie dotyczy), złożenie sprawozdania w wyznaczonym terminie, nie więcej niż jedna ocena cząstkowa w wysokości 3 punktów oraz ocena łączna (średnia arytmetyczna) nie niższa niż 5 punktów. Niespełnienie któregokolwiek warunku oznacza ocenę negatywną, której uzasadnienie jest obowiązkowe.",
+    "basis": "§ 10 ust. 1, 2 i 4 rozporządzenia o pierwszej ocenie"
+  },
+  {
+    "id": "sprawozdanie",
+    "question": "Co powinno zawierać sprawozdanie do pierwszej oceny i jaki okres obejmuje?",
+    "answer": "Sprawozdanie obejmuje przepracowany okres nie krótszy niż 7 miesięcy. Oceniany opisuje w nim: zadania z opisu stanowiska i inne istotne zadania, problemy przy wykonywaniu zadań i sposób ich rozwiązania, zdobyte nowe umiejętności i wiedzę oraz wnioski dotyczące usprawnienia sposobu wykonywania zadań.",
+    "basis": "§ 6 rozporządzenia o pierwszej ocenie"
+  },
+  {
+    "id": "skala-pierwsza",
+    "question": "Jaka jest skala punktowa pierwszej oceny?",
+    "answer": "Oceny cząstkowe za elementy oceny przyznaje się według skali: 3 punkty – poniżej oczekiwań, 5 punktów – na poziomie oczekiwań, 7 punktów – powyżej oczekiwań. Ocena łączna to średnia arytmetyczna ocen cząstkowych.",
+    "basis": "§ 7 pkt 3 i § 9 ust. 1 rozporządzenia o pierwszej ocenie"
+  },
+  {
+    "id": "arkusze",
+    "question": "Kiedy stosuje się arkusz B, a kiedy arkusz C?",
+    "answer": "Arkusz B służy do oceny osoby zatrudnionej na stanowisku, na którym praca polega na bezpośrednim kierowaniu pracownikami (innym niż kierownik urzędu). Arkusz C służy do oceny osób na pozostałych stanowiskach. Arkusz A dotyczy kierownika urzędu.",
+    "basis": "§ 3 ust. 2–4 rozporządzenia o ocenach okresowych"
+  },
+  {
+    "id": "kryteria-obowiazkowe",
+    "question": "Jakie są kryteria obowiązkowe w arkuszach B i C?",
+    "answer": "Arkusz B (stanowiska kierownicze): zarządzanie ludźmi; podejmowanie decyzji i odpowiedzialność; organizacja pracy i orientacja na osiąganie celów; współpraca; komunikacja. Arkusz C (pozostałe stanowiska): wykorzystywanie wiedzy i doskonalenie zawodowe; rzetelność; organizacja pracy i orientacja na osiąganie celów; współpraca; komunikacja. Kryterium dodatkowe nie może powtarzać kryterium obowiązkowego.",
+    "basis": "§ 4 ust. 2 i 3 rozporządzenia o ocenach okresowych"
+  },
+  {
+    "id": "rozmowa-oceniajaca",
+    "question": "Co omawia się na rozmowie oceniającej?",
+    "answer": "Przed sporządzeniem oceny na piśmie oceniający omawia z ocenianym: główne obowiązki wykonywane w okresie oceny i sposób ich realizacji z uwzględnieniem ustalonych kryteriów, sposób realizowania wyznaczonych celów (jeśli je wyznaczono) oraz kierunki dalszego rozwoju zawodowego i potrzeby w zakresie podnoszenia kwalifikacji. Wnioski z rozmowy oceniający bierze pod uwagę przy sporządzaniu oceny.",
+    "basis": "§ 10 i § 11 ust. 2 rozporządzenia o ocenach okresowych"
+  },
+  {
+    "id": "czesc-i-podpis",
+    "question": "Czy oceniany podpisuje część I arkusza?",
+    "answer": "Tak. Oceniany potwierdza podpisem przeprowadzenie rozmowy rozpoczynającej oraz zapoznanie się z kryteriami oceny i terminem sporządzenia oceny na piśmie. Następnie oryginał arkusza włącza się do akt osobowych, a kopię części I oceniający doręcza ocenianemu.",
+    "basis": "§ 6 ust. 2 i 3 rozporządzenia o ocenach okresowych"
+  },
+  {
+    "id": "uzasadnienie",
+    "question": "Czy uzasadnienie oceny okresowej jest obowiązkowe?",
+    "answer": "Uzasadnienie jest obowiązkowe przy ocenie negatywnej. Przy ocenie pozytywnej oceniający może je sporządzić. Uzasadnienie może polegać na ogólnym omówieniu oceny albo na odniesieniu się do wszystkich lub niektórych ocen cząstkowych.",
+    "basis": "§ 11 ust. 3 i 4 rozporządzenia o ocenach okresowych; przypis do wzoru arkusza"
+  }
+]

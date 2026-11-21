@@ -27,7 +27,7 @@ Kolejność: najpierw ★, potem pozostałe P0, potem P1 (w kolejności z tabeli
 |---|---|---|---|---|---|
 | ★Z07 | Silnik punktacji (§11, §10), walidacja kryteriów dodatkowych | Z03 | gotowe | geoglof | `z07-silnik-punktacji` |
 | ★Z08 | Silnik terminów (KC 112/115, święta, nieobecności) | Z03 | gotowe | geoglof | `z08-silnik-terminow` |
-| ★Z09 | Sugerowany poziom kompetencji i dane do „Dlaczego ten poziom?” | Z05, Z07 | wolne | | |
+| ★Z09 | Sugerowany poziom kompetencji i dane do „Dlaczego ten poziom?” | Z05, Z07 | gotowe | Nadia | `z09-sugerowany-poziom` |
 
 ## D. Interfejs i ścieżki
 

@@ -91,8 +91,6 @@ export function AutosaveIndicator({ state, className }: { state: AutosaveState; 
     state.status === "saving" ? Loader2 : state.status === "error" ? AlertCircle : CheckCircle2;
   return (
     <p
-      role="status"
-      aria-live="polite"
       className={cn(
         "inline-flex items-center gap-1.5 text-sm",
         state.status === "error" ? "text-danger" : "text-muted-foreground",
@@ -100,7 +98,11 @@ export function AutosaveIndicator({ state, className }: { state: AutosaveState; 
       )}
     >
       <Icon className={cn("size-4", state.status === "saving" && "animate-spin")} aria-hidden />
-      {autosaveText(state)}
+      <span aria-hidden>{autosaveText(state)}</span>
+      {/* Czytnik ekranu słyszy tylko wynik zapisu, a nie „Zapisywanie…” po każdej zmianie. */}
+      <span role="status" aria-live="polite" className="sr-only">
+        {state.status === "saving" ? "" : autosaveText(state)}
+      </span>
     </p>
   );
 }

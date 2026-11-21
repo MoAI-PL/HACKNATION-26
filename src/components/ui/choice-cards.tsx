@@ -20,7 +20,7 @@ export interface ChoiceOption<V extends string = string> {
 }
 
 const cardBase =
-  "group relative flex h-full w-full flex-col gap-1 rounded-lg border-2 bg-card p-4 text-left transition-colors hover:border-primary/50 disabled:cursor-not-allowed disabled:opacity-50";
+  "group relative flex h-full w-full flex-col gap-1 rounded-lg border-2 border-input bg-card p-4 text-left transition-colors hover:border-primary/50 disabled:cursor-not-allowed disabled:opacity-50";
 const cardChecked = "border-primary bg-secondary";
 
 function CheckMark({ checked }: { checked: boolean }) {
@@ -134,7 +134,7 @@ export function ChoiceCardMulti<V extends string>({
                 cardBase,
                 "cursor-pointer pr-10 has-[:focus-visible]:outline-3 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-ring",
                 checked && cardChecked,
-                disabled && "cursor-not-allowed opacity-50 hover:border-border",
+                disabled && "cursor-not-allowed opacity-50 hover:border-input",
               )}
             >
               <input

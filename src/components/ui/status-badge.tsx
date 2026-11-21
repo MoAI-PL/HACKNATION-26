@@ -34,23 +34,50 @@ const TONE_ICONS: Record<Tone, LucideIcon> = {
   ai: Sparkles,
 };
 
+export type BadgeSize = "sm" | "md";
+
+const SIZE_CLASSES: Record<BadgeSize, { box: string; icon: string }> = {
+  sm: { box: "gap-1 px-2.5 py-0.5 text-xs font-medium", icon: "size-3.5" },
+  // Większa odznaka do miejsc, gdzie pilność jest najważniejszą informacją (karta „Do zrobienia”).
+  md: { box: "gap-1.5 px-3 py-1 text-sm font-semibold", icon: "size-4" },
+};
+
+/**
+ * Wariant „solid”: pełne tło i biały tekst – do miejsc, gdzie pilność ma być widoczna od razu (karta „Do zrobienia”).
+ * Kontrast białego tekstu: danger 7,5:1, warning-strong 5,2:1, success 7,1:1, info 8,3:1, ai 7,1:1.
+ */
+const SOLID_CLASSES: Record<Tone, string> = {
+  neutral: "bg-muted-foreground text-white border-transparent",
+  info: "bg-info text-white border-transparent",
+  success: "bg-success text-white border-transparent",
+  warning: "bg-warning-strong text-white border-transparent",
+  danger: "bg-danger text-white border-transparent",
+  ai: "bg-ai text-ai-foreground border-transparent",
+};
+
+export type BadgeVariant = "soft" | "solid";
+
 export interface StatusBadgeProps extends React.ComponentProps<"span"> {
   tone?: Tone;
   icon?: LucideIcon | null;
+  size?: BadgeSize;
+  /** soft (domyślnie) – jasne tło i kolorowy tekst; solid – pełne kolorowe tło i biały tekst. */
+  variant?: BadgeVariant;
 }
 
-export function StatusBadge({ tone = "neutral", icon, className, children, ...props }: StatusBadgeProps) {
+export function StatusBadge({ tone = "neutral", icon, size = "sm", variant = "soft", className, children, ...props }: StatusBadgeProps) {
   const Icon = icon === null ? null : (icon ?? TONE_ICONS[tone]);
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-xs font-medium whitespace-nowrap",
-        TONE_CLASSES[tone],
+        "inline-flex items-center rounded-full border whitespace-nowrap",
+        SIZE_CLASSES[size].box,
+        variant === "solid" ? SOLID_CLASSES[tone] : TONE_CLASSES[tone],
         className,
       )}
       {...props}
     >
-      {Icon && <Icon className="size-3.5 shrink-0" aria-hidden />}
+      {Icon && <Icon className={cn("shrink-0", SIZE_CLASSES[size].icon)} aria-hidden />}
       {children}
     </span>
   );
@@ -61,17 +88,21 @@ export function DeadlineBadge({
   daysLeft,
   urgency,
   label,
+  size,
+  variant,
   className,
 }: {
   daysLeft: number;
   urgency: DeadlineUrgency;
   /** Własny tekst zamiast domyślnego, np. „do pt. 28.11”. */
   label?: string;
+  size?: BadgeSize;
+  variant?: BadgeVariant;
   className?: string;
 }) {
   const tone = URGENCY_TONE[urgency];
   return (
-    <StatusBadge tone={tone} icon={urgency === "PO_TERMINIE" ? XCircle : undefined} className={className}>
+    <StatusBadge tone={tone} size={size} variant={variant} icon={urgency === "PO_TERMINIE" ? XCircle : undefined} className={className}>
       {label ?? deadlineText(daysLeft)}
     </StatusBadge>
   );

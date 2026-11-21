@@ -192,6 +192,8 @@ export function Showcase() {
           sources={[{ document: "Rozporządzenie o ocenach okresowych", unit: "§ 11 ust. 3", quote: "Oceniający sporządza uzasadnienie przyznanej oceny w przypadku przyznania oceny negatywnej." }]}
           onInsert={(t) => setUzasadnienie(t)}
           onReject={() => undefined}
+          // Katalog komponentów: dane fikcyjne, bez zapisu do dziennika decyzji.
+          onDecision={() => undefined}
           onCancel={() => setStan("niedostepna")}
           onRetry={() => setStan("gotowa")}
         />

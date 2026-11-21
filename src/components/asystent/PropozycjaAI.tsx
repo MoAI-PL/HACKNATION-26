@@ -47,8 +47,11 @@ export interface PropozycjaAIProps {
   insertLabel?: string;
   onInsert: (text: string) => void;
   onReject: () => void;
-  /** Zapis decyzji do AuditLog (sekcja 4.2). */
-  onDecision?: (decision: ProposalDecision) => void;
+  /**
+   * Zapis decyzji do AuditLog (sekcja 4.2) – obowiązkowy. Najprościej: wspólna akcja `logAiDecision`
+   * z `@/lib/audit/decyzje-ai` (użytkownik z sesji), albo akcja ekranu, która sprawdza dostęp do obiektu.
+   */
+  onDecision: (decision: ProposalDecision) => void;
   /** Anulowanie w trakcie ładowania. */
   onCancel?: () => void;
   /** Ponowienie, gdy asystent był niedostępny. */
@@ -82,12 +85,12 @@ export function PropozycjaAI({
   }, [proposal]);
 
   const insert = () => {
-    onDecision?.({ decision: "WSTAW", proposal, final: text });
+    onDecision({ decision: "WSTAW", proposal, final: text });
     setDecided("WSTAW");
     onInsert(text);
   };
   const reject = () => {
-    onDecision?.({ decision: "ODRZUC", proposal });
+    onDecision({ decision: "ODRZUC", proposal });
     setDecided("ODRZUC");
     onReject();
   };

@@ -12,6 +12,18 @@ import { parseDraft, wizardDeadlines, type PreviousEvaluation, type WizardDeadli
 
 const iso = (d: Date | null | undefined): IsoDate | undefined => (d ? fromDbDate(d) : undefined);
 
+/**
+ * Poprzednia ocena okresowa jako punkt odniesienia terminów.
+ * ZAŁOŻENIE: ocena sporządzona przed wprowadzeniem pracownika do systemu (pulpit Z11 – „Dodaj pracownika”)
+ * ma datę, ale nie ma wyniku; liczymy ją jak ocenę pozytywną (zwykły cykl 24 miesięcy) – tak samo jak pulpit.
+ */
+function toPrevious(
+  prev: { evaluatedAt: Date | null; result: "POZYTYWNA" | "NEGATYWNA" | null; acknowledgedAt: Date | null } | null,
+): PreviousEvaluation | undefined {
+  if (!prev?.evaluatedAt) return undefined;
+  return { evaluatedAt: fromDbDate(prev.evaluatedAt), result: prev.result ?? "POZYTYWNA", acknowledgedAt: iso(prev.acknowledgedAt) };
+}
+
 /** Warunek dostępu przełożonego do oceny. */
 export function evaluationAccess(userId: string) {
   return { OR: [{ evaluatorId: userId }, { employee: { supervisorId: userId } }] };
@@ -59,14 +71,11 @@ export async function loadWizardData(evaluationId: string, userId: string): Prom
   if (!ev) return null;
 
   const prev = await prisma.evaluation.findFirst({
-    where: { employeeId: ev.employeeId, type: "OKRESOWA", id: { not: ev.id }, evaluatedAt: { not: null }, result: { not: null } },
+    where: { employeeId: ev.employeeId, type: "OKRESOWA", id: { not: ev.id }, evaluatedAt: { not: null } },
     orderBy: { evaluatedAt: "desc" },
     select: { evaluatedAt: true, result: true, acknowledgedAt: true },
   });
-  const previous: PreviousEvaluation | undefined =
-    prev?.evaluatedAt && prev.result
-      ? { evaluatedAt: fromDbDate(prev.evaluatedAt), result: prev.result, acknowledgedAt: iso(prev.acknowledgedAt) }
-      : undefined;
+  const previous = toPrevious(prev);
 
   const emp = ev.employee;
   const position = emp.position ? positionFromRecord(emp.position) : null;
@@ -126,12 +135,12 @@ export async function listPeriodicEvaluations(userId: string): Promise<PeriodicL
     let conversationDue: IsoDate | undefined;
     if (ev.status === "DO_ROZPOCZECIA") {
       const prev = await prisma.evaluation.findFirst({
-        where: { employeeId: ev.employeeId, type: "OKRESOWA", id: { not: ev.id }, evaluatedAt: { not: null }, result: { not: null } },
+        where: { employeeId: ev.employeeId, type: "OKRESOWA", id: { not: ev.id }, evaluatedAt: { not: null } },
         orderBy: { evaluatedAt: "desc" },
         select: { evaluatedAt: true, result: true, acknowledgedAt: true },
       });
       const d = wizardDeadlines({
-        previous: prev?.evaluatedAt && prev.result ? { evaluatedAt: fromDbDate(prev.evaluatedAt), result: prev.result, acknowledgedAt: iso(prev.acknowledgedAt) } : undefined,
+        previous: toPrevious(prev),
         permanentFrom: iso(ev.employee.permanentFrom),
       });
       conversationDue = d?.conversation.date;

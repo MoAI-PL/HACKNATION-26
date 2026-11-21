@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { globalShortcutFor, isTypingTarget, matchesShortcut, SHORTCUT_EVENTS } from "@/lib/ui/shortcuts";
 import { autosaveText, deadlineText, urgencyFromDaysLeft, URGENCY_TONE, wizardStepLabel } from "@/lib/ui/status";
-import { ASSISTANT_HREF, isActivePath, navForRole, plannedNavForRole, roleHasAssistant, roleHasQuickNote } from "@/lib/ui/nav";
+import { ASSISTANT_HREF, isActivePath, isScreenReady, navForRole, plannedNavForRole, roleHasAssistant, roleHasQuickNote } from "@/lib/ui/nav";
 import { ROLES } from "@/lib/domain/types";
 
 const pole = (tagName: string) => ({ tagName, getAttribute: () => null });
@@ -86,9 +86,22 @@ describe("nawigacja", () => {
   it("oceniany nie widzi ekranów przełożonego, asystenta ani szybkiej notatki", () => {
     expect(navForRole("OCENIANY").map((i) => i.href)).toEqual(["/moje-oceny"]);
     expect(roleHasAssistant("OCENIANY")).toBe(false);
+    // Asystent formalny we wspólnej grupie (wspolne) – także dla HR i kierującego (role.ts: obszar /asystent).
+    expect(navForRole("HR").map((i) => i.href)).toEqual(["/hr", ASSISTANT_HREF]);
+    expect(navForRole("KIERUJACY_KOMORKA").map((i) => i.href)).toEqual(["/kierujacy", ASSISTANT_HREF]);
+    expect(roleHasAssistant("HR")).toBe(true);
     expect(roleHasQuickNote("OCENIANY", true)).toBe(false);
     expect(roleHasQuickNote("PRZELOZONY", true)).toBe(true);
     expect(roleHasQuickNote("PRZELOZONY", false)).toBe(false);
+  });
+
+  it("gotowość ekranu wynika z menu (także podstrony), ekrany z pending nie są gotowe", () => {
+    expect(isScreenReady("/pulpit")).toBe(true);
+    expect(isScreenReady(`${ASSISTANT_HREF}/historia`)).toBe(true);
+    for (const item of plannedNavForRole("PRZELOZONY").filter((i) => i.pending)) {
+      expect(isScreenReady(`${item.href}/123`)).toBe(false);
+    }
+    expect(isScreenReady("/nie-ma-takiego")).toBe(false);
   });
 
   it("aktywna pozycja obejmuje podstrony, ale nie podobne adresy", () => {

@@ -73,7 +73,7 @@ Kolejność: najpierw ★, potem pozostałe P0, potem P1 (w kolejności z tabeli
 
 | ID | Zadanie | Zależy od | Status | Kto | Gałąź |
 |---|---|---|---|---|---|
-| Z40 | Asystent języka (opis zachowania zamiast opisu osoby) | Z15, Z20 | w toku | bartektymochowicz-collab | `bartek/z40-asystent-jezyka` |
+| Z40 | Asystent języka (opis zachowania zamiast opisu osoby) | Z15, Z20 | gotowe | bartektymochowicz-collab | `bartek/z40-asystent-jezyka` |
 | Z36 | Lustro oceniającego | Z09, Z13, Z18 | gotowe | geoglof | `z36-lustro` |
 | Z42 | Przepisy w kontekście („ⓘ Dlaczego?”) | Z10, Z21 | wolne | | |
 | Z43 | Tryb rozmowy | Z24, Z15 | wolne | | |

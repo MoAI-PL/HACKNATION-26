@@ -60,10 +60,9 @@ const NAV_BY_ROLE: Record<Role, NavItem[]> = {
       pending: "Z24",
     },
   ],
-  // ZAŁOŻENIE: strona asystenta (Z22) leży w grupie (przelozony), więc na razie tylko przełożony.
-  // role.ts dopuszcza /asystent także dla HR i kierującego – gdy strona trafi do wspólnego layoutu, dodać ASYSTENT_FORMALNY tutaj.
-  KIERUJACY_KOMORKA: [{ href: "/kierujacy", label: "Arkusze do podpisu", icon: "podpis" }],
-  HR: [{ href: "/hr", label: "Panel HR", icon: "hr", description: "Oceny, terminy, przypomnienia" }],
+  // Asystent formalny leży we wspólnej grupie (wspolne) – dostęp jak obszar „/asystent” w role.ts.
+  KIERUJACY_KOMORKA: [{ href: "/kierujacy", label: "Arkusze do podpisu", icon: "podpis" }, ASYSTENT_FORMALNY],
+  HR: [{ href: "/hr", label: "Panel HR", icon: "hr", description: "Oceny, terminy, przypomnienia" }, ASYSTENT_FORMALNY],
   OCENIANY: [{ href: "/moje-oceny", label: "Moje oceny", icon: "moje" }],
 };
 

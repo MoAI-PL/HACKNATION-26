@@ -86,6 +86,10 @@ describe("nawigacja", () => {
   it("oceniany nie widzi ekranów przełożonego, asystenta ani szybkiej notatki", () => {
     expect(navForRole("OCENIANY").map((i) => i.href)).toEqual(["/moje-oceny"]);
     expect(roleHasAssistant("OCENIANY")).toBe(false);
+    // Asystent formalny we wspólnej grupie (wspolne) – także dla HR i kierującego (role.ts: obszar /asystent).
+    expect(navForRole("HR").map((i) => i.href)).toEqual(["/hr", ASSISTANT_HREF]);
+    expect(navForRole("KIERUJACY_KOMORKA").map((i) => i.href)).toEqual(["/kierujacy", ASSISTANT_HREF]);
+    expect(roleHasAssistant("HR")).toBe(true);
     expect(roleHasQuickNote("OCENIANY", true)).toBe(false);
     expect(roleHasQuickNote("PRZELOZONY", true)).toBe(true);
     expect(roleHasQuickNote("PRZELOZONY", false)).toBe(false);

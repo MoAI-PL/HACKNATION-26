@@ -33,7 +33,7 @@ export function DemoAccounts({ accounts, password }: { accounts: readonly DemoAc
                 <span className="text-sm text-muted-foreground">{a.description}</span>
                 <span className="break-all font-mono text-xs text-muted-foreground">{a.email}</span>
               </div>
-              <Button type="submit" variant="outline" className="mt-auto h-9" disabled={pending}>
+              <Button type="submit" variant="outline" className="mt-auto h-auto min-h-9 whitespace-normal py-2 text-center" disabled={pending}>
                 Zaloguj jako {a.name}
               </Button>
             </form>

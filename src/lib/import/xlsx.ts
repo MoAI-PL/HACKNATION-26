@@ -5,20 +5,13 @@
 // ma znane podatności. Format OOXML w zakresie, którego potrzebujemy, jest prosty: ZIP + kilka plików XML.
 // Zależności: fflate (MIT) do ZIP i fast-xml-parser (MIT) do XML.
 //
-// Zabezpieczenia dla plików wgrywanych przez użytkownika (panel HR, Z19): limit rozmiaru po rozpakowaniu,
-// odrzucenie DOCTYPE (encje XML), odczyt wyłącznie części wskazanych w relacjach skoroszytu.
+// Zabezpieczenia dla plików wgrywanych przez użytkownika (panel HR, Z19): ooxml.ts (limit rozmiaru, odrzucenie DOCTYPE)
+// i odczyt wyłącznie części wskazanych w relacjach skoroszytu.
 
-import { unzipSync } from "fflate";
 import { XMLParser } from "fast-xml-parser";
+import { OoxmlReadError, openOoxml } from "./ooxml";
 
-export const MAX_UNCOMPRESSED_BYTES = 50 * 1024 * 1024;
-
-export class XlsxReadError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = "XlsxReadError";
-  }
-}
+export { OoxmlReadError as XlsxReadError, MAX_UNCOMPRESSED_BYTES } from "./ooxml";
 
 export interface XlsxSheet {
   name: string;
@@ -100,32 +93,14 @@ function resolveTarget(target: string): string {
 }
 
 export function readXlsx(data: Uint8Array): XlsxWorkbook {
-  let files: Record<string, Uint8Array>;
-  let total = 0;
-  try {
-    files = unzipSync(data, {
-      filter: (f) => {
-        total += f.originalSize;
-        if (total > MAX_UNCOMPRESSED_BYTES) throw new XlsxReadError("Plik po rozpakowaniu przekracza 50 MB.");
-        return f.name.endsWith(".xml") || f.name.endsWith(".rels");
-      },
-    });
-  } catch (e) {
-    if (e instanceof XlsxReadError) throw e;
-    throw new XlsxReadError("Plik nie jest skoroszytem .xlsx (nie da się go rozpakować jako archiwum ZIP).");
-  }
-
-  const decoder = new TextDecoder("utf-8");
+  const pkg = openOoxml(data, "skoroszytem .xlsx");
   const readXml = (path: string): XmlNode | undefined => {
-    const bytes = files[path];
-    if (!bytes) return undefined;
-    const text = decoder.decode(bytes);
-    if (/<!DOCTYPE/i.test(text)) throw new XlsxReadError(`Część „${path}” zawiera deklarację DOCTYPE – takie pliki odrzucamy ze względów bezpieczeństwa.`);
-    return xml.parse(text) as XmlNode;
+    const text = pkg.part(path);
+    return text === undefined ? undefined : (xml.parse(text) as XmlNode);
   };
 
   const workbook = readXml("xl/workbook.xml")?.workbook as XmlNode | undefined;
-  if (!workbook) throw new XlsxReadError("W pliku brakuje części xl/workbook.xml – to nie jest skoroszyt Excela.");
+  if (!workbook) throw new OoxmlReadError("W pliku brakuje części xl/workbook.xml – to nie jest skoroszyt Excela.");
   const rels = (readXml("xl/_rels/workbook.xml.rels")?.Relationships as XmlNode | undefined)?.Relationship as XmlNode[] | undefined;
   const relTarget = new Map(asArray(rels).map((r) => [String(r["@_Id"]), String(r["@_Target"])]));
 
@@ -134,9 +109,9 @@ export function readXlsx(data: Uint8Array): XlsxWorkbook {
   const sheets: XlsxSheet[] = asArray((workbook.sheets as XmlNode | undefined)?.sheet as XmlNode[] | undefined).map((s) => {
     const name = String(s["@_name"]);
     const target = relTarget.get(String(s["@_id"]));
-    if (!target) throw new XlsxReadError(`Arkusz „${name}” nie ma powiązanej części w pliku.`);
+    if (!target) throw new OoxmlReadError(`Arkusz „${name}” nie ma powiązanej części w pliku.`);
     const ws = readXml(resolveTarget(target))?.worksheet as XmlNode | undefined;
-    if (!ws) throw new XlsxReadError(`Nie można odczytać arkusza „${name}”.`);
+    if (!ws) throw new OoxmlReadError(`Nie można odczytać arkusza „${name}”.`);
 
     const cells = new Map<string, string>();
     let maxRow = 0;

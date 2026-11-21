@@ -132,12 +132,20 @@ describe("treść OSP od MC", () => {
 describe("dane demo (Z26) zgodne z plikami OSP", () => {
   it.each(Object.entries(seedOsp))("%s", (_klucz, wpis) => {
     const r = parseOsp(readFileSync(wpis.sourceFileName));
-    expect({ title: wpis.title, symbol: wpis.symbol, subordinates: wpis.subordinates, dominant: wpis.dominantTasks.length, other: wpis.otherTasks.length }).toEqual({
+    expect({
+      title: wpis.title,
+      symbol: wpis.symbol,
+      subordinates: wpis.subordinates,
+      dominant: wpis.dominantTasks.length,
+      other: wpis.otherTasks.length,
+      competencies: wpis.requiredCompetencies.map((c) => c.toLocaleLowerCase("pl")),
+    }).toEqual({
       title: r.position.title,
       symbol: r.position.symbol,
       subordinates: r.position.subordinates,
       dominant: r.position.dominantTasks.length,
       other: r.position.otherTasks.length,
+      competencies: r.position.requiredCompetencies.map((c) => c.toLocaleLowerCase("pl")),
     });
   });
 });

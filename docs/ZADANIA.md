@@ -78,7 +78,7 @@ Kolejność: najpierw ★, potem pozostałe P0, potem P1 (w kolejności z tabeli
 | Z42 | Przepisy w kontekście („ⓘ Dlaczego?”) | Z10, Z21 | wolne | | |
 | Z43 | Tryb rozmowy | Z24, Z15 | wolne | | |
 | Z34 | Pseudonimizacja przed LLM | Z20 | wolne | | |
-| Z35 | Dziennik audytu z eksportem CSV | Z14 | wolne | | |
+| Z35 | Dziennik audytu z eksportem CSV | Z14 | w toku | geoglof | `z35-dziennik-audytu` |
 | Z37 | Oś czasu procesu pracownika | Z08 | wolne | | |
 | Z38 | REST API `/api/v1` (eksport JSON) | Z15 | gotowe | geoglof | `z38-rest-api` |
 

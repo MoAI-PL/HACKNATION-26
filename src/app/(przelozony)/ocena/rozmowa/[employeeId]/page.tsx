@@ -74,6 +74,9 @@ export default async function PrzygotowanieRozmowyPage({
               Wszyscy podwładni
             </Link>
             <PrintButton />
+            <Link href={`/ocena/rozmowa/${encodeURIComponent(employeeId)}/tryb?typ=${kind}`} className={cn(buttonVariants(), "h-10")}>
+              Tryb rozmowy
+            </Link>
           </div>
         }
       />

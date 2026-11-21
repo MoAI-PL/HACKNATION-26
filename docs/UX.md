@@ -26,7 +26,7 @@ Podgląd wszystkich komponentów: **`/komponenty`** (po zalogowaniu dowolnym kon
 | `input` | `#7d8996` | obramowanie pól (kontrast ≥ 3:1) |
 | `ai`, `ai-soft`, `ai-border` | `#6d28d9`, `#f5f1ff`, `#8b5cf6` | **wyłącznie** propozycje AI |
 | `success`, `warning`, `danger`, `info` (+ `-soft`) | zielony, brązowo-pomarańczowy, czerwony, granat | statusy i komunikaty |
-| `warning-strong` | `#c2410c` | tylko grafika: pomarańczowy pasek pilności (tekst – `warning`) |
+| `warning-strong` | `#c2410c` | tło pomarańczowej odznaki pilności z białym tekstem (jako tekst – `warning`) |
 
 Kolorów statusów nie używamy do dekoracji. Nowy kolor dodajemy tylko jako token w `globals.css`.
 
@@ -37,7 +37,7 @@ Kolorów statusów nie używamy do dekoracji. Nowy kolor dodajemy tylko jako tok
 | `AppShell`, `PageHeader` | `components/layout/AppShell.tsx` | układ każdego ekranu po zalogowaniu; `PageHeader` = jeden `h1` + jedna główna akcja |
 | `Button` | `components/ui/button.tsx` | warianty: `default` (główna akcja), `outline`, `ghost`, `link`, `destructive`, `ai` (tylko w propozycjach AI) |
 | `Card` … `CardFooter` | `components/ui/card.tsx` | grupowanie treści, karta „Do zrobienia” |
-| `StatusBadge`, `DeadlineBadge`, `EvaluationStatusBadge` | `components/ui/status-badge.tsx` | etap oceny, termin (kolor wg `urgencyFromDaysLeft`); `size="md"` – większa odznaka; `TONE_STRIPE` – kolorowy pasek wiersza (zawsze razem z odznaką z tekstem) |
+| `StatusBadge`, `DeadlineBadge`, `EvaluationStatusBadge` | `components/ui/status-badge.tsx` | etap oceny, termin (kolor wg `urgencyFromDaysLeft`); `size="md"` – większa odznaka; `variant="solid"` – pełne kolorowe tło i biały tekst (karta „Do zrobienia”) |
 | `Notice` | `components/ui/notice.tsx` | komunikat z powodem, podstawą prawną i akcją; błędy/ostrzeżenia mają `role="alert"` |
 | `EmptyState` | `components/ui/empty-state.tsx` | pusta lista z instrukcją i przyciskiem |
 | `InfoTip`, `Term` | `components/ui/info-tip.tsx` | „ⓘ Dlaczego?” przy polach i krokach (treści: Z42), dymki żargonu ze słownika `GLOSSARY` |

@@ -90,7 +90,7 @@
   --success-soft: #e7f4ea;
   --warning: #8a4b00;
   --warning-soft: #fff3dc;
-  /* Pomarańcz do grafiki (pasek pilności) – 5,2:1 na bieli; do tekstu używamy --warning. */
+  /* Pomarańcz jako tło odznaki pilności z białym tekstem (5,2:1); jako kolor tekstu używamy --warning. */
   --warning-strong: #c2410c;
   --danger: #a61b1b;
   --danger-soft: #fdeceb;

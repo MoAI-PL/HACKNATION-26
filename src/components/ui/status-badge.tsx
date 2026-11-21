@@ -42,30 +42,37 @@ const SIZE_CLASSES: Record<BadgeSize, { box: string; icon: string }> = {
   md: { box: "gap-1.5 px-3 py-1 text-sm font-semibold", icon: "size-4" },
 };
 
-/** Kolor lewego paska wiersza według tonu (np. wiersz w „Do zrobienia”) – zawsze razem z odznaką z tekstem. */
-export const TONE_STRIPE: Record<Tone, string> = {
-  neutral: "border-l-border",
-  info: "border-l-info",
-  success: "border-l-success",
-  warning: "border-l-warning-strong",
-  danger: "border-l-danger",
-  ai: "border-l-ai",
+/**
+ * Wariant „solid”: pełne tło i biały tekst – do miejsc, gdzie pilność ma być widoczna od razu (karta „Do zrobienia”).
+ * Kontrast białego tekstu: danger 7,5:1, warning-strong 5,2:1, success 7,1:1, info 8,3:1, ai 7,1:1.
+ */
+const SOLID_CLASSES: Record<Tone, string> = {
+  neutral: "bg-muted-foreground text-white border-transparent",
+  info: "bg-info text-white border-transparent",
+  success: "bg-success text-white border-transparent",
+  warning: "bg-warning-strong text-white border-transparent",
+  danger: "bg-danger text-white border-transparent",
+  ai: "bg-ai text-ai-foreground border-transparent",
 };
+
+export type BadgeVariant = "soft" | "solid";
 
 export interface StatusBadgeProps extends React.ComponentProps<"span"> {
   tone?: Tone;
   icon?: LucideIcon | null;
   size?: BadgeSize;
+  /** soft (domyślnie) – jasne tło i kolorowy tekst; solid – pełne kolorowe tło i biały tekst. */
+  variant?: BadgeVariant;
 }
 
-export function StatusBadge({ tone = "neutral", icon, size = "sm", className, children, ...props }: StatusBadgeProps) {
+export function StatusBadge({ tone = "neutral", icon, size = "sm", variant = "soft", className, children, ...props }: StatusBadgeProps) {
   const Icon = icon === null ? null : (icon ?? TONE_ICONS[tone]);
   return (
     <span
       className={cn(
         "inline-flex items-center rounded-full border whitespace-nowrap",
         SIZE_CLASSES[size].box,
-        TONE_CLASSES[tone],
+        variant === "solid" ? SOLID_CLASSES[tone] : TONE_CLASSES[tone],
         className,
       )}
       {...props}
@@ -82,6 +89,7 @@ export function DeadlineBadge({
   urgency,
   label,
   size,
+  variant,
   className,
 }: {
   daysLeft: number;
@@ -89,11 +97,12 @@ export function DeadlineBadge({
   /** Własny tekst zamiast domyślnego, np. „do pt. 28.11”. */
   label?: string;
   size?: BadgeSize;
+  variant?: BadgeVariant;
   className?: string;
 }) {
   const tone = URGENCY_TONE[urgency];
   return (
-    <StatusBadge tone={tone} size={size} icon={urgency === "PO_TERMINIE" ? XCircle : undefined} className={className}>
+    <StatusBadge tone={tone} size={size} variant={variant} icon={urgency === "PO_TERMINIE" ? XCircle : undefined} className={className}>
       {label ?? deadlineText(daysLeft)}
     </StatusBadge>
   );

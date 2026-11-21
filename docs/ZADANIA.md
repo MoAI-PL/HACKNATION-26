@@ -77,7 +77,7 @@ Kolejność: najpierw ★, potem pozostałe P0, potem P1 (w kolejności z tabeli
 | Z36 | Lustro oceniającego | Z09, Z13, Z18 | wolne | | |
 | Z42 | Przepisy w kontekście („ⓘ Dlaczego?”) | Z10, Z21 | wolne | | |
 | Z43 | Tryb rozmowy | Z24, Z15 | wolne | | |
-| Z34 | Pseudonimizacja przed LLM | Z20 | wolne | | |
+| Z34 | Pseudonimizacja przed LLM | Z20 | w toku | Nadia | `z34-pseudonimizacja` |
 | Z35 | Dziennik audytu z eksportem CSV | Z14 | wolne | | |
 | Z37 | Oś czasu procesu pracownika | Z08 | wolne | | |
 | Z38 | REST API `/api/v1` (eksport JSON) | Z15 | wolne | | |

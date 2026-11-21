@@ -19,7 +19,7 @@ export const PROTECTED_AREAS: ReadonlyArray<{ prefix: string; roles: readonly Ro
   { prefix: "/pulpit", roles: ["PRZELOZONY"] },
   { prefix: "/ocena", roles: ["PRZELOZONY"] },
   { prefix: "/obserwacje", roles: ["PRZELOZONY"] },
-  { prefix: "/asystent", roles: ["PRZELOZONY", "HR"] },
+  { prefix: "/asystent", roles: ["PRZELOZONY", "HR", "KIERUJACY_KOMORKA"] },
   { prefix: "/hr", roles: ["HR"] },
   { prefix: "/moje-oceny", roles: ["OCENIANY"] },
   { prefix: "/kierujacy", roles: ["KIERUJACY_KOMORKA"] },

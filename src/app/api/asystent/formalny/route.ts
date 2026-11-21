@@ -2,10 +2,12 @@
 //   GET  /api/asystent/formalny?krok=OCENA → podpowiedzi pytań dla kroku i informacja, czy model AI jest dostępny
 //   POST /api/asystent/formalny { pytanie, krok? } → odpowiedź ze źródłami albo odmowa
 //
-// ZAŁOŻENIE: autoryzację (tylko zalogowani przełożeni, HR, kierujący) dodaje Z04 – wtedy userId trafi do dziennika zapytań.
+// Dostęp (Z04): przełożony, HR i kierujący komórką; bez sesji 401, inna rola (oceniany) 403.
 
-import { NextResponse, type NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 import { z } from "zod";
+import { withRole } from "@/lib/auth/guard";
+import type { Role } from "@/lib/domain/types";
 import { answerFormalQuestion, MAX_QUESTION_LENGTH } from "@/lib/ai/funkcje/asystent-formalny";
 import { logAssistantQuery } from "@/lib/ai/funkcje/dziennik-zapytan";
 import { suggestionsFor } from "@/lib/ai/funkcje/podpowiedzi";
@@ -35,18 +37,21 @@ function rateLimited(key: string): boolean {
   return recent.length > MAX_PER_WINDOW;
 }
 
-export function GET(req: NextRequest) {
+/** Role z dostępem do asystenta formalnego (te same co ekran /asystent w src/lib/auth/role.ts). */
+const ASSISTANT_ROLES: readonly Role[] = ["PRZELOZONY", "HR", "KIERUJACY_KOMORKA"];
+
+export const GET = withRole(ASSISTANT_ROLES, (req) => {
   const llm = getLLM();
   return NextResponse.json({
-    podpowiedzi: suggestionsFor(req.nextUrl.searchParams.get("krok")),
+    podpowiedzi: suggestionsFor(new URL(req.url).searchParams.get("krok")),
     aiDostepne: !!llm,
     model: llm?.model ?? null,
   });
-}
+});
 
-export async function POST(req: NextRequest) {
-  const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "lokalny";
-  if (rateLimited(ip)) {
+export const POST = withRole(ASSISTANT_ROLES, async (req, _ctx, user) => {
+  // Limit liczony na użytkownika (po zalogowaniu znamy go pewniej niż adres IP).
+  if (rateLimited(user.id)) {
     return NextResponse.json({ blad: "Zbyt wiele pytań w krótkim czasie. Spróbuj ponownie za minutę." }, { status: 429 });
   }
 
@@ -62,6 +67,6 @@ export async function POST(req: NextRequest) {
   }
 
   const answer = await answerFormalQuestion(parsed.data.pytanie);
-  await logAssistantQuery(answer, { step: parsed.data.krok });
+  await logAssistantQuery(answer, { userId: user.id, step: parsed.data.krok });
   return NextResponse.json(answer);
-}
+});

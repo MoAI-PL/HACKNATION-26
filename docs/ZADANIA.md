@@ -33,7 +33,7 @@ Kolejność: najpierw ★, potem pozostałe P0, potem P1 (w kolejności z tabeli
 
 | ID | Zadanie | Zależy od | Status | Kto | Gałąź |
 |---|---|---|---|---|---|
-| ★Z10 | Układ i system wizualny, komponenty bazowe, `<PropozycjaAI>` | Z02 | w toku | Kamson2077 | `z10-uklad-ui` |
+| ★Z10 | Układ i system wizualny, komponenty bazowe, `<PropozycjaAI>` | Z02 | gotowe | Kamson2077 | `z10-uklad-ui` |
 | ★Z11 | Pulpit przełożonego z kartą „Do zrobienia” | Z04, Z08, Z10 | wolne | | |
 | ★Z12 | Kreator oceny okresowej, część 1 (OSP, arkusz, kryteria, rozmowa rozpoczynająca) | Z06, Z07, Z08, Z10 | wolne | | |
 | ★Z13 | Dziennik obserwacji (SDR) | Z03, Z10 | wolne | | |

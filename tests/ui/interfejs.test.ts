@@ -75,7 +75,7 @@ describe("nawigacja", () => {
 
   it("menu ukrywa ekrany w budowie (bez martwych linków)", () => {
     expect(navForRole("PRZELOZONY").every((i) => !i.pending)).toBe(true);
-    expect(navForRole("PRZELOZONY").map((i) => i.href)).toEqual(["/pulpit", ASSISTANT_HREF]);
+    expect(navForRole("PRZELOZONY").map((i) => i.href)).toEqual(["/pulpit", "/obserwacje", ASSISTANT_HREF]);
   });
 
   it("adresy menu leżą w obszarach ról z Z04", async () => {

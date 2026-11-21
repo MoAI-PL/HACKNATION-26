@@ -381,7 +381,7 @@ export function TrybRozmowy({ employeeId, kind, title, steps, prepHref }: TrybRo
     <div className="mx-auto flex w-full max-w-4xl flex-col gap-6">
       <div className="flex flex-wrap items-center justify-between gap-3 border-b pb-3">
         <div className="min-w-0">
-          <p className="truncate text-sm text-muted-foreground">{title}</p>
+          <h1 className="truncate text-sm font-normal text-muted-foreground">{title}</h1>
           <p className="text-sm">
             Punkt {index + 1} z {steps.length}
             <span className="text-muted-foreground"> · zakres z przepisu: {requiredCount - missing.length}/{requiredCount}</span>

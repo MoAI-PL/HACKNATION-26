@@ -10,6 +10,8 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
+    "e2e": "playwright test",
+    "e2e:raport": "playwright show-report",
     "eval": "tsx scripts/eval-asystenta.ts",
     "eval:notatki": "tsx scripts/eval-notatek.ts",
     "seed": "prisma db seed",
@@ -41,7 +43,9 @@
     "zod": "^4.6.7"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.14.0",
     "@eslint/eslintrc": "^3",
+    "@playwright/test": "^1.65.1",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",

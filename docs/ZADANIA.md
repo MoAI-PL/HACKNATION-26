@@ -18,7 +18,7 @@ Kolejność: najpierw ★, potem pozostałe P0, potem P1 (w kolejności z tabeli
 | ID | Zadanie | Zależy od | Status | Kto | Gałąź |
 |---|---|---|---|---|---|
 | ★Z05 | Import modelu kompetencji (xlsx → JSON) | Z02 | gotowe | Nadia | `z05-import-modelu` |
-| ★Z06 | Import OSP (docx) i automatyczny wybór arkusza B/C | Z03 | wolne | | |
+| ★Z06 | Import OSP (docx) i automatyczny wybór arkusza B/C | Z03 | gotowe | Nadia | `z06-import-osp` |
 | ★Z26 | Dane demo (seed) wokół persony przełożonej | Z03 | gotowe | suzanne0401 | `z26-dane-demo` |
 
 ## C. Silnik reguł
@@ -33,16 +33,16 @@ Kolejność: najpierw ★, potem pozostałe P0, potem P1 (w kolejności z tabeli
 
 | ID | Zadanie | Zależy od | Status | Kto | Gałąź |
 |---|---|---|---|---|---|
-| ★Z10 | Układ i system wizualny, komponenty bazowe, `<PropozycjaAI>` | Z02 | w toku | Kamson2077 | `z10-uklad-ui` |
-| ★Z11 | Pulpit przełożonego z kartą „Do zrobienia” | Z04, Z08, Z10 | wolne | | |
-| ★Z12 | Kreator oceny okresowej, część 1 (OSP, arkusz, kryteria, rozmowa rozpoczynająca) | Z06, Z07, Z08, Z10 | wolne | | |
-| ★Z13 | Dziennik obserwacji (SDR) | Z03, Z10 | wolne | | |
+| ★Z10 | Układ i system wizualny, komponenty bazowe, `<PropozycjaAI>` | Z02 | gotowe | Kamson2077 | `z10-uklad-ui` |
+| ★Z11 | Pulpit przełożonego z kartą „Do zrobienia” | Z04, Z08, Z10 | w toku | Kamson2077 | |
+| ★Z12 | Kreator oceny okresowej, część 1 (OSP, arkusz, kryteria, rozmowa rozpoczynająca) | Z06, Z07, Z08, Z10 | gotowe | geoglof | `z12-kreator-okresowej` |
+| ★Z13 | Dziennik obserwacji (SDR) | Z03, Z10 | gotowe | Nadia | `z13-dziennik-obserwacji` |
 | ★Z41 | Szybka notatka w 10 sekund | Z13, Z20 | wolne | | |
-| ★Z14 | Zakończenie oceny: karty zachowań, sugestia, decyzja przełożonego | Z09, Z13 | wolne | | |
+| ★Z14 | Zakończenie oceny: karty zachowań, sugestia, decyzja przełożonego | Z09, Z13 | gotowe | geoglof | `z14-zakonczenie-oceny` |
 | ★Z15 | Podsumowanie i wynik, uzasadnienie, IPRZ | Z07, Z14 | wolne | | |
 | ★Z16 | PDF arkuszy B i C | Z07, Z15 | wolne | | |
 | Z17 | Ścieżka pierwszej oceny | Z07, Z08, Z14, Z16 | wolne | | |
-| Z18 | Panel HR, część 1 (oceny, terminy, przypomnienia) | Z04, Z08, Z10 | wolne | | |
+| Z18 | Panel HR, część 1 (oceny, terminy, przypomnienia) | Z04, Z08, Z10 | gotowe | Nadia | `z18-panel-hr` |
 | Z19 | Panel HR, część 2 (edycja modelu i przepisów) | Z05, Z18 | wolne | | |
 
 ## E. Sztuczna inteligencja
@@ -52,7 +52,7 @@ Kolejność: najpierw ★, potem pozostałe P0, potem P1 (w kolejności z tabeli
 | ★Z20 | Warstwa LLM (`LLMProvider`, konfiguracja w `.env`) | Z02 | gotowe | suzanne0401 | `z20-z22-asystent` |
 | ★Z21 | Baza wiedzy (przepisy, poradniki, ustawa z ISAP, BM25) | Z02 | gotowe | suzanne0401 | `z21-baza-wiedzy` |
 | ★Z22 | Asystent formalny ze źródłami i odmową | Z20, Z21 | gotowe | suzanne0401 | `z20-z22-asystent` |
-| ★Z23 | Analiza OSP: propozycja kryteriów dodatkowych z cytatem | Z06, Z20 | wolne | | |
+| ★Z23 | Analiza OSP: propozycja kryteriów dodatkowych z cytatem | Z06, Z20 | gotowe | Nadia | `z23-analiza-osp` |
 | Z24 | Asystent rozmowy | Z20, Z14 | wolne | | |
 | Z25 | Zestaw testowy asystenta (`npm run eval`) | Z22 | do przeglądu | bartektymochowicz-collab | `bartek/z25-eval-asystenta` |
 
@@ -61,9 +61,9 @@ Kolejność: najpierw ★, potem pozostałe P0, potem P1 (w kolejności z tabeli
 | ID | Zadanie | Zależy od | Status | Kto | Gałąź |
 |---|---|---|---|---|---|
 | ★Z27 | Pytania do mentorów (`docs/ZALOZENIA.md`) | — | wolne | | |
-| ★Z28 | Szkic w HackTribe – **wysłać przed 19:30** | Z01 | w toku | geoglof | — |
-| ★Z29 | Publiczne demo | Z04, Z26 | w toku | suzanne0401 | |
-| ★Z44 | Reset danych demo i działanie bez AI | Z20, Z26 | wolne | | |
+| ★Z28 | Szkic w HackTribe – **wysłać przed 19:30** | Z01 | gotowe | geoglof | — |
+| ★Z29 | Publiczne demo | Z04, Z26 | gotowe | suzanne0401 | `z29-publiczne-demo` |
+| ★Z44 | Reset danych demo i działanie bez AI | Z20, Z26 | gotowe | Nadia | `z44-zabezpieczenia-demo` |
 | Z30 | Testy ręczne, Playwright, dostępność, pomiar czasu oceny | Z15, Z16 | wolne | | |
 | Z31 | Dokumentacja (`README`, `docs/`) | całość | wolne | | |
 | Z32 | Prezentacja, film, pitch | Z25, Z30 | wolne | | |

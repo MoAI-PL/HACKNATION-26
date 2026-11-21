@@ -23,7 +23,7 @@ docs/               tablica zadań, założenia, dokumentacja
 
 ## Publiczne demo
 
-Adres demo: _(uzupełnić po wdrożeniu)_. Wdrożenie: Vercel + Neon – instrukcja w [`docs/WDROZENIE.md`](docs/WDROZENIE.md).
+**Adres demo: https://hacknation-26.vercel.app** – konta demo poniżej (logowanie jednym kliknięciem na ekranie logowania). Wdrożenie: Vercel + Neon – instrukcja w [`docs/WDROZENIE.md`](docs/WDROZENIE.md).
 
 ## Uruchomienie lokalne
 
@@ -70,7 +70,12 @@ Konta i dane demo tworzy `npm run seed` (można uruchamiać wielokrotnie – dan
 | `npm run build` | build produkcyjny |
 | `npm run seed` | dane demo |
 | `npm run wiedza` | buduje bazę wiedzy asystenta z PDF-ów (`data/wiedza/fragmenty.json`) |
+<<<<<<< HEAD
 | `npm run eval` | zestaw testowy asystenta formalnego (`-- --bez-ai`: tylko wyszukiwanie); wynik w `eval/wynik.md` |
+=======
+| `npm run eval` | zestaw testowy asystenta formalnego |
+| `npm run osp -- plik.docx` | podgląd importu opisu stanowiska pracy: co system odczyta i jaki arkusz (B/C) wybierze |
+>>>>>>> 9501b7a07679b3ddeb35c7af4c538aafdf1ba578
 | `npm run model` | import modelu kompetencji: `materialy/Model_kompetencji.xlsx` → `data/model-kompetencji.json` (`-- --check` sprawdza aktualność) |
 | `npm run db:up` / `db:migrate` / `db:generate` | baza danych: start, migracje, klient Prisma |
 

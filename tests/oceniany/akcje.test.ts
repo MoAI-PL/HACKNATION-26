@@ -31,7 +31,7 @@ const ocena = (zmiany: Record<string, unknown> = {}) => ({
 
 beforeEach(() => {
   authMock.mockReset();
-  applyMock.mockReset();
+  applyMock.mockReset().mockResolvedValue(true);
   prismaMock.evaluation.findFirst.mockReset();
 });
 
@@ -42,6 +42,14 @@ describe("potwierdzenie zapoznania się przez ocenianego", () => {
     await expect(acknowledgeOwnEvaluation("e1")).resolves.toEqual({ ok: true });
     expect(prismaMock.evaluation.findFirst.mock.calls[0]![0].where).toEqual({ id: "e1", employee: { user: { id: "jan" } } });
     expect(applyMock).toHaveBeenCalledWith("tx", expect.objectContaining({ id: "e1" }), expect.any(String), "jan", "OCENIANY");
+  });
+
+  it("potwierdzenie już odnotowane (np. równolegle przez przełożonego) – komunikat zamiast drugiego zapisu", async () => {
+    zalogowany("OCENIANY");
+    prismaMock.evaluation.findFirst.mockResolvedValue(ocena());
+    applyMock.mockResolvedValue(false);
+    const r = await acknowledgeOwnEvaluation("e1");
+    expect(r.ok).toBe(false);
   });
 
   it("cudza ocena wygląda jak nieistniejąca", async () => {

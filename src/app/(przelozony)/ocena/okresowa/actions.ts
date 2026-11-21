@@ -164,7 +164,10 @@ export async function completePartOne(evaluationId: string, draft: WizardDraft):
   const overridden = sheet !== sheetFromOsp;
   const checklist = Object.fromEntries(CHECKLIST_ITEMS.map((i) => [i.key, !!d.checklist[i.key]]));
 
-  await prisma.$transaction(async (tx) => {
+  const started = await prisma.$transaction(async (tx) => {
+    // Warunek na etap w samym zapisie – podwójne kliknięcie „Zatwierdź” nie utworzy drugiej rozmowy ani drugiego wpisu.
+    const claimed = await tx.evaluation.updateMany({ where: { id: ev.id, status: "DO_ROZPOCZECIA" }, data: { status: "W_OKRESIE_OCENY" } });
+    if (claimed.count === 0) return false;
     await tx.evaluationCriterion.deleteMany({ where: { evaluationId: ev.id } });
     await tx.evaluation.update({
       where: { id: ev.id },
@@ -224,7 +227,9 @@ export async function completePartOne(evaluationId: string, draft: WizardDraft):
         },
       },
     });
+    return true;
   });
+  if (!started) return { ok: false, error: ALREADY_SET };
 
   revalidatePath("/ocena/okresowa");
   revalidatePath(`/ocena/okresowa/${ev.id}`);

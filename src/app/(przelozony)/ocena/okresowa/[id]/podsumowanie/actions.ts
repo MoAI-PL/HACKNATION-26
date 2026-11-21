@@ -73,9 +73,10 @@ export async function completeEvaluation(evaluationId: string, input: unknown): 
 
   const promotion = f.promotionRequest && partThreeAvailable(data.employee.isCivilServant, result);
   const evaluatedAt = toDbDate(f.evaluatedAt!);
-  await prisma.$transaction(async (tx) => {
-    await tx.evaluation.update({
-      where: { id: ev.id },
+  const completed = await prisma.$transaction(async (tx) => {
+    // Warunek na etap w samym zapisie – podwójne kliknięcie „Sporządź ocenę” nie zapisze oceny dwa razy.
+    const updated = await tx.evaluation.updateMany({
+      where: { id: ev.id, status: "W_OCENIE" },
       data: {
         status: "CZEKA_NA_ZAPOZNANIE",
         evaluatedAt,
@@ -93,6 +94,7 @@ export async function completeEvaluation(evaluationId: string, input: unknown): 
         previousDate: data.previous ? toDbDate(data.previous.date) : null,
       },
     });
+    if (updated.count === 0) return false;
     await tx.auditLog.create({
       data: {
         userId: user.id,
@@ -108,7 +110,9 @@ export async function completeEvaluation(evaluationId: string, input: unknown): 
         },
       },
     });
+    return true;
   });
+  if (!completed) return { ok: false, error: "Ta ocena jest już sporządzona. Odśwież stronę." };
   revalidatePath("/ocena/okresowa");
   revalidatePath(`/ocena/okresowa/${ev.id}`);
   revalidatePath("/pulpit");
@@ -128,7 +132,8 @@ export async function acknowledgeEvaluation(evaluationId: string, ackDate: strin
   const problem = acknowledgmentIssue(/^\d{4}-\d{2}-\d{2}$/.test(ackDate) ? ackDate : undefined, fromDbDate(ev.evaluatedAt), todayIso());
   if (problem) return { ok: false, error: problem };
 
-  await prisma.$transaction((tx) => applyAcknowledgment(tx, ev, ackDate, user.id, "PRZELOZONY"));
+  const applied = await prisma.$transaction((tx) => applyAcknowledgment(tx, ev, ackDate, user.id, "PRZELOZONY"));
+  if (!applied) return { ok: false, error: "Zapoznanie się z tą oceną jest już odnotowane. Odśwież stronę." };
   revalidatePath("/ocena/okresowa");
   revalidatePath(`/ocena/okresowa/${ev.id}`);
   revalidatePath("/pulpit");

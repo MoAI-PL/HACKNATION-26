@@ -7,6 +7,7 @@ import {
   employeeRow,
   evaluationLink,
   formatDay,
+  journalLinks,
   pathEntries,
   periodicEvaluationHref,
   openDeadlines,
@@ -182,6 +183,20 @@ describe("wejścia w ścieżki i karta pracownika", () => {
     expect(evaluationLink(ludzie[1]!, () => true)?.label).toBe("Otwórz ocenę okresową");
     expect(evaluationLink(ludzie[2]!, () => true)).toBeNull();
     expect(evaluationLink(ludzie[0]!, () => false)).toBeNull();
+  });
+});
+
+describe("linki do dziennika obserwacji (Z13)", () => {
+  it("lista notatek osoby i nowa notatka z wybraną osobą", () => {
+    expect(journalLinks("abc 1", () => true)).toEqual({ list: "/obserwacje?osoba=abc%201", add: "/obserwacje/nowa?osoba=abc%201" });
+  });
+
+  it("bez gotowego dziennika – brak linków", () => {
+    expect(journalLinks("abc", () => false)).toBeNull();
+  });
+
+  it("na aktualnym menu dziennik jest gotowy", () => {
+    expect(journalLinks("abc")).not.toBeNull();
   });
 });
 

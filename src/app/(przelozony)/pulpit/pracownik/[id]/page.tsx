@@ -13,7 +13,7 @@ import { DEADLINE_KIND_LABELS, deadlineUrgency, daysUntil } from "@/lib/rules/te
 import { formatDatePl, formatRangePl, inclusiveDays } from "@/lib/rules/kalendarz";
 import { plural } from "@/lib/rules/tekst";
 import { loadSubordinate } from "@/lib/dashboard/dane";
-import { currentEvaluation, evaluationLink, fullName, openDeadlines } from "@/lib/dashboard/pulpit";
+import { currentEvaluation, evaluationLink, fullName, journalLinks, openDeadlines } from "@/lib/dashboard/pulpit";
 import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = { title: "Pracownik – Kompas Kompetencji" };
@@ -32,6 +32,7 @@ export default async function PracownikPage({ params }: { params: Promise<{ id: 
   const deadlines = openDeadlines(employee);
   const history = employee.evaluations.filter((e) => e.status === "ZAKONCZONA").reverse();
   const action = evaluationLink(employee);
+  const journal = journalLinks(employee.id);
 
   return (
     <>
@@ -124,6 +125,22 @@ export default async function PracownikPage({ params }: { params: Promise<{ id: 
                       employee.lastObservationDate ? `, ostatnia ${formatDatePl(employee.lastObservationDate)}` : ""
                     }.`}
               </p>
+              {journal && (
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <Button asChild variant="outline" size="sm">
+                    <Link href={journal.add} className="no-underline">
+                      Dodaj obserwację
+                    </Link>
+                  </Button>
+                  {employee.observationsCount > 0 && (
+                    <Button asChild variant="ghost" size="sm">
+                      <Link href={journal.list} className="no-underline">
+                        Otwórz dziennik
+                      </Link>
+                    </Button>
+                  )}
+                </div>
+              )}
             </CardContent>
           </Card>
 

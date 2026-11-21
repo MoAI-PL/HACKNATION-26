@@ -15,7 +15,7 @@ import { DEADLINE_KIND_LABELS } from "@/lib/rules/terminy";
 import { daysBetween, formatDatePl, weekdayName } from "@/lib/rules/kalendarz";
 import { plural } from "@/lib/rules/tekst";
 import { loadSubordinates } from "@/lib/dashboard/dane";
-import { buildDashboardTodo, employeeHref, employeeRow, formatDay, pathEntries, sortRows, type PathKey } from "@/lib/dashboard/pulpit";
+import { buildDashboardTodo, employeeHref, employeeRow, formatDay, journalLinks, pathEntries, sortRows, type PathKey } from "@/lib/dashboard/pulpit";
 
 export const metadata: Metadata = { title: "Pulpit – Kompas Kompetencji" };
 export const dynamic = "force-dynamic";
@@ -133,56 +133,75 @@ export default async function PulpitPage() {
             />
           ) : (
             <ul className="grid gap-3 lg:grid-cols-2">
-              {rows.map((r) => (
-                <li key={r.id}>
-                  <Link
-                    href={employeeHref(r.id)}
-                    className="flex h-full flex-col gap-2 rounded-xl border bg-card p-4 text-foreground no-underline shadow-xs transition-colors hover:border-primary/50"
-                  >
-                    <div className="flex flex-wrap items-start justify-between gap-2">
-                      <div className="flex min-w-0 flex-col">
-                        <span className="font-semibold">{r.name}</span>
-                        <span className="text-sm text-muted-foreground">
-                          {[r.positionTitle, r.orgUnit].filter(Boolean).join(" · ") || "Stanowisko nieuzupełnione"}
-                        </span>
+              {rows.map((r) => {
+                const journal = journalLinks(r.id);
+                const obsText =
+                  r.observationsCount === 0
+                    ? "Brak obserwacji w dzienniku"
+                    : `${r.observationsCount} ${plural(r.observationsCount, ["obserwacja", "obserwacje", "obserwacji"])}${
+                        r.lastObservationDate ? `, ostatnia ${formatDay(r.lastObservationDate, today)}` : ""
+                      }`;
+                return (
+                  <li key={r.id}>
+                    {/* Cała karta prowadzi do karty pracownika (link na nazwisku rozciągnięty na kartę),
+                        a linia z obserwacjami – osobny link do dziennika (bez zagnieżdżania linków). */}
+                    <div className="relative flex h-full flex-col gap-2 rounded-xl border bg-card p-4 shadow-xs transition-colors hover:border-primary/50">
+                      <div className="flex flex-wrap items-start justify-between gap-2">
+                        <div className="flex min-w-0 flex-col">
+                          <Link
+                            href={employeeHref(r.id)}
+                            className="font-semibold text-foreground no-underline after:absolute after:inset-0 after:rounded-xl"
+                          >
+                            {r.name}
+                          </Link>
+                          <span className="text-sm text-muted-foreground">
+                            {[r.positionTitle, r.orgUnit].filter(Boolean).join(" · ") || "Stanowisko nieuzupełnione"}
+                          </span>
+                        </div>
+                        {r.evaluation && <EvaluationStatusBadge type={r.evaluation.type} status={r.evaluation.status} />}
                       </div>
-                      {r.evaluation && <EvaluationStatusBadge type={r.evaluation.type} status={r.evaluation.status} />}
-                    </div>
 
-                    <div className="flex flex-wrap items-center gap-2 text-sm">
-                      {r.evaluation ? (
-                        <span className="text-muted-foreground">
-                          {EVALUATION_TYPE_LABELS[r.evaluation.type]}
-                          {r.evaluation.type === "OKRESOWA" ? `, arkusz ${r.evaluation.sheet}` : ""}
-                          {r.evaluation.isReevaluation ? " (ponowna po ocenie negatywnej)" : ""}
-                        </span>
-                      ) : (
-                        <StatusBadge>Brak otwartej oceny</StatusBadge>
-                      )}
-                    </div>
-
-                    {r.next ? (
                       <div className="flex flex-wrap items-center gap-2 text-sm">
-                        <span>
-                          {DEADLINE_KIND_LABELS[r.next.deadline.kind]}: do {formatDay(r.next.deadline.date, today)}
-                        </span>
-                        <DeadlineBadge daysLeft={r.next.daysLeft} urgency={r.next.urgency} />
+                        {r.evaluation ? (
+                          <span className="text-muted-foreground">
+                            {EVALUATION_TYPE_LABELS[r.evaluation.type]}
+                            {r.evaluation.type === "OKRESOWA" ? `, arkusz ${r.evaluation.sheet}` : ""}
+                            {r.evaluation.isReevaluation ? " (ponowna po ocenie negatywnej)" : ""}
+                          </span>
+                        ) : (
+                          <StatusBadge>Brak otwartej oceny</StatusBadge>
+                        )}
                       </div>
-                    ) : (
-                      <span className="text-sm text-muted-foreground">Brak terminów do pilnowania.</span>
-                    )}
 
-                    <span className="mt-auto flex items-center gap-1.5 text-sm text-muted-foreground">
-                      <NotebookPen className="size-4" aria-hidden />
-                      {r.observationsCount === 0
-                        ? "Brak obserwacji w dzienniku"
-                        : `${r.observationsCount} ${plural(r.observationsCount, ["obserwacja", "obserwacje", "obserwacji"])}${
-                            r.lastObservationDate ? `, ostatnia ${formatDay(r.lastObservationDate, today)}` : ""
-                          }`}
-                    </span>
-                  </Link>
-                </li>
-              ))}
+                      {r.next ? (
+                        <div className="flex flex-wrap items-center gap-2 text-sm">
+                          <span>
+                            {DEADLINE_KIND_LABELS[r.next.deadline.kind]}: do {formatDay(r.next.deadline.date, today)}
+                          </span>
+                          <DeadlineBadge daysLeft={r.next.daysLeft} urgency={r.next.urgency} />
+                        </div>
+                      ) : (
+                        <span className="text-sm text-muted-foreground">Brak terminów do pilnowania.</span>
+                      )}
+
+                      <span className="mt-auto flex items-center gap-1.5 text-sm text-muted-foreground">
+                        <NotebookPen className="size-4" aria-hidden />
+                        {journal ? (
+                          <Link
+                            href={r.observationsCount === 0 ? journal.add : journal.list}
+                            className="relative z-10 rounded-sm text-primary underline-offset-4 hover:underline"
+                          >
+                            {r.observationsCount === 0 ? "Brak obserwacji – dodaj pierwszą" : obsText}
+                            <span className="sr-only"> – dziennik: {r.name}</span>
+                          </Link>
+                        ) : (
+                          obsText
+                        )}
+                      </span>
+                    </div>
+                  </li>
+                );
+              })}
             </ul>
           )}
         </section>

@@ -322,3 +322,21 @@ export function pathEntries(employees: EmployeeInfo[], ready: (href: string) => 
   };
   return PATHS.filter((p) => ready(p.href)).map((p) => ({ ...p, summary: summary[p.key] }));
 }
+
+// ---------------------------------------------------------------------------
+// Dziennik obserwacji (Z13)
+// ---------------------------------------------------------------------------
+
+export interface JournalLinks {
+  /** Notatki tej osoby w dzienniku. */
+  list: string;
+  /** Nowa notatka z wybraną osobą. */
+  add: string;
+}
+
+/** Linki do dziennika obserwacji pracownika – null, dopóki ekran dziennika nie jest gotowy. */
+export function journalLinks(employeeId: string, ready: (href: string) => boolean = isScreenReady): JournalLinks | null {
+  if (!ready("/obserwacje")) return null;
+  const osoba = encodeURIComponent(employeeId);
+  return { list: `/obserwacje?osoba=${osoba}`, add: `/obserwacje/nowa?osoba=${osoba}` };
+}

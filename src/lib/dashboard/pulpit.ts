@@ -233,21 +233,42 @@ export interface TodoTarget {
   label: string;
 }
 
+/** Zakończenie oceny okresowej – karty zachowań, sugestia i decyzja przełożonego (Z14). */
+export function periodicAssessmentHref(evaluationId: string): string {
+  return `${periodicEvaluationHref(evaluationId)}/ocena`;
+}
+
+/** Terminy, przy których przełożony sporządza ocenę okresową (ekran Z14). */
+const ASSESSMENT_KINDS = new Set(["OCENA_OKRESOWA", "PONOWNA_OCENA_PO_NEGATYWNEJ", "OCENA_PRZY_ZMIANIE_STANOWISKA"]);
+
+/** „Kontynuuj ocenę”, gdy przełożony już zaczął oceniać wskaźniki, w przeciwnym razie „Zakończ ocenę” (jak w Z12/Z14). */
+function assessmentLabel(status: EvaluationStatus | undefined): string {
+  return status === "W_OCENIE" ? "Kontynuuj ocenę" : "Zakończ ocenę";
+}
+
 /**
  * Dokąd prowadzi przycisk sprawy z „Do zrobienia”.
- * - rozmowa rozpoczynająca (także po ocenie negatywnej) → kreator części I oceny okresowej (Z12): „Ustal kryteria”;
- * - pozostałe sprawy (sporządzenie oceny – Z14, pierwsza ocena – Z17) → karta pracownika z wyjaśnieniem terminu,
- *   dopóki ich ekrany nie są gotowe. Gotowość ekranu bierzemy z menu (isScreenReady) – bez martwych linków
- *   i bez obietnic, których ekran nie spełni.
+ * - rozmowa rozpoczynająca (także po ocenie negatywnej) → kreator części I (Z12): „Ustal kryteria”;
+ * - sporządzenie oceny okresowej (24 mies., ponowna po negatywnej, przy zmianie stanowiska) → zakończenie oceny (Z14):
+ *   „Zakończ ocenę” / „Kontynuuj ocenę”;
+ * - pozostałe sprawy (pierwsza ocena – Z17, ponowne kryteria po zmianie stanowiska) → karta pracownika z wyjaśnieniem terminu.
+ * Gotowość ekranu bierzemy z menu (isScreenReady) – bez martwych linków i bez obietnic, których ekran nie spełni.
  */
 export function todoTarget(
   item: Pick<TodoItem, "employeeId" | "evaluationId" | "deadline">,
   ready: (href: string) => boolean = isScreenReady,
+  status?: EvaluationStatus,
 ): TodoTarget {
   const kind = item.deadline.kind;
-  if ((kind === "ROZMOWA_ROZPOCZYNAJACA" || kind === "ROZMOWA_PO_NEGATYWNEJ") && item.evaluationId) {
-    const href = periodicEvaluationHref(item.evaluationId);
-    if (ready(href)) return { href, label: "Ustal kryteria" };
+  if (item.evaluationId) {
+    if (kind === "ROZMOWA_ROZPOCZYNAJACA" || kind === "ROZMOWA_PO_NEGATYWNEJ") {
+      const href = periodicEvaluationHref(item.evaluationId);
+      if (ready(href)) return { href, label: "Ustal kryteria" };
+    }
+    if (ASSESSMENT_KINDS.has(kind) && (status === "W_OKRESIE_OCENY" || status === "W_OCENIE")) {
+      const href = periodicAssessmentHref(item.evaluationId);
+      if (ready(href)) return { href, label: assessmentLabel(status) };
+    }
   }
   return { href: employeeHref(item.employeeId), label: "Zobacz szczegóły" };
 }
@@ -258,14 +279,14 @@ export function buildDashboardTodo(
   limit = 5,
   ready: (href: string) => boolean = isScreenReady,
 ): TodoItem[] {
-  const sources: TodoSource[] = employees.map((e) => ({
-    employeeId: e.id,
-    employeeName: fullName(e),
-    evaluationId: currentEvaluation(e)?.id,
-    deadlines: openDeadlines(e),
-  }));
+  const statusById = new Map<string, EvaluationStatus>();
+  const sources: TodoSource[] = employees.map((e) => {
+    const current = currentEvaluation(e);
+    if (current) statusById.set(current.id, current.status);
+    return { employeeId: e.id, employeeName: fullName(e), evaluationId: current?.id, deadlines: openDeadlines(e) };
+  });
   return buildTodoItems(sources, today, { limit }).map((item) => {
-    const target = todoTarget(item, ready);
+    const target = todoTarget(item, ready, item.evaluationId ? statusById.get(item.evaluationId) : undefined);
     return { ...item, href: target.href, actionLabel: target.label };
   });
 }
@@ -277,6 +298,10 @@ export function evaluationLink(
 ): TodoTarget | null {
   const current = currentEvaluation(e);
   if (!current || current.type !== "OKRESOWA") return null;
+  if (current.status === "W_OKRESIE_OCENY" || current.status === "W_OCENIE") {
+    const href = periodicAssessmentHref(current.id);
+    if (ready(href)) return { href, label: assessmentLabel(current.status) };
+  }
   const href = periodicEvaluationHref(current.id);
   if (!ready(href)) return null;
   return { href, label: current.status === "DO_ROZPOCZECIA" ? "Ustal kryteria" : "Otwórz ocenę okresową" };

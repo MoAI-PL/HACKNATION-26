@@ -9,6 +9,7 @@ import {
   formatDay,
   journalLinks,
   pathEntries,
+  periodicAssessmentHref,
   periodicEvaluationHref,
   openDeadlines,
   sortRows,
@@ -122,13 +123,32 @@ describe("karta „Do zrobienia” i lista podwładnych", () => {
     expect(todo[0]!.actionLabel).toBe("Zobacz szczegóły");
   });
 
-  it("sporządzenie oceny i pierwsza ocena prowadzą na kartę pracownika, dopóki nie ma Z14 i Z17", () => {
+  it("sporządzenie oceny prowadzi do zakończenia oceny (Z14), pierwsza ocena – na kartę pracownika (do Z17)", () => {
     const prev = addDays(addMonths(TODAY, -24), 9);
     const wOcenie = employee({ id: "kasia", evaluations: [done("p", prev), open("c", { status: "W_OCENIE" })] });
+    const wOkresie = employee({ id: "piotr", evaluations: [done("p2", addDays(addMonths(TODAY, -24), 20)), open("d")] });
     const start = addDays(TODAY, -15);
     const nowa = employee({ id: "ola", employmentStart: start, contractEnd: addDays(addMonths(start, 12), -1), evaluations: [{ ...open("f", { type: "PIERWSZA", sheet: "PIERWSZA" }), status: "DO_ROZPOCZECIA" }] });
-    const todo = buildDashboardTodo([wOcenie, nowa], TODAY, 5, () => true);
-    expect(todo.map((t) => [t.employeeId, t.actionLabel])).toEqual([["ola", "Zobacz szczegóły"], ["kasia", "Zobacz szczegóły"]]);
+    const todo = buildDashboardTodo([wOcenie, wOkresie, nowa], TODAY, 5, () => true);
+    expect(todo.map((t) => [t.employeeId, t.actionLabel, t.href])).toEqual([
+      ["ola", "Zobacz szczegóły", employeeHref("ola")],
+      ["kasia", "Kontynuuj ocenę", periodicAssessmentHref("c")],
+      ["piotr", "Zakończ ocenę", periodicAssessmentHref("d")],
+    ]);
+  });
+
+  it("ponowna ocena po negatywnej też prowadzi do zakończenia oceny", () => {
+    const neg = done("p", addDays(TODAY, -40), "NEGATYWNA");
+    const marcin = employee({ id: "marcin", evaluations: [neg, open("r", { isReevaluation: true })] });
+    const [item] = buildDashboardTodo([marcin], TODAY, 5, () => true);
+    expect([item!.actionLabel, item!.href]).toEqual(["Zakończ ocenę", periodicAssessmentHref("r")]);
+  });
+
+  it("bez gotowego ekranu Z14 sporządzenie oceny wraca na kartę pracownika", () => {
+    const prev = addDays(addMonths(TODAY, -24), 9);
+    const wOcenie = employee({ id: "kasia", evaluations: [done("p", prev), open("c", { status: "W_OCENIE" })] });
+    const [item] = buildDashboardTodo([wOcenie], TODAY, 5, (h) => !h.endsWith("/ocena"));
+    expect(item!.actionLabel).toBe("Zobacz szczegóły");
   });
 
   it("na aktualnym menu: kreator Z12 jest gotowy, ekran pierwszej oceny jeszcze nie", () => {
@@ -180,7 +200,8 @@ describe("wejścia w ścieżki i karta pracownika", () => {
 
   it("karta pracownika: główna akcja do oceny okresowej, brak akcji przy pierwszej ocenie", () => {
     expect(evaluationLink(ludzie[0]!, () => true)).toEqual({ href: periodicEvaluationHref("a1"), label: "Ustal kryteria" });
-    expect(evaluationLink(ludzie[1]!, () => true)?.label).toBe("Otwórz ocenę okresową");
+    expect(evaluationLink(ludzie[1]!, () => true)).toEqual({ href: periodicAssessmentHref("b1"), label: "Zakończ ocenę" });
+    expect(evaluationLink(ludzie[1]!, (h) => !h.endsWith("/ocena"))?.label).toBe("Otwórz ocenę okresową");
     expect(evaluationLink(ludzie[2]!, () => true)).toBeNull();
     expect(evaluationLink(ludzie[0]!, () => false)).toBeNull();
   });

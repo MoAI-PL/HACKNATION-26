@@ -107,6 +107,25 @@ Skróty jednoklawiszowe nie działają podczas pisania w polu ani z Ctrl/Cmd/Alt
 
 | Data | Co | Wynik |
 |---|---|---|
-| 21.11 | `/komponenty` przy 768 i 1440 px | brak poziomego przewijania, 1 `h1`, 1 `main`, wszystkie pola z etykietami, cele kliknięcia ≥ 24 px, skróty N, /, ?, 1–5 działają, fokus widoczny |
+| 21.11 | `/komponenty` przy 768 i 1440 px (przed podpięciem do layoutów ról) | brak poziomego przewijania, 1 `h1`, 1 `main`, wszystkie pola z etykietami, cele kliknięcia ≥ 24 px, skróty /, ?, 1–5 działają, fokus widoczny (skrót N wyłączony do Z41) |
+| 21.11 | kontrast tokenów kolorów (obliczenie WCAG) | 22 z 23 par spełnia AA; wyjątek: ramka niezaznaczonej karty wyboru 1,4:1 (punkt 4 niżej) |
 | — | axe / Lighthouse (Z30) | do uzupełnienia |
 | — | pomiar „pełna ocena w 15 minut” (Z30) | do uzupełnienia |
+
+## Z10 – co zostało do 100%
+
+Przegląd 21.11 wieczorem: Z10 działa i jest scalone, ale te punkty zostały otwarte. Kto bierze punkt, wpisuje się w nawiasie.
+
+| # | Co | Dlaczego | Jak sprawdzić |
+|---|---|---|---|
+| 1 | **Przegląd nagłówka i menu po zalogowaniu** każdą rolą (przełożona, HR, kierujący, oceniany) przy 768 i 1440 px | `AppShell` w layoutach ról nie był jeszcze oglądany na żywo (brak lokalnej bazy z danymi). Obok imienia doszło „Wyloguj” – nagłówek może się inaczej zawijać | brak poziomego przewijania, jedno `main`, menu zgodne z rolą, „Wyloguj” działa |
+| 2 | **`<PropozycjaAI>`: wymusić zapis do AuditLog** – `onDecision` obowiązkowy i wspólna akcja serwerowa (np. `logAiDecision`), która bierze użytkownika z sesji (Z04) | sekcja 4.2: każde „Wstaw” i „Odrzuć” trafia do AuditLog z treścią propozycji; dziś zależy to od pamięci autora funkcji AI | test akcji: wpis z `aiProposal` i `humanDecision`; brak `onDecision` = błąd typów |
+| 3 | **Automatyczny przegląd dostępności** (axe DevTools / Lighthouse ≥ 90) na `/logowanie`, `/pulpit`, `/asystent`, `/komponenty` i poprawki | wymóg WCAG 2.1 AA, punkt na slajd; dziś sprawdzone tylko ręcznie | wynik wpisany w tabeli „Wyniki przeglądów” (wspólnie z Z30) |
+| 4 | Ramka niezaznaczonej karty wyboru: `border-input` zamiast `border-border` | kontrast 1,4:1 < 3:1 (WCAG 1.4.11) | obliczony kontrast ≥ 3:1 |
+| 5 | `AutosaveIndicator`: ogłaszać czytnikowi tylko „Zapisano …” i błąd, nie każde „Zapisywanie…” | przy pisaniu czytnik ekranu odczytuje komunikat po każdej zmianie | NVDA / VoiceOver – jeden komunikat po zapisie |
+| 6 | Skrót `/` nie działa, gdy otwarte jest okno dialogowe | dziś `/` przy otwartym oknie (np. „Dodaj pracownika”) przenosi na stronę asystenta | test ręczny |
+| 7 | `/komponenty`: użytkownik z sesji zamiast stałej „Ewy”, a na produkcji tylko przy `DEMO_MODE` | każda rola widzi tam menu przełożonego; strona nie jest dla jury | HR na `/komponenty` widzi menu HR; bez `DEMO_MODE` – 404 |
+| 8 | Asystent formalny dla HR i kierującego – decyzja z Z04/Z22 | `role.ts` wpuszcza HR i kierującego na `/asystent`, ale strona leży w grupie `(przelozony)`, więc ich przekierowuje; w menu na razie tylko przełożony | po przeniesieniu strony do wspólnego layoutu dodać `ASYSTENT_FORMALNY` do menu HR i kierującego w `src/lib/ui/nav.ts` |
+| 9 | Krótki przewodnik po pierwszym logowaniu (3 dymki, sekcja 4.3) | nie jest przypisany do żadnego zadania; Z10 dał komponenty, przewodnika nie ma | po pierwszym logowaniu przełożonej 3 pomijalne dymki, potem już nie |
+
+**Zależne od innych zadań (bez zmian w Z10):** Z41 włącza „Notatkę” i skrót N (`FEATURES.quickNote = true` w `src/lib/ui/nav.ts`); każde zadanie ekranu (Z12, Z13, Z17, Z24) usuwa `pending` ze swojej pozycji menu w tym samym commicie, który dodaje stronę.

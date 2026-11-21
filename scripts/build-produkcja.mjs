@@ -8,24 +8,27 @@
 
 import { execSync } from "node:child_process";
 
-const run = (cmd) => {
+const run = (cmd, env = process.env) => {
   console.log(`\n▶ ${cmd}`);
-  execSync(cmd, { stdio: "inherit" });
+  execSync(cmd, { stdio: "inherit", env });
 };
 
 const production = process.env.VERCEL_ENV === "production";
 
 if (production) {
   if (!process.env.DATABASE_URL) {
-    console.error("Brak DATABASE_URL – ustaw zmienną w ustawieniach projektu (Environment Variables).");
+    console.error("Brak DATABASE_URL – podłącz bazę: Vercel → projekt → Storage → Neon (docs/WDROZENIE.md), potem Redeploy.");
     process.exit(1);
   }
   if (!process.env.AUTH_SECRET) {
-    console.error("Brak AUTH_SECRET – ustaw zmienną w ustawieniach projektu (Environment Variables).");
+    console.error("Brak AUTH_SECRET – dodaj zmienną: Vercel → projekt → Settings → Environment Variables (docs/WDROZENIE.md), potem Redeploy.");
     process.exit(1);
   }
-  run("npx prisma migrate deploy");
-  if (process.env.SEED_ON_DEPLOY !== "false") run("npm run seed");
+  // Integracja Neon w Vercelu ustawia DATABASE_URL (pula połączeń) i DATABASE_URL_UNPOOLED (bezpośrednie).
+  // Migracje i seed idą połączeniem bezpośrednim, aplikacja korzysta z puli.
+  const dbEnv = { ...process.env, DATABASE_URL: process.env.DATABASE_URL_UNPOOLED || process.env.DATABASE_URL };
+  run("npx prisma migrate deploy", dbEnv);
+  if (process.env.SEED_ON_DEPLOY !== "false") run("npm run seed", dbEnv);
 } else {
   console.log(`VERCEL_ENV=${process.env.VERCEL_ENV ?? "(brak)"} – pomijam migracje i seed (baza demo bez zmian).`);
 }

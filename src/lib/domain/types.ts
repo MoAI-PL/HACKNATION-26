@@ -177,8 +177,32 @@ export interface PositionDescription {
   dominantTasks: string[];
   otherTasks: string[];
   subordinates: SubordinateOption;
+  /** Zaznaczone upoważnienia i pełnomocnictwa (bez „brak…”), połączone średnikiem; brak pola = brak upoważnień. */
   authorizations?: string;
+  /** „Kompetencje miękkie” z OSP – nazwy kompetencji z modelu (załącznik nr 1). */
   requiredCompetencies: string[];
+  /** Te same kompetencje jako kody – do porównania z kryteriami obowiązkowymi i propozycji kryteriów dodatkowych (Z23). */
+  requiredCompetencyCodes?: CompetencyCode[];
+  /** Symbol stanowiska, np. "DSI WWI 5". */
+  symbol?: string;
+  office?: string;
+  /** Stanowisko bezpośrednio nadzorujące, np. „naczelnik wydziału”. */
+  supervisor?: string;
+  /** Opisy „Złożoność i kreatywność” oraz „Niezbędna samodzielność i inicjatywa” – kontekst dla AI (Z23). */
+  complexity?: string;
+  independence?: string;
+  /** „Inne kompetencje, wiedza lub umiejętności” – wymagana znajomość przepisów i zagadnień. */
+  knowledge?: string[];
+}
+
+/** Automatyczny wybór arkusza oceny okresowej z OSP (§ 3) – przełożony może go zmienić (zmiana trafia do dziennika). */
+export interface SheetSelection {
+  sheet: Exclude<PeriodicSheet, "A">;
+  subordinates: SubordinateOption;
+  /** Kryteria obowiązkowe wybranego arkusza (§ 4). */
+  mandatoryCriteria: CompetencyCode[];
+  /** Np. „Wybrano arkusz C, bo w OSP zaznaczono »brak podległych pracowników«.” */
+  explanation: Explanation;
 }
 
 // ---------------------------------------------------------------------------

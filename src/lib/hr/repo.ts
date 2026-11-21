@@ -38,9 +38,16 @@ const evaluationSelect = {
 type Row = Prisma.EvaluationGetPayload<{ select: typeof evaluationSelect }>;
 const iso = (d: Date | null) => (d ? fromDbDate(d) : null);
 
-/** Wszystkie oceny z danymi do terminów; historia wyników liczona w pamięci (dane jednego urzędu są małe). */
-export async function listHrRecords(): Promise<HrEvaluationRecord[]> {
-  const rows: Row[] = await prisma.evaluation.findMany({ select: evaluationSelect });
+/**
+ * Oceny z danymi do terminów; historia wyników liczona w pamięci (dane jednego urzędu są małe).
+ * `employeeIds` – tylko oceny tych pracowników (np. podwładnych przełożonego w asystencie rozmowy, Z24).
+ */
+export async function listHrRecords(filter: { employeeIds?: string[] } = {}): Promise<HrEvaluationRecord[]> {
+  const rows: Row[] = await prisma.evaluation.findMany({
+    where: filter.employeeIds ? { employeeId: { in: filter.employeeIds } } : {},
+    select: evaluationSelect,
+    orderBy: { createdAt: "desc" },
+  });
 
   const completedByEmployee = new Map<string, Row[]>();
   for (const r of rows) {

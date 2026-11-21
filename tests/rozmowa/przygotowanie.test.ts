@@ -1,7 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { buildConversationPrep, indicatorEvidence, type PrepInput } from "@/lib/rozmowa/przygotowanie";
+import { buildConversationPrep, illustrativeObservation, indicatorEvidence, type PrepInput } from "@/lib/rozmowa/przygotowanie";
 import { buildMessages, formatProposal, polishConversation, pseudonymize } from "@/lib/rozmowa/ai";
-import { suggestedKind } from "@/lib/rozmowa/repo";
+import { allowedKinds, currentEvaluation, suggestedKind } from "@/lib/rozmowa/repo";
+import type { HrEvaluationRecord } from "@/lib/hr/panel";
 import { LLMError, type ChatMessage, type LLMProvider } from "@/lib/ai/llm";
 import { getFragment } from "@/lib/ai/rag/search";
 import type { ObservationView } from "@/lib/obserwacje/dziennik";
@@ -59,21 +60,27 @@ describe("rozmowa oceniająca (§ 10)", () => {
     ]);
   });
 
+  it("agenda § 10 pkt 1 zawiera obowiązki z OSP", () => {
+    expect(p.agenda[0].details.slice(0, 3)).toEqual(base.dominantTasks.map((t) => `obowiązek: ${t}`));
+  });
+
   it("mocne strony i obszary do rozwoju", () => {
     expect(p.strengths.map((s) => s.indicatorId)).toEqual(["ANALITYCZNE.3", "WSPOLPRACA.2"]);
     expect(p.growth.map((g) => g.indicatorId)).toEqual(["KOMUNIKACJA.4"]);
   });
 
-  it("pytania odwołują się do najnowszej notatki i celu", () => {
-    expect(p.questions[0].text).toMatch(/^Wróćmy do sytuacji z 1 listopada 2026: „Sytuacja b”/);
+  it("pytanie o obszar do rozwoju odwołuje się do notatki z najsłabszym zachowaniem, nie do najnowszej", () => {
+    expect(p.questions[0].text).toMatch(/^Wróćmy do sytuacji z 1 września 2026: „Sytuacja c”/);
     expect(p.questions.some((q) => /Na ile udało się osiągnąć cel: „Zestaw najczęstszych pytań/.test(q.text))).toBe(true);
     expect(p.questions.at(-1)!.why).toBe("§ 10 pkt 3 – kierunki rozwoju");
   });
 
   it("informacja zwrotna: zachowanie – skutek – oczekiwanie (poziom 3 z modelu przy obszarze do rozwoju)", () => {
-    expect(p.feedback[0]).toMatchObject({ behavior: "Działanie b", effect: "Rezultat b" });
+    expect(p.feedback[0]).toMatchObject({ behavior: "Działanie c", effect: "Rezultat c", indicatorName: "Przedstawianie przekonujących argumentów odpowiednio do sytuacji" });
     expect(p.feedback[0].expectation).toMatch(/^Oczekuję zachowania na poziomie oczekiwań: /);
-    expect(p.feedback.find((f) => f.behavior === "Działanie a")!.expectation).toMatch(/^Proszę utrzymać ten sposób działania\. Kolejny krok: /);
+    expect(p.feedback.find((f) => f.behavior === "Działanie d")!.expectation).toMatch(/^Proszę utrzymać ten sposób działania\. Kolejny krok: /);
+    // poziom 5 – nie ma „kolejnego kroku” wyżej
+    expect(p.feedback.find((f) => f.behavior === "Działanie a")!.expectation).toBe("Proszę utrzymać ten sposób działania i dzielić się nim z zespołem – to wzór dla innych.");
   });
 
   it("działania rozwojowe dla obszaru do rozwoju, sprzeciw w trudnych sytuacjach, termin w liście", () => {
@@ -130,8 +137,36 @@ describe("następna rozmowa według etapu oceny", () => {
     ["OKRESOWA", "W_OKRESIE_OCENY", "OCENIAJACA"],
     ["OKRESOWA", "W_OCENIE", "OCENIAJACA"],
     ["PIERWSZA", "DO_ROZPOCZECIA", "WSTEPNA"],
+    ["PIERWSZA", "W_OKRESIE_OCENY", "WSTEPNA"],
+    [null, null, "ROZPOCZYNAJACA"],
   ] as const)("%s / %s → %s", (type, status, kind) => {
     expect(suggestedKind(type, status)).toBe(kind);
+  });
+
+  it("pierwsza ocena: tylko rozmowa wstępna (§ 10 rozp. o ocenach okresowych jej nie dotyczy)", () => {
+    expect(allowedKinds("PIERWSZA")).toEqual(["WSTEPNA"]);
+    expect(allowedKinds("OKRESOWA")).toEqual(["ROZPOCZYNAJACA", "OCENIAJACA"]);
+    expect(allowedKinds(null)).toEqual(["ROZPOCZYNAJACA", "OCENIAJACA"]);
+  });
+
+  it("ta sama ocena w liście i ściądze: najnowsza w toku, bez zakończonych i czekających na zapoznanie", () => {
+    const r = (id: string, status: HrEvaluationRecord["status"], employeeId = "kasia") => ({ id, status, employee: { id: employeeId } }) as HrEvaluationRecord;
+    const records = [r("zapoznanie", "CZEKA_NA_ZAPOZNANIE"), r("nowa", "DO_ROZPOCZECIA"), r("stara", "W_OCENIE"), r("inna", "W_OCENIE", "jan")];
+    expect(currentEvaluation(records, "kasia")?.id).toBe("nowa");
+    expect(currentEvaluation([r("z", "ZAKONCZONA")], "kasia")).toBeUndefined();
+  });
+});
+
+describe("notatka ilustrująca ocenę", () => {
+  const ev = indicatorEvidence(base).find((e) => e.indicatorId === "KOMUNIKACJA.4")!;
+  it("rozwój – najsłabszy poziom; mocna strona – najmocniejszy; remis – najnowsza", () => {
+    expect(illustrativeObservation(ev, "growth")?.id).toBe("c");
+    expect(illustrativeObservation(ev, "strength")?.id).toBe("b");
+    const tie = { ...ev, observations: [obs("s", "KOMUNIKACJA.4", 2, "2026-01-01"), obs("t", "KOMUNIKACJA.4", 2, "2026-05-01")] };
+    expect(illustrativeObservation(tie, "growth")?.id).toBe("t");
+  });
+  it("warunek (np. wymagane działanie i rezultat) zawęża wybór", () => {
+    expect(illustrativeObservation(ev, "growth", (o) => o.id !== "c")?.id).toBe("b");
   });
 });
 

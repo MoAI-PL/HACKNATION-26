@@ -67,4 +67,11 @@ describe("redakcja przez AI", () => {
     authMock.mockResolvedValue(null);
     await expect(polishConversationAction("kasia", "OCENIAJACA")).rejects.toMatchObject({ status: 401 });
   });
+
+  it("limit: najwyżej 10 próśb na minutę na przełożonego", async () => {
+    zalogowany("PRZELOZONY", "limit-test");
+    prismaMock.employee.findFirst.mockResolvedValue(null);
+    for (let i = 0; i < 10; i++) await polishConversationAction("obcy", "OCENIAJACA");
+    expect(await polishConversationAction("obcy", "OCENIAJACA")).toEqual({ ok: false, reason: "Zbyt wiele próśb do asystenta w krótkim czasie. Spróbuj ponownie za minutę." });
+  });
 });

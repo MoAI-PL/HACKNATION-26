@@ -1,0 +1,126 @@
+{
+  "opis": "Zapasowe odpowiedzi AI dla scen pitchu (Z44). Używane wyłącznie przy DEMO_MODE=true i wyłącznie wtedy, gdy model jest skonfigurowany, ale nie odpowiedział (błąd, limit, przekroczony czas). Każde użycie jest oznaczone w interfejsie i w logach serwera. Źródła i cytaty sprawdza test tests/demo/demo-cache.test.ts.",
+  "asystentFormalny": [
+    {
+      "pytania": [
+        "W jakim terminie można złożyć sprzeciw?",
+        "Ile dni na sprzeciw?",
+        "Ile dni ma pracownik na sprzeciw od oceny?",
+        "Do kiedy można złożyć sprzeciw od oceny okresowej?"
+      ],
+      "odpowiedz": "Sprzeciw od oceny okresowej składa się do dyrektora generalnego urzędu w terminie 7 dni od dnia zapoznania się z oceną przez ocenianego (art. 83 ust. 1 ustawy). Sprzeciw rozpatruje się w terminie 14 dni od dnia jego wniesienia.",
+      "zrodla": [
+        "PORADNIK_OKRESOWE:s32:69",
+        "FAQ:sprzeciw"
+      ]
+    },
+    {
+      "pytania": [
+        "Ile kryteriów dodatkowych można wybrać?",
+        "Ile można wybrać kryteriów dodatkowych?",
+        "Ile kryteriów dodatkowych w ocenie okresowej?"
+      ],
+      "odpowiedz": "Oceniający może wybrać z wykazu kryteriów oceny nie więcej niż 3 kryteria dodatkowe – najistotniejsze ze względu na charakter obowiązków wynikających z opisu stanowiska pracy ocenianego (§ 5 ust. 2 rozporządzenia).",
+      "zrodla": [
+        "ROZP_OKRESOWE:§5:ust.2",
+        "FAQ:kryteria-dodatkowe"
+      ]
+    },
+    {
+      "pytania": [
+        "Kiedy ocena okresowa jest negatywna?",
+        "Kiedy ocena jest negatywna?",
+        "Kiedy przyznaje się ocenę negatywną?"
+      ],
+      "odpowiedz": "Ocenę negatywną przyznaje się, gdy ogólny poziom spełniania kryteriów to „poniżej oczekiwań” albo „znacznie poniżej oczekiwań”, a także wtedy, gdy którakolwiek ocena cząstkowa wynosi 1 pkt, czyli „znacznie poniżej oczekiwań” (§ 11 ust. 1 rozporządzenia).",
+      "zrodla": [
+        "ROZP_OKRESOWE:§11:ust.1:2",
+        "FAQ:ocena-negatywna"
+      ]
+    },
+    {
+      "pytania": [
+        "Co wydłuża termin oceny okresowej?",
+        "Co wydłuża termin sporządzenia oceny okresowej?",
+        "Czy L4 wydłuża termin oceny?"
+      ],
+      "odpowiedz": "Usprawiedliwiona nieobecność ocenianego w pracy trwająca dłużej niż miesiąc wydłuża 24-miesięczny termin sporządzenia oceny o czas tej nieobecności (art. 81 ust. 7 ustawy). Nie dotyczy to terminu ponownej oceny po ocenie negatywnej.",
+      "zrodla": [
+        "FAQ:nieobecnosc",
+        "PORADNIK_OKRESOWE:s11:20",
+        "PORADNIK_OKRESOWE:s14:27"
+      ]
+    }
+  ],
+  "kryteriaZOsp": [
+    {
+      "symbol": "DSI WWI 5",
+      "tytul": "radca",
+      "arkusz": "C",
+      "propozycje": [
+        {
+          "kryterium": "ANALITYCZNE",
+          "uzasadnienie": "Główne zadanie to analiza i ocena prawa krajowego i unijnego oraz orzecznictwa – wymaga rozróżniania informacji istotnych i formułowania wniosków.",
+          "zadanie": 1,
+          "cytat": "Analizuje i dokonuje oceny prawa krajowego, prawa Unii Europejskiej, orzecznictwa krajowego i międzynarodowego"
+        },
+        {
+          "kryterium": "KREATYWNOSC",
+          "uzasadnienie": "Radca analizuje bariery dla innowacji i opracowuje propozycje działań usprawniających.",
+          "zadanie": 4,
+          "cytat": "Analizuje bariery prawne i organizacyjne dla rozwoju innowacji w obszarze sztucznej inteligencji w celu opracowywania propozycji działań usprawniających"
+        },
+        {
+          "kryterium": "KLIENT",
+          "uzasadnienie": "Przygotowuje odpowiedzi na pisma i wystąpienia kierowane do Komisji, w tym komunikację z podmiotami zewnętrznymi.",
+          "zadanie": 5,
+          "cytat": "Przygotowuje projekty odpowiedzi na pisma i inne wystąpienia kierowane do Komisji Rozwoju i Bezpieczeństwa Sztucznej Inteligencji"
+        }
+      ]
+    },
+    {
+      "symbol": "DC WZKSOiC 6",
+      "tytul": "starszy specjalista",
+      "arkusz": "C",
+      "propozycje": [
+        {
+          "kryterium": "KRYZYS",
+          "uzasadnienie": "Stanowisko obsługuje zarządzanie kryzysowe w cyberprzestrzeni, w tym reagowanie na incydenty i sytuacje kryzysowe.",
+          "zadanie": 1,
+          "cytat": "Bierze udział w opracowaniu i aktualizacji dokumentacji w zakresie zarządzania kryzysowego"
+        },
+        {
+          "kryterium": "ANALITYCZNE",
+          "uzasadnienie": "Ocena obiektów i procesów infrastruktury krytycznej wymaga dostrzegania zależności między informacjami; OSP wymienia też myślenie analityczne wśród kompetencji miękkich.",
+          "zadanie": 6,
+          "cytat": "Dokonuje oceny obiektów oraz procesów pod kątem Infrastruktury krytycznej"
+        }
+      ]
+    },
+    {
+      "symbol": "DWM WKAM 1",
+      "tytul": "naczelnik wydziału",
+      "arkusz": "B",
+      "propozycje": [
+        {
+          "kryterium": "WYSTAPIENIA",
+          "uzasadnienie": "Naczelnik organizuje międzynarodowe konferencje i wydarzenia oraz reprezentuje wydział na zewnątrz.",
+          "zadanie": 5,
+          "cytat": "Organizuje wydarzenia o charakterze międzynarodowym w obszarze cyfryzacji"
+        },
+        {
+          "kryterium": "NEGOCJOWANIE",
+          "uzasadnienie": "Odpowiada za umowy na bilety i tłumaczenia, w tym postępowania o udzielenie zamówień publicznych.",
+          "zadanie": 6,
+          "cytat": "Bierze udział w pracach dotyczących realizacji umowy na świadczenia usług zakupu krajowych i zagranicznych biletów lotniczych i kolejowych"
+        },
+        {
+          "kryterium": "WIEDZA",
+          "uzasadnienie": "Przygotowuje materiały tezowo-informacyjne o współpracy międzynarodowej; OSP wymienia tę kompetencję wśród wymaganych.",
+          "zadanie": 4,
+          "cytat": "Koordynuje przygotowania materiałów tezowo-informacyjnych (stanowiska, opinie)"
+        }
+      ]
+    }
+  ]
+}

@@ -8,7 +8,8 @@
 
 import { z } from "zod";
 import { chatJson, getLLM, LLMError, type LLMProvider } from "@/lib/ai/llm";
-import { citation, searchKnowledge } from "@/lib/ai/rag/search";
+import { citation, getFragment, searchKnowledge } from "@/lib/ai/rag/search";
+import { CACHE_NOTICE, cachedFormalAnswer, demoCacheEnabled, logCacheUse } from "@/lib/demo/demo-cache";
 import type { KnowledgeFragment, SearchHit } from "@/lib/ai/rag/types";
 
 export const REFUSAL = "Nie znalazłem tej informacji w dostępnych źródłach. Skontaktuj się z komórką kadr.";
@@ -38,6 +39,8 @@ export interface AssistantAnswer {
   /** Dodatkowa informacja dla użytkownika, np. o niedostępności modelu albo niezweryfikowanym przepisie. */
   notice?: string;
   model?: string;
+  /** Z44: odpowiedź zapasowa z data/demo-cache.json (model nie odpowiedział w trybie demo). */
+  fromCache?: boolean;
   durationMs: number;
 }
 
@@ -151,6 +154,13 @@ export async function answerFormalQuestion(rawQuestion: string, options: AskOpti
     };
   } catch (e) {
     const reason = e instanceof LLMError ? e.message : "Nieoczekiwany błąd asystenta.";
+    // Z44: w trybie demo pytania ze scen pitchu mają przygotowaną wcześniej odpowiedź z tymi samymi źródłami.
+    const cached = demoCacheEnabled() ? cachedFormalAnswer(question) : undefined;
+    const cachedSources = cached?.zrodla.map(getFragment).filter((f): f is KnowledgeFragment => f !== undefined) ?? [];
+    if (cached && cachedSources.length > 0) {
+      logCacheUse("asystent formalny", question, reason);
+      return { question, answer: cached.odpowiedz, refused: false, mode: "AI", sources: cachedSources.map(toSource), notice: CACHE_NOTICE, fromCache: true, durationMs: Date.now() - started };
+    }
     return fallback(question, search.hits, started, `Asystent AI jest chwilowo niedostępny (${reason}) – pokazujemy źródła bez redakcji AI.`);
   }
 }

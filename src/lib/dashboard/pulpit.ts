@@ -31,6 +31,7 @@ import {
   type PeriodicAnchor,
   type TodoSource,
 } from "@/lib/rules/terminy";
+import { formatDatePl, formatDateShortPl } from "@/lib/rules/kalendarz";
 
 /** Ocena pracownika potrzebna do ustalenia terminów. */
 export interface EvaluationInfo {
@@ -67,6 +68,11 @@ export interface EmployeeInfo {
   positionChanges: (PositionChangeEvent & { date: IsoDate })[];
   observationsCount: number;
   lastObservationDate?: IsoDate;
+}
+
+/** „pt. 27.11” w bieżącym roku, „22.12.2025” w innym – data na kartach pulpitu bez niejednoznaczności. */
+export function formatDay(date: IsoDate, today: IsoDate): string {
+  return date.slice(0, 4) === today.slice(0, 4) ? formatDateShortPl(date) : formatDatePl(date);
 }
 
 export function fullName(e: Pick<EmployeeInfo, "firstName" | "lastName">): string {

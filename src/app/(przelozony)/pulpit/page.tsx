@@ -12,10 +12,10 @@ import { requirePageRole } from "@/lib/auth/guard";
 import { todayIso } from "@/lib/domain/daty";
 import { EVALUATION_TYPE_LABELS } from "@/lib/domain/slownik";
 import { DEADLINE_KIND_LABELS } from "@/lib/rules/terminy";
-import { daysBetween, formatDatePl, formatDateShortPl, weekdayName } from "@/lib/rules/kalendarz";
+import { daysBetween, formatDatePl, weekdayName } from "@/lib/rules/kalendarz";
 import { plural } from "@/lib/rules/tekst";
 import { loadSubordinates } from "@/lib/dashboard/dane";
-import { buildDashboardTodo, employeeHref, employeeRow, sortRows } from "@/lib/dashboard/pulpit";
+import { buildDashboardTodo, employeeHref, employeeRow, formatDay, sortRows } from "@/lib/dashboard/pulpit";
 
 export const metadata: Metadata = { title: "Pulpit – Kompas Kompetencji" };
 export const dynamic = "force-dynamic";
@@ -59,7 +59,7 @@ export default async function PulpitPage() {
             ) : (
               <ol className="flex flex-col divide-y">
                 {todo.map((item) => (
-                  <li key={`${item.employeeId}-${item.deadline.kind}`} className="flex flex-wrap items-center justify-between gap-3 py-3">
+                  <li key={`${item.employeeId}-${item.deadline.kind}`} className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 py-3">
                     <div className="flex min-w-0 flex-col gap-1">
                       <span className="font-medium">{item.title}</span>
                       <DeadlineBadge
@@ -131,7 +131,7 @@ export default async function PulpitPage() {
                     {r.next ? (
                       <div className="flex flex-wrap items-center gap-2 text-sm">
                         <span>
-                          {DEADLINE_KIND_LABELS[r.next.deadline.kind]}: do {formatDateShortPl(r.next.deadline.date)}
+                          {DEADLINE_KIND_LABELS[r.next.deadline.kind]}: do {formatDay(r.next.deadline.date, today)}
                         </span>
                         <DeadlineBadge daysLeft={r.next.daysLeft} urgency={r.next.urgency} />
                       </div>
@@ -144,7 +144,7 @@ export default async function PulpitPage() {
                       {r.observationsCount === 0
                         ? "Brak obserwacji w dzienniku"
                         : `${r.observationsCount} ${plural(r.observationsCount, ["obserwacja", "obserwacje", "obserwacji"])}${
-                            r.lastObservationDate ? `, ostatnia ${formatDateShortPl(r.lastObservationDate)}` : ""
+                            r.lastObservationDate ? `, ostatnia ${formatDay(r.lastObservationDate, today)}` : ""
                           }`}
                     </span>
                   </Link>

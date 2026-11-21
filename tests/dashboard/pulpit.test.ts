@@ -5,6 +5,7 @@ import {
   currentEvaluation,
   employeeHref,
   employeeRow,
+  formatDay,
   openDeadlines,
   sortRows,
   type EmployeeInfo,
@@ -109,6 +110,14 @@ describe("karta „Do zrobienia” i lista podwładnych", () => {
     expect(todo[0]!.actionLabel).toBe("Zobacz szczegóły");
     expect(todo[0]!.title).toContain("J. Adamska");
     expect(todo[0]!.urgency).toBe("PILNE");
+  });
+
+  it("termin z innego roku ma rok w dacie (bez niejednoznaczności)", () => {
+    const stara = employee({ id: "stara", lastName: "Stara", permanentFrom: "2025-11-20", evaluations: [open("s", { status: "DO_ROZPOCZECIA" })] });
+    const [item] = buildDashboardTodo([stara], TODAY);
+    expect(item!.title).toContain("termin minął 22.12.2025");
+    expect(formatDay("2026-11-27", TODAY)).toBe("pt. 27.11");
+    expect(formatDay("2027-01-11", TODAY)).toBe("11.01.2027");
   });
 
   it("pokazuje najwyżej 5 spraw", () => {

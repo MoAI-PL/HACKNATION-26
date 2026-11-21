@@ -81,6 +81,13 @@ Przełożony widzi wyłącznie swoich podwładnych: zapytania filtrujemy po `sup
 - `additionalCriteriaFromOsp`: kompetencje miękkie z OSP, które nie są obowiązkowe na wybranym arkuszu (np. starszy specjalista → Myślenie analityczne) – podpowiedź bez AI dla Z12 i punkt wyjścia dla Z23.
 - Czytnik `src/lib/import/docx.ts` obsługuje pola wyboru Worda 2010+ (`w14:checkbox`), stare pola formularza (FORMCHECKBOX), znaki ☒/☐ i symbole Wingdings; pomija teksty zastępcze pustych kontrolek („Wybierz element.”). Wspólne zabezpieczenia plików od użytkownika (limit 50 MB, odrzucenie DOCTYPE) są w `src/lib/import/ooxml.ts`.
 
+## Asystent rozmowy (Z24)
+
+- Ekrany przełożonego: `/ocena/rozmowa` (podwładni z rozmową, która jest następna według etapu oceny, i terminem z silnika Z08) oraz `/ocena/rozmowa/[pracownik]?typ=WSTEPNA|ROZPOCZYNAJACA|OCENIAJACA` – ściąga do przeczytania i wydruku (nagłówek aplikacji ukryty przy druku).
+- Logika bez bazy i bez AI: `src/lib/rozmowa/przygotowanie.ts` – zakres rozmowy z przepisu (§ 3 rozp. o pierwszej ocenie, § 5 ust. 1 i § 10 rozp. o ocenach okresowych, treść z bazy wiedzy w „Dlaczego?”), agenda, mocne strony i obszary do rozwoju (ocena wskaźnika z Z14, a gdy jej brak – średnia z poziomów zachowań w notatkach Z13), pytania odwołujące się do konkretnych notatek i celu, informacja zwrotna zachowanie–skutek–oczekiwanie (oczekiwanie = opis zachowania z modelu), działania rozwojowe (`rozwoj.ts`, kierunki rozwoju zawsze – § 10 pkt 3), trudne sytuacje (sprzeciw – art. 83, po ocenie negatywnej – art. 81 ust. 9).
+- AI (`src/lib/rozmowa/ai.ts`) tylko redaguje otwarcie i informację zwrotną w `<PropozycjaAI>`; do modelu nie trafia imię i nazwisko (zamiana na „osoba oceniana”), „Wstaw” dopisuje tekst do notatek na ekranie, „Wstaw” i „Odrzuć” trafiają do `AuditLog` (`funkcja: ASYSTENT_ROZMOWY`). Bez modelu ściąga jest kompletna.
+- Szkice uzasadnienia i wniosków do IPRZ wstawia się do arkusza w podsumowaniu oceny (Z15); asystent rozmowy podsuwa do nich działania rozwojowe.
+
 ## Zabezpieczenia demo (Z44)
 
 - `resetDemoData` (`src/lib/demo/reset.ts`) woła `seedDemoData` z Z26 (usuwa dane demo i tworzy je od nowa, konta zostają) i zapisuje `RESET_DEMO` w `AuditLog`. Poza `DEMO_MODE=true` rzuca `DemoResetDisabledError` i niczego nie zmienia.

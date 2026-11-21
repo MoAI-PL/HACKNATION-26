@@ -19,7 +19,7 @@ Kolejność: najpierw ★, potem pozostałe P0, potem P1 (w kolejności z tabeli
 |---|---|---|---|---|---|
 | ★Z05 | Import modelu kompetencji (xlsx → JSON) | Z02 | gotowe | Nadia | `z05-import-modelu` |
 | ★Z06 | Import OSP (docx) i automatyczny wybór arkusza B/C | Z03 | wolne | | |
-| ★Z26 | Dane demo (seed) wokół persony przełożonej | Z03 | wolne | | |
+| ★Z26 | Dane demo (seed) wokół persony przełożonej | Z03 | w toku | suzanne0401 | `z26-dane-demo` |
 
 ## C. Silnik reguł
 
@@ -62,7 +62,7 @@ Kolejność: najpierw ★, potem pozostałe P0, potem P1 (w kolejności z tabeli
 |---|---|---|---|---|---|
 | ★Z27 | Pytania do mentorów (`docs/ZALOZENIA.md`) | — | wolne | | |
 | ★Z28 | Szkic w HackTribe – **wysłać przed 19:30** | Z01 | w toku | geoglof | — |
-| ★Z29 | Publiczne demo | Z04, Z26 | wolne | | |
+| ★Z29 | Publiczne demo | Z04, Z26 | w toku | suzanne0401 | |
 | ★Z44 | Reset danych demo i działanie bez AI | Z20, Z26 | wolne | | |
 | Z30 | Testy ręczne, Playwright, dostępność, pomiar czasu oceny | Z15, Z16 | wolne | | |
 | Z31 | Dokumentacja (`README`, `docs/`) | całość | wolne | | |

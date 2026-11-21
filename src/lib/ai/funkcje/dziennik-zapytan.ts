@@ -10,7 +10,8 @@ export async function logAssistantQuery(a: AssistantAnswer, extra: { userId?: st
     await prisma.assistantQuery.create({
       data: {
         userId: extra.userId,
-        question: a.question,
+        // Z34: w dzienniku zostaje pytanie bez danych osobowych (minimalizacja danych).
+        question: a.sentQuestion ?? a.question,
         sources: a.sources.map((s) => ({ id: s.id, unit: s.unit, citation: s.citation })),
         answer: a.answer,
         refused: a.refused,

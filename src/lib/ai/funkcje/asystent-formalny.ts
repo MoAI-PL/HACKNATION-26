@@ -5,12 +5,14 @@
 //  2. brak modelu albo błąd modelu → tryb bez AI: pokazujemy najlepiej pasujące fragmenty przepisów;
 //  3. model dostaje tylko fragmenty (jako dane w znacznikach) i odpowiada JSON-em z numerami źródeł;
 //  4. kontrola: numery źródeł muszą istnieć, a wymienione w odpowiedzi „art.” / „§” muszą występować w źródłach.
+// Z34: pytanie jest pseudonimizowane przed wyszukiwaniem, modelem i dziennikiem (np. „Czy mogę ocenić Kasię…” → „[OSOBA_1]”).
 
 import { z } from "zod";
 import { chatJson, getLLM, LLMError, type LLMProvider } from "@/lib/ai/llm";
 import { citation, getFragment, searchKnowledge } from "@/lib/ai/rag/search";
 import { CACHE_NOTICE, cachedFormalAnswer, demoCacheEnabled, logCacheUse } from "@/lib/demo/demo-cache";
 import type { KnowledgeFragment, SearchHit } from "@/lib/ai/rag/types";
+import { describeHidden, pseudonymize, restoreNames, type PseudoPerson } from "@/lib/ai/pseudonimizacja";
 
 export const REFUSAL = "Nie znalazłem tej informacji w dostępnych źródłach. Skontaktuj się z komórką kadr.";
 export const MAX_QUESTION_LENGTH = 500;
@@ -41,6 +43,10 @@ export interface AssistantAnswer {
   model?: string;
   /** Z44: odpowiedź zapasowa z data/demo-cache.json (model nie odpowiedział w trybie demo). */
   fromCache?: boolean;
+  /** Z34: pytanie po pseudonimizacji – to trafiło do modelu i do dziennika (tylko gdy coś ukryto). */
+  sentQuestion?: string;
+  /** Z34: co ukryto przed modelem, np. „Przed wysłaniem do modelu ukryto: 1 osobę.” */
+  privacy?: string;
   durationMs: number;
 }
 
@@ -112,11 +118,28 @@ function fallback(question: string, hits: SearchHit[], started: number, notice: 
 export interface AskOptions {
   /** Dostawca modelu; domyślnie z .env. null = wymuś tryb bez AI. */
   llm?: LLMProvider | null;
+  /** Z34: podwładni pytającego – ich imiona i nazwiska (z odmianą) nie trafią do modelu. */
+  people?: readonly PseudoPerson[];
 }
 
 export async function answerFormalQuestion(rawQuestion: string, options: AskOptions = {}): Promise<AssistantAnswer> {
-  const started = Date.now();
   const question = rawQuestion.trim().slice(0, MAX_QUESTION_LENGTH);
+  const people = options.people ?? [];
+  const p = pseudonymize(question, people);
+  const result = await answerPseudonymized(p.text, options);
+  if (p.text === question) return { ...result, question };
+  return {
+    ...result,
+    question,
+    answer: restoreNames(result.answer, p.tags, people, p.hidden),
+    sentQuestion: p.text,
+    privacy: describeHidden(p.counts) ?? undefined,
+  };
+}
+
+/** Odpowiedź na pytanie już po pseudonimizacji – tylko ten tekst trafia do wyszukiwarki, modelu i pamięci podręcznej demo. */
+async function answerPseudonymized(question: string, options: AskOptions): Promise<AssistantAnswer> {
+  const started = Date.now();
   const llm = options.llm === undefined ? getLLM() : options.llm;
   const mode: AssistantMode = llm ? "AI" : "BEZ_AI";
 

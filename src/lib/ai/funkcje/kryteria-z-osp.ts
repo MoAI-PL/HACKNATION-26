@@ -17,6 +17,7 @@ import { COMPETENCY_NAMES, SHEET_LABELS } from "@/lib/domain/slownik";
 import type { CompetencyCode, PositionDescription } from "@/lib/domain/types";
 import { availableAdditionalCriteria, validateAdditionalCriteria } from "@/lib/rules/kryteria";
 import { CACHE_NOTICE, cachedCriteria, demoCacheEnabled, logCacheUse } from "@/lib/demo/demo-cache";
+import { pseudonymizeMany, restoreNames } from "@/lib/ai/pseudonimizacja";
 
 export type ProposalMode = "AI" | "BEZ_AI";
 export type QuoteSource = "ZADANIE_DOMINUJACE" | "ZADANIE_POZOSTALE" | "KOMPETENCJE_MIEKKIE";
@@ -130,6 +131,20 @@ export function buildMessages(position: PositionDescription, sheet: "B" | "C", c
       content: `<stanowisko>${asData(position.title)} – ${SHEET_LABELS[sheet]}</stanowisko>\n${extra}\n<zadania>\n${tasks}\n</zadania>\n<kandydaci>\n${kandydaci}\n</kandydaci>`,
     },
   ];
+}
+
+/**
+ * Z34: OSP przed wysłaniem do modelu bez danych osobowych (np. „uzgadnia z Janem Kowalskim”, e-mail lub telefon w zadaniu).
+ * Nazw komórek nie ukrywamy – opisują zadania stanowiska, a nie osoby. `restore` przywraca oryginał w cytatach z odpowiedzi.
+ */
+export function pseudonymizePosition(position: PositionDescription): { position: PositionDescription; restore: (text: string) => string } {
+  const n = position.dominantTasks.length;
+  const p = pseudonymizeMany([position.title, position.purpose, ...position.dominantTasks, ...position.otherTasks], [], { units: false });
+  const [title, purpose, ...tasks] = p.texts;
+  return {
+    position: { ...position, title: title ?? position.title, purpose: purpose ?? position.purpose, dominantTasks: tasks.slice(0, n), otherTasks: tasks.slice(n) },
+    restore: (text) => restoreNames(text, p.tags, [], p.hidden),
+  };
 }
 
 /** Cytat z modelu → dosłowny fragment OSP. Gdy go nie ma w zadaniu, szukamy w innych zadaniach, a w ostateczności bierzemy początek zadania. */
@@ -268,7 +283,9 @@ export async function proposeAdditionalCriteria(
   if (!llm) return offline("Asystent AI nie jest skonfigurowany – propozycja na podstawie kompetencji i słów kluczowych z OSP.");
 
   try {
-    const { data, model } = await chatJson(llm, buildMessages(position, sheet, candidates, max), responseSchema, { temperature: 0.2, maxTokens: 700 });
+    const hidden = pseudonymizePosition(position);
+    const hiddenTasks = numberTasks(hidden.position);
+    const { data, model } = await chatJson(llm, buildMessages(hidden.position, sheet, candidates, max), responseSchema, { temperature: 0.2, maxTokens: 700 });
     const proposals: CriterionProposal[] = [];
     const dropped: string[] = [];
     for (const p of data.propozycje) {
@@ -278,12 +295,13 @@ export async function proposeAdditionalCriteria(
         continue;
       }
       if (proposals.some((x) => x.competency === code) || proposals.length >= max) continue;
-      const quote = verifyQuote(p.cytat, p.zadanie, tasks);
-      if (!quote) {
+      const verified = verifyQuote(p.cytat, p.zadanie, hiddenTasks);
+      if (!verified) {
         dropped.push(COMPETENCY_NAMES[code]);
         continue;
       }
-      const justification = norm(p.uzasadnienie).slice(0, MAX_JUSTIFICATION) || `Wynika z zadania ${quote.taskNumber}.`;
+      const quote = { ...verified, text: hidden.restore(verified.text) };
+      const justification = hidden.restore(norm(p.uzasadnienie)).slice(0, MAX_JUSTIFICATION) || `Wynika z zadania ${quote.taskNumber}.`;
       proposals.push({ competency: code, name: COMPETENCY_NAMES[code], justification, quote });
     }
 

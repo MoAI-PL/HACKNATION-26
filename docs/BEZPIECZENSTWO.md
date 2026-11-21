@@ -68,7 +68,7 @@ Sprawdzone testami (`tests/auth/`, testy akcji ekranów) i ręcznie na demo: oce
 
 - logowanie przez katalog urzędu (SSO / Active Directory / login.gov.pl) zamiast haseł w aplikacji; uwierzytelnianie wieloskładnikowe dla HR;
 - `DEMO_MODE=false`, rotacja `AUTH_SECRET`, usunięcie kont demo;
-- model AI lokalny w infrastrukturze urzędu; przy modelu zewnętrznym – umowa powierzenia i pseudonimizacja;
+- model AI lokalny w infrastrukturze urzędu; przy modelu zewnętrznym – umowa powierzenia (pseudonimizacja tekstu przed modelem już działa – Z34, [`AI.md`](AI.md));
 - nagłówki bezpieczeństwa (CSP, HSTS) na reverse proxy, limit zapytań we współdzielonym magazynie (np. Redis);
 - polityka retencji danych ocen zgodna z przepisami o aktach osobowych, kopie zapasowe bazy, monitoring i alerty;
 - test penetracyjny i przegląd uprawnień przez inspektora ochrony danych; rejestr czynności przetwarzania (RODO).

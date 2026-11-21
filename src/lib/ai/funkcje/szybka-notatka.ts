@@ -4,7 +4,8 @@
 // i najbliższy poziom zachowania. Decyzja zawsze należy do przełożonego (<PropozycjaAI>).
 //
 // Przebieg:
-//  1. pseudonimizacja: imiona i nazwiska podwładnych (z odmianą i zdrobnieniami) → znaczniki [OSOBA_1] (prosta wersja, pełna w Z34);
+//  1. pseudonimizacja (Z34, src/lib/ai/pseudonimizacja.ts): podwładni (z odmianą i zdrobnieniami), osoby spoza zespołu,
+//     komórki i identyfikatory → znaczniki [OSOBA_1], [KOMORKA_1], [EMAIL_1]…;
 //     przy okazji deterministycznie rozpoznajemy, o kim jest notatka;
 //  2. model dostaje notatkę w znacznikach i katalog wskaźników, zwraca JSON (zasada AI nr 4: zod + jedna ponowna próba);
 //  3. kontrola: wskaźnik musi istnieć w modelu, osoba musi być podwładnym, poziom 1–5 tylko przy wskaźniku;
@@ -19,151 +20,19 @@ import type { CompetencyModelIndex } from "@/lib/domain/model-kompetencji";
 import { isIsoDate } from "@/lib/domain/daty";
 import type { BehaviorLevel, CompetencyCode, IsoDate, ObservationSource } from "@/lib/domain/types";
 import { MAX_SDR_LENGTH } from "@/lib/obserwacje/stale";
+import { describeHidden, pseudonymize, restoreNames, type PseudoPerson } from "@/lib/ai/pseudonimizacja";
 
 /** Najdłuższa szybka notatka (jedno–kilka zdań). */
 export const MAX_NOTE_LENGTH = 1000;
 
-export interface NotePerson {
-  id: string;
-  firstName: string;
-  lastName: string;
-}
+/** Podwładny w notatce (imię i nazwisko do pseudonimizacji). */
+export type NotePerson = PseudoPerson;
 
 // ---------------------------------------------------------------------------
-// Pseudonimizacja (prosta wersja; pełna – nazwiska spoza zespołu, komórki – w Z34)
+// Pseudonimizacja – wspólny moduł (Z34): podwładni, osoby spoza zespołu, komórki, identyfikatory
 // ---------------------------------------------------------------------------
 
-/** Małe litery, bez polskich znaków (ł → l), bez zmiany długości słowa. */
-export function foldWord(word: string): string {
-  return word
-    .toLocaleLowerCase("pl")
-    .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")
-    .replace(/ł/g, "l");
-}
-
-// ZAŁOŻENIE: najczęstsze zdrobnienia imion. Przełożeni piszą notatki potocznie („Anka”, „Kasia”, „Piotrek”).
-export const DIMINUTIVES: Record<string, string[]> = {
-  anna: ["ania", "anka", "anusia", "anula"],
-  katarzyna: ["kasia", "kaska", "kasienka"],
-  piotr: ["piotrek", "piotrus"],
-  jan: ["janek", "jas", "jasiu"],
-  marcin: ["marcinek"],
-  aleksandra: ["ola", "olka", "olenka"],
-  aleksander: ["olek", "alek"],
-  marta: ["martusia", "martunia"],
-  maria: ["marysia", "marysienka"],
-  magdalena: ["magda", "madzia"],
-  malgorzata: ["gosia", "malgosia"],
-  agnieszka: ["aga", "agusia"],
-  krzysztof: ["krzysiek", "krzys"],
-  tomasz: ["tomek"],
-  pawel: ["pawelek"],
-  michal: ["michalek"],
-  andrzej: ["andrzejek", "jedrek"],
-  ewa: ["ewka", "ewunia"],
-  joanna: ["asia", "joasia"],
-  barbara: ["basia"],
-  elzbieta: ["ela"],
-  zofia: ["zosia"],
-  monika: ["monia"],
-  tadeusz: ["tadek"],
-  wojciech: ["wojtek"],
-  grzegorz: ["grzesiek"],
-  stanislaw: ["staszek"],
-  jakub: ["kuba", "kubus"],
-  mateusz: ["mateuszek"],
-  dorota: ["dorotka"],
-  beata: ["beatka"],
-};
-
-const ENDINGS = ["", "a", "e", "i", "y", "ie", "ę", "ą", "o", "u", "em", "iem", "owi", "om", "ej", "iej", "ze", "ce", "ii", "io", "iu", "im", "ich", "iego", "iemu", "ego", "emu"].map(foldWord);
-
-const SHORT_ENDINGS = ["a", "i", "ę", "ą", "o", "u"].map(foldWord);
-
-/** Formy odmiany słowa (po foldWord): Anna → anny, annie, anną…; Piotrek → piotrka, piotrkiem; Paweł → pawła. */
-export function inflections(word: string): Set<string> {
-  const w = foldWord(word);
-  const stems = new Set<string>([w]);
-  if (/[aeiouy]$/.test(w)) stems.add(w.slice(0, -1)); // Anna → ann-, Kasia → kasi-
-  if (w.endsWith("ek")) stems.add(`${w.slice(0, -2)}k`); // Piotrek → piotrk-
-  if (w.endsWith("el")) stems.add(`${w.slice(0, -2)}l`); // Paweł → pawł-
-  if (w.endsWith("ski") || w.endsWith("cki") || w.endsWith("dzki")) stems.add(w.slice(0, -1)); // Kowalski → kowalsk-
-  const out = new Set<string>();
-  for (const s of stems) {
-    if (s.length < 2) continue;
-    // Krótki rdzeń (Ola → ol-) tylko z końcówkami rzeczownika, żeby „olej” nie był imieniem.
-    for (const e of s.length < 3 ? SHORT_ENDINGS : ENDINGS) out.add(s + e);
-    // Oboczności w celowniku i miejscowniku: Marta → Marcie, Agnieszka → Agnieszce, Magda → Magdzie, Olga → Oldze.
-    if (s.endsWith("t")) out.add(`${s.slice(0, -1)}cie`);
-    if (s.endsWith("k")) out.add(`${s.slice(0, -1)}ce`);
-    if (s.endsWith("d")) out.add(`${s.slice(0, -1)}dzie`);
-    if (s.endsWith("g")) out.add(`${s.slice(0, -1)}dze`);
-  }
-  out.add(w);
-  return out;
-}
-
-// Krótkie słowa, które przypadkiem pokrywają się z formą imienia (np. „ani” jako spójnik).
-const NOT_NAMES = new Set(["ani", "ale", "jasne", "jasno", "agi"]);
-
-export interface Pseudonymized {
-  /** Tekst wysyłany do modelu – bez imion i nazwisk podwładnych. */
-  text: string;
-  /** Znacznik → pracownik. */
-  tags: Record<string, string>;
-  /** Pracownicy wymienieni w notatce (w kolejności pierwszego wystąpienia). */
-  mentioned: string[];
-  /** Czy któreś słowo pasowało do więcej niż jednej osoby (np. dwie Marty). */
-  ambiguous: boolean;
-}
-
-/**
- * Zamienia imiona (z odmianą i zdrobnieniami) i nazwiska podwładnych na znaczniki [OSOBA_n].
- * Słowo pasujące do kilku osób zastępujemy neutralnym [OSOBA] – wtedy osobę wybiera przełożony.
- */
-export function pseudonymize(text: string, people: NotePerson[]): Pseudonymized {
-  const formsByPerson = people.map((p) => {
-    const first = foldWord(p.firstName);
-    const forms = new Set<string>([...inflections(p.firstName), ...inflections(p.lastName)]);
-    for (const d of DIMINUTIVES[first] ?? []) for (const f of inflections(d)) forms.add(f);
-    for (const f of NOT_NAMES) forms.delete(f);
-    return { id: p.id, forms };
-  });
-
-  const tags: Record<string, string> = {};
-  const tagOf = new Map<string, string>();
-  const mentioned: string[] = [];
-  let ambiguous = false;
-
-  const out = text.replace(/\p{L}+/gu, (word) => {
-    const f = foldWord(word);
-    const hits = formsByPerson.filter((p) => p.forms.has(f));
-    if (hits.length === 0) return word;
-    if (hits.length > 1) {
-      ambiguous = true;
-      return "[OSOBA]";
-    }
-    const id = hits[0]!.id;
-    let tag = tagOf.get(id);
-    if (!tag) {
-      tag = `OSOBA_${tagOf.size + 1}`;
-      tagOf.set(id, tag);
-      tags[tag] = id;
-      mentioned.push(id);
-    }
-    return `[${tag}]`;
-  });
-  return { text: out, tags, mentioned, ambiguous };
-}
-
-/** Znaczniki z odpowiedzi modelu → imiona (mianownik). Nieznany znacznik → „osoba”. */
-export function restoreNames(text: string, tags: Record<string, string>, people: NotePerson[]): string {
-  return text.replace(/\[?\b(OSOBA(?:_\d+)?)\b\]?/g, (_m, tag: string) => {
-    const person = people.find((p) => p.id === tags[tag]);
-    return person ? person.firstName : "osoba";
-  });
-}
+export { DIMINUTIVES, foldWord, inflections, pseudonymize, restoreNames, type Pseudonymized } from "@/lib/ai/pseudonimizacja";
 
 // ---------------------------------------------------------------------------
 // Propozycja
@@ -184,6 +53,8 @@ export interface QuickNoteProposal {
   justification?: string;
   /** Tekst, który trafił do modelu (po pseudonimizacji) – pokazujemy go, żeby było widać, że imiona nie wychodzą. */
   sentText?: string;
+  /** Z34: co ukryto przed modelem, np. „Przed wysłaniem do modelu ukryto: 2 osoby, 1 adres e-mail.” */
+  privacy?: string;
   notice?: string;
   model?: string;
   durationMs: number;
@@ -276,7 +147,7 @@ export async function proposeQuickNote(note: string, people: NotePerson[], optio
     if (data.wskaznik && !indicator) notes.push("Asystent wskazał wskaźnik spoza modelu kompetencji – wybierz go sam.");
 
     const level = indicator && data.poziom && data.poziom >= 1 && data.poziom <= 5 ? (data.poziom as BehaviorLevel) : null;
-    const restore = (s: string | null | undefined) => clean(restoreNames(clean(s), p.tags, people));
+    const restore = (s: string | null | undefined) => clean(restoreNames(clean(s), p.tags, people, p.hidden));
 
     const result: QuickNoteProposal = {
       mode: "AI",
@@ -289,6 +160,7 @@ export async function proposeQuickNote(note: string, people: NotePerson[], optio
       outcome: restore(data.rezultat),
       justification: restore(data.uzasadnienie) || undefined,
       sentText: p.text,
+      privacy: describeHidden(p.counts) ?? undefined,
       notice: notes.length ? notes.join(" ") : undefined,
       model: usedModel,
       durationMs: Date.now() - started,

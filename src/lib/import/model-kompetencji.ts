@@ -22,6 +22,7 @@ import {
 } from "@/lib/domain/types";
 import { competencyModelSchema } from "@/lib/domain/model-kompetencji";
 import { XlsxReadError, cellAddress, readXlsx, type XlsxSheet } from "./xlsx";
+import { normalizeText, sameText } from "./tekst";
 
 export const SUMMARY_SHEET = "Model kompetencji";
 export const HEADER_ROW = 3;
@@ -50,18 +51,10 @@ export interface ImportOptions {
   importedAt?: IsoDate;
 }
 
-/** Ujednolica tekst z komórki: łamania linii i twarde spacje → spacja, bez miękkich łączników, podwójnych spacji i spacji na końcach. */
-export function normalizeText(value: string): string {
-  return value
-    .replace(/­/g, "")
-    .replace(/[\s   ]+/g, " ")
-    .trim();
-}
+export { normalizeText };
 
-/** Porównanie nazw niezależne od wielkości liter i białych znaków („ORGANIZACJA PRACY i …” = „Organizacja pracy i …”). */
-function sameName(a: string, b: string): boolean {
-  return normalizeText(a).toLocaleLowerCase("pl") === normalizeText(b).toLocaleLowerCase("pl");
-}
+/** Porównanie nazw niezależne od wielkości liter i białych znaków. */
+const sameName = sameText;
 
 function addr(sheet: string, ref: string): string {
   return `„${sheet}”!${ref}`;

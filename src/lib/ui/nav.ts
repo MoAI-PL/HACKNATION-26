@@ -65,6 +65,7 @@ const NAV_BY_ROLE: Record<Role, NavItem[]> = {
   HR: [
     { href: "/hr", label: "Panel HR", icon: "hr", description: "Oceny, terminy, przypomnienia" },
     { href: "/hr/lustro", label: "Lustro ocen", icon: "hr", description: "Rozkład ocen w komórkach (Z36)" },
+    { href: "/hr/dziennik", label: "Dziennik decyzji", icon: "hr", description: "Propozycje AI obok decyzji człowieka (Z35)" },
     ASYSTENT_FORMALNY,
   ],
   OCENIANY: [{ href: "/moje-oceny", label: "Moje oceny", icon: "moje" }],

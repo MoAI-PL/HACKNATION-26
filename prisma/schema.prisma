@@ -189,8 +189,9 @@ model Employee {
   evaluations   Evaluation[]
   observations  Observation[]
   conversations Conversation[]
-  absences      Absence[]
-  reminders     Reminder[]
+  absences        Absence[]
+  positionChanges PositionChange[]
+  reminders       Reminder[]
 
   @@index([supervisorId])
 }
@@ -393,6 +394,23 @@ model Absence {
   to         DateTime    @db.Date
   note       String?
   createdAt  DateTime    @default(now())
+
+  @@index([employeeId])
+}
+
+/// Zmiana stanowiska pracownika – wejście silnika terminów (Z08):
+/// < 6 mies. od ustalenia kryteriów → ponowne kryteria w 30 dni (§ 9 ust. 1),
+/// ≥ 6 mies. → ocena od 7 dni przed do 30 dni po zmianie (art. 81 ust. 6 ustawy, § 9 ust. 2).
+model PositionChange {
+  id                      String   @id @default(cuid())
+  employeeId              String
+  employee                Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  date                    DateTime @db.Date
+  /// Terminy zmienia tylko zmiana stanowiska z istotną zmianą obowiązków.
+  significantDutiesChange Boolean  @default(true)
+  newPositionTitle        String?
+  note                    String?
+  createdAt               DateTime @default(now())
 
   @@index([employeeId])
 }

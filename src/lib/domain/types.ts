@@ -283,6 +283,13 @@ export interface Deadline {
   explanation: Explanation;
 }
 
+/** Zmiana stanowiska (model PositionChange) – wejście silnika terminów (§ 9, art. 81 ust. 6 ustawy). */
+export interface PositionChangeEvent {
+  date: IsoDate;
+  /** Terminy zmienia tylko zmiana z istotną zmianą obowiązków. */
+  significantDutiesChange: boolean;
+}
+
 /** Kolor odznaki terminu – zawsze razem z tekstem (sekcja 4.1 pkt 8). */
 export type DeadlineUrgency = "PO_TERMINIE" | "PILNE" | "WKROTCE" | "W_TERMINIE";
 

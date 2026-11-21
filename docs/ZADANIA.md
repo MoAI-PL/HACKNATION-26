@@ -79,7 +79,7 @@ Kolejność: najpierw ★, potem pozostałe P0, potem P1 (w kolejności z tabeli
 | Z43 | Tryb rozmowy | Z24, Z15 | wolne | | |
 | Z34 | Pseudonimizacja przed LLM | Z20 | gotowe | geoglof | `z34-pseudonimizacja` |
 | Z35 | Dziennik audytu z eksportem CSV | Z14 | gotowe | geoglof | `z35-dziennik-audytu` |
-| Z37 | Oś czasu procesu pracownika | Z08 | w toku | geoglof | `z37-os-czasu` |
+| Z37 | Oś czasu procesu pracownika | Z08 | gotowe | geoglof | `z37-os-czasu` |
 | Z38 | REST API `/api/v1` (eksport JSON) | Z15 | gotowe | geoglof | `z38-rest-api` |
 
 ## H. P2

@@ -228,4 +228,12 @@ describe("pierwsza ocena (§ 10)", () => {
   it("odrzuca punkty spoza skali 3/5/7", () => {
     expect(() => scoreFirstEval(pierwsza([5, 5, 5, 5, 9 as FirstEvalPoints]))).toThrow(RulesInputError);
   });
+
+  it("wyjaśnienie pozytywnej oceny podaje progi z parametrów", () => {
+    expect(teksty(scoreFirstEval(pierwsza([3, 5, 5, 7, 7])))).toContain("najwyżej 1 ocena cząstkowa za 3 pkt i ocena łączna co najmniej 5,00 pkt");
+    const zmienione = { ...rules, firstEval: { ...rules.firstEval, minAverage: 4, maxScoresAtMinimum: 2 } };
+    const w = scoreFirstEval(pierwsza([3, 3, 5, 5, 5]), zmienione);
+    expect(w.result).toBe("POZYTYWNA");
+    expect(teksty(w)).toContain("najwyżej 2 oceny cząstkowe za 3 pkt i ocena łączna co najmniej 4,00 pkt");
+  });
 });

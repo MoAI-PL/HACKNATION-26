@@ -4,6 +4,8 @@ import { ClipboardList } from "lucide-react";
 import { PageHeader } from "@/components/layout/AppShell";
 import { HrEvaluationsTable } from "@/components/hr/HrEvaluationsTable";
 import { RemindersQueue } from "@/components/hr/RemindersQueue";
+import { ResetDemoCard } from "@/components/hr/ResetDemoCard";
+import { isDemoMode } from "@/lib/auth/demo";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -20,6 +22,8 @@ import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = { title: "Panel HR – Kompas Kompetencji" };
 export const dynamic = "force-dynamic";
+// Reset danych demo (Z44) zapisuje kilkadziesiąt rekordów – na Vercelu z bazą Neon potrzebuje więcej niż domyślny limit czasu.
+export const maxDuration = 60;
 
 // Panel HR, część 1 (Z18): wszystkie oceny z terminami z silnika (z wydłużeniami), filtry i kolejka przypomnień.
 
@@ -29,6 +33,8 @@ const MESSAGES: Record<string, { tone: "success" | "info" | "warning"; text: str
   dodano: { tone: "success", text: "Przypomnienie dodane do kolejki. Sprawdź podgląd i wyślij." },
   "nie-trzeba": { tone: "info", text: "Dla tej oceny przypomnienie nie jest teraz potrzebne albo już czeka w kolejce." },
   "brak-oceny": { tone: "warning", text: "Nie znaleziono tej oceny. Odśwież stronę." },
+  reset: { tone: "success", text: "Dane demo przywrócone do stanu początkowego. Terminy liczone od dzisiaj." },
+  "reset-wylaczony": { tone: "warning", text: "Reset danych demo jest wyłączony – działa tylko w trybie demo (DEMO_MODE=true)." },
 };
 
 const URGENCY_OPTIONS = [
@@ -158,6 +164,8 @@ export default async function HrPage({ searchParams }: { searchParams: Promise<R
         </div>
         <RemindersQueue reminders={reminders} />
       </section>
+
+      {isDemoMode() && <ResetDemoCard />}
     </div>
   );
 }

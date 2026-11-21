@@ -16,6 +16,7 @@ import { rules as defaultRules, type Rules } from "@/lib/domain/przepisy";
 import { COMPETENCY_NAMES, SHEET_LABELS } from "@/lib/domain/slownik";
 import type { CompetencyCode, PositionDescription } from "@/lib/domain/types";
 import { availableAdditionalCriteria, validateAdditionalCriteria } from "@/lib/rules/kryteria";
+import { CACHE_NOTICE, cachedCriteria, demoCacheEnabled, logCacheUse } from "@/lib/demo/demo-cache";
 
 export type ProposalMode = "AI" | "BEZ_AI";
 export type QuoteSource = "ZADANIE_DOMINUJACE" | "ZADANIE_POZOSTALE" | "KOMPETENCJE_MIEKKIE";
@@ -36,6 +37,8 @@ export interface CriteriaProposalResult {
   /** Informacja dla użytkownika, np. o trybie bez AI albo pominiętej propozycji modelu. */
   notice?: string;
   model?: string;
+  /** Z44: propozycja zapasowa z data/demo-cache.json (model nie odpowiedział w trybie demo). */
+  fromCache?: boolean;
   durationMs: number;
 }
 
@@ -298,6 +301,19 @@ export async function proposeAdditionalCriteria(
     };
   } catch (e) {
     const reason = e instanceof LLMError ? e.message : "Asystent AI jest chwilowo niedostępny.";
+    // Z44: w trybie demo OSP z materiałów MC mają przygotowaną wcześniej propozycję; cytaty sprawdzamy tak samo jak odpowiedź modelu.
+    const cached = demoCacheEnabled() ? cachedCriteria(position, sheet) : undefined;
+    if (cached) {
+      const proposals = cached.propozycje.flatMap((p): CriterionProposal[] => {
+        const code = p.kryterium as CompetencyCode;
+        const quote = candidates.includes(code) ? verifyQuote(p.cytat, p.zadanie, tasks) : null;
+        return quote ? [{ competency: code, name: COMPETENCY_NAMES[code], justification: p.uzasadnienie, quote }] : [];
+      });
+      if (proposals.length > 0 && validateAdditionalCriteria(sheet, proposals.map((p) => p.competency), r).valid) {
+        logCacheUse("analiza OSP", position.symbol ? `${position.title} (${position.symbol})` : position.title, reason);
+        return { sheet, mode: "AI", proposals, notice: CACHE_NOTICE, fromCache: true, durationMs: Date.now() - started };
+      }
+    }
     return offline(`${reason} Pokazujemy propozycję na podstawie OSP bez AI.`);
   }
 }

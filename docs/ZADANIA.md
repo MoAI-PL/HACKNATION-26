@@ -53,7 +53,7 @@ Kolejność: najpierw ★, potem pozostałe P0, potem P1 (w kolejności z tabeli
 | ★Z21 | Baza wiedzy (przepisy, poradniki, ustawa z ISAP, BM25) | Z02 | gotowe | suzanne0401 | `z21-baza-wiedzy` |
 | ★Z22 | Asystent formalny ze źródłami i odmową | Z20, Z21 | gotowe | suzanne0401 | `z20-z22-asystent` |
 | ★Z23 | Analiza OSP: propozycja kryteriów dodatkowych z cytatem | Z06, Z20 | gotowe | Nadia | `z23-analiza-osp` |
-| Z24 | Asystent rozmowy | Z20, Z14 | wolne | | |
+| Z24 | Asystent rozmowy | Z20, Z14 | w toku | Nadia | `z24-asystent-rozmowy` |
 | Z25 | Zestaw testowy asystenta (`npm run eval`) | Z22 | gotowe | bartektymochowicz-collab | `bartek/z25-eval-asystenta` |
 
 ## F. Jakość, wdrożenie, zgłoszenie

@@ -32,7 +32,7 @@ export interface NavItem {
 /** Funkcje włączane przez zadania, które je budują – do tego czasu ich przyciski są ukryte (zasada „bez atrap”). */
 export const FEATURES = {
   /** Z41: szybka notatka (przycisk „Notatka” i skrót N). */
-  quickNote: false,
+  quickNote: true,
 } as const;
 
 /** Adres asystenta formalnego (Z22). */
@@ -61,7 +61,12 @@ const NAV_BY_ROLE: Record<Role, NavItem[]> = {
   ],
   // Asystent formalny leży we wspólnej grupie (wspolne) – dostęp jak obszar „/asystent” w role.ts.
   KIERUJACY_KOMORKA: [{ href: "/kierujacy", label: "Arkusze do podpisu", icon: "podpis" }, ASYSTENT_FORMALNY],
-  HR: [{ href: "/hr", label: "Panel HR", icon: "hr", description: "Oceny, terminy, przypomnienia" }, ASYSTENT_FORMALNY],
+  HR: [
+    { href: "/hr", label: "Panel HR", icon: "hr", description: "Oceny, terminy, przypomnienia" },
+    { href: "/hr/lustro", label: "Lustro ocen", icon: "hr", description: "Rozkład ocen w komórkach (Z36)" },
+    { href: "/hr/dziennik", label: "Dziennik decyzji", icon: "hr", description: "Propozycje AI obok decyzji człowieka (Z35)" },
+    ASYSTENT_FORMALNY,
+  ],
   OCENIANY: [{ href: "/moje-oceny", label: "Moje oceny", icon: "moje" }],
 };
 
@@ -86,6 +91,13 @@ export function plannedNavForRole(role: Role): NavItem[] {
 /** Czy pozycja menu jest aktywna dla bieżącej ścieżki (także podstrony). */
 export function isActivePath(pathname: string, href: string): boolean {
   return pathname === href || pathname.startsWith(`${href}/`);
+}
+
+/** Jedna aktywna pozycja menu: najdokładniej pasująca (np. /hr/lustro → „Lustro ocen”, a nie „Panel HR”). */
+export function activeHref(pathname: string, items: readonly NavItem[]): string | undefined {
+  return items
+    .filter((i) => isActivePath(pathname, i.href))
+    .sort((a, b) => b.href.length - a.href.length)[0]?.href;
 }
 
 /** Szybkie notatki robi tylko przełożony – i tylko gdy funkcja jest gotowa (Z41). */

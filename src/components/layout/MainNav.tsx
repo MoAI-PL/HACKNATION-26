@@ -15,7 +15,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { isActivePath, type NavIcon, type NavItem } from "@/lib/ui/nav";
+import { activeHref, type NavIcon, type NavItem } from "@/lib/ui/nav";
 
 const ICONS: Record<NavIcon, LucideIcon> = {
   pulpit: LayoutDashboard,
@@ -32,12 +32,13 @@ const ICONS: Record<NavIcon, LucideIcon> = {
 /** Menu główne – poziome, zawija się przy 768 px. Aktywna pozycja ma aria-current="page". */
 export function MainNav({ items }: { items: NavItem[] }) {
   const pathname = usePathname();
+  const current = activeHref(pathname, items);
   return (
     <nav aria-label="Menu główne" className="border-t bg-card">
       <ul className="mx-auto flex max-w-7xl flex-wrap gap-1 px-4 py-1.5 md:px-6">
         {items.map((item) => {
           const Icon = ICONS[item.icon];
-          const active = isActivePath(pathname, item.href);
+          const active = item.href === current;
           return (
             <li key={item.href}>
               <Link

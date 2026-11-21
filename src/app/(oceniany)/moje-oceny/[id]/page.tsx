@@ -100,7 +100,8 @@ export default async function MojaOcenaPage({ params }: { params: Promise<{ id: 
 
         {v.objection && (
           <Notice tone="info" title={`Sprzeciw możesz wnieść do ${formatDatePl(v.objection.date)}`} legalBasis="art. 83 ustawy o służbie cywilnej">
-            Sprzeciw składasz do kierownika urzędu w ciągu 7 dni od zapoznania się z oceną.
+            Sprzeciw składasz w ciągu 7 dni od zapoznania się z oceną do dyrektora generalnego urzędu, a gdy nie ma tego stanowiska – do
+            kierownika urzędu. Sprzeciw rozpatruje się w ciągu 14 dni.
           </Notice>
         )}
       </div>

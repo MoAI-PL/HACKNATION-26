@@ -11,6 +11,7 @@ import { loadWizardData } from "@/lib/ocena/dane-kreatora";
 import { formatDatePl } from "@/lib/rules/kalendarz";
 
 export const dynamic = "force-dynamic";
+export const metadata = { title: "Ocena okresowa – część I – Kompas Kompetencji" };
 
 export default async function KreatorOcenyOkresowejPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;

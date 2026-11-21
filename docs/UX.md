@@ -62,8 +62,9 @@ return <AppShell user={shellUser(user)} userMenu={<LogoutButton />}>{children}</
 - Menu jest w `src/lib/ui/nav.ts`. Adresy leżą w obszarach ról z `src/lib/auth/role.ts` (test to sprawdza).
 - **Bez martwych linków:** pozycja z `pending: "Z12"` jest ukryta, dopóki ekranu nie ma. Zadanie ekranu usuwa `pending` w commicie, który dodaje stronę.
 - Docelowe menu przełożonego: Pulpit (`/pulpit`), Pierwsza ocena (`/ocena/pierwsza`, Z17), Ocena okresowa (`/ocena/okresowa`, Z12), Dziennik obserwacji (`/obserwacje`, Z13), Asystent formalny (`/asystent`), Asystent rozmowy (`/ocena/rozmowa`, Z24).
-- Przycisk „Notatka” i skrót `N` są wyłączone do czasu Z41: Z41 ustawia `FEATURES.quickNote = true` w `nav.ts`.
-- Asystent formalny (`/asystent`) jest na razie tylko w menu przełożonego, bo strona leży w grupie `(przelozony)`. Gdy trafi do wspólnego layoutu, dodajemy go też HR i kierującemu.
+- Przycisk „Notatka” i skrót `N` – szybka notatka (Z41), włączone (`FEATURES.quickNote = true` w `nav.ts`).
+- Asystent formalny (`/asystent`) leży we wspólnej grupie `(wspolne)` i jest w menu przełożonego, HR i kierującego.
+- Nieistniejący adres i rekord spoza uprawnień pokazują polską stronę „Nie znaleziono strony” (`src/app/not-found.tsx`), a nieoczekiwany błąd – „Coś poszło nie tak” z przyciskiem „Spróbuj ponownie” (`src/app/error.tsx`).
 
 ### `<PropozycjaAI>` – wspólny wzorzec AI (sekcja 4.2)
 
@@ -86,7 +87,7 @@ Gdy model nie odpowiada, ustaw `state="niedostepna"`. Komunikat jest spokojny i 
 
 | Klawisz | Działanie | Gdzie | Jak podpiąć |
 |---|---|---|---|
-| `N` | szybka notatka | wszędzie (przełożony, po włączeniu w Z41) | `useShortcutEvent(SHORTCUT_EVENTS.quickNote, (e) => { e.preventDefault(); otwórz(); })` |
+| `N` | szybka notatka | wszędzie (przełożony) | `useShortcutEvent(SHORTCUT_EVENTS.quickNote, (e) => { e.preventDefault(); otwórz(); })` |
 | `/` | asystent formalny | wszędzie (role z asystentem) | domyślnie przejście na `/asystent`; panel boczny może przejąć skrót: `useShortcutEvent(SHORTCUT_EVENTS.assistant, (e) => { e.preventDefault(); otwórz(); })` |
 | `?` | lista skrótów | wszędzie | gotowe w `AppShell` |
 | `←` `→` | poprzedni / następny wskaźnik | ocena wskaźników | `useShortcut("ArrowRight", …)` – Z14 |
@@ -135,4 +136,4 @@ Przegląd 21.11 wieczorem: Z10 działa i jest scalone, ale te punkty zostały ot
 
 **Stan punktów po przeglądzie 21.11, 23:00 (geoglof, gałąź `z10-poprawki`):** 1 – zrobione (audyt wszystkich ról przy 768 i 1440 px, poprawione logowanie przy 768 px); 2 – zrobione (`onDecision` obowiązkowy, wspólna akcja `logAiDecision` w `src/lib/audit/decyzje-ai.ts`); 3 – axe zrobione (0 naruszeń), Lighthouse zostaje w Z30; 4 – zrobione (`border-input`); 5 – zrobione (czytnik słyszy tylko „Zapisano …” i błąd); 6 – zrobione (skróty globalne nie działają przy otwartym oknie); 7 – zrobione (użytkownik z sesji, na produkcji tylko przy `DEMO_MODE`); 8 – zrobione (asystent w grupie `(wspolne)`, w menu HR i kierującego); 9 – otwarte.
 
-**Zależne od innych zadań (bez zmian w Z10):** Z41 włącza „Notatkę” i skrót N (`FEATURES.quickNote = true` w `src/lib/ui/nav.ts`); każde zadanie ekranu (Z12, Z13, Z17, Z24) usuwa `pending` ze swojej pozycji menu w tym samym commicie, który dodaje stronę.
+**Zależne od innych zadań (bez zmian w Z10):** Z41 włączyło „Notatkę” i skrót N; Z12 i Z13 dodały swoje ekrany. Z24 dodało asystenta rozmowy. Został Z17 (pierwsza ocena) – usuwa `pending` ze swojej pozycji menu w tym samym commicie, który dodaje stronę.

@@ -36,7 +36,7 @@ export const DEMO_ACCOUNTS: readonly DemoAccount[] = [
     email: "kierujacy@demo.kompas.test",
     name: "Tomasz Wiśniewski",
     role: "KIERUJACY_KOMORKA",
-    description: "Kierujący komórką. Podpis arkusza pierwszej oceny.",
+    description: "Kierujący komórką. Pierwsze oceny nowych pracowników komórki i terminy, w których uczestniczy.",
   },
 ];
 

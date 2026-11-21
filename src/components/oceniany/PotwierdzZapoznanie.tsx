@@ -34,7 +34,8 @@ export function PotwierdzZapoznanie({ evaluationId }: { evaluationId: string }) 
       <CardContent className="flex flex-col gap-4">
         <p className="text-sm">
           Potwierdzenie oznacza tylko, że ocena została Ci przedstawiona – nie że się z nią zgadzasz. Od dzisiejszego dnia biegnie 7 dni na
-          wniesienie sprzeciwu do kierownika urzędu (art. 83 ustawy o służbie cywilnej).
+          wniesienie sprzeciwu do dyrektora generalnego urzędu, a gdy nie ma tego stanowiska – do kierownika urzędu (art. 83 ust. 1 ustawy o
+          służbie cywilnej).
         </p>
         {error && (
           <p role="alert" className="text-sm font-medium text-danger">

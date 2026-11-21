@@ -13,6 +13,7 @@ import { daysBetween, formatDatePl, formatDateShortPl } from "@/lib/rules/kalend
 import { deadlineUrgency } from "@/lib/rules/terminy";
 
 export const dynamic = "force-dynamic";
+export const metadata = { title: "Ocena okresowa – Kompas Kompetencji" };
 
 const ACTION_LABEL: Record<EvaluationStatus, string> = {
   DO_ROZPOCZECIA: "Ustal kryteria",

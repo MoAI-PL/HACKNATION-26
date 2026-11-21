@@ -50,7 +50,7 @@ Kolejność: najpierw ★, potem pozostałe P0, potem P1 (w kolejności z tabeli
 | ID | Zadanie | Zależy od | Status | Kto | Gałąź |
 |---|---|---|---|---|---|
 | ★Z20 | Warstwa LLM (`LLMProvider`, konfiguracja w `.env`) | Z02 | wolne | | |
-| ★Z21 | Baza wiedzy (przepisy, poradniki, ustawa z ISAP, BM25) | Z02 | wolne | | |
+| ★Z21 | Baza wiedzy (przepisy, poradniki, ustawa z ISAP, BM25) | Z02 | w toku | suzanne0401 | `z21-baza-wiedzy` |
 | ★Z22 | Asystent formalny ze źródłami i odmową | Z20, Z21 | wolne | | |
 | ★Z23 | Analiza OSP: propozycja kryteriów dodatkowych z cytatem | Z06, Z20 | wolne | | |
 | Z24 | Asystent rozmowy | Z20, Z14 | wolne | | |

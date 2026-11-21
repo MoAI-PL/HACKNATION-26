@@ -3,6 +3,7 @@
 import { PrismaClient } from "@prisma/client";
 import { DEMO_ACCOUNTS, DEMO_PASSWORD } from "../src/lib/auth/demo";
 import { hashPassword } from "../src/lib/auth/password";
+import { seedDemoData } from "../src/lib/demo/dane-demo";
 
 const prisma = new PrismaClient();
 
@@ -20,6 +21,8 @@ async function seedDemoUsers() {
 
 async function main() {
   await seedDemoUsers();
+  const demo = await seedDemoData(prisma);
+  console.log(`Seed: dane demo na dzień ${demo.today} – ${demo.employees} pracowników, ${demo.evaluations} ocen, ${demo.observations} obserwacji.`);
   await prisma.appInfo.upsert({
     where: { key: "seed" },
     update: { value: new Date().toISOString() },

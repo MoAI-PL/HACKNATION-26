@@ -51,6 +51,12 @@ export default async function KreatorOcenyOkresowejPage({ params }: { params: Pr
                 {data.status === "W_OCENIE" ? "Kontynuuj ocenę" : "Zakończ ocenę"}
               </Link>
             </Button>
+          ) : data.status === "CZEKA_NA_ZAPOZNANIE" || data.status === "ZAKONCZONA" ? (
+            <Button asChild>
+              <Link href={`/ocena/okresowa/${data.evaluationId}/podsumowanie`}>
+                {data.status === "CZEKA_NA_ZAPOZNANIE" ? "Potwierdź zapoznanie" : "Zobacz ocenę"}
+              </Link>
+            </Button>
           ) : (
             <Button asChild variant="outline">
               <Link href="/ocena/okresowa">Wróć do listy</Link>

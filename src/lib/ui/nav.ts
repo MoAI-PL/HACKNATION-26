@@ -59,16 +59,23 @@ const NAV_BY_ROLE: Record<Role, NavItem[]> = {
       description: "Rozmowa, informacja zwrotna, rozwój",
     },
   ],
-  // ZAŁOŻENIE: strona asystenta (Z22) leży w grupie (przelozony), więc na razie tylko przełożony.
-  // role.ts dopuszcza /asystent także dla HR i kierującego – gdy strona trafi do wspólnego layoutu, dodać ASYSTENT_FORMALNY tutaj.
-  KIERUJACY_KOMORKA: [{ href: "/kierujacy", label: "Arkusze do podpisu", icon: "podpis" }],
-  HR: [{ href: "/hr", label: "Panel HR", icon: "hr", description: "Oceny, terminy, przypomnienia" }],
+  // Asystent formalny leży we wspólnej grupie (wspolne) – dostęp jak obszar „/asystent” w role.ts.
+  KIERUJACY_KOMORKA: [{ href: "/kierujacy", label: "Arkusze do podpisu", icon: "podpis" }, ASYSTENT_FORMALNY],
+  HR: [{ href: "/hr", label: "Panel HR", icon: "hr", description: "Oceny, terminy, przypomnienia" }, ASYSTENT_FORMALNY],
   OCENIANY: [{ href: "/moje-oceny", label: "Moje oceny", icon: "moje" }],
 };
 
 /** Menu widoczne dla roli – tylko gotowe ekrany. */
 export function navForRole(role: Role): NavItem[] {
   return NAV_BY_ROLE[role].filter((item) => !item.pending);
+}
+
+/**
+ * Czy ekran (albo jego podstrona) jest już gotowy – według menu przełożonego: istnieje pozycja z tym adresem bez `pending`.
+ * Jedno źródło prawdy dla linków z pulpitu (Z11): gdy zadanie ekranu usuwa `pending`, linki same zaczynają tam prowadzić.
+ */
+export function isScreenReady(href: string): boolean {
+  return NAV_BY_ROLE.PRZELOZONY.some((item) => !item.pending && isActivePath(href, item.href));
 }
 
 /** Pełne docelowe menu roli (także ekrany w budowie) – do testów i dokumentacji. */

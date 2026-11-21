@@ -9,7 +9,7 @@ import { requirePageRole } from "@/lib/auth/guard";
 import { todayIso } from "@/lib/domain/daty";
 import type { EvaluationStatus } from "@/lib/domain/types";
 import { listPeriodicEvaluations } from "@/lib/ocena/dane-kreatora";
-import { daysBetween, formatDateShortPl } from "@/lib/rules/kalendarz";
+import { daysBetween, formatDatePl, formatDateShortPl } from "@/lib/rules/kalendarz";
 import { deadlineUrgency } from "@/lib/rules/terminy";
 
 export const dynamic = "force-dynamic";
@@ -76,7 +76,7 @@ export default async function OcenaOkresowaPage() {
                           <DeadlineBadge
                             daysLeft={daysBetween(today, deadline.date)}
                             urgency={deadlineUrgency(deadline, today)}
-                            label={`${what} ${formatDateShortPl(deadline.date)}`}
+                            label={`${what} ${deadline.date.slice(0, 4) === today.slice(0, 4) ? formatDateShortPl(deadline.date) : formatDatePl(deadline.date)}`}
                           />
                         )}
                       </span>

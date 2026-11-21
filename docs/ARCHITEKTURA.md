@@ -1,6 +1,111 @@
 # Architektura
 
-> Dokument rozwijany w trakcie prac. Pełny opis (diagram, model danych, API, wdrożenie i skalowanie) uzupełnia Z31.
+Kompas Kompetencji to jedna aplikacja webowa (Next.js) z interfejsem i API, bazą PostgreSQL i wymiennym modelem językowym. Logika przepisów jest oddzielona od interfejsu i od AI: to czyste funkcje TypeScript z testami, sterowane parametrami z `data/przepisy.json`.
+
+## Przegląd
+
+```mermaid
+flowchart LR
+  subgraph P[Przeglądarka]
+    UI["Ekrany ról<br/>przełożony · HR · oceniany · kierujący"]
+  end
+  subgraph A[Aplikacja Next.js]
+    MW["Middleware<br/>sesja i obszary ról"]
+    SC["Ekrany i akcje serwerowe<br/>autoryzacja w każdej akcji"]
+    API["REST API<br/>/api/v1, /api/asystent"]
+    RULES["Silnik reguł<br/>punktacja §11/§10 · terminy KC · arkusz · sugestia"]
+    IMP["Import<br/>OSP .docx · model kompetencji .xlsx"]
+    AI["Warstwa AI<br/>asystent formalny · kryteria z OSP"]
+    RAG["Baza wiedzy<br/>406 fragmentów, BM25"]
+  end
+  DB[("PostgreSQL<br/>Prisma")]
+  LLM["Model językowy<br/>API zgodne z OpenAI<br/>Ollama lokalnie / Gemini na demo"]
+  CFG["data/przepisy.json<br/>data/model-kompetencji.json"]
+
+  UI --> MW --> SC
+  UI --> API
+  SC --> RULES
+  SC --> IMP
+  SC --> DB
+  API --> AI
+  API --> DB
+  AI --> RAG
+  AI -.opcjonalnie.-> LLM
+  RULES --> CFG
+  IMP --> CFG
+```
+
+- **Ekrany i akcje serwerowe** (App Router) dla czterech ról. Middleware kieruje niezalogowanych na logowanie, a każda akcja i każdy handler API sprawdza rolę i zakres danych sam.
+- **Silnik reguł** (`src/lib/rules/`) liczy arkusz, punkty, poziom ogólny, wynik, sugerowany poziom i wszystkie terminy. Nie korzysta z AI.
+- **Warstwa AI** (`src/lib/ai/`) ma jeden interfejs dostawcy zgodny z API OpenAI. Gdy modelu nie ma albo zawiedzie, funkcje AI przechodzą w tryb bez AI (źródła albo propozycja deterministyczna). Szczegóły: [`AI.md`](AI.md).
+- **Baza danych** przechowuje pracowników, stanowiska (OSP), oceny, oceny wskaźników, obserwacje, rozmowy, nieobecności, przypomnienia, dziennik decyzji i dziennik zapytań asystenta.
+
+## Model danych
+
+```mermaid
+erDiagram
+  User ||--o{ Employee : "przełożony (supervisor)"
+  User ||--o{ Employee : "kierujący komórką"
+  User |o--o| Employee : "konto ocenianego"
+  OrgUnit ||--o{ OrgUnit : "struktura"
+  OrgUnit ||--o{ Employee : ""
+  OrgUnit ||--o{ Position : ""
+  Position ||--o{ Employee : "OSP"
+  Employee ||--o{ Evaluation : ""
+  User ||--o{ Evaluation : "oceniający"
+  Evaluation ||--o{ EvaluationCriterion : "kryteria"
+  EvaluationCriterion ||--o{ IndicatorRating : "oceny wskaźników"
+  Evaluation |o--o| FirstEvalReport : "sprawozdanie"
+  Evaluation ||--o{ Conversation : "rozmowy"
+  Employee ||--o{ Observation : "dziennik SDR"
+  Employee ||--o{ Absence : "nieobecności"
+  Employee ||--o{ PositionChange : "zmiany stanowiska"
+  User ||--o{ Reminder : "przypomnienia"
+  User ||--o{ AuditLog : "dziennik decyzji"
+  User ||--o{ AssistantQuery : "dziennik zapytań"
+```
+
+| Model | Rola |
+|---|---|
+| `User` | konto z rolą (`PRZELOZONY`, `HR`, `OCENIANY`, `KIERUJACY_KOMORKA`), hasło jako skrót bcrypt |
+| `OrgUnit`, `Position`, `Employee` | struktura urzędu, opis stanowiska pracy (pola z OSP + pełny tekst), kartoteka pracownika z przełożonym i kierującym komórką |
+| `Evaluation` | ocena okresowa albo pierwsza: arkusz, etap, okres, termin, wynik, poziom ogólny, średnia, uzasadnienie, IPRZ, dane poprzedniej oceny, część III, stan kreatora (autozapis) |
+| `EvaluationCriterion`, `IndicatorRating` | kryterium (obowiązkowe/dodatkowe, z uzasadnieniem wyboru), ocena cząstkowa przełożonego, sugestia systemu i powód zmiany; wybór opisu zachowania przy wskaźniku (1–5 albo „brak okazji do obserwacji”) |
+| `Observation` | dziennik obserwacji: data, wskaźnik, Sytuacja – Działanie – Rezultat, źródło (ręczna / szybka notatka) |
+| `Conversation`, `FirstEvalReport` | rozmowy (wstępna, rozpoczynająca, oceniająca, bieżąca) i sprawozdanie do pierwszej oceny |
+| `Absence`, `PositionChange`, `Reminder` | wejście silnika terminów i przypomnienia |
+| `AuditLog`, `AssistantQuery` | dziennik decyzji (propozycja AI obok decyzji człowieka, zmiany sugestii, arkusza, przepisów) i dziennik zapytań asystenta |
+
+Typy domeny i wartości wyliczeniowe są w `src/lib/domain/types.ts`; test pilnuje ich zgodności ze schematem Prisma.
+
+## API
+
+Pełna specyfikacja: [`openapi.yaml`](openapi.yaml). Każdy endpoint (poza statusem) wymaga sesji; bez sesji – 401, przy złej roli – 403, z komunikatem po polsku.
+
+| Metoda i ścieżka | Role | Opis |
+|---|---|---|
+| `GET /api/v1/status` | publiczny | kontrola działania (monitoring wdrożenia) |
+| `GET /api/v1/me` | zalogowany | dane zalogowanego użytkownika i rola |
+| `GET /api/v1/pracownicy` | przełożony, HR | lista pracowników; przełożony – tylko własni podwładni |
+| `GET /api/asystent/formalny?krok=…` | przełożony, HR, kierujący | podpowiedzi pytań dla kroku ścieżki, dostępność modelu |
+| `POST /api/asystent/formalny` | przełożony, HR, kierujący | pytanie → odpowiedź ze źródłami albo odmowa |
+| `POST /api/asystent/kryteria` | przełożony, HR | propozycja kryteriów dodatkowych z OSP (plik albo pracownik z bazy) |
+
+Ekrany zapisują dane akcjami serwerowymi Next.js (z walidacją zod i autoryzacją w każdej akcji). Integracja z EZD i systemem kadrowym (np. QNT) jest przewidziana przez rozbudowę `/api/v1` (import pracowników i OSP, eksport oceny w JSON i PDF) – nie jest częścią prototypu.
+
+## Wdrożenie i skalowanie
+
+| Środowisko | Jak |
+|---|---|
+| **Lokalnie** | `docker compose up` (PostgreSQL 16) + `npm run dev`; model opcjonalny (Ollama) |
+| **Demo** | Vercel (aplikacja, region Frankfurt) + Neon (PostgreSQL, Frankfurt) + Gemini (darmowy plan) – [`WDROZENIE.md`](WDROZENIE.md). Każde wdrożenie gałęzi `main` stosuje migracje i odtwarza dane demo |
+| **Docelowo w urzędzie** | kontener Node.js (`npm run build && npm start`) za reverse proxy z TLS, PostgreSQL urzędu, model lokalny przez Ollamę na serwerze z GPU (np. Bielik) – dane nie opuszczają infrastruktury urzędu |
+
+Skalowanie:
+- **Aplikacja jest bezstanowa** (sesja JWT w ciasteczku), więc skaluje się poziomo – kolejne instancje za load balancerem. Jedyny stan w pamięci to limit zapytań do AI; przy wielu instancjach trzeba go przenieść do Redis.
+- **Baza:** obciążenie jest małe (kilkadziesiąt ocen na przełożonego co 2 lata); indeksy na przełożonym, ocenianym i etapie oceny. Pula połączeń (np. PgBouncer / pooler Neon).
+- **Model:** jedyny element kosztowny obliczeniowo. Wyszukiwanie BM25 działa w procesie aplikacji (406 fragmentów, milisekundy); do modelu trafia tylko 5 fragmentów i pytanie. Odmowa poza zakresem nie woła modelu.
+- **Wiele urzędów:** parametry przepisów i model kompetencji są danymi (`data/`), a struktura (`OrgUnit`) – drzewem, więc ta sama aplikacja obsłuży inny urząd po imporcie jego struktury i OSP.
 
 ## Stos technologiczny
 
@@ -10,7 +115,11 @@
 | Interfejs | Tailwind CSS 4, shadcn/ui (Radix), lucide-react |
 | Walidacja | zod – wejście każdego endpointu i formularza |
 | Baza danych | PostgreSQL 16 przez Prisma 6 |
-| Testy | Vitest (logika, silnik reguł), Playwright (główna ścieżka) |
+| Uwierzytelnianie | Auth.js (next-auth v5), bcryptjs, sesja JWT w ciasteczku httpOnly |
+| AI | własny klient API zgodnego z OpenAI (bez SDK), MiniSearch (BM25), pdfjs-dist (budowa bazy wiedzy) |
+| Import plików | fflate + fast-xml-parser (docx i xlsx) |
+| Testy | Vitest – silnik reguł, import, AI (z udawanym modelem), autoryzacja, logika ekranów; testy integracyjne na PostgreSQL (`TEST_DATABASE_URL`); zestaw testowy asystenta `npm run eval` |
+| Hosting demo | Vercel + Neon (Frankfurt) |
 
 ## Decyzje
 
@@ -142,23 +251,28 @@ Przełożony widzi wyłącznie swoich podwładnych: zapytania filtrujemy po `sup
 
 ```
 materialy/                 materiały MC (tylko do odczytu)
-data/                      model kompetencji, parametry przepisów, baza wiedzy
-prisma/                    schema.prisma, seed.ts, seed-dane/
+data/                      model kompetencji, parametry przepisów (przepisy.json), baza wiedzy (wiedza/), zapasowe odpowiedzi demo
+prisma/                    schema.prisma, migracje, seed.ts, seed-dane/ (OSP do danych demo)
 src/
   app/
-    (auth)/ (przelozony)/ (hr)/ (oceniany)/   ekrany według ról
-    api/v1/                REST API (np. /api/v1/status)
-    api/asystent/          endpointy asystentów
-  components/ui/ layout/ ocena/ asystent/
+    (auth)/                logowanie
+    (przelozony)/          pulpit, ocena okresowa (kreator, ocena wskaźników, podsumowanie), dziennik obserwacji
+    (hr)/                  panel HR, zawiadomienie o zmianie terminu
+    (oceniany)/ (kierujacy)/
+    api/v1/                REST API (status, me, pracownicy)
+    api/asystent/          asystent formalny, kryteria z OSP
+  components/              ui/ (komponenty bazowe), layout/, pulpit/, ocena/, obserwacje/, hr/, asystent/, auth/
   lib/
-    domain/                typy i słownik (kontrakt wspólny)
-    rules/                 silnik reguł: punktacja, terminy, sugestie
-    auth/                  role, strażnicy autoryzacji, konta demo (Z04)
-    pdf/  import/
-    ai/llm/ ai/rag/ ai/funkcje/
+    domain/                typy, słownik, przepisy, model kompetencji, daty (kontrakt wspólny)
+    rules/                 silnik reguł: arkusz, kryteria, punktacja, terminy, kalendarz, sugestia
+    auth/                  role, strażnicy autoryzacji, konta demo
+    import/                czytniki docx/xlsx, OSP, model kompetencji
+    ai/llm/ ai/rag/ ai/funkcje/   dostawca modelu, baza wiedzy, asystent i kryteria z OSP
+    dashboard/ ocena/ obserwacje/ hr/ demo/ audit/ ui/   logika i dostęp do danych ekranów, dziennik decyzji, nawigacja
     db.ts                  klient Prisma
-scripts/                   import modelu, import wiedzy, eval asystenta
-tests/rules/               testy silnika reguł
-eval/                      zestaw testowy asystenta
-docs/                      dokumentacja, tablica zadań
+  middleware.ts, auth.ts   sesja i obszary ról
+scripts/                   import modelu, OSP, bazy wiedzy, eval asystenta, build produkcyjny
+tests/                     testy (Vitest)
+eval/                      zestaw testowy asystenta i wynik
+docs/                      dokumentacja
 ```

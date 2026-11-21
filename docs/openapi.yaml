@@ -1,0 +1,270 @@
+openapi: 3.1.0
+info:
+  title: Kompas Kompetencji – API
+  version: "0.1.0"
+  description: |
+    REST API prototypu Kompas Kompetencji (HackNation 2026, zadanie Ministerstwa Cyfryzacji).
+    Przygotowane pod integrację z systemem EZD i systemem kadrowym (np. QNT).
+
+    Uwierzytelnianie: sesja Auth.js w ciasteczku httpOnly (logowanie na /logowanie).
+    Bez sesji endpointy zwracają 401, przy roli bez uprawnień – 403, zawsze z komunikatem po polsku.
+    Przełożony widzi wyłącznie swoich podwładnych.
+
+    Planowane rozszerzenia (poza prototypem): import pracowników i OSP z systemu kadrowego,
+    eksport zakończonej oceny w JSON i PDF do EZD.
+servers:
+  - url: https://hacknation-26.vercel.app
+    description: publiczne demo (dane fikcyjne)
+  - url: http://localhost:3000
+    description: lokalnie
+tags:
+  - name: system
+  - name: pracownicy
+  - name: asystent
+security:
+  - sesja: []
+paths:
+  /api/v1/status:
+    get:
+      tags: [system]
+      summary: Kontrola działania aplikacji
+      security: []
+      responses:
+        "200":
+          description: Aplikacja działa
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: { type: string, example: ok }
+                  aplikacja: { type: string, example: Kompas Kompetencji }
+  /api/v1/me:
+    get:
+      tags: [system]
+      summary: Zalogowany użytkownik
+      description: Dowolna rola, wymaga zalogowania.
+      responses:
+        "200":
+          description: Dane użytkownika
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id: { type: string }
+                  name: { type: string, example: Ewa Kowalczyk }
+                  email: { type: string, example: ewa.kowalczyk@demo.kompas.test }
+                  role: { $ref: "#/components/schemas/Rola" }
+        "401": { $ref: "#/components/responses/BrakSesji" }
+  /api/v1/pracownicy:
+    get:
+      tags: [pracownicy]
+      summary: Lista pracowników
+      description: HR widzi wszystkich pracowników urzędu, przełożony – tylko swoich bezpośrednich podwładnych.
+      responses:
+        "200":
+          description: Lista pracowników (sortowanie po nazwisku)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items: { $ref: "#/components/schemas/Pracownik" }
+        "401": { $ref: "#/components/responses/BrakSesji" }
+        "403": { $ref: "#/components/responses/BrakUprawnien" }
+  /api/asystent/formalny:
+    get:
+      tags: [asystent]
+      summary: Podpowiedzi pytań dla kroku ścieżki i dostępność modelu AI
+      description: Role – przełożony, HR, kierujący komórką.
+      parameters:
+        - name: krok
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [START, OSP, KRYTERIA, ROZMOWA_ROZPOCZYNAJACA, OCENA, PODSUMOWANIE, PIERWSZA_OCENA]
+      responses:
+        "200":
+          description: Podpowiedzi
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  podpowiedzi: { type: array, items: { type: string }, maxItems: 3 }
+                  aiDostepne: { type: boolean }
+                  model: { type: [string, "null"] }
+        "401": { $ref: "#/components/responses/BrakSesji" }
+        "403": { $ref: "#/components/responses/BrakUprawnien" }
+    post:
+      tags: [asystent]
+      summary: Pytanie do asystenta formalnego
+      description: |
+        Odpowiedź wyłącznie na podstawie fragmentów przepisów i poradników KPRM, zawsze ze źródłami.
+        Przy słabym dopasowaniu – odmowa bez pytania modelu. Bez modelu albo przy jego błędzie – tryb `BEZ_AI`
+        (pasujące fragmenty źródeł). Limit: 20 pytań na minutę na użytkownika. Role – przełożony, HR, kierujący komórką.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [pytanie]
+              properties:
+                pytanie: { type: string, minLength: 3, maxLength: 500, example: "W jakim terminie można złożyć sprzeciw?" }
+                krok: { type: string, maxLength: 40 }
+      responses:
+        "200":
+          description: Odpowiedź albo odmowa
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/OdpowiedzAsystenta" }
+        "400": { $ref: "#/components/responses/BledneDane" }
+        "401": { $ref: "#/components/responses/BrakSesji" }
+        "403": { $ref: "#/components/responses/BrakUprawnien" }
+        "429": { $ref: "#/components/responses/LimitZapytan" }
+  /api/asystent/kryteria:
+    post:
+      tags: [asystent]
+      summary: Propozycja kryteriów dodatkowych z opisu stanowiska pracy
+      description: |
+        Do 3 kryteriów dodatkowych z uzasadnieniem i dosłownym cytatem zadania z OSP (§ 5 ust. 2).
+        Kryteria i cytaty sprawdza kod; bez modelu – propozycja deterministyczna (tryb `BEZ_AI`).
+        Role – przełożony (własni podwładni) i HR. Limit: 10 zapytań na minutę na użytkownika.
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [plik]
+              properties:
+                plik: { type: string, format: binary, description: "OSP w formacie .docx, do 5 MB" }
+                arkusz: { type: string, enum: [B, C], description: "gdy przełożony zmienił arkusz wskazany przez OSP" }
+          application/json:
+            schema:
+              type: object
+              required: [pracownikId]
+              properties:
+                pracownikId: { type: string, description: "pracownik z OSP zapisanym w bazie" }
+                arkusz: { type: string, enum: [B, C] }
+      responses:
+        "200":
+          description: Propozycja
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  propozycja:
+                    type: object
+                    properties:
+                      mode: { type: string, enum: [AI, BEZ_AI] }
+                      proposals:
+                        type: array
+                        maxItems: 3
+                        items:
+                          type: object
+                          properties:
+                            competency: { $ref: "#/components/schemas/KodKompetencji" }
+                            name: { type: string, example: "Myślenie analityczne" }
+                            justification: { type: string }
+                            quote:
+                              type: object
+                              properties:
+                                text: { type: string }
+                                source: { type: string, example: "Opis stanowiska pracy, zadanie dominujące 1" }
+                                taskNumber: { type: integer }
+                      notice: { type: string }
+                  arkusz:
+                    type: object
+                    description: wybór arkusza z OSP (§ 3) z wyjaśnieniem i arkusz wybrany do propozycji
+                  stanowisko: { type: object, description: odczytany opis stanowiska pracy }
+                  uwagi: { type: array, items: { type: string } }
+        "400": { $ref: "#/components/responses/BledneDane" }
+        "401": { $ref: "#/components/responses/BrakSesji" }
+        "403": { $ref: "#/components/responses/BrakUprawnien" }
+        "404": { description: Pracownik spoza podwładnych przełożonego }
+        "409": { description: Pracownik bez opisu stanowiska pracy }
+        "413": { description: Plik za duży }
+        "422": { description: "Plik nie jest poprawnym OSP (lista `problemy`)" }
+        "429": { $ref: "#/components/responses/LimitZapytan" }
+components:
+  securitySchemes:
+    sesja:
+      type: apiKey
+      in: cookie
+      name: authjs.session-token
+      description: Ciasteczko sesji Auth.js (na HTTPS z przedrostkiem __Secure-).
+  responses:
+    BrakSesji:
+      description: Brak sesji
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Blad" }
+          example: { error: "Musisz się zalogować, żeby wykonać tę operację." }
+    BrakUprawnien:
+      description: Rola bez uprawnień
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Blad" }
+          example: { error: "Twoja rola nie ma dostępu do tej operacji." }
+    BledneDane:
+      description: Niepoprawne dane wejściowe
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              blad: { type: string, example: "Pytanie jest za krótkie." }
+    LimitZapytan:
+      description: Przekroczony limit zapytań
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              blad: { type: string, example: "Zbyt wiele pytań w krótkim czasie. Spróbuj ponownie za minutę." }
+  schemas:
+    Rola:
+      type: string
+      enum: [PRZELOZONY, HR, OCENIANY, KIERUJACY_KOMORKA]
+    KodKompetencji:
+      type: string
+      enum: [RZETELNOSC, KOMUNIKACJA, WIEDZA, ORGANIZACJA, KREATYWNOSC, WSPOLPRACA, ANALITYCZNE, NEGOCJOWANIE, WYSTAPIENIA, KLIENT, KRYZYS, STRATEGICZNE, LUDZIE, DECYZJE]
+    Blad:
+      type: object
+      properties:
+        error: { type: string }
+    Pracownik:
+      type: object
+      properties:
+        id: { type: string }
+        firstName: { type: string }
+        lastName: { type: string }
+        orgUnit: { type: [object, "null"], properties: { name: { type: string } } }
+        position: { type: [object, "null"], properties: { title: { type: string } } }
+    Zrodlo:
+      type: object
+      properties:
+        id: { type: string, example: "ROZP_OKRESOWE:§5:ust.2" }
+        citation: { type: string, example: "§ 5 ust. 2 – rozporządzenie o ocenach okresowych (Dz.U. 2016 poz. 470)" }
+        documentTitle: { type: string }
+        unit: { type: string }
+        page: { type: integer }
+        quote: { type: string }
+    OdpowiedzAsystenta:
+      type: object
+      properties:
+        question: { type: string }
+        answer: { type: string }
+        refused: { type: boolean, description: "true = odmowa: brak informacji w źródłach" }
+        mode: { type: string, enum: [AI, BEZ_AI] }
+        sources: { type: array, items: { $ref: "#/components/schemas/Zrodlo" } }
+        notice: { type: string, description: "np. niedostępność modelu albo przepis spoza źródeł" }
+        model: { type: string }
+        durationMs: { type: integer }

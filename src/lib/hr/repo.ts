@@ -39,8 +39,9 @@ type Row = Prisma.EvaluationGetPayload<{ select: typeof evaluationSelect }>;
 const iso = (d: Date | null) => (d ? fromDbDate(d) : null);
 
 /** Wszystkie oceny z danymi do terminów; historia wyników liczona w pamięci (dane jednego urzędu są małe). */
-export async function listHrRecords(): Promise<HrEvaluationRecord[]> {
-  const rows: Row[] = await prisma.evaluation.findMany({ select: evaluationSelect });
+/** Oceny z danymi do liczenia terminów. Bez warunku – wszystkie (HR); z warunkiem – np. pierwsze oceny w komórce kierującego. */
+export async function listHrRecords(where: Prisma.EvaluationWhereInput = {}): Promise<HrEvaluationRecord[]> {
+  const rows: Row[] = await prisma.evaluation.findMany({ where, select: evaluationSelect });
 
   const completedByEmployee = new Map<string, Row[]>();
   for (const r of rows) {

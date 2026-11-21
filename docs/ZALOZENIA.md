@@ -6,8 +6,12 @@ Każde miejsce w kodzie oznaczone `// ZAŁOŻENIE:` ma tu swój wpis. Odpowiedzi
 |---|---|---|---|
 | 1 | Jak mapować 5 poziomów modelu kompetencji na skalę 3-stopniową pierwszej oceny (3/5/7)? | poziomy 1–2 → 3 pkt (poziom 1 z ostrzeżeniem), 3 → 5 pkt, 4–5 → 7 pkt | |
 | 2 | Czy reguła sugerowanego poziomu (średnia wskaźników zaobserwowanych, zaokrąglenie do skali, remis w dół) jest akceptowalna? | tak, konfigurowalna w `data/przepisy.json` | |
-| 3 | W materiałach są dwie różne kopie rozporządzenia o ocenach okresowych z 2016 r. (`materialy/ocena-okresowa/…_wariant-a.pdf` i `…_wariant-b.pdf`). Która jest właściwa (np. tekst jednolity)? | do wyjaśnienia; do bazy wiedzy bierzemy obie z oznaczeniem wariantu | |
+| 3 | W materiałach są dwie różne kopie rozporządzenia o ocenach okresowych z 2016 r. (`materialy/ocena-okresowa/…_wariant-a.pdf` i `…_wariant-b.pdf`). Która jest właściwa (np. tekst jednolity)? | **Ustalenie (Z03):** `wariant-a` to pełny tekst rozporządzenia (Dz.U. poz. 470) z załącznikami, a `wariant-b` to tylko jego fragment z załącznikiem nr 1 (wykaz kryteriów). Treść § 3–11 sprawdzona z `wariant-a` i zgodna z `data/przepisy.json`. Do bazy wiedzy wystarczy `wariant-a`. Do potwierdzenia: czy to aktualny tekst (bez późniejszych zmian) | |
 | 4 | Czy jury ma przygotowane scenariusze testowe lub własne dane? | dodanie pracownika i OSP musi trwać < 1 min | |
 | 5 | Czy jest preferowany stos technologiczny pod wdrożenie w MC? | Next.js + PostgreSQL, uruchomienie przez `docker compose` | |
 | 6 | Zestaw pytań i odpowiedzi zapowiedziany przez MC na Discordzie – gdzie jest i czy wolno go dołączyć do bazy wiedzy? | | |
 | 7 | Ustawy o służbie cywilnej nie ma w materiałach. Czy wystarczą wybrane artykuły z ISAP (art. 35–38, 71, 81–83, 89)? | tak, pobieramy z ISAP z datą stanu prawnego | |
+| 8 | Pierwsza ocena: czy termin na sprawozdanie przedłuża każda usprawiedliwiona nieobecność? | tak – § 5 ust. 1 rozp. o pierwszej ocenie nie ma progu „dłużej niż miesiąc” (ten próg dotyczy tylko oceny okresowej, art. 81 ust. 7 ustawy); przedłużenie wyznacza przełożony „w uzasadnionych przypadkach” | |
+| 9 | Liczenie terminów: czy sobota przesuwa koniec terminu? | tak – art. 115 KC: koniec terminu w dzień ustawowo wolny lub w sobotę przesuwa się na następny dzień roboczy (`dateCounting.saturdayIsDayOff`) | |
+| 10 | Wskaźnik z „brak okazji do obserwacji” – jak zapisujemy? | wiersz `IndicatorRating` z `level = null`; wskaźnik bez wiersza = jeszcze nieoceniony | |
+| 11 | Lustro oceniającego – progi (świeżość ≥ 60% notatek z 30 dni, aureola przy ≥ 5 wskaźnikach, łagodność ±1,5 pkt przy ≥ 3 ocenach w komórce) | domyślne wartości w `data/przepisy.json` (`mirror`), edytowalne w panelu HR | |

@@ -33,6 +33,23 @@
 7. **Dziennik zapytań** (`AssistantQuery`): pytanie, użyte źródła, odpowiedź, odmowa, krok ścieżki, model, czas.
 8. **Limit zapytań** na endpoint (20/min na adres) chroni darmowy limit dostawcy.
 
+## Zestaw testowy asystenta (Z25)
+
+- Pytania: `eval/pytania.json` – 25 pytań w zakresie (sformułowanych inaczej niż w FAQ) z odpowiedzią wzorcową, akceptowanymi źródłami i słowami kluczowymi oraz 5 pytań spoza zakresu (w tym próba prompt injection).
+- Uruchomienie: `npm run eval` (z modelem z `.env`) albo `npm run eval -- --bez-ai` (tylko wyszukiwanie, bez modelu). Wynik: `eval/wynik.md` (tabela na slajd) i `eval/wynik.json` (szczegóły każdej odpowiedzi).
+- Miary:
+  - **trafność** – odpowiedź w trybie AI, z co najmniej jednym oczekiwanym źródłem i z wymaganą treścią (np. „7 dni”);
+  - **odpowiedzi ze źródłem** – odsetek pytań w zakresie, na które asystent odpowiedział ze wskazaniem fragmentu;
+  - **poprawne odmowy** – odsetek pytań spoza zakresu zakończonych odmową;
+  - osobno poziom wyszukiwania: czy właściwy fragment jest w top 5 i czy pytanie spoza zakresu odpada bez pytania modelu.
+- Test regresji (`tests/ai/eval.test.ts`) pilnuje progu wyszukiwania: ≥ 90% pytań z właściwym fragmentem w top 5, ≥ 3/5 odmów bez modelu, prompt injection zawsze odrzucony.
+
+**Wynik wyszukiwania (21.11, bez modelu):** właściwy fragment w top 5 – **25/25**; odmowa bez pytania modelu – **3/5**. Dwa pytania spoza zakresu (wynagrodzenie, urlop) mają słowa wspólne z poradnikami („dyrektor”, „pracownik”, „dni”), więc odmowę daje dopiero model na podstawie zasady „brak w źródłach”.
+
+**Strojenie (Z25):** zestaw wykazał, że „ocena / oceny / ocenę” miały różne rdzenie (obcinanie do 6 znaków nie łączyło krótkich słów), przez co pytanie „Kiedy najwcześniej można sporządzić pierwszą ocenę?” kończyło się odmową. Krótkie słowa tracą teraz ostatnią literę (`ocen`). Wynik wyszukiwania: 24/25 → 25/25, bez pogorszenia odmów.
+
+**Wynik z modelem:** uzupełnić z `eval/wynik.md` po uruchomieniu `npm run eval` na modelu demo.
+
 ## Gdzie przetwarzane są dane
 
 | Wariant | Gdzie trafia pytanie | Dane osobowe |
@@ -44,5 +61,5 @@
 
 - autoryzacja endpointów asystenta (Z04) i powiązanie dziennika zapytań z użytkownikiem;
 - pseudonimizacja danych osobowych przed wysłaniem do modelu w funkcjach operujących na danych pracowników (Z34);
-- strojenie progów wyszukiwania na zestawie testowym (Z25) i dodanie ustawy o służbie cywilnej do bazy wiedzy;
+- dodanie ustawy o służbie cywilnej do bazy wiedzy i ponowny pomiar `npm run eval`;
 - limit zapytań we współdzielonym magazynie (np. Redis) przy wielu instancjach.

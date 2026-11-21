@@ -56,6 +56,8 @@ describe("baza wiedzy: normalizacja", () => {
     expect(foldPolish("Sprzeciw Żółć Łódź")).toBe("sprzeciw zolc lodz");
     expect(normalizeTerm("sprzeciwu")).toBe(normalizeTerm("sprzeciw"));
     expect(normalizeTerm("kryteriów")).toBe(normalizeTerm("kryteria"));
+    expect(normalizeTerm("ocenę")).toBe(normalizeTerm("ocena"));
+    expect(normalizeTerm("oceny")).toBe(normalizeTerm("ocena"));
     expect(normalizeTerm("jest")).toBeNull();
     expect(normalizeTerm("83")).toBe("83");
   });

@@ -24,6 +24,8 @@ npx license-checker-rseidelsohn --production --summary
 | lucide-react | 1.77 | ISC | ikony |
 | zod | 4 | MIT | walidacja danych |
 | @prisma/client, prisma | 6.19 | Apache-2.0 | dostęp do bazy danych, migracje |
+| minisearch | 7.2 | MIT | wyszukiwanie BM25 w bazie wiedzy asystenta |
+| pdfjs-dist | 6.5 | Apache-2.0 | odczyt tekstu z PDF przy budowie bazy wiedzy (tylko skrypt) |
 | typescript | 5 | Apache-2.0 | język |
 | vitest | 3 | MIT | testy |
 | vite-tsconfig-paths | 6 | MIT | aliasy `@/` w testach |

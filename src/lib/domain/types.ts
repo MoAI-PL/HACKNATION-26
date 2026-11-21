@@ -199,6 +199,8 @@ export interface Warning {
   severity: WarningSeverity;
   message: string;
   legalBasis?: string;
+  /** Wskaźnik, którego dotyczy ostrzeżenie (np. „uzasadnij przykładem”) – do pokazania przy jego karcie. */
+  indicatorId?: IndicatorId;
 }
 
 // ---------------------------------------------------------------------------
@@ -243,18 +245,60 @@ export interface CriteriaValidation {
 // Sugerowany poziom kompetencji (Z09)
 // ---------------------------------------------------------------------------
 
+/** Ocena jednego wskaźnika – wejście sugestii (Z09). */
+export interface IndicatorRatingInput {
+  indicatorId: IndicatorId;
+  /** Wybrana karta zachowania albo „brak okazji do obserwacji”; null = wskaźnik jeszcze nieoceniony. */
+  value: IndicatorRatingValue | null;
+  /** Czy przy wskaźniku jest notatka SDR (własna albo przypięta obserwacja z dziennika). */
+  hasNote: boolean;
+}
+
+/** Wiersz panelu „Dlaczego ten poziom?”: jeden wskaźnik kompetencji. */
+export interface IndicatorBreakdown {
+  indicatorId: IndicatorId;
+  name: string;
+  value: IndicatorRatingValue | null;
+  /** Punkty wskaźnika na skali oceny (1/3/5/7/9 albo 3/5/7); null, gdy nieobserwowany lub nieoceniony. */
+  points: number | null;
+  hasNote: boolean;
+}
+
 export interface LevelSuggestion {
   competency: CompetencyCode;
+  evaluationType: EvaluationType;
   /** null = brak podstaw do sugestii (żaden wskaźnik nie został zaobserwowany). */
   suggestedPoints: PeriodicPoints | FirstEvalPoints | null;
+  /** Poziom odpowiadający suggestedPoints (w pierwszej ocenie: PONIZEJ / NA_POZIOMIE / POWYZEJ). */
+  suggestedLevel: Level | null;
   average: number | null;
   /** true, gdy średnia wypadła dokładnie pomiędzy dwiema wartościami skali i zaokrąglono w dół. */
   tieRoundedDown: boolean;
   observedCount: number;
   totalCount: number;
-  /** Rozkład wyborów do panelu „Dlaczego ten poziom?”. */
+  /** Rozkład wyborów do panelu „Dlaczego ten poziom?” (wskaźniki nieocenione nie są liczone). */
   distribution: Record<IndicatorRatingValue, number>;
+  /** Wskaźniki w kolejności z modelu kompetencji. */
+  indicators: IndicatorBreakdown[];
+  /** Wzór i zaokrąglenie zwykłym językiem, np. „(7 + 5 + 7) : 3 = 6,33 pkt → 7 pkt”. */
+  explanations: Explanation[];
   warnings: Warning[];
+}
+
+/** Decyzja przełożonego o ocenie cząstkowej kryterium (Z14) – do walidacji przed zapisem. */
+export interface FinalDecisionInput {
+  suggestion: LevelSuggestion;
+  finalPoints: number;
+  /** Jedno zdanie powodu – wymagane, gdy finalPoints różni się od sugestii. */
+  justification?: string;
+}
+
+export interface FinalDecisionValidation {
+  valid: boolean;
+  justificationRequired: boolean;
+  /** Ocena ostateczna różni się od sugestii – oba wpisy trafiają do dziennika decyzji. */
+  differsFromSuggestion: boolean;
+  errors: Explanation[];
 }
 
 // ---------------------------------------------------------------------------

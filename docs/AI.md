@@ -45,6 +45,13 @@
 7. Propozycja nigdy nie trafia do arkusza sama: przełożony wstawia ją przyciskiem w `<PropozycjaAI>` (Z12), a „Wstaw” i „Odrzuć” trafiają do dziennika.
 8. API: `POST /api/asystent/kryteria` (plik OSP albo pracownik z bazy), tylko przełożony (własni podwładni) i HR, limit 10 zapytań na minutę na użytkownika.
 
+## Zapasowe odpowiedzi na demo (Z44)
+
+- Plik `data/demo-cache.json`: odpowiedzi na 4 pytania z pitchu (sprzeciw, kryteria dodatkowe, ocena negatywna, wydłużenie terminu) ze źródłami z bazy wiedzy i propozycje kryteriów dodatkowych dla trzech OSP od MC z cytatami zadań.
+- Działają **tylko** przy `DEMO_MODE=true` i **tylko** gdy skonfigurowany model nie odpowiedział (błąd, limit, czas). Bez modelu aplikacja działa w zwykłym trybie bez AI.
+- Każde użycie jest jawne: komunikat „Model AI jest chwilowo niedostępny – to odpowiedź przygotowana wcześniej dla demo…”, pole `fromCache: true` w odpowiedzi API i wpis `[demo-cache]` w logach serwera.
+- Nic nie jest wymyślone: test sprawdza, że każde źródło istnieje w bazie wiedzy, każde pytanie przechodzi próg trafności (nie kończy się odmową) i każdy cytat jest dosłownym fragmentem wskazanego zadania z OSP, a cytaty z pliku przechodzą tę samą kontrolę `verifyQuote` co odpowiedzi modelu.
+
 ## Gdzie przetwarzane są dane
 
 | Wariant | Gdzie trafia pytanie | Dane osobowe |

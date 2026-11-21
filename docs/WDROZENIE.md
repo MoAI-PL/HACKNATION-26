@@ -45,3 +45,5 @@ Adres demo wpisz do README i do zgłoszenia w HackTribe.
 - Po wysłaniu zgłoszenia – żadnych pushy (demo się nie zmieni i nie zresetuje).
 - Zapas: film z przejściem ścieżki i zrzuty ekranu w zgłoszeniu.
 - Plan awaryjny: laptop z `npm run build && npm start` i publiczny tunel – tylko w ostateczności (laptop musi być włączony do końca oceny).
+- **Reset danych demo bez wdrożenia (Z44):** konto HR (Anna Zielińska) → Panel HR → sekcja „Tryb demo” → „Resetuj dane demo”. Przywraca dane z terminami od dzisiaj, konta zostają. Dobre przed pitchem i po testach jury. Działa tylko przy `DEMO_MODE=true`; strona ma `maxDuration = 60` (zapis kilkudziesięciu rekordów do Neon).
+- **Zapasowe odpowiedzi AI (Z44):** gdy model jest skonfigurowany, ale nie odpowie na scenie (limit, czas), pytania z pitchu i propozycje kryteriów dla trzech OSP od MC biorą się z `data/demo-cache.json` – z komunikatem „odpowiedź przygotowana wcześniej dla demo” i wpisem `[demo-cache]` w logach Vercela.

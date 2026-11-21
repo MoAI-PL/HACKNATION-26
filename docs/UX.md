@@ -111,6 +111,7 @@ Skróty jednoklawiszowe nie działają podczas pisania w polu ani z Ctrl/Cmd/Alt
 | 21.11 | `/komponenty` przy 768 i 1440 px (przed podpięciem do layoutów ról) | brak poziomego przewijania, 1 `h1`, 1 `main`, wszystkie pola z etykietami, cele kliknięcia ≥ 24 px, skróty /, ?, 1–5 działają, fokus widoczny (skrót N wyłączony do Z41) |
 | 21.11 | kontrast tokenów kolorów (obliczenie WCAG) | 22 z 23 par spełnia AA; wyjątek: ramka niezaznaczonej karty wyboru 1,4:1 (punkt 4 niżej) |
 | 21.11 | `/obserwacje`, `/obserwacje/nowa`, edycja (Z13) przy 768 i 1440 px na danych demo | brak poziomego przewijania, 1 `h1`, 1 `main`, etykiety połączone z polami (`label for`, `aria-describedby`), błędy jako `role="alert"` i `aria-invalid`, wpisany tekst zostaje po błędzie walidacji, okno usuwania łapie fokus i mówi, że operacji nie można cofnąć |
+| 21.11 | `/hr` i `/hr/zawiadomienie/[id]` (Z18) przy 768 i 1440 px na danych demo, jako HR | brak poziomego przewijania strony i tabeli (odznaki etapu zawijają tekst), 1 `h1`, 1 `main`, tabela z `caption`, nagłówkami kolumn i wierszy, terminy kolorem i tekstem, „Dlaczego ten termin?” jako `details`, komunikaty po akcji jako `role="status"` |
 | — | axe / Lighthouse (Z30) | do uzupełnienia |
 | — | pomiar „pełna ocena w 15 minut” (Z30) | do uzupełnienia |
 

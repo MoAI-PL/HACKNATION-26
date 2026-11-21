@@ -95,3 +95,18 @@ export function fieldErrors(error: z.ZodError): FieldErrors {
   }
   return out;
 }
+
+// ---------------------------------------------------------------------------
+// Plik OSP – sprawdzenie przed wysłaniem (także w przeglądarce; parser Z06 działa tylko na serwerze)
+// ---------------------------------------------------------------------------
+
+/** Akcje serwerowe Next.js przyjmują domyślnie do 1 MB – pliki OSP mają ok. 50 KB. */
+export const OSP_MAX_BYTES = 900 * 1024;
+
+/** Problem z plikiem OSP albo null, gdy plik jest w porządku. */
+export function ospFileProblem(file: { name: string; size: number }): string | null {
+  if (!/\.docx$/i.test(file.name)) return "Wybierz plik OSP w formacie Word (.docx).";
+  if (file.size === 0) return "Plik jest pusty. Wybierz inny plik OSP.";
+  if (file.size > OSP_MAX_BYTES) return "Plik OSP jest za duży (najwyżej 900 KB). Zapisz go bez obrazków albo wpisz dane ręcznie.";
+  return null;
+}

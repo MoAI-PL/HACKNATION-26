@@ -33,7 +33,7 @@ beforeEach(() => {
   demoBefore = process.env.DEMO_MODE;
   process.env.DEMO_MODE = "true";
   authMock.mockReset();
-  seedMock.mockReset().mockResolvedValue({ today: "2026-11-21", employees: 6, evaluations: 10, observations: 32 });
+  seedMock.mockReset().mockResolvedValue({ today: "2026-11-21", employees: 6, evaluations: 11, observations: 32 });
   auditMock.mockReset();
 });
 afterEach(() => {

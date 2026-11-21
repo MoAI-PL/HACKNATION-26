@@ -19,11 +19,12 @@ import {
   type Role,
 } from "@/lib/domain/types";
 import { objectionDeadline } from "@/lib/rules/terminy";
+import { FINALIZED_STATUSES } from "@/lib/oceniany/moje-oceny";
 
 export const API_VERSION = "1";
 
-/** Etapy, w których oceniany widzi swoją ocenę w API (po sporządzeniu – § 12). */
-export const VISIBLE_TO_EMPLOYEE: EvaluationStatus[] = ["CZEKA_NA_ZAPOZNANIE", "ZAKONCZONA"];
+/** Etapy, w których oceniany widzi swoją ocenę w API (po sporządzeniu – § 12) – te same co na ekranie „Moje oceny”. */
+export const VISIBLE_TO_EMPLOYEE: EvaluationStatus[] = [...FINALIZED_STATUSES];
 
 /**
  * Zakres ocen dostępnych dla użytkownika (Z04):

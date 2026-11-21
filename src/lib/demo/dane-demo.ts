@@ -347,10 +347,13 @@ export async function seedDemoData(prisma: PrismaClient, today: IsoDate = todayI
     evaluations += 2;
   }
 
-  // --- 4. Marcin Wróbel – po ocenie negatywnej: ponowna ocena po 6 miesiącach -------------------------
+  // --- 4. Marcin Wróbel – po ocenie negatywnej: ponowna ocena po 6 miesiącach (wcześniej ocena pozytywna) -------------------------
   {
     const e = await employee({ firstName: "Marcin", lastName: "Wróbel", osp: "STARSZY_SPECJALISTA", employmentStart: "2021-09-01", permanentFrom: "2021-09-01" });
     const evaluatedAt = d(-40);
+    // Wcześniejszy cykl (pozytywny) – trzecia sporządzona ocena w komórce, więc Lustro ocen (Z36) pokazuje rozkład
+    // (próg anonimowości: co najmniej 3 oceny w komórce).
+    await pastPeriodic(e.id, "C", addMonths(evaluatedAt, -24), ["WIEDZA", "RZETELNOSC", "ORGANIZACJA", "WSPOLPRACA", "KOMUNIKACJA"], [5, 5, 5, 3, 5]);
     const prev = await pastPeriodic(
       e.id, "C", evaluatedAt,
       ["WIEDZA", "RZETELNOSC", "ORGANIZACJA", "WSPOLPRACA", "KOMUNIKACJA"], [3, 3, 5, 3, 5],
@@ -370,7 +373,7 @@ export async function seedDemoData(prisma: PrismaClient, today: IsoDate = todayI
       },
     });
     observations += (await addObservations(e.id, OBS_MARCIN)).count;
-    evaluations += 2;
+    evaluations += 3;
   }
 
   // --- 5. Aleksandra Mazur – nowa pracownica, pierwsza ocena ------------------------------------------

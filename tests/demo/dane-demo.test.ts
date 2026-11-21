@@ -65,7 +65,7 @@ describe.skipIf(!url)("dane demo – seed na PostgreSQL", () => {
     const before = await prisma.employee.count();
     const summary = await seedDemoData(prisma, today);
     expect(await prisma.employee.count()).toBe(before);
-    expect(summary).toMatchObject({ employees: 6, evaluations: 10, observations: 32 });
+    expect(summary).toMatchObject({ employees: 6, evaluations: 11, observations: 32 });
   });
 
   it("przełożona ma 6 podwładnych, a konto ocenianego jest powiązane z Janem Nowakiem", async () => {
@@ -90,12 +90,19 @@ describe.skipIf(!url)("dane demo – seed na PostgreSQL", () => {
   });
 
   it("Marcin: poprzednia ocena negatywna, bieżąca ocena jest ponowną oceną", async () => {
-    const past = await prisma.evaluation.findFirstOrThrow({ where: { employee: { lastName: "Wróbel" }, status: "ZAKONCZONA" } });
+    const past = await prisma.evaluation.findFirstOrThrow({ where: { employee: { lastName: "Wróbel" }, status: "ZAKONCZONA" }, orderBy: { evaluatedAt: "desc" } });
     expect(past.result).toBe("NEGATYWNA");
     expect(past.justification).toBeTruthy();
     const cur = await prisma.evaluation.findFirstOrThrow({ where: { employee: { lastName: "Wróbel" }, status: "W_OKRESIE_OCENY" } });
     expect(cur.isReevaluation).toBe(true);
     expect(cur.previousResult).toBe("NEGATYWNA");
+  });
+
+  it("Lustro ocen (Z36): co najmniej jedna komórka ma 3 sporządzone oceny okresowe, więc rozkład jest widoczny", async () => {
+    const rows = await prisma.evaluation.findMany({ where: { type: "OKRESOWA", average: { not: null } }, select: { employee: { select: { orgUnitId: true } } } });
+    const perUnit = new Map<string, number>();
+    for (const r of rows) perUnit.set(r.employee.orgUnitId ?? "", (perUnit.get(r.employee.orgUnitId ?? "") ?? 0) + 1);
+    expect(Math.max(...perUnit.values())).toBeGreaterThanOrEqual(3);
   });
 
   it("Aleksandra: pierwsza ocena z 5 elementami i kierującym komórką do podpisu", async () => {

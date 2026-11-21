@@ -159,6 +159,12 @@ function Header({ data }: { data: SheetData }) {
 // Część I
 // ---------------------------------------------------------------------------
 
+/** Komórka kryterium dodatkowego w części I: nazwa, „—” w pierwszym wierszu, gdy nie wybrano żadnego, inaczej pusto. */
+export function additionalCell(additional: SheetCriterion[], row: number): string {
+  if (additional[row]) return additional[row].name;
+  return additional.length === 0 && row === 0 ? "—" : "";
+}
+
 function PartI({ data }: { data: SheetData }) {
   const mandatory = data.criteria.filter((c) => c.kind === "OBOWIAZKOWE");
   const additional = data.criteria.filter((c) => c.kind === "DODATKOWE");
@@ -181,7 +187,8 @@ function PartI({ data }: { data: SheetData }) {
         {Array.from({ length: rows }, (_, i) => (
           <View key={i} style={s.row}>
             <Text style={[s.cell, { width: "50%" }]}>{mandatory[i]?.name ?? ""}</Text>
-            <View style={[s.cellLast, { width: "50%" }]}>{i < 3 ? <V>{additional[i]?.name ?? (additional.length === 0 && i === 0 ? "—" : null)}</V> : null}</View>
+            {/* Kryteria są już ustalone, więc nieużyty wiersz zostaje pusty jak we wzorze (bez kropek „do uzupełnienia”). */}
+            <Text style={[s.cellLast, { width: "50%" }]}>{additionalCell(additional, i)}</Text>
           </View>
         ))}
         <View style={s.rowLast}>

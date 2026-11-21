@@ -12,7 +12,7 @@ import {
   splitName,
   type SheetRow,
 } from "@/lib/pdf/arkusz";
-import { renderSheetPdf } from "@/lib/pdf/ArkuszOkresowyPdf";
+import { additionalCell, renderSheetPdf } from "@/lib/pdf/ArkuszOkresowyPdf";
 import { przypisy } from "@/lib/pdf/teksty-arkusza";
 
 const d = (iso: string) => new Date(`${iso}T00:00:00Z`);
@@ -193,6 +193,12 @@ describe("arkusz – dane i warunki wydania", () => {
       "Pobierz część I (PDF)",
     ]);
     expect(sheetDownloads({ ...base, type: "PIERWSZA", status: "W_OCENIE", hasCriteria: true })).toEqual([]);
+  });
+
+  it("część I: nieużyte wiersze kryteriów dodatkowych są puste, „—” gdy nie wybrano żadnego", () => {
+    const one = [{ name: "Wystąpienia publiczne", kind: "DODATKOWE" as const, points: null }];
+    expect([0, 1, 2].map((i) => additionalCell(one, i))).toEqual(["Wystąpienia publiczne", "", ""]);
+    expect([0, 1, 2].map((i) => additionalCell([], i))).toEqual(["—", "", ""]);
   });
 
   it("przypis 1 różni się dla arkuszy B i C", () => {

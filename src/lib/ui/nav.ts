@@ -57,7 +57,6 @@ const NAV_BY_ROLE: Record<Role, NavItem[]> = {
       label: "Asystent rozmowy",
       icon: "asystent-rozmowy",
       description: "Rozmowa, informacja zwrotna, rozwój",
-      pending: "Z24",
     },
   ],
   // ZAŁOŻENIE: strona asystenta (Z22) leży w grupie (przelozony), więc na razie tylko przełożony.

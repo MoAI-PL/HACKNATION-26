@@ -46,7 +46,7 @@ export function AppShell({
         Przejdź do treści
       </a>
 
-      <header className="sticky top-0 z-30 bg-card shadow-xs">
+      <header className="sticky top-0 z-30 bg-card shadow-xs print:hidden">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-4 py-3 md:px-6">
           <Link href="/" className="flex items-center gap-2 text-foreground no-underline">
             <Compass className="size-7 text-primary" aria-hidden />

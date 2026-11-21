@@ -258,6 +258,14 @@ Przełożony widzi wyłącznie swoich podwładnych: zapytania filtrujemy po `sup
 - `citation(fragment)` daje gotowy opis źródła, np. „§ 5 ust. 2 – rozporządzenie o ocenach okresowych (Dz.U. 2016 poz. 470)”.
 - Ustawy o służbie cywilnej nie ma jeszcze w bazie (brak w `materialy/`). Treść art. 81 i 83 jest dostępna pośrednio przez poradnik KPRM, pouczenie w arkuszach i FAQ.
 
+## Przepisy w kontekście (Z42)
+
+- Treści „ⓘ Dlaczego?” są w `data/podpowiedzi.json`: identyfikator, temat, krótkie wyjaśnienie, podstawa prawna, identyfikator fragmentu bazy wiedzy (Z21) i dosłowny cytat. Plik jest mały, więc trafia też do komponentów przeglądarki (cała baza wiedzy – nie).
+- `src/lib/ui/dlaczego.ts` waliduje plik schematem zod przy starcie, dodaje link do aktu w ISAP (rozporządzenia; FAQ i poradniki nie mają publicznego adresu); `<Dlaczego id="…" />` (`src/components/ui/dlaczego.tsx`) rysuje `InfoTip`.
+- Test `tests/ui/podpowiedzi.test.ts` pilnuje, że każdy cytat występuje dosłownie we wskazanym fragmencie, podstawa prawna zawiera jego jednostkę redakcyjną, link do ISAP zgadza się z publikatorem, a każda podpowiedź jest użyta na ekranie.
+- Gdzie: kreator części I (arkusz, kryteria obowiązkowe i dodatkowe, termin i tematy rozmowy rozpoczynającej), część I arkusza (podpis, co wydłuża termin), zakończenie oceny (ocena cząstkowa a sugestia, rozmowa oceniająca), wynik i podsumowanie (kiedy ocena jest negatywna, skala, uzasadnienie, IPRZ, wniosek o stopień), zapoznanie (termin, sprzeciw), oś czasu na karcie pracownika (nieobecność, zmiana stanowiska, termin rozmowy, sprzeciw – każda podpowiedź raz).
+- Nowa podpowiedź: wpis w JSON + identyfikator w `HINT_IDS`; cytat skopiuj z `data/wiedza/fragmenty.json`.
+
 ## Pulpit przełożonego (Z11)
 
 - `src/lib/dashboard/pulpit.ts` – czysta logika: otwarte terminy przełożonego według etapu bieżącej oceny (silnik Z08), karta „Do zrobienia” (3–5 spraw), lista podwładnych, wejścia w ścieżki. Testy: `tests/dashboard/`.

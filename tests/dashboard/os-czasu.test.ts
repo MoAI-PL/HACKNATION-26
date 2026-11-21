@@ -76,6 +76,18 @@ describe("oś czasu procesu", () => {
     expect(t.indexOf(termin)).toBeLessThan(t.findIndex((x) => x.kind === "DZIS"));
   });
 
+  it("podpowiedzi „Dlaczego?” (Z42): nieobecność i sprzeciw – ta sama podpowiedź tylko raz", () => {
+    const e = employee({
+      evaluations: [ev({ id: "p", status: "ZAKONCZONA", evaluatedAt: "2026-11-10", acknowledgedAt: "2026-11-18", result: "POZYTYWNA" })],
+      absences: [
+        { kind: "ZWOLNIENIE_LEKARSKIE", from: "2025-03-01", to: "2025-04-14" },
+        { kind: "URLOP_BEZPLATNY", from: "2025-07-01", to: "2025-08-14" },
+      ],
+    });
+    const hints = processTimeline(e, TODAY).flatMap((x) => (x.hint ? [x.hint] : []));
+    expect(hints).toEqual(["NIEOBECNOSC", "SPRZECIW"]);
+  });
+
   it("termin na sprzeciw po zapoznaniu – widoczny do tygodnia po upływie, potem znika", () => {
     const zakonczona = (ack: string) =>
       employee({ evaluations: [ev({ id: "p", status: "ZAKONCZONA", evaluatedAt: "2026-11-10", acknowledgedAt: ack, result: "NEGATYWNA" })] });

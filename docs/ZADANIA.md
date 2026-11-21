@@ -11,13 +11,13 @@ Kolejność: najpierw ★, potem pozostałe P0, potem P1 (w kolejności z tabeli
 | ★Z01 | Porządek w repozytorium, `materialy/`, tablica zadań | — | gotowe | suzanne0401 | `z01-porzadek-repo` |
 | ★Z02 | Szkielet aplikacji (Next.js 15, TS, Tailwind, shadcn/ui, Prisma, docker compose, Vitest) | Z01 | gotowe | suzanne0401 | `z02-szkielet` |
 | ★Z03 | Kontrakt domeny (`types.ts`, `slownik.ts`, `schema.prisma`, `przepisy.json`) | Z02 | gotowe | Kamson2077 | `z03-kontrakt-domeny` |
-| ★Z04 | Logowanie i role, konta demo na ekranie logowania | Z03 | wolne | bartektymochowicz-collab | |
+| ★Z04 | Logowanie i role, konta demo na ekranie logowania | Z03 | w toku | bartektymochowicz-collab | `bartek/z04-logowanie-role` |
 
 ## B. Dane i import
 
 | ID | Zadanie | Zależy od | Status | Kto | Gałąź |
 |---|---|---|---|---|---|
-| ★Z05 | Import modelu kompetencji (xlsx → JSON) | Z02 | wolne | | |
+| ★Z05 | Import modelu kompetencji (xlsx → JSON) | Z02 | w toku | Nadia | |
 | ★Z06 | Import OSP (docx) i automatyczny wybór arkusza B/C | Z03 | wolne | | |
 | ★Z26 | Dane demo (seed) wokół persony przełożonej | Z03 | wolne | | |
 

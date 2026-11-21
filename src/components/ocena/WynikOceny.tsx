@@ -1,6 +1,7 @@
 import * as React from "react";
 import { CheckCircle2, XCircle } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Dlaczego } from "@/components/ui/dlaczego";
 import { CRITERION_KIND_LABELS, LEVEL_LABELS, RESULT_LABELS } from "@/lib/domain/slownik";
 import type { PeriodicScoreResult } from "@/lib/domain/types";
 import { formatPoints } from "@/lib/rules/tekst";
@@ -26,7 +27,10 @@ export function WynikOceny({
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Wynik oceny</CardTitle>
+        <CardTitle className="flex flex-wrap items-center gap-2">
+          Wynik oceny
+          <Dlaczego id="WYNIK_OCENY" label="Kiedy ocena jest negatywna?" />
+        </CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col gap-5">
         <div
@@ -58,7 +62,12 @@ export function WynikOceny({
         </ul>
 
         <table className="w-full text-left text-sm">
-          <caption className="mb-2 text-left font-semibold">Oceny cząstkowe</caption>
+          <caption className="mb-2 text-left font-semibold">
+            <span className="flex flex-wrap items-center gap-2">
+              Oceny cząstkowe
+              <Dlaczego id="SKALA_OCEN" label="Skala punktów" />
+            </span>
+          </caption>
           <thead>
             <tr className="border-b text-muted-foreground">
               <th scope="col" className="py-1.5 pr-3 font-medium">Kryterium</th>

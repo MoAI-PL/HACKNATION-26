@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { ChoiceCardGroup, ChoiceCardMulti } from "@/components/ui/choice-cards";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Field, Input, Textarea } from "@/components/ui/field";
-import { InfoTip } from "@/components/ui/info-tip";
+import { Dlaczego } from "@/components/ui/dlaczego";
 import { Notice } from "@/components/ui/notice";
 import { WizardFooter, WizardProgress } from "@/components/ui/wizard";
 import { PropozycjaAI, type ProposalState } from "@/components/asystent/PropozycjaAI";
@@ -388,6 +388,9 @@ function KrokArkusz({
           Bez opisu stanowiska wybierz arkusz samodzielnie: B – gdy praca polega na bezpośrednim kierowaniu pracownikami, C – pozostałe stanowiska (§ 3).
         </Notice>
       )}
+      <div>
+        <Dlaczego id="ARKUSZ" label="Arkusz B czy C?" />
+      </div>
       <ChoiceCardGroup label="Arkusz oceny" options={[option("B"), option("C")]} value={selected} onValueChange={onChange} />
       {changed && (
         <Field
@@ -460,7 +463,7 @@ function KrokKryteria({
       <section aria-labelledby="kryteria-obowiazkowe" className="flex flex-col gap-2">
         <h3 id="kryteria-obowiazkowe" className="flex items-center gap-2 font-semibold">
           Kryteria obowiązkowe – arkusz {sheet}
-          <InfoTip legalBasis="§ 4">Kryteria obowiązkowe wynikają z arkusza i nie można ich zmienić.</InfoTip>
+          <Dlaczego id="KRYTERIA_OBOWIAZKOWE" />
         </h3>
         <ul className="flex flex-wrap gap-2">
           {mandatoryCriteria(sheet).map((c) => (
@@ -475,9 +478,7 @@ function KrokKryteria({
         <div className="flex flex-wrap items-center justify-between gap-2">
           <h3 id="kryteria-dodatkowe" className="flex items-center gap-2 font-semibold">
             Kryteria dodatkowe (nieobowiązkowe, najwyżej 3)
-            <InfoTip legalBasis="§ 2 ust. 2, § 5 ust. 2">
-              Wybierz kryteria najistotniejsze dla obowiązków z opisu stanowiska. Nie mogą powtarzać kryteriów obowiązkowych.
-            </InfoTip>
+            <Dlaczego id="KRYTERIA_DODATKOWE" />
           </h3>
           {ai.status === "brak" && (
             <Button variant="outline" onClick={ask}>
@@ -580,7 +581,13 @@ function KrokRozmowa({ data, draft, update }: { data: WizardData; draft: WizardD
         </Notice>
       )}
 
-      <Field label="Data rozmowy rozpoczynającej" hint="Od tego dnia biegnie okres podlegania ocenie." required className="max-w-xs">
+      <Field
+        label="Data rozmowy rozpoczynającej"
+        hint="Od tego dnia biegnie okres podlegania ocenie."
+        required
+        className="max-w-xs"
+        aside={<Dlaczego id="TERMIN_ROZMOWY_ROZPOCZYNAJACEJ" label="Do kiedy?" />}
+      >
         <Input
           type="date"
           value={draft.conversationDate ?? ""}
@@ -597,7 +604,7 @@ function KrokRozmowa({ data, draft, update }: { data: WizardData; draft: WizardD
       <fieldset className="flex flex-col gap-2">
         <legend className="mb-2 flex items-center gap-2 font-semibold">
           Co omówiono w rozmowie
-          <InfoTip legalBasis="§ 5 ust. 1">Rozmowa rozpoczynająca obejmuje te cztery tematy. Cele – tylko jeśli są uzasadnione.</InfoTip>
+          <Dlaczego id="ROZMOWA_ROZPOCZYNAJACA" />
         </legend>
         {CHECKLIST_ITEMS.map((item) => (
           <label key={item.key} className="flex min-h-6 cursor-pointer items-start gap-3 rounded-md p-1">

@@ -88,7 +88,8 @@ Przełożony widzi wyłącznie swoich podwładnych: zapytania filtrujemy po `sup
 - AI (`src/lib/rozmowa/ai.ts`) tylko redaguje otwarcie i informację zwrotną w `<PropozycjaAI>`; do modelu nie trafia imię i nazwisko (zamiana na „osoba oceniana”), „Wstaw” dopisuje tekst do notatek na ekranie, „Wstaw” i „Odrzuć” trafiają do `AuditLog` (`funkcja: ASYSTENT_ROZMOWY`). Bez modelu ściąga jest kompletna.
 - Szkice uzasadnienia i wniosków do IPRZ wstawia się do arkusza w podsumowaniu oceny (Z15); asystent rozmowy podsuwa do nich działania rozwojowe.
 - Reguły wyboru: lista i ściąga biorą tę samą ocenę (`currentEvaluation`: najnowsza w toku, bez zakończonych i czekających na zapoznanie). Pierwsza ocena ma wyłącznie rozmowę wstępną (`allowedKinds`) – inny rodzaj w adresie jest ignorowany. Notatki do rozmowy oceniającej tylko z okresu oceny (od `periodStart`). Pytanie i informacja zwrotna przy obszarze do rozwoju odwołują się do notatki z najsłabszym zachowaniem, przy mocnej stronie – z najmocniejszym.
-- Notatki przełożonego: szkic w `localStorage` tej przeglądarki (osobno dla pracownika i rodzaju rozmowy), na wydruku pełna treść; nic nie trafia do bazy. Limit redakcji AI: 10 na minutę na przełożonego.
+- Notatki przełożonego: szkic w `localStorage` tej przeglądarki (osobno dla pracownika i rodzaju rozmowy), na wydruku pełna treść; nic nie trafia do bazy. Limit redakcji AI: 10 na minutę na przełożonego; decyzje „Wstaw / Odrzuć” walidowane zod na serwerze (treść do 10 000 znaków).
+- Zakres treści zgodny z przepisem rozmowy: działania rozwojowe tylko w rozmowie oceniającej (§ 10 pkt 3); po ocenie negatywnej cele na okres do ponownej oceny (6 miesięcy, art. 81 ust. 9).
 
 ## Zabezpieczenia demo (Z44)
 

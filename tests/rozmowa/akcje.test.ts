@@ -43,6 +43,15 @@ describe("zapis decyzji „Wstaw / Odrzuć”", () => {
     expect(prismaMock.auditLog.create).not.toHaveBeenCalled();
   });
 
+  it("spreparowane dane z przeglądarki (zła decyzja, ogromna treść) – odrzucone bez wpisu", async () => {
+    zalogowany("PRZELOZONY");
+    prismaMock.employee.findFirst.mockResolvedValue({ id: "kasia" });
+    expect(await logConversationAiDecisionAction("kasia", { kind: "OCENIAJACA", decision: "USUN", proposal: "P" })).toEqual({ ok: false });
+    expect(await logConversationAiDecisionAction("kasia", { kind: "OCENIAJACA", decision: "WSTAW", proposal: "x".repeat(10_001) })).toEqual({ ok: false });
+    expect(await logConversationAiDecisionAction("kasia", null)).toEqual({ ok: false });
+    expect(prismaMock.auditLog.create).not.toHaveBeenCalled();
+  });
+
   it.each(["HR", "OCENIANY", "KIERUJACY_KOMORKA"])("rola %s – 403", async (role) => {
     zalogowany(role);
     await expect(logConversationAiDecisionAction("kasia", { kind: "OCENIAJACA", decision: "WSTAW", proposal: "P" })).rejects.toMatchObject({ status: 403 });

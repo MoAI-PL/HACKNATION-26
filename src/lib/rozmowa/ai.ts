@@ -8,7 +8,11 @@ import { CONVERSATION_LABELS, type ConversationPrep } from "./przygotowanie";
 
 const responseSchema = z.object({
   otwarcie: z.string().min(10),
-  informacjaZwrotna: z.array(z.object({ zachowanie: z.string(), skutek: z.string(), oczekiwanie: z.string() })).max(4).default([]),
+  // Model bywa „nadgorliwy” – nadmiarowe punkty przycinamy zamiast odrzucać całą odpowiedź.
+  informacjaZwrotna: z
+    .array(z.object({ zachowanie: z.string(), skutek: z.string(), oczekiwanie: z.string() }))
+    .default([])
+    .transform((a) => a.slice(0, 4)),
   zamkniecie: z.string().default(""),
 });
 
@@ -23,7 +27,10 @@ export interface PolishResult {
 
 const asData = (t: string) => t.replace(/</g, "‹").replace(/>/g, "›");
 
-/** Prosta pseudonimizacja: imię i nazwisko (także odmienione końcówki) → „osoba oceniana”. */
+/**
+ * Prosta pseudonimizacja: imię i nazwisko osoby ocenianej (także odmienione) → „osoba oceniana”.
+ * Ograniczenie: zdrobnień („Kasia”) i nazwisk innych osób z notatek nie zamieniamy – pełna pseudonimizacja to Z34.
+ */
 export function pseudonymize(text: string, fullName: string): string {
   let out = text;
   for (const part of fullName.split(/\s+/).filter((p) => p.length >= 3)) {

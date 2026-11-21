@@ -79,20 +79,20 @@ export default async function PrzygotowanieRozmowyPage({
       />
 
       {data.allowed.length > 1 && (
-      <nav aria-label="Rodzaj rozmowy" className="flex flex-wrap gap-1 self-start rounded-lg border bg-card p-1 print:hidden">
-        {data.allowed.map((k) => (
-          <Link
-            key={k}
-            href={`/ocena/rozmowa/${employeeId}?typ=${k}`}
-            aria-current={k === kind ? "page" : undefined}
-            className={cn(buttonVariants({ variant: k === kind ? "secondary" : "ghost", size: "sm" }), "h-9 px-3")}
-          >
-            {CONVERSATION_LABELS[k]}
-            {k === data.suggested && <span className="sr-only"> (następna według etapu oceny)</span>}
-            {k === data.suggested && k !== kind && <span aria-hidden> •</span>}
-          </Link>
-        ))}
-      </nav>
+        <nav aria-label="Rodzaj rozmowy" className="flex flex-wrap gap-1 self-start rounded-lg border bg-card p-1 print:hidden">
+          {data.allowed.map((k) => (
+            <Link
+              key={k}
+              href={`/ocena/rozmowa/${encodeURIComponent(employeeId)}?typ=${k}`}
+              aria-current={k === kind ? "page" : undefined}
+              className={cn(buttonVariants({ variant: k === kind ? "secondary" : "ghost", size: "sm" }), "h-9 px-3")}
+            >
+              {CONVERSATION_LABELS[k]}
+              {k === data.suggested && <span className="sr-only"> (następna według etapu oceny)</span>}
+              {k === data.suggested && k !== kind && <span aria-hidden> •</span>}
+            </Link>
+          ))}
+        </nav>
       )}
 
       <Section id="cel" title="Cel rozmowy">

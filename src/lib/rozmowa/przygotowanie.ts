@@ -199,7 +199,7 @@ export function buildConversationPrep(input: PrepInput, model: CompetencyModelIn
       { topic: "Jak wygląda pierwsza ocena", details: ["5 elementów: rzetelność, wykorzystywanie wiedzy, organizacja pracy, komunikacja, współpraca", "skala 3 / 5 / 7 pkt, sprawozdanie, egzamin ze służby przygotowawczej"] },
       { topic: "Główne obowiązki z opisu stanowiska i oczekiwania co do ich wykonywania", details: tasks.map((t) => shorten(t)) },
       { topic: "Oczekiwania co do postawy, zaangażowania, postępów, relacji ze współpracownikami i terminowości", details: ["opieraj się na opisach elementów oceny z załącznika nr 1"] },
-      { topic: "Termin złożenia sprawozdania", details: ["sprawozdanie obejmuje co najmniej 7 miesięcy pracy – wpisz termin do systemu"] },
+      { topic: "Termin złożenia sprawozdania", details: ["sprawozdanie obejmuje co najmniej 7 miesięcy pracy – podaj termin i zapisz go w notatkach z rozmowy"] },
     ];
     questions.push(
       { text: "Które zadania z opisu stanowiska wydają się Pani/Panu najtrudniejsze na start?", why: "§ 3 pkt 2 – obowiązki z OSP" },
@@ -223,7 +223,9 @@ export function buildConversationPrep(input: PrepInput, model: CompetencyModelIn
     ];
     for (const t of tasks.slice(0, 2)) questions.push({ text: `Jak rozumie Pani/Pan zadanie „${shorten(t, 110)}”? Co jest potrzebne, żeby wykonywać je na poziomie oczekiwań?`, why: "§ 5 ust. 1 pkt 1 – obowiązki z OSP" });
     questions.push({ text: "Które z kryteriów są dla Pani/Pana najmniej jasne? Omówmy przykład zachowania „na poziomie oczekiwań”.", why: "§ 5 ust. 1 pkt 2–3 – kryteria i oczekiwania" });
-    questions.push({ text: "Jaki cel na najbliższe dwa lata byłby dla Pani/Pana ważny i realny?", why: "§ 5 ust. 1 pkt 4 – cele" });
+    // Po ocenie negatywnej okres trwa do ponownej oceny po 6 miesiącach (art. 81 ust. 9), w pozostałych przypadkach – 24 miesiące.
+    const horizon = input.isReevaluation ? "do ponownej oceny za 6 miesięcy" : "na najbliższe dwa lata";
+    questions.push({ text: `Jaki cel ${horizon} byłby dla Pani/Pana ważny i realny?`, why: "§ 5 ust. 1 pkt 4 – cele" });
   } else {
     goal = "Omówić z osobą ocenianą wykonywanie obowiązków w świetle kryteriów, realizację celów i kierunki rozwoju – przed sporządzeniem oceny na piśmie.";
     legalBasis = "§ 10 rozporządzenia w sprawie ocen okresowych";
@@ -279,7 +281,9 @@ export function buildConversationPrep(input: PrepInput, model: CompetencyModelIn
   // wskaźniki poniżej „powyżej oczekiwań”, a bez ocen i notatek – kryteria oceny.
   const nextLowest = [...ev].filter((e) => e.level < 4).sort((a, b) => a.level - b.level);
   const developmentCompetencies = [...new Set((growth.length ? growth : nextLowest).map((g) => g.competency))].slice(0, 2);
-  const development = (developmentCompetencies.length ? developmentCompetencies : input.criteria.map((c) => c.competency).slice(0, 2)).map((c) => ({
+  // Działania rozwojowe to zakres rozmowy oceniającej (§ 10 pkt 3) – w rozmowie wstępnej i rozpoczynającej ich nie ma.
+  const developmentSource = input.kind !== "OCENIAJACA" ? [] : developmentCompetencies.length ? developmentCompetencies : input.criteria.map((c) => c.competency).slice(0, 2);
+  const development = developmentSource.map((c) => ({
     competency: c,
     name: COMPETENCY_NAMES[c],
     ideas: DEVELOPMENT_IDEAS[c],
@@ -301,8 +305,8 @@ export function buildConversationPrep(input: PrepInput, model: CompetencyModelIn
     checklist: [
       "Zarezerwuj 45–60 minut w spokojnym miejscu, bez telefonów i poczty.",
       input.kind === "OCENIAJACA" ? "Przejrzyj notatki z całego okresu oceny, nie tylko z ostatnich tygodni." : "Miej pod ręką opis stanowiska pracy (OSP).",
-      input.deadline ? `Termin: ${input.deadline.label}.` : "Sprawdź termin rozmowy na pulpicie.",
-      "Po rozmowie zapisz ustalenia – przydadzą się w ocenie i w IPRZ.",
+      ...(input.deadline ? [`Termin: ${input.deadline.label}.`] : []),
+      input.kind === "OCENIAJACA" ? "Po rozmowie zapisz ustalenia – przydadzą się w ocenie i we wnioskach do IPRZ." : "Po rozmowie zapisz ustalenia – przydadzą się w ocenie.",
     ],
     notes,
   };

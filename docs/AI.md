@@ -13,7 +13,7 @@
 | Asystent formalny (pytania o procedurę) | tak | odpowiedź wyłącznie z fragmentów przepisów i poradników, zawsze ze źródłem |
 | Punktacja, wynik, terminy, wybór arkusza | **nie** | silnik reguł z testami |
 | Propozycja kryteriów dodatkowych z OSP (Z23) | tak | do 3 kryteriów z uzasadnieniem i cytatem zadania; kryteria i cytaty sprawdza kod, bez modelu działa propozycja ze słów kluczowych |
-| Asystent rozmowy (Z24) | tak, opcjonalnie | AI redaguje tylko otwarcie i informację zwrotną z gotowej ściągi; dane bez imienia i nazwiska; ściąga powstaje bez AI z przepisów, ocen i notatek |
+| Asystent rozmowy (Z24) | tak, opcjonalnie | AI redaguje tylko otwarcie i informację zwrotną z gotowej ściągi; imię i nazwisko osoby ocenianej (także odmienione) zamieniane na „osoba oceniana” – zdrobnień i nazwisk innych osób z notatek jeszcze nie (pełna pseudonimizacja: Z34); ściąga powstaje bez AI z przepisów, ocen i notatek |
 | Sugerowany poziom kompetencji | **nie** | średnia z wybranych opisów zachowań, wzór widoczny w panelu „Dlaczego ten poziom?” |
 
 ## Model

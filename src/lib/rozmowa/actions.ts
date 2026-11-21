@@ -1,6 +1,7 @@
 "use server";
 // Akcje asystenta rozmowy (Z24): redakcja przez AI i zapis decyzji „Wstaw / Odrzuć” w dzienniku decyzji (sekcja 4.2).
 
+import { z } from "zod";
 import { requireRole } from "@/lib/auth/guard";
 import { prisma } from "@/lib/db";
 import { polishConversation, type PolishResult } from "./ai";
@@ -32,10 +33,21 @@ export async function polishConversationAction(employeeId: string, kind: string)
   return polishConversation(prep, data.input.employeeName);
 }
 
-export async function logConversationAiDecisionAction(employeeId: string, input: { kind: string; decision: "WSTAW" | "ODRZUC"; proposal: string; final?: string }): Promise<{ ok: boolean }> {
+// Dane z przeglądarki – walidacja na serwerze (typy TypeScript nie chronią przed spreparowanym zapytaniem).
+const decisionSchema = z.object({
+  kind: z.enum(CONVERSATION_KINDS as [ConversationKind, ...ConversationKind[]]),
+  decision: z.enum(["WSTAW", "ODRZUC"]),
+  proposal: z.string().max(10_000),
+  final: z.string().max(10_000).optional(),
+});
+
+export async function logConversationAiDecisionAction(employeeId: string, raw: unknown): Promise<{ ok: boolean }> {
   const user = await requireRole("PRZELOZONY");
+  const parsed = decisionSchema.safeParse(raw);
+  if (!parsed.success || typeof employeeId !== "string") return { ok: false };
+  const input = parsed.data;
   const employee = await prisma.employee.findFirst({ where: { id: employeeId, supervisorId: user.id }, select: { id: true } });
-  if (!employee || !isKind(input.kind)) return { ok: false };
+  if (!employee) return { ok: false };
   await prisma.auditLog.create({
     data: {
       userId: user.id,

@@ -119,6 +119,24 @@ describe("rozmowa rozpoczynająca (§ 5 ust. 1) i wstępna (§ 3)", () => {
     expect(getFragment(p.sourceFragmentId)?.unit).toBe("§ 5 ust. 1");
   });
 
+  it("działania rozwojowe tylko w rozmowie oceniającej (§ 10 pkt 3)", () => {
+    expect(buildConversationPrep({ ...base, kind: "WSTEPNA" }).development).toEqual([]);
+    expect(buildConversationPrep({ ...base, kind: "ROZPOCZYNAJACA" }).development).toEqual([]);
+    expect(buildConversationPrep(base).development.length).toBeGreaterThan(0);
+  });
+
+  it("po ocenie negatywnej cel na 6 miesięcy, a nie na dwa lata (art. 81 ust. 9)", () => {
+    const q = (isReevaluation: boolean) => buildConversationPrep({ ...base, kind: "ROZPOCZYNAJACA", isReevaluation }).questions.at(-1)!.text;
+    expect(q(true)).toBe("Jaki cel do ponownej oceny za 6 miesięcy byłby dla Pani/Pana ważny i realny?");
+    expect(q(false)).toBe("Jaki cel na najbliższe dwa lata byłby dla Pani/Pana ważny i realny?");
+  });
+
+  it("lista „przed rozmową” bez odesłań do ekranów, których nie ma", () => {
+    const p = buildConversationPrep({ ...base, kind: "WSTEPNA", deadline: null });
+    expect(p.checklist.join(" ")).not.toMatch(/pulpi/);
+    expect(p.agenda.at(-1)!.details[0]).not.toMatch(/do systemu/);
+  });
+
   it("wstępna: zasady pierwszej oceny i termin sprawozdania", () => {
     const p = buildConversationPrep({ ...base, kind: "WSTEPNA" });
     expect(p.legalBasis).toBe("§ 3 rozporządzenia w sprawie pierwszej oceny");
@@ -210,6 +228,13 @@ describe("redakcja przez AI", () => {
     expect(await polishConversation(prep, "Katarzyna Wójcik", { llm: null })).toEqual({ ok: false, reason: "Asystent AI nie jest skonfigurowany. Ściąga powyżej powstała bez AI i jest kompletna." });
     const r = await polishConversation(prep, "Katarzyna Wójcik", { llm: fakeLLM(new LLMError("LIMIT_ZAPYTAN", "Przekroczono limit zapytań do modelu.")) });
     expect(r).toEqual({ ok: false, reason: "Przekroczono limit zapytań do modelu." });
+  });
+
+  it("nadmiarowe punkty informacji zwrotnej są przycinane do 4, a nie odrzucają odpowiedzi", async () => {
+    const fb = Array.from({ length: 6 }, (_, i) => ({ zachowanie: `Z${i}`, skutek: "S", oczekiwanie: "O" }));
+    const r = await polishConversation(prep, "Katarzyna Wójcik", { llm: fakeLLM(JSON.stringify({ otwarcie: "Dzień dobry, zaczynajmy rozmowę.", informacjaZwrotna: fb })) });
+    expect(r.ok).toBe(true);
+    expect(r.text!.match(/Zachowanie: /g)).toHaveLength(4);
   });
 
   it("formatowanie bez pustych sekcji", () => {

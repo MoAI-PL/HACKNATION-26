@@ -32,6 +32,8 @@ import {
   type TodoSource,
 } from "@/lib/rules/terminy";
 import { formatDatePl, formatDateShortPl } from "@/lib/rules/kalendarz";
+import { isScreenReady } from "@/lib/ui/nav";
+import { plural } from "@/lib/rules/tekst";
 
 /** Ocena pracownika potrzebna do ustalenia terminów. */
 export interface EvaluationInfo {
@@ -221,20 +223,102 @@ export function employeeHref(employeeId: string): string {
   return `/pulpit/pracownik/${encodeURIComponent(employeeId)}`;
 }
 
-/**
- * Ekrany docelowe akcji z karty „Do zrobienia”. Dopóki ekranu nie ma (zadanie w toku),
- * przycisk prowadzi do karty pracownika z wyjaśnieniem terminu i ma uczciwy napis „Zobacz szczegóły”
- * – bez martwych linków i bez obietnic, których ekran nie spełni.
- */
-export const ACTION_SCREENS_READY = false;
+/** Kreator oceny okresowej (Z12) dla danej oceny. */
+export function periodicEvaluationHref(evaluationId: string): string {
+  return `/ocena/okresowa/${encodeURIComponent(evaluationId)}`;
+}
 
-export function buildDashboardTodo(employees: EmployeeInfo[], today: IsoDate, limit = 5): TodoItem[] {
+export interface TodoTarget {
+  href: string;
+  label: string;
+}
+
+/**
+ * Dokąd prowadzi przycisk sprawy z „Do zrobienia”.
+ * - rozmowa rozpoczynająca (także po ocenie negatywnej) → kreator części I oceny okresowej (Z12): „Ustal kryteria”;
+ * - pozostałe sprawy (sporządzenie oceny – Z14, pierwsza ocena – Z17) → karta pracownika z wyjaśnieniem terminu,
+ *   dopóki ich ekrany nie są gotowe. Gotowość ekranu bierzemy z menu (isScreenReady) – bez martwych linków
+ *   i bez obietnic, których ekran nie spełni.
+ */
+export function todoTarget(
+  item: Pick<TodoItem, "employeeId" | "evaluationId" | "deadline">,
+  ready: (href: string) => boolean = isScreenReady,
+): TodoTarget {
+  const kind = item.deadline.kind;
+  if ((kind === "ROZMOWA_ROZPOCZYNAJACA" || kind === "ROZMOWA_PO_NEGATYWNEJ") && item.evaluationId) {
+    const href = periodicEvaluationHref(item.evaluationId);
+    if (ready(href)) return { href, label: "Ustal kryteria" };
+  }
+  return { href: employeeHref(item.employeeId), label: "Zobacz szczegóły" };
+}
+
+export function buildDashboardTodo(
+  employees: EmployeeInfo[],
+  today: IsoDate,
+  limit = 5,
+  ready: (href: string) => boolean = isScreenReady,
+): TodoItem[] {
   const sources: TodoSource[] = employees.map((e) => ({
     employeeId: e.id,
     employeeName: fullName(e),
     evaluationId: currentEvaluation(e)?.id,
     deadlines: openDeadlines(e),
   }));
-  const items = buildTodoItems(sources, today, { limit, hrefFor: (s) => employeeHref(s.employeeId) });
-  return ACTION_SCREENS_READY ? items : items.map((i) => ({ ...i, actionLabel: "Zobacz szczegóły" }));
+  return buildTodoItems(sources, today, { limit }).map((item) => {
+    const target = todoTarget(item, ready);
+    return { ...item, href: target.href, actionLabel: target.label };
+  });
+}
+
+/** Główna akcja na karcie pracownika: kreator / część I oceny okresowej, gdy ekran jest gotowy. */
+export function evaluationLink(
+  e: EmployeeInfo,
+  ready: (href: string) => boolean = isScreenReady,
+): TodoTarget | null {
+  const current = currentEvaluation(e);
+  if (!current || current.type !== "OKRESOWA") return null;
+  const href = periodicEvaluationHref(current.id);
+  if (!ready(href)) return null;
+  return { href, label: current.status === "DO_ROZPOCZECIA" ? "Ustal kryteria" : "Otwórz ocenę okresową" };
+}
+
+// ---------------------------------------------------------------------------
+// Wejścia w ścieżki (grafika MC: dwie ścieżki oceny i dwóch asystentów)
+// ---------------------------------------------------------------------------
+
+export type PathKey = "OKRESOWA" | "PIERWSZA" | "ASYSTENT_FORMALNY" | "ASYSTENT_ROZMOWY";
+
+export interface PathEntry {
+  key: PathKey;
+  title: string;
+  href: string;
+  /** Krótkie podsumowanie, np. „5 osób, 1 do ustalenia kryteriów”. */
+  summary: string;
+}
+
+const PATHS: { key: PathKey; title: string; href: string }[] = [
+  { key: "OKRESOWA", title: "Ocena okresowa", href: "/ocena/okresowa" },
+  { key: "PIERWSZA", title: "Pierwsza ocena", href: "/ocena/pierwsza" },
+  { key: "ASYSTENT_FORMALNY", title: "Asystent formalny", href: "/asystent" },
+  { key: "ASYSTENT_ROZMOWY", title: "Asystent rozmowy", href: "/ocena/rozmowa" },
+];
+
+function people(n: number): string {
+  return `${n} ${plural(n, ["osoba", "osoby", "osób"])}`;
+}
+
+/** Wejścia w ścieżki z podsumowaniem – tylko te, których ekrany są gotowe (bez martwych linków). */
+export function pathEntries(employees: EmployeeInfo[], ready: (href: string) => boolean = isScreenReady): PathEntry[] {
+  const current = employees.map(currentEvaluation).filter((e): e is EvaluationInfo => Boolean(e));
+  const periodic = current.filter((e) => e.type === "OKRESOWA");
+  const first = current.filter((e) => e.type === "PIERWSZA");
+  const toStart = (list: EvaluationInfo[]) => list.filter((e) => e.status === "DO_ROZPOCZECIA").length;
+
+  const summary: Record<PathKey, string> = {
+    OKRESOWA: `${people(periodic.length)}${toStart(periodic) ? `, ${toStart(periodic)} do ustalenia kryteriów` : ""}`,
+    PIERWSZA: `${people(first.length)}${toStart(first) ? `, ${toStart(first)} przed rozmową wstępną` : ""}`,
+    ASYSTENT_FORMALNY: "Procedura, formularze i terminy – odpowiedzi ze wskazaniem przepisu",
+    ASYSTENT_ROZMOWY: "Rozmowa oceniająca, informacja zwrotna i plan rozwoju",
+  };
+  return PATHS.filter((p) => ready(p.href)).map((p) => ({ ...p, summary: summary[p.key] }));
 }

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { CalendarCheck2, NotebookPen, Users } from "lucide-react";
+import { CalendarCheck2, CalendarDays, ChevronRight, FileText, MessagesSquare, NotebookPen, UserStar, Users, type LucideIcon } from "lucide-react";
 import { PageHeader } from "@/components/layout/AppShell";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { DeadlineBadge, EvaluationStatusBadge, StatusBadge } from "@/components/ui/status-badge";
@@ -15,7 +15,7 @@ import { DEADLINE_KIND_LABELS } from "@/lib/rules/terminy";
 import { daysBetween, formatDatePl, weekdayName } from "@/lib/rules/kalendarz";
 import { plural } from "@/lib/rules/tekst";
 import { loadSubordinates } from "@/lib/dashboard/dane";
-import { buildDashboardTodo, employeeHref, employeeRow, formatDay, sortRows } from "@/lib/dashboard/pulpit";
+import { buildDashboardTodo, employeeHref, employeeRow, formatDay, pathEntries, sortRows, type PathKey } from "@/lib/dashboard/pulpit";
 
 export const metadata: Metadata = { title: "Pulpit – Kompas Kompetencji" };
 export const dynamic = "force-dynamic";
@@ -27,6 +27,7 @@ export default async function PulpitPage() {
   const employees = await loadSubordinates(user.id);
   const todo = buildDashboardTodo(employees, today);
   const rows = sortRows(employees.map((e) => employeeRow(e, today)));
+  const paths = pathEntries(employees);
   const firstName = (user.name ?? "").split(" ")[0];
 
   return (
@@ -82,6 +83,36 @@ export default async function PulpitPage() {
             )}
           </CardContent>
         </Card>
+
+        {paths.length > 0 && (
+          <nav aria-labelledby="sciezki" className="flex flex-col gap-3">
+            <h2 id="sciezki" className="text-xl">
+              Ścieżki oceny
+            </h2>
+            <ul className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+              {paths.map((p) => {
+                const Icon = PATH_ICONS[p.key];
+                return (
+                  <li key={p.key}>
+                    <Link
+                      href={p.href}
+                      className="group flex h-full items-center gap-3 rounded-xl border bg-card p-4 text-foreground no-underline shadow-xs transition-colors hover:border-primary/50"
+                    >
+                      <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-secondary text-primary">
+                        <Icon className="size-5" aria-hidden />
+                      </span>
+                      <span className="flex min-w-0 flex-1 flex-col">
+                        <span className="font-semibold">{p.title}</span>
+                        <span className="text-sm text-muted-foreground">{p.summary}</span>
+                      </span>
+                      <ChevronRight className="size-5 shrink-0 text-muted-foreground group-hover:text-primary" aria-hidden />
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          </nav>
+        )}
 
         <section aria-labelledby="podwladni" className="flex flex-col gap-3">
           <div className="flex flex-wrap items-center justify-between gap-2">
@@ -160,3 +191,9 @@ export default async function PulpitPage() {
   );
 }
 
+const PATH_ICONS: Record<PathKey, LucideIcon> = {
+  OKRESOWA: CalendarDays,
+  PIERWSZA: UserStar,
+  ASYSTENT_FORMALNY: FileText,
+  ASYSTENT_ROZMOWY: MessagesSquare,
+};

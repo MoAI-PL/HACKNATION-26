@@ -5,7 +5,10 @@ import {
   currentEvaluation,
   employeeHref,
   employeeRow,
+  evaluationLink,
   formatDay,
+  pathEntries,
+  periodicEvaluationHref,
   openDeadlines,
   sortRows,
   type EmployeeInfo,
@@ -103,13 +106,34 @@ describe("karta „Do zrobienia” i lista podwładnych", () => {
     employee({ id: "bez", lastName: "Bąk", evaluations: [] }),
   ];
 
-  it("sortuje od najpilniejszego, prowadzi do karty pracownika i nie obiecuje ekranów, których nie ma", () => {
-    const todo = buildDashboardTodo(ludzie, TODAY);
+  it("sortuje od najpilniejszego; rozmowa rozpoczynająca prowadzi do kreatora Z12", () => {
+    const todo = buildDashboardTodo(ludzie, TODAY, 5, () => true);
     expect(todo.map((t) => t.employeeId)).toEqual(["pilne", "pozniej"]);
-    expect(todo[0]!.href).toBe(employeeHref("pilne"));
-    expect(todo[0]!.actionLabel).toBe("Zobacz szczegóły");
+    expect(todo[0]!.href).toBe(periodicEvaluationHref("b"));
+    expect(todo[0]!.actionLabel).toBe("Ustal kryteria");
     expect(todo[0]!.title).toContain("J. Adamska");
     expect(todo[0]!.urgency).toBe("PILNE");
+  });
+
+  it("bez gotowego ekranu – karta pracownika i uczciwe „Zobacz szczegóły” (bez martwych linków)", () => {
+    const todo = buildDashboardTodo(ludzie, TODAY, 5, () => false);
+    expect(todo[0]!.href).toBe(employeeHref("pilne"));
+    expect(todo[0]!.actionLabel).toBe("Zobacz szczegóły");
+  });
+
+  it("sporządzenie oceny i pierwsza ocena prowadzą na kartę pracownika, dopóki nie ma Z14 i Z17", () => {
+    const prev = addDays(addMonths(TODAY, -24), 9);
+    const wOcenie = employee({ id: "kasia", evaluations: [done("p", prev), open("c", { status: "W_OCENIE" })] });
+    const start = addDays(TODAY, -15);
+    const nowa = employee({ id: "ola", employmentStart: start, contractEnd: addDays(addMonths(start, 12), -1), evaluations: [{ ...open("f", { type: "PIERWSZA", sheet: "PIERWSZA" }), status: "DO_ROZPOCZECIA" }] });
+    const todo = buildDashboardTodo([wOcenie, nowa], TODAY, 5, () => true);
+    expect(todo.map((t) => [t.employeeId, t.actionLabel])).toEqual([["ola", "Zobacz szczegóły"], ["kasia", "Zobacz szczegóły"]]);
+  });
+
+  it("na aktualnym menu: kreator Z12 jest gotowy, ekran pierwszej oceny jeszcze nie", () => {
+    const [item] = buildDashboardTodo([ludzie[1]!], TODAY);
+    expect(item!.actionLabel).toBe("Ustal kryteria");
+    expect(pathEntries(ludzie).map((p) => p.key)).not.toContain("PIERWSZA");
   });
 
   it("termin z innego roku ma rok w dacie (bez niejednoznaczności)", () => {
@@ -132,6 +156,32 @@ describe("karta „Do zrobienia” i lista podwładnych", () => {
     expect(rows.map((r) => r.id)).toEqual(["pilne", "pozniej", "bez"]);
     expect(rows[0]!.next?.daysLeft).toBe(3);
     expect(rows[2]!.evaluation).toBeUndefined();
+  });
+});
+
+describe("wejścia w ścieżki i karta pracownika", () => {
+  const ludzie = [
+    employee({ id: "a", permanentFrom: addDays(TODAY, -5), evaluations: [open("a1", { status: "DO_ROZPOCZECIA" })] }),
+    employee({ id: "b", evaluations: [done("b0", "2025-01-10"), open("b1")] }),
+    employee({ id: "c", employmentStart: addDays(TODAY, -3), evaluations: [{ ...open("c1", { type: "PIERWSZA", sheet: "PIERWSZA" }), status: "DO_ROZPOCZECIA" }] }),
+  ];
+
+  it("dwie ścieżki i dwóch asystentów z podsumowaniem, gdy wszystkie ekrany są gotowe", () => {
+    const p = pathEntries(ludzie, () => true);
+    expect(p.map((x) => x.key)).toEqual(["OKRESOWA", "PIERWSZA", "ASYSTENT_FORMALNY", "ASYSTENT_ROZMOWY"]);
+    expect(p[0]!.summary).toBe("2 osoby, 1 do ustalenia kryteriów");
+    expect(p[1]!.summary).toBe("1 osoba, 1 przed rozmową wstępną");
+  });
+
+  it("ścieżki bez gotowego ekranu są ukryte", () => {
+    expect(pathEntries(ludzie, (h) => h === "/asystent").map((x) => x.key)).toEqual(["ASYSTENT_FORMALNY"]);
+  });
+
+  it("karta pracownika: główna akcja do oceny okresowej, brak akcji przy pierwszej ocenie", () => {
+    expect(evaluationLink(ludzie[0]!, () => true)).toEqual({ href: periodicEvaluationHref("a1"), label: "Ustal kryteria" });
+    expect(evaluationLink(ludzie[1]!, () => true)?.label).toBe("Otwórz ocenę okresową");
+    expect(evaluationLink(ludzie[2]!, () => true)).toBeNull();
+    expect(evaluationLink(ludzie[0]!, () => false)).toBeNull();
   });
 });
 

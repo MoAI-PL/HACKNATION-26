@@ -13,7 +13,8 @@ import { DEADLINE_KIND_LABELS, deadlineUrgency, daysUntil } from "@/lib/rules/te
 import { formatDatePl, formatRangePl, inclusiveDays } from "@/lib/rules/kalendarz";
 import { plural } from "@/lib/rules/tekst";
 import { loadSubordinate } from "@/lib/dashboard/dane";
-import { currentEvaluation, fullName, openDeadlines } from "@/lib/dashboard/pulpit";
+import { currentEvaluation, evaluationLink, fullName, openDeadlines } from "@/lib/dashboard/pulpit";
+import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = { title: "Pracownik – Kompas Kompetencji" };
 export const dynamic = "force-dynamic";
@@ -30,6 +31,7 @@ export default async function PracownikPage({ params }: { params: Promise<{ id: 
   const current = currentEvaluation(employee);
   const deadlines = openDeadlines(employee);
   const history = employee.evaluations.filter((e) => e.status === "ZAKONCZONA").reverse();
+  const action = evaluationLink(employee);
 
   return (
     <>
@@ -41,6 +43,15 @@ export default async function PracownikPage({ params }: { params: Promise<{ id: 
         title={fullName(employee)}
         description={[employee.positionTitle, employee.orgUnit].filter(Boolean).join(" · ") || undefined}
         badge={current && <EvaluationStatusBadge type={current.type} status={current.status} />}
+        action={
+          action && (
+            <Button asChild>
+              <Link href={action.href} className="no-underline">
+                {action.label}
+              </Link>
+            </Button>
+          )
+        }
       />
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">

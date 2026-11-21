@@ -72,6 +72,14 @@ export function navForRole(role: Role): NavItem[] {
   return NAV_BY_ROLE[role].filter((item) => !item.pending);
 }
 
+/**
+ * Czy ekran (albo jego podstrona) jest już gotowy – według menu przełożonego: istnieje pozycja z tym adresem bez `pending`.
+ * Jedno źródło prawdy dla linków z pulpitu (Z11): gdy zadanie ekranu usuwa `pending`, linki same zaczynają tam prowadzić.
+ */
+export function isScreenReady(href: string): boolean {
+  return NAV_BY_ROLE.PRZELOZONY.some((item) => !item.pending && isActivePath(href, item.href));
+}
+
 /** Pełne docelowe menu roli (także ekrany w budowie) – do testów i dokumentacji. */
 export function plannedNavForRole(role: Role): NavItem[] {
   return NAV_BY_ROLE[role];

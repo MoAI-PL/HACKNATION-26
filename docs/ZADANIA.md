@@ -49,9 +49,9 @@ Kolejność: najpierw ★, potem pozostałe P0, potem P1 (w kolejności z tabeli
 
 | ID | Zadanie | Zależy od | Status | Kto | Gałąź |
 |---|---|---|---|---|---|
-| ★Z20 | Warstwa LLM (`LLMProvider`, konfiguracja w `.env`) | Z02 | w toku | suzanne0401 | `z20-z22-asystent` |
+| ★Z20 | Warstwa LLM (`LLMProvider`, konfiguracja w `.env`) | Z02 | gotowe | suzanne0401 | `z20-z22-asystent` |
 | ★Z21 | Baza wiedzy (przepisy, poradniki, ustawa z ISAP, BM25) | Z02 | gotowe | suzanne0401 | `z21-baza-wiedzy` |
-| ★Z22 | Asystent formalny ze źródłami i odmową | Z20, Z21 | w toku | suzanne0401 | `z20-z22-asystent` |
+| ★Z22 | Asystent formalny ze źródłami i odmową | Z20, Z21 | gotowe | suzanne0401 | `z20-z22-asystent` |
 | ★Z23 | Analiza OSP: propozycja kryteriów dodatkowych z cytatem | Z06, Z20 | wolne | | |
 | Z24 | Asystent rozmowy | Z20, Z14 | wolne | | |
 | Z25 | Zestaw testowy asystenta (`npm run eval`) | Z22 | wolne | | |

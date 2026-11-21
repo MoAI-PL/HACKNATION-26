@@ -73,10 +73,10 @@ Kolejność: najpierw ★, potem pozostałe P0, potem P1 (w kolejności z tabeli
 
 | ID | Zadanie | Zależy od | Status | Kto | Gałąź |
 |---|---|---|---|---|---|
-| Z40 | Asystent języka (opis zachowania zamiast opisu osoby) | Z15, Z20 | w toku | bartektymochowicz-collab | `bartek/z40-asystent-jezyka` |
+| Z40 | Asystent języka (opis zachowania zamiast opisu osoby) | Z15, Z20 | gotowe | bartektymochowicz-collab | `bartek/z40-asystent-jezyka` |
 | Z36 | Lustro oceniającego | Z09, Z13, Z18 | gotowe | geoglof | `z36-lustro` |
-| Z42 | Przepisy w kontekście („ⓘ Dlaczego?”) | Z10, Z21 | w toku | geoglof | `z42-przepisy-w-kontekscie` |
-| Z43 | Tryb rozmowy | Z24, Z15 | wolne | | |
+| Z42 | Przepisy w kontekście („ⓘ Dlaczego?”) | Z10, Z21 | gotowe | geoglof | `z42-przepisy-w-kontekscie` |
+| Z43 | Tryb rozmowy | Z24, Z15 | w toku | bartektymochowicz-collab | `bartek/z43-tryb-rozmowy` |
 | Z34 | Pseudonimizacja przed LLM | Z20 | gotowe | geoglof | `z34-pseudonimizacja` |
 | Z35 | Dziennik audytu z eksportem CSV | Z14 | gotowe | geoglof | `z35-dziennik-audytu` |
 | Z37 | Oś czasu procesu pracownika | Z08 | gotowe | geoglof | `z37-os-czasu` |

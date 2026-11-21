@@ -5,6 +5,7 @@ import { CalendarRange, Check, Clock, MapPin, TriangleAlert } from "lucide-react
 import type { LucideIcon } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DeadlineBadge } from "@/components/ui/status-badge";
+import { Dlaczego } from "@/components/ui/dlaczego";
 import type { TimelineEntry } from "@/lib/dashboard/os-czasu";
 import { formatDatePl, formatRangePl } from "@/lib/rules/kalendarz";
 import { cn } from "@/lib/utils";
@@ -69,6 +70,7 @@ export function OsCzasuProcesu({ entries, className }: { entries: readonly Timel
                   <div className="flex flex-wrap items-center gap-2">
                     <h3 className="text-base font-semibold">{x.title}</h3>
                     {x.kind === "TERMIN" && x.daysLeft !== undefined && x.urgency && <DeadlineBadge daysLeft={x.daysLeft} urgency={x.urgency} />}
+                    {x.hint && <Dlaczego id={x.hint} />}
                   </div>
                   {x.detail && <p className="text-sm">{x.detail}</p>}
                   {x.legalBasis && <p className="text-xs text-muted-foreground">Podstawa: {x.legalBasis}</p>}

@@ -21,10 +21,12 @@ export interface InfoTipProps {
   href?: string;
   /** Tekst przycisku; domyślnie „Dlaczego?”. */
   label?: string;
+  /** Temat dla czytnika ekranu („Dlaczego? – kryteria dodatkowe”), gdy na stronie jest kilka przycisków „Dlaczego?” (Z42). */
+  topic?: string;
   className?: string;
 }
 
-export function InfoTip({ children, legalBasis, quote, href, label = "Dlaczego?", className }: InfoTipProps) {
+export function InfoTip({ children, legalBasis, quote, href, label = "Dlaczego?", topic, className }: InfoTipProps) {
   return (
     <Popover.Root>
       <Popover.Trigger
@@ -35,9 +37,11 @@ export function InfoTip({ children, legalBasis, quote, href, label = "Dlaczego?"
       >
         <Info className="size-4" aria-hidden />
         <span>{label}</span>
+        {topic && <span className="sr-only"> – {topic}</span>}
       </Popover.Trigger>
       <Popover.Portal>
         <Popover.Content
+          aria-label={topic ? `${label} – ${topic}` : label}
           side="bottom"
           align="start"
           sideOffset={6}
@@ -54,7 +58,7 @@ export function InfoTip({ children, legalBasis, quote, href, label = "Dlaczego?"
             )}
             {href && (
               <a href={href} target="_blank" rel="noreferrer" className="text-primary underline">
-                Zobacz źródło
+                Zobacz źródło<span className="sr-only"> (otwiera się w nowej karcie)</span>
               </a>
             )}
           </div>

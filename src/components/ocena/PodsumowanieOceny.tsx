@@ -6,10 +6,11 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Field, Input, Textarea } from "@/components/ui/field";
-import { InfoTip } from "@/components/ui/info-tip";
+import { Dlaczego } from "@/components/ui/dlaczego";
 import { Notice } from "@/components/ui/notice";
 import { WizardFooter } from "@/components/ui/wizard";
 import { WynikOceny } from "@/components/ocena/WynikOceny";
+import { AsystentJezyka } from "@/components/asystent/AsystentJezyka";
 import type { SummaryData } from "@/lib/ocena/dane-podsumowania";
 import { partThreeAvailable, summaryIssues, type SummaryForm, type SummaryIssue } from "@/lib/ocena/podsumowanie";
 import type { PeriodicScoreResult } from "@/lib/domain/types";
@@ -103,20 +104,22 @@ export function PodsumowanieOceny({ data, result }: { data: SummaryData; result:
             }
             required={result.justificationRequired}
             error={fieldError("justification")}
-            aside={<InfoTip legalBasis="§ 11 ust. 3 i 4">Uzasadnienie jest obowiązkowe przy ocenie negatywnej, przy pozytywnej – dobrowolne.</InfoTip>}
+            aside={<Dlaczego id="UZASADNIENIE" />}
           >
             <Textarea value={form.justification} onChange={(e) => update({ justification: e.target.value })} rows={5} />
           </Field>
+          <AsystentJezyka evaluationId={data.evaluationId} field="UZASADNIENIE" value={form.justification} onApply={(t) => update({ justification: t })} />
 
           <Field
             label="Wnioski do indywidualnego programu rozwoju zawodowego (IPRZ)"
             hint="Co pracownik ma rozwijać i jak: szkolenia, zadania rozwojowe, wsparcie przełożonego."
             required
             error={fieldError("developmentPlan")}
-            aside={<InfoTip legalBasis="§ 11 ust. 1 pkt 5">Wnioski do IPRZ wpisuje się do arkusza przy każdej ocenie.</InfoTip>}
+            aside={<Dlaczego id="IPRZ" />}
           >
             <Textarea value={form.developmentPlan} onChange={(e) => update({ developmentPlan: e.target.value })} rows={4} />
           </Field>
+          <AsystentJezyka evaluationId={data.evaluationId} field="IPRZ" value={form.developmentPlan} onApply={(t) => update({ developmentPlan: t })} />
         </CardContent>
       </Card>
 
@@ -124,9 +127,7 @@ export function PodsumowanieOceny({ data, result }: { data: SummaryData; result:
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             Część III – wniosek o kolejny stopień służbowy
-            <InfoTip legalBasis="§ 11 ust. 5, art. 89 ustawy">
-              Przy ocenie pozytywnej urzędnika służby cywilnej oceniający może złożyć umotywowany wniosek o przyznanie kolejnego stopnia służbowego.
-            </InfoTip>
+            <Dlaczego id="WNIOSEK_O_STOPIEN" />
           </CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
@@ -162,6 +163,12 @@ export function PodsumowanieOceny({ data, result }: { data: SummaryData; result:
                   <Field label="Uzasadnienie wniosku" required error={fieldError("promotion")}>
                     <Textarea value={form.promotionJustification} onChange={(e) => update({ promotionJustification: e.target.value })} rows={3} />
                   </Field>
+                  <AsystentJezyka
+                    evaluationId={data.evaluationId}
+                    field="WNIOSEK_O_STOPIEN"
+                    value={form.promotionJustification}
+                    onApply={(t) => update({ promotionJustification: t })}
+                  />
                 </>
               )}
             </>

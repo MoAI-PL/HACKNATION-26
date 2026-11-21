@@ -1,0 +1,141 @@
+{
+  "opis": "Treści „ⓘ Dlaczego?” (Z42): krótkie wyjaśnienie, jednostka redakcyjna i dosłowny cytat z bazy wiedzy (data/wiedza/fragmenty.json). Zgodność cytatów sprawdza test tests/ui/podpowiedzi.test.ts.",
+  "podpowiedzi": [
+    {
+      "id": "ARKUSZ",
+      "temat": "wybór arkusza",
+      "tekst": "Arkusz wynika ze stanowiska w OSP: B – gdy praca polega na bezpośrednim kierowaniu pracownikami, C – na pozostałych stanowiskach.",
+      "podstawa": "§ 3 ust. 3 i 4 rozporządzenia o ocenach okresowych",
+      "fragment": "ROZP_OKRESOWE:§3:ust.3",
+      "cytat": "Arkusz B, którego wzór jest określony w załączniku nr 3 do rozporządzenia, służy do sporządzenia oceny zatrudnionego na stanowisku, na którym praca polega na bezpośrednim kierowaniu pracownikami"
+    },
+    {
+      "id": "KRYTERIA_OBOWIAZKOWE",
+      "temat": "kryteria obowiązkowe",
+      "tekst": "Kryteria obowiązkowe wynikają z arkusza i nie można ich zmienić – po 5 w arkuszu B i w arkuszu C.",
+      "podstawa": "§ 4 ust. 2 i 3 rozporządzenia o ocenach okresowych",
+      "fragment": "ROZP_OKRESOWE:§4:ust.3",
+      "cytat": "ocenia się, stosując następujące kryteria obowiązkowe: 1) wykorzystywanie wiedzy i doskonalenie zawodowe; 2) rzetelność; 3) organizacja pracy i orientacja na osiąganie celów; 4) współpraca; 5) komunikacja."
+    },
+    {
+      "id": "KRYTERIA_DODATKOWE",
+      "temat": "kryteria dodatkowe",
+      "tekst": "Najwyżej 3 kryteria dodatkowe – najważniejsze dla obowiązków z OSP. Nie można wybrać kryterium, które już jest obowiązkowe.",
+      "podstawa": "§ 5 ust. 2 rozporządzenia o ocenach okresowych",
+      "fragment": "ROZP_OKRESOWE:§5:ust.2",
+      "cytat": "Oceniający może wybrać z wykazu kryteriów oceny nie więcej niż 3 kryteria dodatkowe, najistotniejsze ze względu na charakter obowiązków wynikających z opisu stanowiska pracy zajmowanego przez ocenianego."
+    },
+    {
+      "id": "ROZMOWA_ROZPOCZYNAJACA",
+      "temat": "rozmowa rozpoczynająca",
+      "tekst": "Na rozmowie rozpoczynającej omawiasz cztery tematy. Cele – tylko gdy to uzasadnione charakterem obowiązków.",
+      "podstawa": "§ 5 ust. 1 rozporządzenia o ocenach okresowych",
+      "fragment": "ROZP_OKRESOWE:§5:ust.1",
+      "cytat": "1) główne obowiązki wynikające z opisu stanowiska pracy zajmowanego przez ocenianego; 2) kryteria obowiązkowe i kryteria dodatkowe, jeżeli są wybierane przez oceniającego; 3) oczekiwania oceniającego co do sposobu spełniania kryteriów oceny przez ocenianego; 4) cele do osiągnięcia w okresie, w którym oceniany podlega ocenie, jeżeli ich określenie jest uzasadnione"
+    },
+    {
+      "id": "TERMIN_ROZMOWY_ROZPOCZYNAJACEJ",
+      "temat": "termin rozmowy rozpoczynającej",
+      "tekst": "Rozmowę rozpoczynającą i zapoznanie z kryteriami trzeba przeprowadzić w 30 dni od poprzedniej oceny (albo od zatrudnienia na czas nieokreślony), a po ocenie negatywnej – w 7 dni.",
+      "podstawa": "§ 7 rozporządzenia o ocenach okresowych",
+      "fragment": "ROZP_OKRESOWE:§7",
+      "cytat": "1) 30 dni od dnia sporządzenia na piśmie poprzedniej oceny lub od dnia zatrudnienia ocenianego na czas nieokreślony; 2) 7 dni od dnia sporządzenia na piśmie negatywnej oceny."
+    },
+    {
+      "id": "CZESC_I",
+      "temat": "część I arkusza",
+      "tekst": "Po rozmowie wpisujesz do części I kryteria dodatkowe i termin oceny, a oceniany potwierdza to podpisem.",
+      "podstawa": "§ 5 ust. 3 i § 6 ust. 2 rozporządzenia o ocenach okresowych",
+      "fragment": "ROZP_OKRESOWE:§6:ust.2",
+      "cytat": "Oceniany potwierdza podpisem przeprowadzenie z nim rozmowy, o której mowa w § 5 ust. 1, oraz zapoznanie się z kryteriami oceny i terminem sporządzenia oceny na piśmie."
+    },
+    {
+      "id": "NIEOBECNOSC",
+      "temat": "nieobecność a termin oceny",
+      "tekst": "Usprawiedliwiona nieobecność dłuższa niż miesiąc wydłuża termin oceny o czas tej nieobecności. O zmianie terminu zawiadamiasz ocenianego na piśmie.",
+      "podstawa": "art. 81 ust. 7 ustawy o służbie cywilnej, § 8 rozporządzenia o ocenach okresowych",
+      "fragment": "FAQ:nieobecnosc",
+      "cytat": "Usprawiedliwiona nieobecność ocenianego w pracy trwająca dłużej niż miesiąc wydłuża 24-miesięczny termin sporządzenia oceny o czas tej nieobecności."
+    },
+    {
+      "id": "ZMIANA_STANOWISKA",
+      "temat": "zmiana stanowiska",
+      "tekst": "Istotna zmiana obowiązków w ciągu 6 miesięcy od ustalenia kryteriów albo od ostatniej oceny – w 30 dni ustalasz kryteria od nowa; termin oceny się nie zmienia.",
+      "podstawa": "§ 9 ust. 1 rozporządzenia o ocenach okresowych",
+      "fragment": "ROZP_OKRESOWE:§9:ust.1",
+      "cytat": "w terminie 30 dni od zmiany stanowiska pracy ponownie dokonuje się czynności, o których mowa w § 5 i § 6; termin sporządzenia oceny nie ulega zmianie."
+    },
+    {
+      "id": "OCENA_CZASTKOWA",
+      "temat": "ocena cząstkowa a sugestia",
+      "tekst": "Sugestia to tylko podpowiedź z ocen wskaźników. Ocenę cząstkową każdego kryterium przyznajesz Ty – w skali 1, 3, 5, 7 albo 9 punktów.",
+      "podstawa": "§ 11 ust. 1 pkt 1 rozporządzenia o ocenach okresowych",
+      "fragment": "ROZP_OKRESOWE:§11:ust.1:1",
+      "cytat": "przyznaniu ocen cząstkowych odpowiednio do poziomu spełniania przez ocenianego każdego z kryteriów obowiązkowych i kryteriów dodatkowych, jeżeli zostały wybrane"
+    },
+    {
+      "id": "SKALA_OCEN",
+      "temat": "skala ocen",
+      "tekst": "Każda ocena cząstkowa to jeden z pięciu poziomów. Poziom ogólny to średnia ocen cząstkowych.",
+      "podstawa": "§ 11 ust. 1 pkt 1 i 2 rozporządzenia o ocenach okresowych",
+      "fragment": "ROZP_OKRESOWE:§11:ust.1:1",
+      "cytat": "a) znacznie poniżej oczekiwań – 1 punkt, b) poniżej oczekiwań – 3 punkty, c) na poziomie oczekiwań – 5 punktów, d) powyżej oczekiwań – 7 punktów, e) znacznie powyżej oczekiwań – 9 punktów"
+    },
+    {
+      "id": "WYNIK_OCENY",
+      "temat": "wynik oceny",
+      "tekst": "Ocena jest negatywna, gdy poziom ogólny jest poniżej oczekiwań albo gdy choć jedna ocena cząstkowa jest „znacznie poniżej oczekiwań” (1 pkt) – nawet przy dobrej średniej.",
+      "podstawa": "§ 11 ust. 1 pkt 3 i 4 rozporządzenia o ocenach okresowych",
+      "fragment": "ROZP_OKRESOWE:§11:ust.1:2",
+      "cytat": "4) przyznaniu oceny negatywnej – w przypadku ustalenia ogólnego poziomu spełniania kryteriów oceny na poziomie poniżej oczekiwań albo znacznie poniżej oczekiwań, a także w przypadku uzyskania przez ocenianego co najmniej jednej oceny cząstkowej na poziomie znacznie poniżej oczekiwań"
+    },
+    {
+      "id": "ROZMOWA_OCENIAJACA",
+      "temat": "rozmowa oceniająca",
+      "tekst": "Przed sporządzeniem oceny na piśmie przeprowadzasz rozmowę oceniającą: obowiązki i sposób ich realizacji, cele (jeśli były) i kierunki rozwoju.",
+      "podstawa": "§ 10 rozporządzenia o ocenach okresowych",
+      "fragment": "ROZP_OKRESOWE:§10",
+      "cytat": "Przed sporządzeniem oceny na piśmie oceniający przeprowadza z ocenianym rozmowę oceniającą"
+    },
+    {
+      "id": "UZASADNIENIE",
+      "temat": "uzasadnienie oceny",
+      "tekst": "Uzasadnienie jest obowiązkowe przy ocenie negatywnej, przy pozytywnej – dobrowolne.",
+      "podstawa": "§ 11 ust. 3 i 4 rozporządzenia o ocenach okresowych",
+      "fragment": "ROZP_OKRESOWE:§11:ust.3",
+      "cytat": "Oceniający sporządza uzasadnienie przyznanej oceny w przypadku przyznania oceny negatywnej."
+    },
+    {
+      "id": "IPRZ",
+      "temat": "wnioski do IPRZ",
+      "tekst": "Wnioski do indywidualnego programu rozwoju zawodowego wpisujesz przy każdej ocenie – pozytywnej i negatywnej.",
+      "podstawa": "§ 11 ust. 1 pkt 5 rozporządzenia o ocenach okresowych",
+      "fragment": "ROZP_OKRESOWE:§11:ust.1:2",
+      "cytat": "5) wpisaniu do arkusza wniosków dotyczących indywidualnego programu rozwoju zawodowego ocenianego."
+    },
+    {
+      "id": "WNIOSEK_O_STOPIEN",
+      "temat": "wniosek o stopień służbowy",
+      "tekst": "Tylko przy ocenie pozytywnej urzędnika służby cywilnej możesz dołączyć umotywowany wniosek o kolejny stopień służbowy (część III arkusza).",
+      "podstawa": "§ 11 ust. 5 rozporządzenia o ocenach okresowych",
+      "fragment": "ROZP_OKRESOWE:§11:ust.5",
+      "cytat": "W przypadku przyznania oceny pozytywnej ocenianemu będącemu urzędnikiem służby cywilnej oceniający może sporządzić umotywowany wniosek o przyznanie ocenianemu kolejnego stopnia służbowego, wypełniając część III arkusza."
+    },
+    {
+      "id": "ZAPOZNANIE",
+      "temat": "zapoznanie z oceną",
+      "tekst": "Z oceną zapoznajesz ocenianego niezwłocznie po jej sporządzeniu. Od tego dnia biegnie termin na sprzeciw.",
+      "podstawa": "§ 12 ust. 1 rozporządzenia o ocenach okresowych",
+      "fragment": "ROZP_OKRESOWE:§12:ust.1",
+      "cytat": "Oceniający niezwłocznie zapoznaje ocenianego z oceną sporządzoną na piśmie."
+    },
+    {
+      "id": "SPRZECIW",
+      "temat": "sprzeciw od oceny",
+      "tekst": "Oceniany ma 7 dni od zapoznania się z oceną na sprzeciw do dyrektora generalnego urzędu. Pouczenie jest w arkuszu.",
+      "podstawa": "art. 83 ust. 1 ustawy o służbie cywilnej (pouczenie w arkuszu – załącznik nr 4 do rozporządzenia)",
+      "fragment": "ROZP_OKRESOWE:zal4:4",
+      "cytat": "od oceny okresowej służy, w terminie 7 dni od dnia zapoznania się z oceną, sprzeciw do dyrektora generalnego urzędu."
+    }
+  ]
+}

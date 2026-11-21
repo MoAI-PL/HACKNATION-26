@@ -2,6 +2,7 @@ import * as React from "react";
 import { CalendarClock } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { InfoTip } from "@/components/ui/info-tip";
+import { Dlaczego } from "@/components/ui/dlaczego";
 import { COMPETENCY_NAMES, CRITERION_KIND_LABELS, SHEET_LABELS } from "@/lib/domain/slownik";
 import type { CompetencyCode, Deadline, IsoDate, Sheet } from "@/lib/domain/types";
 import { formatDatePl } from "@/lib/rules/kalendarz";
@@ -50,8 +51,9 @@ export function CzescIArkusza({
       </CardHeader>
       <CardContent className="flex flex-col gap-5">
         <section aria-labelledby="czesc-i-kryteria">
-          <h2 id="czesc-i-kryteria" className="mb-2 text-base font-semibold">
+          <h2 id="czesc-i-kryteria" className="mb-2 flex items-center gap-2 text-base font-semibold">
             Kryteria oceny
+            <Dlaczego id="CZESC_I" />
           </h2>
           <ol className="flex flex-col gap-2">
             {mandatory.map((c) => (
@@ -84,6 +86,7 @@ export function CzescIArkusza({
                 {dueExplanation.text}
               </InfoTip>
             )}
+            <Dlaczego id="NIEOBECNOSC" label="Co wydłuża termin?" />
           </h2>
           <p className="text-lg font-medium">{dueDate ? formatDatePl(dueDate) : "—"}</p>
         </section>

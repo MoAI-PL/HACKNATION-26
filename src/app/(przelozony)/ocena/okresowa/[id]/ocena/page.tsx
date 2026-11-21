@@ -10,6 +10,7 @@ import { ASSESSABLE, loadAssessment } from "@/lib/ocena/dane-oceny";
 import { formatDatePl } from "@/lib/rules/kalendarz";
 
 export const dynamic = "force-dynamic";
+export const metadata = { title: "Zakończ ocenę – Kompas Kompetencji" };
 
 export default async function ZakonczenieOcenyPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;

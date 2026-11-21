@@ -14,6 +14,7 @@ import { missingText } from "@/lib/ocena/podsumowanie";
 import { formatDatePl } from "@/lib/rules/kalendarz";
 
 export const dynamic = "force-dynamic";
+export const metadata = { title: "Podsumowanie oceny – Kompas Kompetencji" };
 
 export default async function PodsumowanieOcenyPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;

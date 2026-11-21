@@ -10,6 +10,7 @@ import { InfoTip } from "@/components/ui/info-tip";
 import { Notice } from "@/components/ui/notice";
 import { WizardFooter } from "@/components/ui/wizard";
 import { WynikOceny } from "@/components/ocena/WynikOceny";
+import { AsystentJezyka } from "@/components/asystent/AsystentJezyka";
 import type { SummaryData } from "@/lib/ocena/dane-podsumowania";
 import { partThreeAvailable, summaryIssues, type SummaryForm, type SummaryIssue } from "@/lib/ocena/podsumowanie";
 import type { PeriodicScoreResult } from "@/lib/domain/types";
@@ -107,6 +108,7 @@ export function PodsumowanieOceny({ data, result }: { data: SummaryData; result:
           >
             <Textarea value={form.justification} onChange={(e) => update({ justification: e.target.value })} rows={5} />
           </Field>
+          <AsystentJezyka evaluationId={data.evaluationId} field="UZASADNIENIE" value={form.justification} onApply={(t) => update({ justification: t })} />
 
           <Field
             label="Wnioski do indywidualnego programu rozwoju zawodowego (IPRZ)"
@@ -117,6 +119,7 @@ export function PodsumowanieOceny({ data, result }: { data: SummaryData; result:
           >
             <Textarea value={form.developmentPlan} onChange={(e) => update({ developmentPlan: e.target.value })} rows={4} />
           </Field>
+          <AsystentJezyka evaluationId={data.evaluationId} field="IPRZ" value={form.developmentPlan} onApply={(t) => update({ developmentPlan: t })} />
         </CardContent>
       </Card>
 
@@ -162,6 +165,12 @@ export function PodsumowanieOceny({ data, result }: { data: SummaryData; result:
                   <Field label="Uzasadnienie wniosku" required error={fieldError("promotion")}>
                     <Textarea value={form.promotionJustification} onChange={(e) => update({ promotionJustification: e.target.value })} rows={3} />
                   </Field>
+                  <AsystentJezyka
+                    evaluationId={data.evaluationId}
+                    field="WNIOSEK_O_STOPIEN"
+                    value={form.promotionJustification}
+                    onApply={(t) => update({ promotionJustification: t })}
+                  />
                 </>
               )}
             </>

@@ -103,6 +103,16 @@ Uwagi do pomiaru:
 
 **Wynik (21.11, `gemini-3.5-flash-lite`): 5/5** – właściwa osoba i sensowny wskaźnik dla każdego zdania, ok. 1 s na notatkę (np. „Kasia … poprowadziła spotkanie z DSI, mimo że strony się kłóciły” → Współpraca: dbanie o dobrą atmosferę i otwartość, „Piotrek … oddał raport po terminie i z błędami” → Rzetelność). Pierwsza wersja promptu przypinała spotkanie z innym departamentem do wystąpień publicznych; prompt każe teraz najpierw rozważać kompetencje obowiązkowe.
 
+## Asystent języka (Z40) – opis zachowania zamiast opisu osoby
+
+1. **Gdzie:** pod polami „Uzasadnienie oceny”, „Wnioski do IPRZ” i „Uzasadnienie wniosku” o stopień służbowy na ekranie podsumowania oceny (Z15).
+2. **Najpierw reguły, bez AI** (`src/lib/ai/jezyk/reguly.ts`, działają w przeglądarce po 0,9 s przerwy w pisaniu): oceny charakteru („jest leniwy”, „była niekomunikatywna”, także pochwały typu „pracowita”), etykiety („typ samotnika”, „ma problem z…”) i uogólnienia („zawsze”, „nigdy”). Pod polem pojawia się podpowiedź z przykładem opisu zachowania. Lista jest zachowawcza – lepiej przepuścić rzadkie sformułowanie niż oznaczać zdania o zachowaniu.
+3. **Potem model, na prośbę** („Przeformułuj z AI”): ten sam tekst jako opis zachowań i skutków w `<PropozycjaAI>` z przyciskiem „Zastosuj”. Model **nie dopisuje faktów** – gdzie brakuje konkretu, wstawia „[uzupełnij: kiedy i ile razy]”, a przełożony uzupełnia to sam.
+4. **Ochrona danych:** imiona i nazwiska ocenianego i zespołu są pseudonimizowane przed wysłaniem (ten sam mechanizm co w Z41).
+5. **Tekst to dane, nie polecenia;** odpowiedź JSON walidowana schematem, jedna ponowna próba; odpowiedź pusta albo nieproporcjonalnie długa jest odrzucana.
+6. **Bez AI** zostają podpowiedzi z reguł – nic nie blokuje sporządzenia oceny. Przycisk „Zostaw bez zmian” ukrywa podpowiedź.
+7. **Dostęp:** tylko przełożony prowadzący daną ocenę; limit 15 zapytań na minutę. „Zastosuj” i „Odrzuć” trafiają do dziennika decyzji (`logAiDecision`, funkcja `ASYSTENT_JEZYKA`).
+
 ## Gdzie przetwarzane są dane
 
 | Wariant | Gdzie trafia pytanie | Dane osobowe |

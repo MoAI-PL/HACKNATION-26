@@ -15,6 +15,8 @@ import { plural } from "@/lib/rules/tekst";
 import { loadSubordinate } from "@/lib/dashboard/dane";
 import { currentEvaluation, evaluationLink, fullName, journalLinks, openDeadlines } from "@/lib/dashboard/pulpit";
 import { Button } from "@/components/ui/button";
+import { OsCzasuProcesu } from "@/components/pulpit/OsCzasuProcesu";
+import { processTimeline } from "@/lib/dashboard/os-czasu";
 
 export const metadata: Metadata = { title: "Pracownik – Kompas Kompetencji" };
 export const dynamic = "force-dynamic";
@@ -87,7 +89,7 @@ export default async function PracownikPage({ params }: { params: Promise<{ id: 
                       <DeadlineBadge daysLeft={daysUntil(d, today)} urgency={deadlineUrgency(d, today)} />
                     </div>
                     <p className="text-lg">
-                      {d.earliest ? `od ${formatDatePl(d.earliest)} do ${formatDatePl(d.date)}` : `do ${formatDatePl(d.date)}`}
+                      {d.earliest && d.earliest !== d.date ? `od ${formatDatePl(d.earliest)} do ${formatDatePl(d.date)}` : `do ${formatDatePl(d.date)}`}
                     </p>
                     <p className="text-sm">{d.explanation.text}</p>
                     {d.extensions.length > 0 && (
@@ -186,6 +188,9 @@ export default async function PracownikPage({ params }: { params: Promise<{ id: 
           )}
         </div>
       </div>
+
+      {/* Z37: oś czasu procesu – historia i terminy prawne na jednej linii z „dziś”. */}
+      <OsCzasuProcesu entries={processTimeline(employee, today)} className="mt-6" />
     </>
   );
 }

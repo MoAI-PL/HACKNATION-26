@@ -9,6 +9,10 @@ Sprawdzenie całego drzewa zależności produkcyjnych:
 npx license-checker-rseidelsohn --production --summary
 ```
 
+**Wynik (21.11.2026, zależności produkcyjne z przechodnimi):** MIT 318 · Apache-2.0 18 · ISC 17 · BSD-3-Clause 8 · BSD-2-Clause 5 · BlueOak-1.0.0 3 · 0BSD 1 · MIT lub CC0-1.0 1 · CC-BY-4.0 1 (`caniuse-lite`) · Apache-2.0 + LGPL-3.0 1 (`@img/sharp-win32-x64`, opcjonalna) · UNLICENSED 1 (sam projekt). **Brak GPL i AGPL.** Obie uwagi – w tabeli na końcu.
+
+Prawa do kodu: zespół jest autorem całego kodu aplikacji; użyte biblioteki są wymienione poniżej wraz z licencjami. Materiały w `materialy/` pochodzą od organizatora zadania (Ministerstwo Cyfryzacji).
+
 ## Zależności bezpośrednie
 
 | Pakiet | Wersja | Licencja | Do czego |

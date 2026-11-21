@@ -13,9 +13,9 @@ Rozwiązanie zadania Ministerstwa Cyfryzacji (Biuro Dyrektora Generalnego) „Ko
 | Rola | E-mail | Hasło | Co zobaczyć |
 |---|---|---|---|
 | **Przełożona – Ewa Kowalczyk** | `ewa.kowalczyk@demo.kompas.test` | `Kompas2026!` | pulpit „Do zrobienia”, ocena okresowa, dziennik obserwacji, asystent |
-| HR / administrator | `hr@demo.kompas.test` | `Kompas2026!` | panel HR: terminy z wydłużeniami, przypomnienia, reset danych demo |
+| HR / administrator | `hr@demo.kompas.test` | `Kompas2026!` | panel HR: terminy z wydłużeniami, przypomnienia, Lustro ocen, dziennik decyzji z eksportem CSV, reset danych demo |
 | Oceniany – Jan Nowak | `jan.nowak@demo.kompas.test` | `Kompas2026!` | własne oceny i potwierdzenie zapoznania się; rola z najwęższymi uprawnieniami – próba wejścia na ekrany przełożonego albo do API wraca na własny ekran / 403 |
-| Kierujący komórką | `kierujacy@demo.kompas.test` | `Kompas2026!` | asystent formalny; rola do podpisu arkusza pierwszej oceny |
+| Kierujący komórką | `kierujacy@demo.kompas.test` | `Kompas2026!` | pierwsze oceny nowych pracowników komórki: etap, kalendarz terminów i jego rola (art. 38 ustawy); asystent formalny |
 
 Scenariusz krok po kroku dla jury (ok. 10 minut): **[`docs/DEMO.md`](docs/DEMO.md)**.
 
@@ -29,11 +29,16 @@ Scenariusz krok po kroku dla jury (ok. 10 minut): **[`docs/DEMO.md`](docs/DEMO.m
 | 📄 | **Opis stanowiska → arkusz** | wgranie OSP (.docx) – system odczytuje cel, zadania i liczbę podległych i sam wybiera arkusz B lub C z wyjaśnieniem (§ 3) |
 | ✨ | **Kryteria dodatkowe z OSP** | AI proponuje do 3 kryteriów z uzasadnieniem i **dosłownym cytatem zadania z OSP**; kod sprawdza listę, limit i cytat; przełożony wstawia albo odrzuca |
 | 📝 | **Dziennik obserwacji (SDR)** | notatki Sytuacja – Działanie – Rezultat przypięte do wskaźnika, przez cały okres oceny |
+| ⚡ | **Szybka notatka w 10 sekund** | klawisz `N` i jedno zdanie – AI proponuje pracownika, wskaźnik, SDR i poziom zachowania; imiona nie trafiają do modelu (pseudonimizacja); przełożony poprawia i zapisuje |
 | 🃏 | **Ocena przez wybór zachowania** | przy każdym wskaźniku 5 opisów zachowań z modelu MC (bez liczb) + „brak okazji do obserwacji”, obok notatki z dziennika; klawisze 1–5 |
 | 🧭 | **„Dlaczego ten poziom?”** | sugerowany poziom kryterium z rozkładem wyborów, wzorem i ostrzeżeniami; zmiana sugestii wymaga jednego zdania powodu – oba wpisy trafiają do dziennika decyzji |
 | ⚖️ | **Wynik zgodny z § 11** | średnia, poziom ogólny, wynik pozytywny/negatywny z wyjaśnieniem i podstawą prawną; uzasadnienie obowiązkowe przy ocenie negatywnej, IPRZ, część III, termin sprzeciwu |
 | 💬 | **Asystent formalny** | odpowiedzi tylko z 406 fragmentów przepisów i poradników, zawsze ze źródłem; uczciwa odmowa poza zakresem; **25/25 trafnych, 5/5 odmów** w zestawie testowym |
 | 🏛 | **Panel HR** | wszystkie oceny z terminami i wydłużeniami (np. „+44 dni: zwolnienie lekarskie”), przypomnienia, wzór zawiadomienia o zmianie terminu, ostrzeżenie z art. 71 |
+| 🪞 | **Lustro oceniającego** | łagodne sygnały typowych błędów oceniania przed sporządzeniem oceny (efekt świeżości, aureoli, poziom skrajny bez notatki); w panelu HR zanonimizowany rozkład ocen w komórkach (od 3 ocen) i odstający przełożeni |
+| 🧾 | **Dziennik decyzji** | każda propozycja AI obok decyzji człowieka, zmiany sugestii i arkusza, sporządzenie i zapoznanie – z filtrami i eksportem CSV (Excel, polskie znaki) |
+| 🧑‍💼 | **Kierujący komórką** | pierwsze oceny nowych pracowników komórki z kalendarzem terminów i opisem roli kierującego (porozumienie, rozmowa, podpis, wniosek do dyrektora generalnego) |
+| 🔌 | **REST API** | eksport oceny w JSON pod EZD i system kadrowy (`/api/v1/oceny/{id}`), lista ocen i pracowników z tymi samymi uprawnieniami co ekrany – [`docs/openapi.yaml`](docs/openapi.yaml) |
 | 👤 | **Moje oceny (oceniany)** | pracownik widzi kryteria i termin bieżącej oceny (część I arkusza), a po sporządzeniu – wynik z wyjaśnieniem, uzasadnienie, IPRZ i termin sprzeciwu; sam potwierdza zapoznanie się z oceną |
 | 🔐 | **Role i bezpieczeństwo** | przełożony, HR, oceniany, kierujący; autoryzacja w każdym API i akcji serwerowej (401/403), przełożony widzi wyłącznie swoich podwładnych |
 
@@ -88,8 +93,8 @@ Model AI jest opcjonalny: bez `LLM_BASE_URL` i `LLM_MODEL` aplikacja działa w t
 | Katarzyna Wójcik | radca (arkusz C) | ocena za kilka dni, 10 obserwacji w dzienniku – główna ścieżka oceny wskaźników |
 | Piotr Lewandowski | naczelnik wydziału (arkusz B) | okres oceny, kryteria dodatkowe z OSP |
 | Jan Nowak (konto ocenianego) | starszy specjalista (arkusz C) | L4 44 dni wydłuża termin; większość notatek z ostatniego miesiąca |
-| Marcin Wróbel | starszy specjalista (arkusz C) | po ocenie negatywnej – ponowna ocena po 6 miesiącach |
-| Aleksandra Mazur | starszy specjalista | nowa pracownica – pierwsza ocena, rozmowa wstępna w 21 dni |
+| Marcin Wróbel | starszy specjalista (arkusz C) | wcześniej ocena pozytywna, potem negatywna – ponowna ocena po 6 miesiącach |
+| Aleksandra Mazur | starszy specjalista | nowa pracownica – pierwsza ocena, rozmowa wstępna w 21 dni; widoczna też u kierującego komórką |
 | Marta Kamińska | radca (arkusz C) | zatrudniona na czas nieokreślony – ocena do rozpoczęcia od OSP |
 
 ### Skrypty

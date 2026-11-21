@@ -4,7 +4,7 @@ Adres: **https://hacknation-26.vercel.app** · wszystkie dane są fikcyjne · na
 
 Ścieżka pokrywa walidację z treści zadania: **rozpoczęcie procesu → praca z kryteriami i kompetencjami → ocena wskaźników behawioralnych → sugerowany poziom → ostateczna decyzja przełożonego**, a także pytania do asystenta AI.
 
-> Jeśli ktoś wcześniej zmienił dane, przywróć stan początkowy: zaloguj się jako **HR** i kliknij **„Resetuj dane”** w panelu HR (trwa ułamek sekundy).
+> Jeśli ktoś wcześniej zmienił dane, przywróć stan początkowy: zaloguj się jako **HR** i kliknij **„Resetuj dane demo”** w panelu HR (trwa ułamek sekundy).
 
 ## 1. Logowanie i pulpit (1 min)
 
@@ -29,6 +29,7 @@ Adres: **https://hacknation-26.vercel.app** · wszystkie dane są fikcyjne · na
 1. Menu **Dziennik obserwacji** – oś czasu notatek **Sytuacja – Działanie – Rezultat** dla podwładnych Ewy, filtry: osoba, kompetencja, okres.
 2. Widok **„Według wskaźników”** – notatki przypięte do wskaźników modelu kompetencji.
 3. **„Dodaj obserwację”** – nowa notatka z datą i wskaźnikiem.
+4. **Szybka notatka:** naciśnij **N** (albo „Notatka” w nagłówku) i wpisz jedno zdanie, np. „Kasia świetnie wyjaśniła przedsiębiorcy nowe przepisy”. AI proponuje pracownika, wskaźnik, Sytuację – Działanie – Rezultat i poziom zachowania; imiona nie trafiają do modelu. Popraw, co chcesz, i zapisz – decyzja trafia do dziennika decyzji.
 
 ## 4. Ocena wskaźników, sugestia i decyzja (3 min) – serce rozwiązania
 
@@ -37,7 +38,7 @@ Adres: **https://hacknation-26.vercel.app** · wszystkie dane są fikcyjne · na
 3. Przy każdym wskaźniku **5 kart z opisami zachowań** z modelu kompetencji MC – **bez punktów** – oraz „brak okazji do obserwacji”. Obok notatki z dziennika dotyczące tego wskaźnika. Wybór myszą albo klawiszami **1–5**, **0** = brak obserwacji, **← →** = poprzedni / następny wskaźnik. **„Jak oceniać?”** – wskazówki z modelu.
 4. Po ocenie wskaźników kryterium pojawia się **sugerowany poziom** (np. „Komunikacja – 7 pkt”) i panel **„Dlaczego ten poziom?”**: rozkład wybranych zachowań, wzór, notatki, ostrzeżenia (np. poziom skrajny bez notatki, mało obserwacji).
 5. **Zmień decyzję na inną niż sugestia** – system wymaga jednego zdania powodu. Sugestia i decyzja trafiają do dziennika decyzji.
-6. **Krok 8 – Przegląd ocen** – wszystkie oceny cząstkowe; potem **podsumowanie**: średnia, poziom ogólny i **wynik z wyjaśnieniem i podstawą prawną** (§ 11). Wypróbuj ocenę negatywną (np. jedno kryterium „znacznie poniżej oczekiwań”) – nie da się jej zamknąć bez uzasadnienia; podsumowanie pokazuje też wnioski do IPRZ, część III (dla urzędnika) i termin sprzeciwu.
+6. **Krok 8 – Przegląd ocen** – wszystkie oceny cząstkowe i **Lustro oceniającego** (łagodne sygnały, np. większość notatek z ostatniego miesiąca – efekt świeżości; nie blokują oceny); potem **podsumowanie**: średnia, poziom ogólny i **wynik z wyjaśnieniem i podstawą prawną** (§ 11). Wypróbuj ocenę negatywną (np. jedno kryterium „znacznie poniżej oczekiwań”) – nie da się jej zamknąć bez uzasadnienia; podsumowanie pokazuje też wnioski do IPRZ, część III (dla urzędnika) i termin sprzeciwu.
 
 ## 5. Asystent formalny (2 min)
 
@@ -59,11 +60,14 @@ Każde źródło można rozwinąć – widać cytat i miejsce w dokumencie (para
 2. Tabela wszystkich ocen z filtrami (etap, termin, komórka). Przy **Janie Nowaku** termin wydłużony: **„+44 dni: zwolnienie lekarskie …”**, a krótszy urlop bezpłatny (20 dni) – zgodnie z art. 81 ust. 7 – terminu nie wydłuża. „Dlaczego ten termin?” pokazuje wyliczenie z podstawą prawną.
 3. Przy Marcinie Wróblu – ponowna ocena po ocenie negatywnej (art. 81 ust. 9).
 4. **Przypomnienia** – podgląd treści i „Wyślij” (symulacja z wpisem w dzienniku zdarzeń); **wzór zawiadomienia o zmianie terminu** (§ 8) do druku.
+5. Menu **Lustro ocen** – rozkład sporządzonych ocen w komórce bez nazwisk (od 3 ocen, żeby nie dało się rozpoznać osób) i sygnał, gdy któryś przełożony wyraźnie odstaje od średniej.
+6. Menu **Dziennik decyzji** – propozycje AI obok decyzji człowieka, zmiany sugestii z powodem, sporządzenie i zapoznanie się z oceną; **„Pobierz CSV”** otwiera się w Excelu z polskimi znakami.
 
-## 7. Uprawnienia (30 s)
+## 7. Pozostałe role i uprawnienia (1 min)
 
 1. Wyloguj → **„Zaloguj jako Jan Nowak”** (oceniany) – trafia na **„Moje oceny”**: bieżąca ocena pokazuje tylko kryteria z uzasadnieniem wyboru i termin (bez roboczych punktów przełożonego), zakończona – pełny wynik z wyjaśnieniem.
-2. Próba wejścia na `/pulpit`, `/hr` albo `/asystent` przenosi z powrotem na własny ekran; wywołanie API `/api/v1/pracownicy` zwraca **403**, a bez zalogowania – **401**.
+2. Próba wejścia na `/pulpit`, `/hr` albo `/asystent` przenosi z powrotem na własny ekran; wywołanie API `/api/v1/pracownicy` zwraca **403**, a bez zalogowania – **401**. Adres cudzej oceny daje stronę „Nie znaleziono strony” – bez ujawniania, że taka ocena istnieje.
+3. Wyloguj → **„Zaloguj jako Tomasz Wiśniewski”** (kierujący komórką) – **pierwsze oceny** nowych pracowników komórki (Aleksandra Mazur): etap, najbliższy termin, kalendarz pierwszej oceny i opis roli kierującego z podstawą prawną.
 
 ## Dla ciekawych
 

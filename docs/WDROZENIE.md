@@ -1,42 +1,47 @@
 # Publiczne demo – wdrożenie (Z29)
 
-Demo: **Vercel** (aplikacja Next.js, darmowy plan Hobby) + **Neon** (PostgreSQL, darmowy plan). Obie usługi mają serwery w UE (Frankfurt). Na demo są wyłącznie dane fikcyjne.
+Demo: **Vercel** (aplikacja Next.js, darmowy plan Hobby, logowanie kontem GitHub, bez karty płatniczej) + **Neon** (PostgreSQL, darmowy plan, podłączany jednym kliknięciem z poziomu Vercela). Na demo są wyłącznie dane fikcyjne.
 
 ## Jak to działa
 
 - `vercel.json` ustawia build na `node scripts/build-produkcja.mjs`.
-- **Wdrożenie produkcyjne** (gałąź `main`): `prisma migrate deploy` → `npm run seed` (konta i dane demo odtworzone od nowa, daty liczone od dnia wdrożenia) → `next build`.
+- **Wdrożenie produkcyjne** (gałąź `main`): `prisma migrate deploy` → `npm run seed` (konta i dane demo od nowa, daty liczone od dnia wdrożenia) → `next build`. Migracje i seed idą połączeniem bezpośrednim (`DATABASE_URL_UNPOOLED` z integracji Neon), aplikacja – pulą połączeń (`DATABASE_URL`).
 - **Wdrożenia podglądowe** (inne gałęzie): tylko `next build` – nie zmieniają bazy demo.
-- Każde wdrożenie `main` przywraca dane demo do stanu początkowego. Wyłączenie: `SEED_ON_DEPLOY=false`.
+- `DEMO_MODE="true"` jest w `.env.production` (to nie sekret). Każde wdrożenie `main` przywraca dane demo do stanu początkowego; wyłączenie: zmienna `SEED_ON_DEPLOY=false`.
 
-## Krok po kroku (ok. 15 minut, robi osoba z dostępem do repozytorium)
+## Krok po kroku (ok. 10 minut)
 
-### 1. Baza danych – Neon
-1. Załóż konto na neon.tech i utwórz projekt (region: **AWS Europe Central 1 / Frankfurt**).
-2. W „Connection details” wyłącz **Connection pooling** i skopiuj adres połączenia (`postgresql://…?sslmode=require`). To będzie `DATABASE_URL`.
+### 1. Projekt w Vercelu
+1. Wejdź na vercel.com → **Sign Up** → **Continue with GitHub** (plan Hobby).
+2. **Add New… → Project** → przy repozytorium `MoAI-PL/HACKNATION-26` kliknij **Import** (jeśli go nie widać: „Adjust GitHub App Permissions” i dodaj organizację MoAI-PL albo samo repozytorium).
+3. Kliknij **Deploy**. Pierwsze wdrożenie **zakończy się błędem „Brak DATABASE_URL”** – to oczekiwane, baza dochodzi w kroku 2.
 
-### 2. Aplikacja – Vercel
-1. Zaloguj się na vercel.com kontem GitHub.
-2. **Add New → Project → Import** repozytorium `MoAI-PL/HACKNATION-26` (repozytorium jest publiczne). Framework: Next.js – ustawienia buildu zostaw domyślne (nadpisuje je `vercel.json`).
-3. W **Environment Variables** dodaj (dla środowiska *Production*):
+### 2. Baza danych – Neon z poziomu Vercela
+1. W projekcie: zakładka **Storage** → **Create Database** → **Neon** (Serverless Postgres) → Continue.
+2. Region: **Frankfurt (eu-central-1)**, plan **Free** → zaakceptuj → **Create**.
+3. **Connect Project** → wybierz ten projekt, środowiska: Production (i Preview). Vercel sam doda zmienne `DATABASE_URL` i `DATABASE_URL_UNPOOLED` – niczego nie kopiujesz.
 
-   | Zmienna | Wartość |
-   |---|---|
-   | `DATABASE_URL` | adres z Neon (krok 1.2) |
-   | `AUTH_SECRET` | losowy ciąg – wygeneruj lokalnie: `npx auth secret` |
-   | `DEMO_MODE` | `true` |
-   | `LLM_BASE_URL`, `LLM_MODEL`, `LLM_API_KEY` | opcjonalnie – darmowy dostawca zgodny z API OpenAI (przykłady w `.env.example`); bez nich asystent działa w trybie bez AI |
+### 3. Sekret logowania
+1. Na swoim komputerze w PowerShell wygeneruj losowy sekret i skopiuj go do schowka (nie pojawia się na ekranie):
+   ```powershell
+   [Convert]::ToBase64String((1..32 | ForEach-Object { Get-Random -Maximum 256 })) | Set-Clipboard
+   ```
+2. W projekcie: **Settings → Environment Variables** → Key: `AUTH_SECRET`, Value: wklej (Ctrl+V), środowisko: Production → **Save**.
+3. Opcjonalnie: `LLM_BASE_URL`, `LLM_MODEL`, `LLM_API_KEY` (darmowy dostawca zgodny z API OpenAI – przykłady w `.env.example`). Bez nich asystent działa w trybie bez AI.
 
-4. **Deploy.** W logu buildu powinny być linie `All migrations have been successfully applied` i `Seed: dane demo na dzień …`.
+### 4. Wdrożenie
+**Deployments** → ostatnie wdrożenie → **⋯ → Redeploy**. W logu powinny być `All migrations have been successfully applied` i `Seed: dane demo na dzień …`. Adres demo: `https://<nazwa-projektu>.vercel.app`.
 
-### 3. Sprawdzenie (w oknie prywatnym przeglądarki)
-- adres `https://<projekt>.vercel.app` przekierowuje na `/logowanie` z kartami kont demo;
+## Sprawdzenie (w oknie prywatnym przeglądarki)
+- adres główny przekierowuje na `/logowanie` z kartami kont demo;
 - „Zaloguj jako Ewa Kowalczyk” → pulpit; `/asystent` odpowiada ze źródłami;
 - „Zaloguj jako Jan Nowak” → `/moje-oceny`; `/api/asystent/formalny` zwraca 403;
 - `/api/v1/status` zwraca `{"status":"ok"}`.
 
 Adres demo wpisz do README i do zgłoszenia w HackTribe.
 
-## Plan awaryjny
-
-Jeśli Vercel albo Neon zawiodą: laptop z `npm run build && npm start` i publiczny tunel (np. Cloudflare Tunnel). Wymaga laptopa włączonego do końca oceny – tylko w ostateczności.
+## Zasady bezpieczne dla demo
+- Wdrażamy wcześnie i sprawdzamy po każdym wdrożeniu `main`.
+- Po wysłaniu zgłoszenia – żadnych pushy (demo się nie zmieni i nie zresetuje).
+- Zapas: film z przejściem ścieżki i zrzuty ekranu w zgłoszeniu.
+- Plan awaryjny: laptop z `npm run build && npm start` i publiczny tunel – tylko w ostateczności (laptop musi być włączony do końca oceny).

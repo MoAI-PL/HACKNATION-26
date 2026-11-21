@@ -244,7 +244,8 @@ export function scoreFirstEval(input: FirstEvalInput, r: Rules = defaultRules): 
   const result = failures.length === 0 ? "POZYTYWNA" : "NEGATYWNA";
   if (result === "POZYTYWNA") {
     explanations.push({
-      text: "Ocena jest pozytywna, bo spełnione są łącznie wszystkie warunki: egzamin, sprawozdanie w terminie, najwyżej jedna ocena za 3 pkt i ocena łączna co najmniej 5 pkt.",
+      // Progi z parametrów – tekst zgadza się z wynikiem także po zmianie przepisów w panelu HR.
+      text: `Ocena jest pozytywna, bo spełnione są łącznie wszystkie warunki: egzamin, sprawozdanie w terminie, najwyżej ${partialScoresCount(fe.maxScoresAtMinimum)} za ${pts(minPoints)} i ocena łączna co najmniej ${formatPoints(fe.minAverage)} pkt.`,
       legalBasis: lb.positive,
     });
     explanations.push({ text: "Uzasadnienie oceny pozytywnej jest nieobowiązkowe.", legalBasis: LB_FIRST_EVAL_OPTIONAL_JUSTIFICATION });

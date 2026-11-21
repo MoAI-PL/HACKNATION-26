@@ -2,13 +2,24 @@
 
 import { z } from "zod";
 
+/** Pusta wartość w .env (np. LLM_TIMEOUT_MS="") = brak ustawienia. */
+const optionalText = z.preprocess((v) => (typeof v === "string" && v.trim() === "" ? undefined : v), z.string().trim().optional());
+const optionalPositiveInt = z.preprocess(
+  (v) => (typeof v === "string" && v.trim() === "" ? undefined : v),
+  z.coerce.number().int().positive().optional(),
+);
+
 const envSchema = z.object({
-  LLM_BASE_URL: z.string().trim().optional(),
-  LLM_MODEL: z.string().trim().optional(),
-  LLM_API_KEY: z.string().trim().optional(),
-  LLM_EMBED_MODEL: z.string().trim().optional(),
-  // Pusta wartość z .env.example (LLM_TIMEOUT_MS="") = brak ustawienia, a nie 0.
-  LLM_TIMEOUT_MS: z.preprocess((v) => (typeof v === "string" && v.trim() === "" ? undefined : v), z.coerce.number().int().positive().optional()),
+  LLM_BASE_URL: optionalText,
+  LLM_MODEL: optionalText,
+  LLM_API_KEY: optionalText,
+  LLM_EMBED_MODEL: optionalText,
+  LLM_TIMEOUT_MS: optionalPositiveInt,
+  /**
+   * Opcjonalny parametr `reasoning_effort` (API zgodne z OpenAI). Modele „myślące” (np. Gemini 2.5+)
+   * odpowiadają znacznie szybciej przy wartości "low" albo "none". Wysyłany tylko, gdy ustawiony.
+   */
+  LLM_REASONING_EFFORT: optionalText,
 });
 
 export interface LLMConfig {
@@ -17,6 +28,7 @@ export interface LLMConfig {
   apiKey?: string;
   embedModel?: string;
   timeoutMs: number;
+  reasoningEffort?: string;
 }
 
 export const DEFAULT_TIMEOUT_MS = 30_000;
@@ -28,8 +40,9 @@ export function readLLMConfig(env: Record<string, string | undefined> = process.
   return {
     baseUrl: e.LLM_BASE_URL.replace(/\/+$/, ""),
     model: e.LLM_MODEL,
-    apiKey: e.LLM_API_KEY || undefined,
-    embedModel: e.LLM_EMBED_MODEL || undefined,
+    apiKey: e.LLM_API_KEY,
+    embedModel: e.LLM_EMBED_MODEL,
     timeoutMs: e.LLM_TIMEOUT_MS ?? DEFAULT_TIMEOUT_MS,
+    ...(e.LLM_REASONING_EFFORT ? { reasoningEffort: e.LLM_REASONING_EFFORT } : {}),
   };
 }

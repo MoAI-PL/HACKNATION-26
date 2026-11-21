@@ -27,10 +27,23 @@ describe("konfiguracja modelu z .env", () => {
     });
   });
 
-  it("puste wartości z .env.example oznaczają brak ustawienia (domyślny limit czasu)", () => {
-    const env = { LLM_BASE_URL: "", LLM_MODEL: "", LLM_API_KEY: "", LLM_EMBED_MODEL: "", LLM_TIMEOUT_MS: "" };
-    expect(readLLMConfig(env)).toBeNull();
-    expect(readLLMConfig({ ...env, LLM_BASE_URL: "http://x/v1", LLM_MODEL: "m" })?.timeoutMs).toBe(30_000);
+  it("puste wartości w .env (np. z .env.example) traktuje jak brak ustawienia", () => {
+    const c = readLLMConfig({ LLM_BASE_URL: "http://x/v1", LLM_MODEL: "m", LLM_API_KEY: "", LLM_TIMEOUT_MS: "", LLM_REASONING_EFFORT: "" })!;
+    expect(c.timeoutMs).toBe(30_000);
+    expect(c.apiKey).toBeUndefined();
+    expect(c.reasoningEffort).toBeUndefined();
+  });
+
+  it("reasoning_effort wysyłany tylko, gdy ustawiony w .env", async () => {
+    const bodies: Record<string, unknown>[] = [];
+    const fetchMock = (async (_u: string, init: RequestInit) => {
+      bodies.push(JSON.parse(init.body as string));
+      return odpowiedz("ok");
+    }) as unknown as typeof fetch;
+    await new OpenAICompatibleProvider(config, fetchMock).chat([]);
+    await new OpenAICompatibleProvider({ ...config, reasoningEffort: "low" }, fetchMock).chat([]);
+    expect(bodies[0]).not.toHaveProperty("reasoning_effort");
+    expect(bodies[1]).toMatchObject({ reasoning_effort: "low" });
   });
 
   it("zmiana modelu w .env daje nowego dostawcę bez zmian w kodzie", () => {

@@ -3,6 +3,7 @@
 
 import type { LLMConfig } from "./config";
 import { LLMError, type ChatMessage, type ChatOptions, type ChatResult, type LLMProvider } from "./types";
+import { redactIdentifiers } from "@/lib/ai/pseudonimizacja";
 
 interface CompletionResponse {
   model?: string;
@@ -38,7 +39,8 @@ export class OpenAICompatibleProvider implements LLMProvider {
         },
         body: JSON.stringify({
           model: this.config.model,
-          messages,
+          // Z34: ostatnia linia obrony – e-mail, PESEL, telefon, numer konta i dowodu nie wychodzą do modelu w żadnej funkcji.
+          messages: messages.map((m) => ({ ...m, content: redactIdentifiers(m.content) })),
           temperature: options.temperature ?? 0.1,
           ...(options.maxTokens ? { max_tokens: options.maxTokens } : {}),
           ...(options.json ? { response_format: { type: "json_object" } } : {}),

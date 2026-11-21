@@ -76,7 +76,7 @@ describe("przeformułowanie przez model", () => {
     expect(r.issues.map((i) => i.phrase)).toEqual(["jest leniwy", "zawsze"]);
     const sent = JSON.stringify(llm.prompts);
     expect(sent).not.toMatch(/Jan|Nowak/);
-    expect(r.sentText).toBe("[OSOBA_1] [OSOBA_1] jest leniwy i zawsze się spóźnia z raportami.");
+    expect(r.sentText).toBe("[OSOBA_1] jest leniwy i zawsze się spóźnia z raportami.");
   });
 
   it("tekst to dane: znaczniki zneutralizowane, prompt zabrania dopisywania faktów", async () => {

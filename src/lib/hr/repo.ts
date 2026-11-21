@@ -41,10 +41,11 @@ const iso = (d: Date | null) => (d ? fromDbDate(d) : null);
 /**
  * Oceny z danymi do terminów; historia wyników liczona w pamięci (dane jednego urzędu są małe).
  * `employeeIds` – tylko oceny tych pracowników (np. podwładnych przełożonego w asystencie rozmowy, Z24).
+ * `where` – dodatkowy warunek (np. pierwsze oceny w komórce kierującego). Bez filtrów – wszystkie oceny (HR).
  */
-export async function listHrRecords(filter: { employeeIds?: string[] } = {}): Promise<HrEvaluationRecord[]> {
+export async function listHrRecords(filter: { employeeIds?: string[]; where?: Prisma.EvaluationWhereInput } = {}): Promise<HrEvaluationRecord[]> {
   const rows: Row[] = await prisma.evaluation.findMany({
-    where: filter.employeeIds ? { employeeId: { in: filter.employeeIds } } : {},
+    where: { AND: [filter.employeeIds ? { employeeId: { in: filter.employeeIds } } : {}, filter.where ?? {}] },
     select: evaluationSelect,
     orderBy: { createdAt: "desc" },
   });

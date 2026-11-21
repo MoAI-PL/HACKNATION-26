@@ -28,7 +28,8 @@ export async function acknowledgeOwnEvaluation(evaluationId: string): Promise<Ow
   const problem = acknowledgmentIssue(today, fromDbDate(ev.evaluatedAt), today);
   if (problem) return { ok: false, error: problem };
 
-  await prisma.$transaction((tx) => applyAcknowledgment(tx, ev, today, user.id, "OCENIANY"));
+  const applied = await prisma.$transaction((tx) => applyAcknowledgment(tx, ev, today, user.id, "OCENIANY"));
+  if (!applied) return { ok: false, error: "Zapoznanie się z tą oceną jest już potwierdzone. Odśwież stronę." };
   revalidatePath("/moje-oceny");
   revalidatePath(`/moje-oceny/${ev.id}`);
   revalidatePath("/ocena/okresowa");

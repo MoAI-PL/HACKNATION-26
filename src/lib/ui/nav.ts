@@ -60,7 +60,10 @@ const NAV_BY_ROLE: Record<Role, NavItem[]> = {
     },
   ],
   // Asystent formalny leży we wspólnej grupie (wspolne) – dostęp jak obszar „/asystent” w role.ts.
-  KIERUJACY_KOMORKA: [{ href: "/kierujacy", label: "Arkusze do podpisu", icon: "podpis" }, ASYSTENT_FORMALNY],
+  KIERUJACY_KOMORKA: [
+    { href: "/kierujacy", label: "Pierwsze oceny", icon: "podpis", description: "Nowi pracownicy komórki i terminy pierwszej oceny" },
+    ASYSTENT_FORMALNY,
+  ],
   HR: [
     { href: "/hr", label: "Panel HR", icon: "hr", description: "Oceny, terminy, przypomnienia" },
     { href: "/hr/lustro", label: "Lustro ocen", icon: "hr", description: "Rozkład ocen w komórkach (Z36)" },

@@ -16,9 +16,9 @@ Ocena okresowa to dane osobowe pracownika (ocena jego pracy, nieobecności, uzas
 | Rola | Dostęp |
 |---|---|
 | Przełożony | wyłącznie **swoi podwładni**: pulpit, oceny, dziennik obserwacji, asystent |
-| HR / administrator | panel HR (wszystkie oceny, terminy, przypomnienia, reset danych demo), asystent |
+| HR / administrator | panel HR (wszystkie oceny, terminy, przypomnienia, Lustro ocen bez nazwisk ocenianych, dziennik decyzji z eksportem CSV, reset danych demo), asystent |
 | Oceniany | tylko własne oceny (zapytania ograniczone do pracownika powiązanego z kontem – cudza ocena daje 404); przed sporządzeniem oceny widzi tylko część I arkusza; potwierdza zapoznanie się wyłącznie z własną oceną czekającą na zapoznanie; brak dostępu do ekranów i API innych ról |
-| Kierujący komórką | asystent; rola przygotowana do podpisu arkusza pierwszej oceny |
+| Kierujący komórką | podgląd pierwszych ocen pracowników **swojej** komórki (`Employee.unitHeadId`), bez możliwości zmiany oceny; asystent |
 
 **Trzy warstwy ochrony** – ukrycie przycisku nie jest zabezpieczeniem:
 
@@ -29,6 +29,8 @@ Ocena okresowa to dane osobowe pracownika (ocena jego pracy, nieobecności, uzas
 Sprawdzone testami (`tests/auth/`, testy akcji ekranów) i ręcznie na demo: oceniany wywołujący API asystenta lub listy pracowników dostaje 403, wywołanie bez sesji – 401.
 
 ## Walidacja danych wejściowych
+
+- **Zmiany etapu oceny są warunkowe w samym zapisie** (zatwierdzenie części I, sporządzenie oceny, zapoznanie się): `updateMany` z warunkiem na bieżący etap w transakcji. Podwójne kliknięcie albo równoczesne potwierdzenie przez przełożonego i ocenianego zapisuje zmianę raz – bez drugiej rozmowy, drugiej oceny na kolejny okres czy zdublowanego wpisu w dzienniku (test na PostgreSQL: `tests/db/zapoznanie.test.ts`).
 
 - **zod** na wejściu każdego endpointu i każdej akcji serwerowej (pytania do asystenta: 3–500 znaków; oceny wskaźników tylko 1–5 albo „brak obserwacji”; decyzja przełożonego tylko ze skali; uzasadnienie wymagane, gdy przepis tego wymaga).
 - **Pliki od użytkownika** (OSP .docx, model kompetencji .xlsx): limit rozmiaru (OSP do 5 MB, do 50 MB po rozpakowaniu), odrzucenie XML z `DOCTYPE` (ochrona przed atakami XXE i „bombami” XML), odczyt tylko części dokumentu wskazanych w jego relacjach.
@@ -57,6 +59,8 @@ Sprawdzone testami (`tests/auth/`, testy akcji ekranów) i ręcznie na demo: oce
 
 ## Zależności
 
+- `npm audit` (21.11.2026): zgłoszenia dotyczą narzędzi budowania i CLI, nie kodu wykonywanego przez aplikację na serwerze (PostCSS wbudowany w Next.js przetwarza wyłącznie nasz własny CSS, CLI Prisma i shadcn działają tylko u programisty). Poprawki wymagają większych wersji (Next 16, Prisma 7) – do wykonania przed wdrożeniem produkcyjnym.
+
 - Wyłącznie licencje permisywne, bez GPL/AGPL ([`LICENCJE.md`](LICENCJE.md)).
 - Import xlsx i docx własnym czytnikiem zamiast bibliotek ze znanymi podatnościami (uzasadnienie w [`ARCHITEKTURA.md`](ARCHITEKTURA.md)).
 
@@ -64,7 +68,7 @@ Sprawdzone testami (`tests/auth/`, testy akcji ekranów) i ręcznie na demo: oce
 
 - logowanie przez katalog urzędu (SSO / Active Directory / login.gov.pl) zamiast haseł w aplikacji; uwierzytelnianie wieloskładnikowe dla HR;
 - `DEMO_MODE=false`, rotacja `AUTH_SECRET`, usunięcie kont demo;
-- model AI lokalny w infrastrukturze urzędu; przy modelu zewnętrznym – umowa powierzenia i pseudonimizacja;
+- model AI lokalny w infrastrukturze urzędu; przy modelu zewnętrznym – umowa powierzenia (pseudonimizacja tekstu przed modelem już działa – Z34, [`AI.md`](AI.md));
 - nagłówki bezpieczeństwa (CSP, HSTS) na reverse proxy, limit zapytań we współdzielonym magazynie (np. Redis);
 - polityka retencji danych ocen zgodna z przepisami o aktach osobowych, kopie zapasowe bazy, monitoring i alerty;
 - test penetracyjny i przegląd uprawnień przez inspektora ochrony danych; rejestr czynności przetwarzania (RODO).

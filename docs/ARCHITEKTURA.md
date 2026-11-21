@@ -230,7 +230,7 @@ Przełożony widzi wyłącznie swoich podwładnych: zapytania filtrujemy po `sup
 ## Szybka notatka (Z41)
 
 - Okno `src/components/asystent/SzybkaNotatka.tsx`, montowane w `AppShell` dla przełożonego (`FEATURES.quickNote`), otwierane skrótem `N` i przyciskiem „Notatka” (zdarzenie `SHORTCUT_EVENTS.quickNote`).
-- Logika: `src/lib/ai/funkcje/szybka-notatka.ts` – pseudonimizacja (`pseudonymize`, `restoreNames`), propozycja (`proposeQuickNote`, z modelem i bez), walidacja zapisu (`validateQuickNote`; bez wskaźnika i SDR notatka też się zapisze – do przypięcia).
+- Logika: `src/lib/ai/funkcje/szybka-notatka.ts` – pseudonimizacja (`pseudonymize`, `restoreNames` ze wspólnego modułu `src/lib/ai/pseudonimizacja.ts`, Z34), propozycja (`proposeQuickNote`, z modelem i bez), walidacja zapisu (`validateQuickNote`; bez wskaźnika i SDR notatka też się zapisze – do przypięcia).
 - Akcje serwerowe: `src/lib/obserwacje/szybka-notatka.ts` – tylko rola przełożonego i tylko własni podwładni; zapis do `Observation` (`originalText`, źródło `SZYBKA_AI` albo `RECZNA`) i decyzji AI do `AuditLog`.
 - Szybka notatka (Z41) zapisze obserwację z `source = SZYBKA_AI` i `originalText`; dziennik już ją pokazuje (odznaka „Szybka notatka”, sekcja „Nieprzypięte do wskaźnika”).
 
@@ -264,8 +264,35 @@ Przełożony widzi wyłącznie swoich podwładnych: zapytania filtrujemy po `sup
 - `src/lib/dashboard/dane.ts` – odczyt z bazy, wyłącznie podwładni zalogowanego przełożonego (`Employee.supervisorId`); cudzy pracownik = 404.
 - `src/lib/dashboard/actions.ts` – szybkie dodanie pracownika (zod, rola sprawdzana na serwerze, wpis w AuditLog) i podgląd pliku OSP (parser Z06).
 - Linki z pulpitu prowadzą tylko do gotowych ekranów: `isScreenReady` w `src/lib/ui/nav.ts` sprawdza menu (`pending`). Rozmowa rozpoczynająca → kreator części I (Z12, „Ustal kryteria”); sporządzenie oceny okresowej (24 mies., ponowna po negatywnej, przy zmianie stanowiska) → zakończenie oceny (Z14, „Zakończ ocenę” / „Kontynuuj ocenę”); pierwsza ocena → karta pracownika `/pulpit/pracownik/[id]`, dopóki Z17 nie usunie `pending`. Linki do dziennika obserwacji (Z13): `/obserwacje?osoba=…` i `/obserwacje/nowa?osoba=…`.
+- Oś czasu procesu na karcie pracownika (Z37): `processTimeline` w `src/lib/dashboard/os-czasu.ts` (czysta logika, testy `tests/dashboard/os-czasu.test.ts`) układa na jednej linii zdarzenia z historii (zatrudnienie, rozmowa rozpoczynająca / wstępna, sprawozdanie, sporządzenie oceny z wynikiem, zapoznanie, zmiana stanowiska), nieobecności jako okresy, otwarte terminy przełożonego z `openDeadlines` (z podstawą prawną i odznaką pilności) oraz termin sprzeciwu ocenianego (art. 83, widoczny do tygodnia po upływie) i znacznik „dziś” (`aria-current="date"`). Komponent serwerowy `src/components/pulpit/OsCzasuProcesu.tsx`, bez JavaScriptu w przeglądarce.
 
 **Zmiana w silniku terminów (Z08) – informacja dla właściciela Z08:** `buildTodoItems` w `src/lib/rules/terminy.ts` dopisuje rok do daty w tytule karty, gdy termin wypada w innym roku niż dzisiejszy: „termin minął 22.12.2025”, „do 05.01.2027”. W bieżącym roku format się nie zmienia („do pt. 27.11”), więc dotychczasowe testy Z08 przechodzą bez zmian. Powód: przy terminie sprzed roku sama data „22.12” była niejednoznaczna (wyszło przy dodaniu pracownika z datą zatrudnienia na czas nieokreślony sprzed roku). Ta sama zasada działa na liście pracowników na pulpicie (`formatDay` w `pulpit.ts`).
+
+## Dziennik decyzji (Z35)
+
+- Ekran `/hr/dziennik` (rola HR): wpisy `AuditLog` od najnowszych – propozycja AI obok decyzji człowieka, zmiany sugestii z powodem, zmiana arkusza, ustalenie kryteriów, sporządzenie i zapoznanie się z oceną. Filtry: rodzaj wpisów (decyzje / tylko AI / logowania / wszystkie) i okres.
+- `GET /hr/dziennik/csv` – te same filtry, plik CSV dla Excela (średnik, BOM, polskie znaki), ochrona przed formułami w komórkach; limit 10 000 wierszy.
+- Logika bez bazy: `src/lib/audit/dziennik.ts` (etykiety działań, filtry, CSV); zapytanie: `src/lib/audit/repo.ts`; wspólny zapis decyzji o propozycjach AI: `src/lib/audit/decyzje-ai.ts`.
+
+## Lustro oceniającego (Z36)
+
+- `src/lib/rules/lustro.ts` – czyste funkcje sygnałów: efekt świeżości, aureoli, łagodność / surowość na tle komórki, poziom skrajny bez notatki. Progi w `data/przepisy.json` (`mirror`), założenia w `docs/ZALOZENIA.md` (#11, #20). Sygnały nigdy nie blokują oceny.
+- Przełożony widzi sygnały w przeglądzie ocen cząstkowych przed sporządzeniem oceny; HR – ekran `/hr/lustro`: rozkład poziomów ogólnych w komórkach bez nazwisk, tylko przy co najmniej 3 ocenach w komórce (dane: `src/lib/ocena/dane-lustra.ts`).
+
+## Ekran ocenianego „Moje oceny” (Z46)
+
+- `/moje-oceny` i `/moje-oceny/[id]` (rola OCENIANY). Zapytania ograniczone do pracownika powiązanego z kontem (`Employee.user`) – cudza ocena = 404.
+- Logika bez bazy: `src/lib/oceniany/moje-oceny.ts` – przed sporządzeniem oceny tylko część I arkusza (kryteria z uzasadnieniem wyboru, termin, rozmowy), bez roboczych ocen przełożonego; po sporządzeniu (§ 12) wynik z wyjaśnieniem, uzasadnienie, IPRZ, część III i termin sprzeciwu. Te same etapy widoczności co w API (`VISIBLE_TO_EMPLOYEE`).
+- Potwierdzenie zapoznania się: akcja `src/lib/oceniany/actions.ts` (data = dziś) i wspólna funkcja `applyAcknowledgment` (`src/lib/ocena/zapoznanie.ts`), z której korzysta też przełożony w podsumowaniu (Z15): ocena → „Zakończona”, nowa ocena na kolejny okres (po negatywnej – ponowna), wpis `ZAPOZNANIE_Z_OCENA` z informacją, kto potwierdził.
+
+## Ekran kierującego komórką
+
+- `/kierujacy` (rola KIERUJACY_KOMORKA): pierwsze oceny pracowników, dla których użytkownik jest kierującym komórką (`Employee.unitHeadId`). Podgląd – oceny sporządza bezpośredni przełożony.
+- `src/lib/kierujacy/pierwsze-oceny.ts` – na bazie wierszy panelu HR (`listHrRecords` z warunkiem, `toHrRow`): najbliższy termin, kalendarz pierwszej oceny (rozmowa wstępna, okno oceny z art. 38 ust. 1 ustawy) i następny krok kierującego (porozumienie, rozmowa, podpis, wniosek z art. 38 ust. 3 ustawy).
+
+## Spójność zapisu
+
+- Zmiany etapu oceny (zatwierdzenie części I, sporządzenie, zapoznanie się) zapisujemy `updateMany` z warunkiem na bieżący etap w transakcji. Drugi, równoczesny zapis nie zmienia już niczego i zwraca komunikat „odśwież stronę” – bez zdublowanych rozmów, ocen i wpisów w dzienniku.
 
 ## Struktura katalogów
 
@@ -277,18 +304,20 @@ src/
   app/
     (auth)/                logowanie
     (przelozony)/          pulpit, ocena okresowa (kreator, ocena wskaźników, podsumowanie), dziennik obserwacji
-    (hr)/                  panel HR, zawiadomienie o zmianie terminu
-    (oceniany)/ (kierujacy)/
-    api/v1/                REST API (status, me, pracownicy)
+    (hr)/                  panel HR, Lustro ocen, dziennik decyzji (CSV), zawiadomienie o zmianie terminu
+    (oceniany)/            moje oceny (lista, podgląd, potwierdzenie zapoznania się)
+    (kierujacy)/           pierwsze oceny w komórce kierującego
+    (wspolne)/             asystent formalny (przełożony, HR, kierujący)
+    api/v1/                REST API (status, me, pracownicy, oceny – eksport JSON)
     api/asystent/          asystent formalny, kryteria z OSP
-  components/              ui/ (komponenty bazowe), layout/, pulpit/, ocena/, obserwacje/, hr/, asystent/, auth/
+  components/              ui/ (komponenty bazowe), layout/, pulpit/, ocena/, obserwacje/, hr/, asystent/, auth/, oceniany/
   lib/
     domain/                typy, słownik, przepisy, model kompetencji, daty (kontrakt wspólny)
-    rules/                 silnik reguł: arkusz, kryteria, punktacja, terminy, kalendarz, sugestia
+    rules/                 silnik reguł: arkusz, kryteria, punktacja, terminy, kalendarz, sugestia, lustro
     auth/                  role, strażnicy autoryzacji, konta demo
     import/                czytniki docx/xlsx, OSP, model kompetencji
     ai/llm/ ai/rag/ ai/funkcje/   dostawca modelu, baza wiedzy, asystent i kryteria z OSP
-    dashboard/ ocena/ obserwacje/ hr/ demo/ audit/ ui/   logika i dostęp do danych ekranów, dziennik decyzji, nawigacja
+    dashboard/ ocena/ obserwacje/ hr/ oceniany/ kierujacy/ demo/ audit/ api/ ui/   logika i dostęp do danych ekranów, dziennik decyzji, eksport API, nawigacja
     db.ts                  klient Prisma
   middleware.ts, auth.ts   sesja i obszary ról
 scripts/                   import modelu, OSP, bazy wiedzy, eval asystenta, build produkcyjny

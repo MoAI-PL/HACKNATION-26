@@ -49,9 +49,9 @@ describe("pseudonimizacja przed modelem", () => {
     expect(p.tags).toEqual({ OSOBA_1: "an", OSOBA_2: "kw", OSOBA_3: "pl", OSOBA_4: "mk", OSOBA_5: "am" });
   });
 
-  it("nazwiska (także odmienione) i ta sama osoba = ten sam znacznik", () => {
+  it("nazwiska (także odmienione) i ta sama osoba = ten sam znacznik (imię i nazwisko zwinięte do jednego – Z34)", () => {
     const p = pseudonymize("Jan Nowak przygotował raport. Nowakowi podziękowałem, Janem jestem zachwycony", people);
-    expect(p.text).toBe("[OSOBA_1] [OSOBA_1] przygotował raport. [OSOBA_1] podziękowałem, [OSOBA_1] jestem zachwycony");
+    expect(p.text).toBe("[OSOBA_1] przygotował raport. [OSOBA_1] podziękowałem, [OSOBA_1] jestem zachwycony");
     expect(p.mentioned).toEqual(["jn"]);
   });
 

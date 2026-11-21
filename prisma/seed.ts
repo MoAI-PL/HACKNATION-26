@@ -1,9 +1,25 @@
-// Dane demo – pełną wersję przygotowuje Z26.
+// Dane demo. Konta logowania: Z04. Pełne dane wokół persony (pracownicy, oceny, obserwacje): Z26.
+// Seed jest idempotentny – można go uruchamiać wielokrotnie.
 import { PrismaClient } from "@prisma/client";
+import { DEMO_ACCOUNTS, DEMO_PASSWORD } from "../src/lib/auth/demo";
+import { hashPassword } from "../src/lib/auth/password";
 
 const prisma = new PrismaClient();
 
+async function seedDemoUsers() {
+  const passwordHash = await hashPassword(DEMO_PASSWORD);
+  for (const a of DEMO_ACCOUNTS) {
+    await prisma.user.upsert({
+      where: { email: a.email },
+      update: { name: a.name, role: a.role, passwordHash },
+      create: { email: a.email, name: a.name, role: a.role, passwordHash },
+    });
+  }
+  console.log(`Seed: ${DEMO_ACCOUNTS.length} konta demo (hasło: ${DEMO_PASSWORD}).`);
+}
+
 async function main() {
+  await seedDemoUsers();
   await prisma.appInfo.upsert({
     where: { key: "seed" },
     update: { value: new Date().toISOString() },

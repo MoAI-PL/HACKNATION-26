@@ -11,7 +11,7 @@ Kolejność: najpierw ★, potem pozostałe P0, potem P1 (w kolejności z tabeli
 | ★Z01 | Porządek w repozytorium, `materialy/`, tablica zadań | — | gotowe | suzanne0401 | `z01-porzadek-repo` |
 | ★Z02 | Szkielet aplikacji (Next.js 15, TS, Tailwind, shadcn/ui, Prisma, docker compose, Vitest) | Z01 | gotowe | suzanne0401 | `z02-szkielet` |
 | ★Z03 | Kontrakt domeny (`types.ts`, `slownik.ts`, `schema.prisma`, `przepisy.json`) | Z02 | gotowe | Kamson2077 | `z03-kontrakt-domeny` |
-| ★Z04 | Logowanie i role, konta demo na ekranie logowania | Z03 | w toku | bartektymochowicz-collab | `bartek/z04-logowanie-role` |
+| ★Z04 | Logowanie i role, konta demo na ekranie logowania | Z03 | do przeglądu | bartektymochowicz-collab | `bartek/z04-logowanie-role` |
 
 ## B. Dane i import
 

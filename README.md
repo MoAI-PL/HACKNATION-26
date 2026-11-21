@@ -26,10 +26,23 @@ docs/               tablica zadań, założenia, dokumentacja
 Wymagania: Node.js 20+, Docker.
 
 1. `npm install`
-2. `cp .env.example .env` (na Windows: `copy .env.example .env`) i uzupełnij `AUTH_SECRET`
+2. `cp .env.example .env` (na Windows: `copy .env.example .env`) i uzupełnij `AUTH_SECRET` (dowolny losowy ciąg, np. wynik `npx auth secret`)
 3. `npm run db:up` – uruchamia PostgreSQL w Dockerze
 4. `npm run db:migrate` i `npm run seed`
 5. `npm run dev` – aplikacja pod http://localhost:3000
+
+## Konta demo
+
+Przy `DEMO_MODE="true"` ekran logowania pokazuje karty kont demo – wystarczy kliknąć „Zaloguj jako…”. Dane są fikcyjne.
+
+| Rola | E-mail | Hasło |
+|---|---|---|
+| Przełożona (Ewa Kowalczyk) | `ewa.kowalczyk@demo.kompas.test` | `Kompas2026!` |
+| HR / administrator | `hr@demo.kompas.test` | `Kompas2026!` |
+| Oceniany | `jan.nowak@demo.kompas.test` | `Kompas2026!` |
+| Kierujący komórką | `kierujacy@demo.kompas.test` | `Kompas2026!` |
+
+Konta tworzy `npm run seed`. Na produkcji ustaw `DEMO_MODE="false"` – karty i logowanie jednym kliknięciem znikają.
 
 ## Skrypty
 

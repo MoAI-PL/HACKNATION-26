@@ -23,6 +23,8 @@ npx license-checker-rseidelsohn --production --summary
 | tw-animate-css | 1.4 | MIT | animacje |
 | lucide-react | 1.77 | ISC | ikony |
 | zod | 4 | MIT | walidacja danych |
+| next-auth (Auth.js) | 5 | ISC | logowanie, sesje |
+| bcryptjs | 3 | BSD-3-Clause | hashowanie haseł |
 | @prisma/client, prisma | 6.19 | Apache-2.0 | dostęp do bazy danych, migracje |
 | typescript | 5 | Apache-2.0 | język |
 | vitest | 3 | MIT | testy |

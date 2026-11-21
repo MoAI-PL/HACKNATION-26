@@ -34,7 +34,24 @@
 7. **Dziennik zapytań** (`AssistantQuery`): pytanie, użyte źródła, odpowiedź, odmowa, krok ścieżki, model, czas.
 8. **Limit zapytań** na endpoint (20/min na adres) chroni darmowy limit dostawcy.
 
-<<<<<<< HEAD
+## Propozycja kryteriów dodatkowych z OSP (Z23) – jak ogranicza błędy
+
+1. **Lista kandydatów liczona przez kod:** 14 kryteriów z załącznika nr 1 bez obowiązkowych dla arkusza (silnik kryteriów Z07). Model wybiera tylko z tej listy, podając kody.
+2. **Zadania z OSP jako dane** w znacznikach `<zadanie nr="…">` (numeracja jak w OSP); znaki `<` `>` w treści OSP są neutralizowane, a prompt nakazuje ignorować polecenia w OSP.
+3. **Odpowiedź JSON walidowana schematem**, jedna ponowna próba.
+4. **Kontrola po odpowiedzi:** kryterium spoza listy albo obowiązkowe jest pomijane (z informacją dla użytkownika), powtórzenia usuwane, najwyżej 3 (`validateAdditionalCriteria`, § 5 ust. 2).
+5. **Cytat zawsze prawdziwy:** cytat modelu musi być dosłownym fragmentem zadania (bez względu na wielkość liter i spacje). Gdy go tam nie ma, szukamy go w innych zadaniach (i poprawiamy numer zadania), a w ostateczności pokazujemy początek wskazanego zadania. Model nie może „włożyć w usta” OSP zdania, którego w nim nie ma.
+6. **Bez modelu** (brak konfiguracji, błąd, limit, odpowiedź bez poprawnych kryteriów): propozycja deterministyczna – kompetencje miękkie wymienione w OSP oraz słowa kluczowe w zadaniach, z wyjaśnieniem, które słowa z którego zadania zadecydowały. Oznaczona jako propozycja bez AI.
+7. Propozycja nigdy nie trafia do arkusza sama: przełożony wstawia ją przyciskiem w `<PropozycjaAI>` (Z12), a „Wstaw” i „Odrzuć” trafiają do dziennika.
+8. API: `POST /api/asystent/kryteria` (plik OSP albo pracownik z bazy), tylko przełożony (własni podwładni) i HR, limit 10 zapytań na minutę na użytkownika.
+
+## Zapasowe odpowiedzi na demo (Z44)
+
+- Plik `data/demo-cache.json`: odpowiedzi na 4 pytania z pitchu (sprzeciw, kryteria dodatkowe, ocena negatywna, wydłużenie terminu) ze źródłami z bazy wiedzy i propozycje kryteriów dodatkowych dla trzech OSP od MC z cytatami zadań.
+- Działają **tylko** przy `DEMO_MODE=true` i **tylko** gdy skonfigurowany model nie odpowiedział (błąd, limit, czas). Bez modelu aplikacja działa w zwykłym trybie bez AI.
+- Każde użycie jest jawne: komunikat „Model AI jest chwilowo niedostępny – to odpowiedź przygotowana wcześniej dla demo…”, pole `fromCache: true` w odpowiedzi API i wpis `[demo-cache]` w logach serwera.
+- Nic nie jest wymyślone: test sprawdza, że każde źródło istnieje w bazie wiedzy, każde pytanie przechodzi próg trafności (nie kończy się odmową) i każdy cytat jest dosłownym fragmentem wskazanego zadania z OSP, a cytaty z pliku przechodzą tę samą kontrolę `verifyQuote` co odpowiedzi modelu.
+
 ## Zestaw testowy asystenta (Z25)
 
 - Pytania: `eval/pytania.json` – 25 pytań w zakresie (sformułowanych inaczej niż w FAQ) z odpowiedzią wzorcową, akceptowanymi źródłami i słowami kluczowymi oraz 5 pytań spoza zakresu (w tym próba prompt injection).
@@ -67,25 +84,6 @@ Uwagi do pomiaru:
 - Dwa pytania spoza zakresu (wynagrodzenie, urlop) przechodzą przez wyszukiwanie, ale model poprawnie odpowiada „brak w źródłach” – działa druga linia obrony z promptu systemowego.
 - Model wybrany na demo: `gemini-3.5-flash-lite`. Większy `gemini-3.5-flash` na darmowym planie często zwracał 503 i 429, przekraczał 30 s i urywał odpowiedź JSON (tokeny rozumowania wliczają się do limitu `max_tokens`). Wersja lite odpowiada w ok. 1 s.
 - `npm run eval` ponawia zapytanie przy chwilowej niedostępności modelu (503/429/przekroczony czas, do 3 razy) i nie zapisuje wyniku, jeśli model nie odpowiedział na żadne pytanie.
-=======
-## Propozycja kryteriów dodatkowych z OSP (Z23) – jak ogranicza błędy
-
-1. **Lista kandydatów liczona przez kod:** 14 kryteriów z załącznika nr 1 bez obowiązkowych dla arkusza (silnik kryteriów Z07). Model wybiera tylko z tej listy, podając kody.
-2. **Zadania z OSP jako dane** w znacznikach `<zadanie nr="…">` (numeracja jak w OSP); znaki `<` `>` w treści OSP są neutralizowane, a prompt nakazuje ignorować polecenia w OSP.
-3. **Odpowiedź JSON walidowana schematem**, jedna ponowna próba.
-4. **Kontrola po odpowiedzi:** kryterium spoza listy albo obowiązkowe jest pomijane (z informacją dla użytkownika), powtórzenia usuwane, najwyżej 3 (`validateAdditionalCriteria`, § 5 ust. 2).
-5. **Cytat zawsze prawdziwy:** cytat modelu musi być dosłownym fragmentem zadania (bez względu na wielkość liter i spacje). Gdy go tam nie ma, szukamy go w innych zadaniach (i poprawiamy numer zadania), a w ostateczności pokazujemy początek wskazanego zadania. Model nie może „włożyć w usta” OSP zdania, którego w nim nie ma.
-6. **Bez modelu** (brak konfiguracji, błąd, limit, odpowiedź bez poprawnych kryteriów): propozycja deterministyczna – kompetencje miękkie wymienione w OSP oraz słowa kluczowe w zadaniach, z wyjaśnieniem, które słowa z którego zadania zadecydowały. Oznaczona jako propozycja bez AI.
-7. Propozycja nigdy nie trafia do arkusza sama: przełożony wstawia ją przyciskiem w `<PropozycjaAI>` (Z12), a „Wstaw” i „Odrzuć” trafiają do dziennika.
-8. API: `POST /api/asystent/kryteria` (plik OSP albo pracownik z bazy), tylko przełożony (własni podwładni) i HR, limit 10 zapytań na minutę na użytkownika.
-
-## Zapasowe odpowiedzi na demo (Z44)
-
-- Plik `data/demo-cache.json`: odpowiedzi na 4 pytania z pitchu (sprzeciw, kryteria dodatkowe, ocena negatywna, wydłużenie terminu) ze źródłami z bazy wiedzy i propozycje kryteriów dodatkowych dla trzech OSP od MC z cytatami zadań.
-- Działają **tylko** przy `DEMO_MODE=true` i **tylko** gdy skonfigurowany model nie odpowiedział (błąd, limit, czas). Bez modelu aplikacja działa w zwykłym trybie bez AI.
-- Każde użycie jest jawne: komunikat „Model AI jest chwilowo niedostępny – to odpowiedź przygotowana wcześniej dla demo…”, pole `fromCache: true` w odpowiedzi API i wpis `[demo-cache]` w logach serwera.
-- Nic nie jest wymyślone: test sprawdza, że każde źródło istnieje w bazie wiedzy, każde pytanie przechodzi próg trafności (nie kończy się odmową) i każdy cytat jest dosłownym fragmentem wskazanego zadania z OSP, a cytaty z pliku przechodzą tę samą kontrolę `verifyQuote` co odpowiedzi modelu.
->>>>>>> 9501b7a07679b3ddeb35c7af4c538aafdf1ba578
 
 ## Gdzie przetwarzane są dane
 

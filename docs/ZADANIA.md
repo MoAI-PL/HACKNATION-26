@@ -54,7 +54,7 @@ Kolejność: najpierw ★, potem pozostałe P0, potem P1 (w kolejności z tabeli
 | ★Z22 | Asystent formalny ze źródłami i odmową | Z20, Z21 | gotowe | suzanne0401 | `z20-z22-asystent` |
 | ★Z23 | Analiza OSP: propozycja kryteriów dodatkowych z cytatem | Z06, Z20 | gotowe | Nadia | `z23-analiza-osp` |
 | Z24 | Asystent rozmowy | Z20, Z14 | wolne | | |
-| Z25 | Zestaw testowy asystenta (`npm run eval`) | Z22 | do przeglądu | bartektymochowicz-collab | `bartek/z25-eval-asystenta` |
+| Z25 | Zestaw testowy asystenta (`npm run eval`) | Z22 | gotowe | bartektymochowicz-collab | `bartek/z25-eval-asystenta` |
 
 ## F. Jakość, wdrożenie, zgłoszenie
 

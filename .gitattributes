@@ -1,0 +1,7 @@
+# Jednolite końce linii (LF) niezależnie od systemu – mniej konfliktów w zespole
+* text=auto eol=lf
+*.docx binary
+*.xlsx binary
+*.pdf binary
+*.png binary
+*.ico binary

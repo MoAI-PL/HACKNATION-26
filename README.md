@@ -71,6 +71,7 @@ Konta i dane demo tworzy `npm run seed` (można uruchamiać wielokrotnie – dan
 | `npm run seed` | dane demo |
 | `npm run wiedza` | buduje bazę wiedzy asystenta z PDF-ów (`data/wiedza/fragmenty.json`) |
 | `npm run eval` | zestaw testowy asystenta formalnego (`-- --bez-ai`: tylko wyszukiwanie); wynik w `eval/wynik.md` |
+| `npm run eval:notatki` | szybka notatka: czy 5 przykładowych zdań trafia w sensowny wskaźnik (wymaga modelu); wynik w `eval/notatki-wynik.md` |
 | `npm run osp -- plik.docx` | podgląd importu opisu stanowiska pracy: co system odczyta i jaki arkusz (B/C) wybierze |
 | `npm run model` | import modelu kompetencji: `materialy/Model_kompetencji.xlsx` → `data/model-kompetencji.json` (`-- --check` sprawdza aktualność) |
 | `npm run db:up` / `db:migrate` / `db:generate` | baza danych: start, migracje, klient Prisma |

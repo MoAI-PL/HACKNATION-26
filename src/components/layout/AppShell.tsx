@@ -7,6 +7,7 @@ import { navForRole, roleHasAssistant, roleHasQuickNote } from "@/lib/ui/nav";
 import { MainNav } from "./MainNav";
 import { HeaderActions } from "./HeaderActions";
 import { GlobalShortcuts } from "./Shortcuts";
+import { SzybkaNotatka } from "@/components/asystent/SzybkaNotatka";
 
 // Układ aplikacji po zalogowaniu (Z10): link „Przejdź do treści”, nagłówek z nazwą, rolą i akcjami,
 // menu według grafiki MC, treść z jednym <main>.
@@ -72,6 +73,7 @@ export function AppShell({
       </main>
 
       <GlobalShortcuts quickNote={quickNote} assistant={assistant} />
+      {quickNote && <SzybkaNotatka />}
     </div>
   );
 }

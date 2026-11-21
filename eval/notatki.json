@@ -1,0 +1,18 @@
+{
+  "opis": "Szybka notatka (Z41): 5 przykładowych zdań o zespole Ewy Kowalczyk z danych demo. „kompetencje” to akceptowane kompetencje wskaźnika (notatka może pasować do kilku), „osoba” – oczekiwany pracownik.",
+  "zespol": [
+    { "id": "kw", "firstName": "Katarzyna", "lastName": "Wójcik" },
+    { "id": "pl", "firstName": "Piotr", "lastName": "Lewandowski" },
+    { "id": "jn", "firstName": "Jan", "lastName": "Nowak" },
+    { "id": "mw", "firstName": "Marcin", "lastName": "Wróbel" },
+    { "id": "am", "firstName": "Aleksandra", "lastName": "Mazur" },
+    { "id": "mk", "firstName": "Marta", "lastName": "Kamińska" }
+  ],
+  "notatki": [
+    { "id": "N1", "tekst": "Kasia świetnie poprowadziła dziś spotkanie z DSI, mimo że strony się kłóciły", "osoba": "kw", "kompetencje": ["WSPOLPRACA", "KOMUNIKACJA", "NEGOCJOWANIE", "KRYZYS"] },
+    { "id": "N2", "tekst": "Piotrek znowu oddał raport dwa dni po terminie i z błędami w tabelach", "osoba": "pl", "kompetencje": ["RZETELNOSC", "ORGANIZACJA"] },
+    { "id": "N3", "tekst": "Jan sam zaproponował nowy szablon odpowiedzi na skargi, który skrócił czas obsługi o połowę", "osoba": "jn", "kompetencje": ["KREATYWNOSC", "KLIENT", "ORGANIZACJA"] },
+    { "id": "N4", "tekst": "Marcin cierpliwie wytłumaczył interesantowi procedurę odwoławczą, choć ten na niego krzyczał", "osoba": "mw", "kompetencje": ["KLIENT", "KOMUNIKACJA", "KRYZYS"] },
+    { "id": "N5", "tekst": "Ola przeszkoliła nowego kolegę z systemu EZD i dała mu swoje notatki", "osoba": "am", "kompetencje": ["WSPOLPRACA", "WIEDZA", "LUDZIE"] }
+  ]
+}

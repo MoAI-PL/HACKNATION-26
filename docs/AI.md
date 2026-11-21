@@ -85,6 +85,21 @@ Uwagi do pomiaru:
 - Model wybrany na demo: `gemini-3.5-flash-lite`. Większy `gemini-3.5-flash` na darmowym planie często zwracał 503 i 429, przekraczał 30 s i urywał odpowiedź JSON (tokeny rozumowania wliczają się do limitu `max_tokens`). Wersja lite odpowiada w ok. 1 s.
 - `npm run eval` ponawia zapytanie przy chwilowej niedostępności modelu (503/429/przekroczony czas, do 3 razy) i nie zapisuje wyniku, jeśli model nie odpowiedział na żadne pytanie.
 
+## Szybka notatka (Z41) – jak ogranicza błędy i chroni dane
+
+1. **Skrót `N` albo przycisk „Notatka”** w nagłówku (tylko przełożony) otwiera okno z jednym polem. Ctrl + Enter wysyła notatkę do asystenta, Enter na „Zapisz notatkę” kończy – cel: 10 sekund.
+2. **Pseudonimizacja przed modelem (prosta wersja, pełna w Z34):** imiona i nazwiska podwładnych – z odmianą („Kasią”, „Nowakowi”, „Marcie”) i zdrobnieniami („Anka”, „Piotrek”, „Ola”) – są zamieniane na znaczniki `[OSOBA_1]`. Model nie dostaje żadnego imienia; w oknie widać dokładnie, jaki tekst trafił do modelu. Słowo pasujące do dwóch osób (dwie Marty) dostaje neutralny znacznik i osobę wybiera przełożony.
+3. **Osoba rozpoznawana bez AI:** to samo dopasowanie imion wskazuje pracownika, gdy notatka dotyczy jednej osoby – działa także w trybie bez modelu.
+4. **Wskaźnik tylko z modelu kompetencji:** model dostaje katalog 49 wskaźników i zwraca identyfikator; wskaźnik spoza katalogu jest odrzucany. Poziom zachowania (1–5) tylko przy wskaźniku – w oknie pokazujemy opis zachowania, nie liczbę.
+5. **Sytuacja – Działanie – Rezultat wyłącznie z faktów z notatki:** prompt zabrania dopisywania faktów i ocen charakteru; brak informacji = puste pole. Gdy model nie wypełni SDR, tekst notatki trafia do „Działania” – nic nie przepada.
+6. **Notatka to dane, nie polecenia:** treść jest w znaczniku `<notatka>` ze zneutralizowanymi nawiasami.
+7. **JSON walidowany schematem**, jedna ponowna próba; potem tryb bez AI.
+8. **Bez AI** (brak modelu, błąd, limit 20 notatek na minutę): notatka zapisuje się jako zwykły tekst (`originalText`) do ręcznego przypięcia w dzienniku – sekcja „Nieprzypięte do wskaźnika”.
+9. **Decyzja należy do przełożonego:** propozycja w `<PropozycjaAI>`, każde pole można zmienić listą wyboru. „Zapisz” z propozycji = źródło `SZYBKA_AI` i wpis `AI_WSTAW` w `AuditLog` (propozycja i ostateczna wersja), „Odrzuć” = `AI_ODRZUC`.
+10. **Test:** `npm run eval:notatki` – 5 przykładowych zdań o zespole z danych demo (`eval/notatki.json`), sprawdza właściwą osobę i wskaźnik z akceptowanej kompetencji; wynik w `eval/notatki-wynik.md`.
+
+**Wynik (21.11, `gemini-3.5-flash-lite`): 5/5** – właściwa osoba i sensowny wskaźnik dla każdego zdania, ok. 1 s na notatkę (np. „Kasia … poprowadziła spotkanie z DSI, mimo że strony się kłóciły” → Współpraca: dbanie o dobrą atmosferę i otwartość, „Piotrek … oddał raport po terminie i z błędami” → Rzetelność). Pierwsza wersja promptu przypinała spotkanie z innym departamentem do wystąpień publicznych; prompt każe teraz najpierw rozważać kompetencje obowiązkowe.
+
 ## Gdzie przetwarzane są dane
 
 | Wariant | Gdzie trafia pytanie | Dane osobowe |

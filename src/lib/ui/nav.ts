@@ -32,7 +32,7 @@ export interface NavItem {
 /** Funkcje włączane przez zadania, które je budują – do tego czasu ich przyciski są ukryte (zasada „bez atrap”). */
 export const FEATURES = {
   /** Z41: szybka notatka (przycisk „Notatka” i skrót N). */
-  quickNote: false,
+  quickNote: true,
 } as const;
 
 /** Adres asystenta formalnego (Z22). */

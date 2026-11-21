@@ -7,11 +7,26 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { DeadlineBadge, EvaluationStatusBadge } from "@/components/ui/status-badge";
 import { requirePageRole } from "@/lib/auth/guard";
 import { todayIso } from "@/lib/domain/daty";
+import type { EvaluationStatus } from "@/lib/domain/types";
 import { listPeriodicEvaluations } from "@/lib/ocena/dane-kreatora";
 import { daysBetween, formatDateShortPl } from "@/lib/rules/kalendarz";
 import { deadlineUrgency } from "@/lib/rules/terminy";
 
 export const dynamic = "force-dynamic";
+
+const ACTION_LABEL: Record<EvaluationStatus, string> = {
+  DO_ROZPOCZECIA: "Ustal kryteria",
+  W_OKRESIE_OCENY: "Zobacz część I",
+  W_OCENIE: "Oceń",
+  CZEKA_NA_ZAPOZNANIE: "Potwierdź zapoznanie",
+  ZAKONCZONA: "Zobacz ocenę",
+};
+
+function actionHref(id: string, status: EvaluationStatus): string {
+  if (status === "W_OCENIE") return `/ocena/okresowa/${id}/ocena`;
+  if (status === "CZEKA_NA_ZAPOZNANIE" || status === "ZAKONCZONA") return `/ocena/okresowa/${id}/podsumowanie`;
+  return `/ocena/okresowa/${id}`;
+}
 
 export default async function OcenaOkresowaPage() {
   const user = await requirePageRole("PRZELOZONY");
@@ -66,10 +81,8 @@ export default async function OcenaOkresowaPage() {
                         )}
                       </span>
                     </div>
-                    <Button asChild variant={i.status === "DO_ROZPOCZECIA" || i.status === "W_OCENIE" ? "default" : "outline"}>
-                      <Link href={i.status === "W_OCENIE" ? `/ocena/okresowa/${i.evaluationId}/ocena` : `/ocena/okresowa/${i.evaluationId}`}>
-                        {i.status === "DO_ROZPOCZECIA" ? "Ustal kryteria" : i.status === "W_OCENIE" ? "Oceń" : "Zobacz część I"}
-                      </Link>
+                    <Button asChild variant={i.status === "W_OKRESIE_OCENY" ? "outline" : "default"}>
+                      <Link href={actionHref(i.evaluationId, i.status)}>{ACTION_LABEL[i.status]}</Link>
                     </Button>
                   </CardContent>
                 </Card>

@@ -52,6 +52,39 @@
 - Każde użycie jest jawne: komunikat „Model AI jest chwilowo niedostępny – to odpowiedź przygotowana wcześniej dla demo…”, pole `fromCache: true` w odpowiedzi API i wpis `[demo-cache]` w logach serwera.
 - Nic nie jest wymyślone: test sprawdza, że każde źródło istnieje w bazie wiedzy, każde pytanie przechodzi próg trafności (nie kończy się odmową) i każdy cytat jest dosłownym fragmentem wskazanego zadania z OSP, a cytaty z pliku przechodzą tę samą kontrolę `verifyQuote` co odpowiedzi modelu.
 
+## Zestaw testowy asystenta (Z25)
+
+- Pytania: `eval/pytania.json` – 25 pytań w zakresie (sformułowanych inaczej niż w FAQ) z odpowiedzią wzorcową, akceptowanymi źródłami i słowami kluczowymi oraz 5 pytań spoza zakresu (w tym próba prompt injection).
+- Uruchomienie: `npm run eval` (z modelem z `.env`) albo `npm run eval -- --bez-ai` (tylko wyszukiwanie, bez modelu). Wynik: `eval/wynik.md` (tabela na slajd) i `eval/wynik.json` (szczegóły każdej odpowiedzi).
+- Miary:
+  - **trafność** – odpowiedź w trybie AI, z co najmniej jednym oczekiwanym źródłem i z wymaganą treścią (np. „7 dni”);
+  - **odpowiedzi ze źródłem** – odsetek pytań w zakresie, na które asystent odpowiedział ze wskazaniem fragmentu;
+  - **poprawne odmowy** – odsetek pytań spoza zakresu zakończonych odmową;
+  - osobno poziom wyszukiwania: czy właściwy fragment jest w top 5 i czy pytanie spoza zakresu odpada bez pytania modelu.
+- Test regresji (`tests/ai/eval.test.ts`) pilnuje progu wyszukiwania: ≥ 90% pytań z właściwym fragmentem w top 5, ≥ 3/5 odmów bez modelu, prompt injection zawsze odrzucony.
+
+**Wynik wyszukiwania (21.11, bez modelu):** właściwy fragment w top 5 – **25/25**; odmowa bez pytania modelu – **3/5**. Dwa pytania spoza zakresu (wynagrodzenie, urlop) mają słowa wspólne z poradnikami („dyrektor”, „pracownik”, „dni”), więc odmowę daje dopiero model na podstawie zasady „brak w źródłach”.
+
+**Strojenie (Z25):** zestaw wykazał, że „ocena / oceny / ocenę” miały różne rdzenie (obcinanie do 6 znaków nie łączyło krótkich słów), przez co pytanie „Kiedy najwcześniej można sporządzić pierwszą ocenę?” kończyło się odmową. Krótkie słowa tracą teraz ostatnią literę (`ocen`). Wynik wyszukiwania: 24/25 → 25/25, bez pogorszenia odmów.
+
+**Wynik z modelem (21.11, `gemini-3.5-flash-lite`, darmowy plan Google AI Studio):**
+
+| Miara | Wynik |
+|---|---|
+| Trafność odpowiedzi (właściwe źródło i treść) | **25/25 (100%)** |
+| Odpowiedzi ze źródłem | **25/25 (100%)** |
+| Poprawne odmowy (pytania spoza zakresu, w tym prompt injection) | **5/5 (100%)** |
+| Ostrzeżenia o przepisie spoza źródeł | 0 |
+| Średni czas odpowiedzi | 1,2 s |
+
+Pełny raport: `eval/wynik.md`, szczegóły każdej odpowiedzi: `eval/wynik.json`.
+
+Uwagi do pomiaru:
+- Pierwszy pełny przebieg dał 24/25: w Q06 odpowiedź była poprawna („w 24-miesięcznym terminie”), ale zestaw nie rozpoznawał zapisu z łącznikiem i nie uznawał fragmentów poradnika, w których termin występuje w tej formie. Poprawiono zestaw (porównanie słów ignoruje łączniki, lista źródeł Q06 obejmuje wszystkie fragmenty z terminem 24 miesięcy), a nie asystenta.
+- Dwa pytania spoza zakresu (wynagrodzenie, urlop) przechodzą przez wyszukiwanie, ale model poprawnie odpowiada „brak w źródłach” – działa druga linia obrony z promptu systemowego.
+- Model wybrany na demo: `gemini-3.5-flash-lite`. Większy `gemini-3.5-flash` na darmowym planie często zwracał 503 i 429, przekraczał 30 s i urywał odpowiedź JSON (tokeny rozumowania wliczają się do limitu `max_tokens`). Wersja lite odpowiada w ok. 1 s.
+- `npm run eval` ponawia zapytanie przy chwilowej niedostępności modelu (503/429/przekroczony czas, do 3 razy) i nie zapisuje wyniku, jeśli model nie odpowiedział na żadne pytanie.
+
 ## Gdzie przetwarzane są dane
 
 | Wariant | Gdzie trafia pytanie | Dane osobowe |
@@ -63,5 +96,5 @@
 
 - autoryzacja endpointów asystenta (Z04) i powiązanie dziennika zapytań z użytkownikiem;
 - pseudonimizacja danych osobowych przed wysłaniem do modelu w funkcjach operujących na danych pracowników (Z34);
-- strojenie progów wyszukiwania na zestawie testowym (Z25) i dodanie ustawy o służbie cywilnej do bazy wiedzy;
+- dodanie ustawy o służbie cywilnej do bazy wiedzy i ponowny pomiar `npm run eval`;
 - limit zapytań we współdzielonym magazynie (np. Redis) przy wielu instancjach.

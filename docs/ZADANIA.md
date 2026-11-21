@@ -39,7 +39,7 @@ Kolejność: najpierw ★, potem pozostałe P0, potem P1 (w kolejności z tabeli
 | ★Z13 | Dziennik obserwacji (SDR) | Z03, Z10 | gotowe | Nadia | `z13-dziennik-obserwacji` |
 | ★Z41 | Szybka notatka w 10 sekund | Z13, Z20 | wolne | | |
 | ★Z14 | Zakończenie oceny: karty zachowań, sugestia, decyzja przełożonego | Z09, Z13 | gotowe | geoglof | `z14-zakonczenie-oceny` |
-| ★Z15 | Podsumowanie i wynik, uzasadnienie, IPRZ | Z07, Z14 | wolne | | |
+| ★Z15 | Podsumowanie i wynik, uzasadnienie, IPRZ | Z07, Z14 | gotowe | geoglof | `z15-podsumowanie` |
 | ★Z16 | PDF arkuszy B i C | Z07, Z15 | wolne | | |
 | Z17 | Ścieżka pierwszej oceny | Z07, Z08, Z14, Z16 | wolne | | |
 | Z18 | Panel HR, część 1 (oceny, terminy, przypomnienia) | Z04, Z08, Z10 | gotowe | Nadia | `z18-panel-hr` |
@@ -53,8 +53,8 @@ Kolejność: najpierw ★, potem pozostałe P0, potem P1 (w kolejności z tabeli
 | ★Z21 | Baza wiedzy (przepisy, poradniki, ustawa z ISAP, BM25) | Z02 | gotowe | suzanne0401 | `z21-baza-wiedzy` |
 | ★Z22 | Asystent formalny ze źródłami i odmową | Z20, Z21 | gotowe | suzanne0401 | `z20-z22-asystent` |
 | ★Z23 | Analiza OSP: propozycja kryteriów dodatkowych z cytatem | Z06, Z20 | gotowe | Nadia | `z23-analiza-osp` |
-| Z24 | Asystent rozmowy | Z20, Z14 | wolne | | |
-| Z25 | Zestaw testowy asystenta (`npm run eval`) | Z22 | wolne | | |
+| Z24 | Asystent rozmowy | Z20, Z14 | w toku | Nadia | `z24-asystent-rozmowy` |
+| Z25 | Zestaw testowy asystenta (`npm run eval`) | Z22 | gotowe | bartektymochowicz-collab | `bartek/z25-eval-asystenta` |
 
 ## F. Jakość, wdrożenie, zgłoszenie
 

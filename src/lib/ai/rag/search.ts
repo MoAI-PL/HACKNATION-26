@@ -5,7 +5,7 @@ import MiniSearch from "minisearch";
 import knowledgeBase from "../../../../data/wiedza/fragmenty.json";
 import type { KnowledgeBase, KnowledgeFragment, SearchHit, SearchOptions, SearchResult } from "./types";
 
-// ZAŁOŻENIE: progi dopasowania dobrane na pytaniach z zestawu testowego (tests/rag); do strojenia w Z25.
+// ZAŁOŻENIE: progi dopasowania dobrane na pytaniach z zestawu testowego (tests/rag, eval/pytania.json – Z25).
 /** Minimalny udział słów pytania obecnych w najlepszym fragmencie (pytania z 3+ słów znaczących). */
 export const MIN_COVERAGE = 0.6;
 /** Minimalny wynik BM25 najlepszego fragmentu. */
@@ -35,7 +35,8 @@ export function foldPolish(s: string): string {
     .replace(/ł/g, "l");
 }
 
-// ZAŁOŻENIE: „stemming przez obcięcie” – pierwsze 6 znaków słowa łączy odmiany (sprzeciw/sprzeciwu, ocena/oceny/oceną).
+// ZAŁOŻENIE: „stemming przez obcięcie” – pierwsze 6 znaków słowa łączy odmiany (sprzeciw/sprzeciwu, kryteria/kryteriów).
+// Krótkie słowa (5–6 znaków) tracą ostatnią literę, żeby łączyć końcówki fleksyjne: ocena/oceny/ocenę → „ocen” (Z25).
 const STEM_LENGTH = 6;
 
 /** Normalizacja słowa: bez polskich znaków, bez słów pomijanych, obcięte do rdzenia. */
@@ -44,7 +45,7 @@ export function normalizeTerm(term: string): string | null {
   if (!t || STOPWORDS.has(t)) return null;
   if (/^\d+$/.test(t)) return t; // numery artykułów, paragrafów, dni
   if (t.length < 3) return null;
-  return t.slice(0, STEM_LENGTH);
+  return t.length > 4 ? t.slice(0, Math.min(STEM_LENGTH, t.length - 1)) : t;
 }
 
 function tokenize(text: string): string[] {

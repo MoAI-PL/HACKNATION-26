@@ -1,0 +1,142 @@
+{
+  "version": "2026-11-21",
+  "sources": {
+    "periodicRegulation": "Rozporządzenie PRM z 4.04.2016 w sprawie warunków i sposobu przeprowadzania ocen okresowych (Dz.U. poz. 470)",
+    "firstEvalRegulation": "Rozporządzenie PRM z 23.07.2015 w sprawie szczegółowych warunków i sposobu dokonywania pierwszej oceny (Dz.U. poz. 1144)",
+    "act": "Ustawa z 21.11.2008 o służbie cywilnej",
+    "civilCode": "Kodeks cywilny, art. 111–115"
+  },
+
+  "periodic": {
+    "partialScores": [
+      { "level": "ZNACZNIE_PONIZEJ", "points": 1 },
+      { "level": "PONIZEJ", "points": 3 },
+      { "level": "NA_POZIOMIE", "points": 5 },
+      { "level": "POWYZEJ", "points": 7 },
+      { "level": "ZNACZNIE_POWYZEJ", "points": 9 }
+    ],
+    "overallLevelThresholds": [
+      { "level": "ZNACZNIE_PONIZEJ", "above": null, "upTo": 2 },
+      { "level": "PONIZEJ", "above": 2, "upTo": 4 },
+      { "level": "NA_POZIOMIE", "above": 4, "upTo": 6 },
+      { "level": "POWYZEJ", "above": 6, "upTo": 8 },
+      { "level": "ZNACZNIE_POWYZEJ", "above": 8, "upTo": 9 }
+    ],
+    "mandatoryCriteria": {
+      "A": ["LUDZIE", "DECYZJE", "ORGANIZACJA", "WSPOLPRACA", "KOMUNIKACJA", "STRATEGICZNE"],
+      "B": ["LUDZIE", "DECYZJE", "ORGANIZACJA", "WSPOLPRACA", "KOMUNIKACJA"],
+      "C": ["WIEDZA", "RZETELNOSC", "ORGANIZACJA", "WSPOLPRACA", "KOMUNIKACJA"]
+    },
+    "maxAdditionalCriteria": 3,
+    "positiveMinOverallLevel": "NA_POZIOMIE",
+    "negativeIfAnyPartialScore": 1,
+    "sheetBySubordinates": {
+      "BRAK": "C",
+      "DO_4": "B",
+      "OD_5_DO_9": "B",
+      "POWYZEJ_9": "B",
+      "PODLEGAJA_KIERUJACY": "B"
+    },
+    "legalBasis": {
+      "sheets": "§ 3",
+      "mandatoryCriteria": "§ 4",
+      "maxAdditionalCriteria": "§ 5 ust. 2",
+      "partialScores": "§ 11 ust. 1 pkt 1",
+      "overallLevel": "§ 11 ust. 1 pkt 2",
+      "positive": "§ 11 ust. 1 pkt 3",
+      "negative": "§ 11 ust. 1 pkt 4",
+      "developmentPlan": "§ 11 ust. 1 pkt 5",
+      "justificationRequired": "§ 11 ust. 3",
+      "promotionRequest": "§ 11 ust. 5, art. 89 ustawy",
+      "objection": "art. 83 ustawy"
+    }
+  },
+
+  "periodicDeadlines": {
+    "periodMonths": 24,
+    "criteriaConversationDays": 30,
+    "afterNegativeConversationDays": 7,
+    "reevaluationAfterNegativeMonths": 6,
+    "absenceExtensionMinMonths": 1,
+    "positionChange": {
+      "thresholdMonths": 6,
+      "newCriteriaDays": 30,
+      "evaluationDaysBefore": 7,
+      "evaluationDaysAfter": 30
+    },
+    "objectionDays": 7,
+    "legalBasis": {
+      "period": "art. 81 ust. 1 ustawy",
+      "criteriaConversation": "§ 7 pkt 1",
+      "afterNegativeConversation": "§ 7 pkt 2",
+      "reevaluationAfterNegative": "art. 81 ust. 9 ustawy",
+      "absenceExtension": "art. 81 ust. 7 ustawy",
+      "positionChangeEarly": "§ 9 ust. 1",
+      "positionChangeLate": "art. 81 ust. 6 ustawy, § 9 ust. 2",
+      "evaluatorChange": "§ 9 ust. 3",
+      "dateChangeNotice": "§ 8",
+      "objection": "art. 83 ustawy"
+    }
+  },
+
+  "firstEval": {
+    "elements": ["RZETELNOSC", "WIEDZA", "ORGANIZACJA", "KOMUNIKACJA", "WSPOLPRACA"],
+    "partialScores": [
+      { "level": "PONIZEJ", "points": 3 },
+      { "level": "NA_POZIOMIE", "points": 5 },
+      { "level": "POWYZEJ", "points": 7 }
+    ],
+    "maxScoresAtMinimum": 1,
+    "minAverage": 5,
+    "initialConversationDays": 21,
+    "evaluationEarliestMonths": 8,
+    "evaluationLatestMonthsBeforeContractEnd": 1,
+    "reportMinMonths": 7,
+    "legalBasis": {
+      "elements": "§ 2 pkt 1",
+      "initialConversation": "§ 3",
+      "reportDue": "§ 4 ust. 1",
+      "reportNewDate": "§ 5",
+      "reportScope": "§ 6",
+      "partialScores": "§ 9 ust. 1",
+      "positive": "§ 10 ust. 1",
+      "negative": "§ 10 ust. 2",
+      "examExemption": "§ 10 ust. 3",
+      "justificationRequired": "§ 10 ust. 4",
+      "developmentPlan": "§ 10 ust. 6",
+      "evaluationWindow": "art. 38 ust. 1 ustawy"
+    }
+  },
+
+  "behaviorToPoints": {
+    "periodic": { "1": 1, "2": 3, "3": 5, "4": 7, "5": 9 },
+    "firstEval": { "1": 3, "2": 3, "3": 5, "4": 7, "5": 7 }
+  },
+
+  "suggestion": {
+    "tieBreak": "DOWN",
+    "minObservedShare": 0.5,
+    "requireNoteAtLevels": [1, 5]
+  },
+
+  "mirror": {
+    "recencyWindowDays": 30,
+    "recencyMinShare": 0.6,
+    "haloMinIndicators": 5,
+    "leniencyDiffPoints": 1.5,
+    "leniencyMinEvaluationsInUnit": 3
+  },
+
+  "deadlineUrgency": {
+    "urgentDays": 7,
+    "soonDays": 30
+  },
+
+  "dateCounting": {
+    "daysStartNextDay": true,
+    "monthsEndOnLastDayIfMissing": true,
+    "moveToNextWorkingDay": true,
+    "saturdayIsDayOff": true,
+    "legalBasis": "art. 111, 112 i 115 Kodeksu cywilnego"
+  }
+}

@@ -1,14 +1,18 @@
 # Wynik zestawu testowego asystenta formalnego
 
-Data: 21.11.2026, 18:34:37 · baza wiedzy: 406 fragmentów · pytania: 25 w zakresie + 5 spoza zakresu (`eval/pytania.json`)
+Data: 21.11.2026, 19:51:10 · baza wiedzy: 406 fragmentów · pytania: 25 w zakresie + 5 spoza zakresu (`eval/pytania.json`)
 
 | Miara | Wynik |
 |---|---|
+| **Trafność odpowiedzi** (właściwe źródło i treść) | **25/25 (100%)** |
+| **Odpowiedzi ze źródłem** | **25/25 (100%)** |
+| **Poprawne odmowy** (pytania spoza zakresu) | **5/5 (100%)** |
+| Ostrzeżenia o przepisie spoza źródeł | 0 |
+| Średni czas odpowiedzi | 1.2 s |
+| Model | gemini-3.5-flash-lite |
 | Wyszukiwanie: właściwy fragment w top 5 | 25/25 (100%) |
 | Wyszukiwanie: odmowa bez pytania modelu (spoza zakresu) | 3/5 (60%) |
 | Wyszukiwanie: średnia pozycja właściwego fragmentu | 1.2 |
-
-Zmierzono tylko poziom wyszukiwania (bez modelu). Pełny pomiar: model w `.env` (`LLM_BASE_URL`, `LLM_MODEL`) i `npm run eval`.
 
 ## Błędy do poprawy
 

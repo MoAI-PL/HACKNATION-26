@@ -35,6 +35,7 @@ export function fold(text: string): string {
     .normalize("NFD")
     .replace(/[̀-ͯ]/g, "")
     .replace(/ł/g, "l")
+    .replace(/[-‐–—]/g, " ") // „24-miesięczny” = „24 miesięczny”
     .replace(/\s+/g, " ");
 }
 
@@ -119,6 +120,8 @@ export interface AnswerResult {
   citedExpected: boolean;
   missing: string[][];
   mode: "AI" | "BEZ_AI";
+  /** Fragmenty wskazane przez asystenta (do analizy błędów). */
+  sourceIds: string[];
   /** Odpowiedź wymienia przepis spoza wskazanych źródeł. */
   unverified: boolean;
   durationMs: number;
@@ -133,7 +136,7 @@ export function scoreAnswerInScope(q: InScopeQuestion, a: AnswerInput): AnswerRe
   const ok = a.mode === "AI" && withSource && citedExpected && missing.length === 0;
   let powod: string | undefined;
   if (!ok) {
-    if (a.mode !== "AI") powod = "tryb bez AI (model niedostępny)";
+    if (a.mode !== "AI") powod = `tryb bez AI (model niedostępny)${a.notice ? `: ${a.notice}` : ""}`;
     else if (a.refused) powod = "niepotrzebna odmowa";
     else if (!withSource) powod = "odpowiedź bez źródła";
     else if (!citedExpected) powod = "źródło spoza oczekiwanych";
@@ -149,6 +152,7 @@ export function scoreAnswerInScope(q: InScopeQuestion, a: AnswerInput): AnswerRe
     citedExpected,
     missing,
     mode: a.mode,
+    sourceIds: a.sourceIds,
     unverified: !!a.notice?.startsWith("Uwaga"),
     durationMs: a.durationMs,
     answer: a.answer,
@@ -167,6 +171,7 @@ export function scoreAnswerOutOfScope(q: OutOfScopeQuestion, a: AnswerInput): An
     citedExpected: false,
     missing: [],
     mode: a.mode,
+    sourceIds: a.sourceIds,
     unverified: !!a.notice?.startsWith("Uwaga"),
     durationMs: a.durationMs,
     answer: a.answer,

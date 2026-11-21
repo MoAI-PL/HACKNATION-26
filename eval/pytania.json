@@ -40,7 +40,7 @@
       "id": "Q06",
       "pytanie": "Co ile miesięcy sporządza się ocenę okresową?",
       "wzorcowa": "Co 24 miesiące (art. 81 ust. 1 ustawy o służbie cywilnej).",
-      "zrodla": ["PORADNIK_OKRESOWE:s8", "PORADNIK_OKRESOWE:s9", "PORADNIK_OKRESOWE:s10", "PORADNIK_OKRESOWE:s13", "PORADNIK_OKRESOWE:s20", "PORADNIK_OKRESOWE:s23"],
+      "zrodla": ["PORADNIK_OKRESOWE:s8", "PORADNIK_OKRESOWE:s9", "PORADNIK_OKRESOWE:s10", "PORADNIK_OKRESOWE:s11", "PORADNIK_OKRESOWE:s12", "PORADNIK_OKRESOWE:s13", "PORADNIK_OKRESOWE:s14", "PORADNIK_OKRESOWE:s16", "PORADNIK_OKRESOWE:s20", "PORADNIK_OKRESOWE:s23", "FAQ:nieobecnosc"],
       "kluczowe": [["24 mies", "dwa lata", "dwudziestu czterech"]]
     },
     {

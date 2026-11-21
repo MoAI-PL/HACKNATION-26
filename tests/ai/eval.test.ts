@@ -68,6 +68,7 @@ describe("logika oceny", () => {
 
   it("słowa kluczowe bez względu na wielkość liter i polskie znaki", () => {
     expect(fold("Siedmiu  DNI")).toBe("siedmiu dni");
+    expect(missingKeywords("w 24-miesięcznym terminie", [["24 mies"]])).toEqual([]);
     expect(missingKeywords("w ciągu SIEDMIU dni", [["7 dni", "siedmiu dni"]])).toEqual([]);
     expect(missingKeywords("w ciagu 14 dni", [["7 dni"]])).toEqual([["7 dni"]]);
   });

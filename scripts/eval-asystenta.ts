@@ -80,7 +80,13 @@ async function main() {
     const all = [...inScope.map((q) => ({ q, inScope: true as const })), ...outOfScope.map((q) => ({ q, inScope: false as const }))];
     for (const [i, item] of all.entries()) {
       if (i > 0 && delayMs > 0) await sleep(delayMs);
-      const a = await answerFormalQuestion(item.q.pytanie, { llm });
+      // Darmowe API bywa chwilowo przeciążone (503) albo limituje (429) – do 3 ponowień z przerwą.
+      let a = await answerFormalQuestion(item.q.pytanie, { llm });
+      for (let retry = 1; retry <= 3 && a.mode === "BEZ_AI" && /HTTP 5\d\d|HTTP 429|limit|nie odpowiedział/i.test(a.notice ?? ""); retry++) {
+        console.log(`     … ${item.q.id}: model chwilowo niedostępny, ponawiam (${retry}/3)`);
+        await sleep(10_000 * retry);
+        a = await answerFormalQuestion(item.q.pytanie, { llm });
+      }
       const input: AnswerInput = {
         answer: a.answer,
         refused: a.refused,
@@ -96,6 +102,13 @@ async function main() {
       console.log(`  ${mark(r.ok)} ${r.id}  ${short(r.pytanie).padEnd(70)}  ${(r.durationMs / 1000).toFixed(1)} s${r.powod ? `  (${r.powod})` : ""}`);
     }
     answers = { model: llm.model, summary: summarizeAnswers(results), results };
+    if (results.length > 0 && results.every((r) => r.mode === "BEZ_AI" || (!r.inScope && r.refused && r.durationMs < 50))) {
+      console.error(
+        "\nModel nie odpowiedział na żadne pytanie (wszystkie w trybie bez AI) – sprawdź LLM_BASE_URL, LLM_MODEL i LLM_API_KEY w .env." +
+          "\nWyniku nie zapisano, żeby nie nadpisać eval/wynik.md błędnym pomiarem.",
+      );
+      process.exit(1);
+    }
   }
 
   const date = new Date().toLocaleString("pl-PL", { timeZone: "Europe/Warsaw" });

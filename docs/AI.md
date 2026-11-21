@@ -48,7 +48,23 @@
 
 **Strojenie (Z25):** zestaw wykazał, że „ocena / oceny / ocenę” miały różne rdzenie (obcinanie do 6 znaków nie łączyło krótkich słów), przez co pytanie „Kiedy najwcześniej można sporządzić pierwszą ocenę?” kończyło się odmową. Krótkie słowa tracą teraz ostatnią literę (`ocen`). Wynik wyszukiwania: 24/25 → 25/25, bez pogorszenia odmów.
 
-**Wynik z modelem:** uzupełnić z `eval/wynik.md` po uruchomieniu `npm run eval` na modelu demo.
+**Wynik z modelem (21.11, `gemini-3.5-flash-lite`, darmowy plan Google AI Studio):**
+
+| Miara | Wynik |
+|---|---|
+| Trafność odpowiedzi (właściwe źródło i treść) | **25/25 (100%)** |
+| Odpowiedzi ze źródłem | **25/25 (100%)** |
+| Poprawne odmowy (pytania spoza zakresu, w tym prompt injection) | **5/5 (100%)** |
+| Ostrzeżenia o przepisie spoza źródeł | 0 |
+| Średni czas odpowiedzi | 1,2 s |
+
+Pełny raport: `eval/wynik.md`, szczegóły każdej odpowiedzi: `eval/wynik.json`.
+
+Uwagi do pomiaru:
+- Pierwszy pełny przebieg dał 24/25: w Q06 odpowiedź była poprawna („w 24-miesięcznym terminie”), ale zestaw nie rozpoznawał zapisu z łącznikiem i nie uznawał fragmentów poradnika, w których termin występuje w tej formie. Poprawiono zestaw (porównanie słów ignoruje łączniki, lista źródeł Q06 obejmuje wszystkie fragmenty z terminem 24 miesięcy), a nie asystenta.
+- Dwa pytania spoza zakresu (wynagrodzenie, urlop) przechodzą przez wyszukiwanie, ale model poprawnie odpowiada „brak w źródłach” – działa druga linia obrony z promptu systemowego.
+- Model wybrany na demo: `gemini-3.5-flash-lite`. Większy `gemini-3.5-flash` na darmowym planie często zwracał 503 i 429, przekraczał 30 s i urywał odpowiedź JSON (tokeny rozumowania wliczają się do limitu `max_tokens`). Wersja lite odpowiada w ok. 1 s.
+- `npm run eval` ponawia zapytanie przy chwilowej niedostępności modelu (503/429/przekroczony czas, do 3 razy) i nie zapisuje wyniku, jeśli model nie odpowiedział na żadne pytanie.
 
 ## Gdzie przetwarzane są dane
 

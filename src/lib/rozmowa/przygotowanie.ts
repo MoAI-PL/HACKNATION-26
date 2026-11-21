@@ -8,7 +8,7 @@
 
 import { competencyModel as defaultModel } from "@/lib/domain/model-kompetencji-dane";
 import type { CompetencyModelIndex } from "@/lib/domain/model-kompetencji";
-import { BEHAVIOR_LEVEL_TO_LEVEL, COMPETENCY_NAMES, LEVEL_LABELS } from "@/lib/domain/slownik";
+import { BEHAVIOR_LEVEL_TO_LEVEL, COMPETENCY_NAMES, CONVERSATION_TYPE_LABELS, LEVEL_LABELS } from "@/lib/domain/slownik";
 import type { BehaviorLevel, CompetencyCode, EvaluationResult, IndicatorRatingValue, IsoDate } from "@/lib/domain/types";
 import { formatDatePl, type ObservationView } from "@/lib/obserwacje/dziennik";
 import { DEVELOPMENT_IDEAS } from "./rozwoj";
@@ -17,9 +17,9 @@ export type ConversationKind = "WSTEPNA" | "ROZPOCZYNAJACA" | "OCENIAJACA";
 export const CONVERSATION_KINDS: ConversationKind[] = ["WSTEPNA", "ROZPOCZYNAJACA", "OCENIAJACA"];
 
 export const CONVERSATION_LABELS: Record<ConversationKind, string> = {
-  WSTEPNA: "Rozmowa wstępna",
-  ROZPOCZYNAJACA: "Rozmowa rozpoczynająca",
-  OCENIAJACA: "Rozmowa oceniająca",
+  WSTEPNA: CONVERSATION_TYPE_LABELS.WSTEPNA,
+  ROZPOCZYNAJACA: CONVERSATION_TYPE_LABELS.ROZPOCZYNAJACA,
+  OCENIAJACA: CONVERSATION_TYPE_LABELS.OCENIAJACA,
 };
 
 export interface PrepInput {
@@ -129,6 +129,16 @@ export function indicatorEvidence(input: Pick<PrepInput, "ratings" | "observatio
   return result;
 }
 
+/**
+ * Notatka, która najlepiej ilustruje ocenę: przy obszarze do rozwoju – z najniższym poziomem zachowania,
+ * przy mocnej stronie – z najwyższym; przy remisie najnowsza. Notatki bez poziomu na końcu.
+ */
+export function illustrativeObservation(e: IndicatorEvidence, direction: "growth" | "strength", require?: (o: ObservationView) => boolean): ObservationView | undefined {
+  const pool = e.observations.filter((o) => !require || require(o));
+  const score = (o: ObservationView) => (o.behaviorLevel === null ? Infinity : direction === "growth" ? o.behaviorLevel : -o.behaviorLevel);
+  return [...pool].sort((a, b) => score(a) - score(b) || b.date.localeCompare(a.date))[0];
+}
+
 function topStrengths(ev: IndicatorEvidence[]): IndicatorEvidence[] {
   return ev.filter((e) => e.level >= 4).sort((a, b) => b.level - a.level || b.observations.length - a.observations.length).slice(0, 3);
 }
@@ -140,14 +150,17 @@ function topGrowth(ev: IndicatorEvidence[]): IndicatorEvidence[] {
 
 /** Informacja zwrotna: zachowanie (działanie z notatki) – skutek (rezultat) – oczekiwanie (opis zachowania z modelu). */
 function feedbackFrom(e: IndicatorEvidence, model: CompetencyModelIndex): FeedbackDraft | null {
-  const o = e.observations.find((x) => x.action && x.outcome);
+  const growth = e.level < 3;
+  const o = illustrativeObservation(e, growth ? "growth" : "strength", (x) => Boolean(x.action && x.outcome));
   if (!o) return null;
   const ind = model.getIndicator(e.indicatorId)!;
-  const expectation =
-    e.level < 3
-      ? `Oczekuję zachowania na poziomie oczekiwań: ${ind.levels[3]}`
-      : `Proszę utrzymać ten sposób działania. Kolejny krok: ${ind.levels[Math.min(5, Math.round(e.level) + 1) as BehaviorLevel]}`;
-  return { indicatorName: ind.name, date: o.date, behavior: o.action!, effect: o.outcome!, expectation };
+  const next = Math.round(e.level) + 1;
+  const expectation = growth
+    ? `Oczekuję zachowania na poziomie oczekiwań: ${ind.levels[3]}`
+    : next <= 5
+      ? `Proszę utrzymać ten sposób działania. Kolejny krok: ${ind.levels[next as BehaviorLevel]}`
+      : "Proszę utrzymać ten sposób działania i dzielić się nim z zespołem – to wzór dla innych.";
+  return { indicatorName: e.name, date: o.date, behavior: o.action!, effect: o.outcome!, expectation };
 }
 
 const COMMON_DIFFICULT: DifficultSituation[] = [
@@ -216,12 +229,19 @@ export function buildConversationPrep(input: PrepInput, model: CompetencyModelIn
     legalBasis = "§ 10 rozporządzenia w sprawie ocen okresowych";
     sourceFragmentId = "ROZP_OKRESOWE:§10";
     agenda = [
-      { topic: "Główne obowiązki w okresie oceny i sposób ich realizacji w świetle kryteriów", details: [...strengths.map((s) => `mocna strona: ${s.name} (${s.levelLabel})`), ...growth.map((g) => `do rozwoju: ${g.name} (${g.levelLabel})`)] },
+      {
+        topic: "Główne obowiązki w okresie oceny i sposób ich realizacji w świetle kryteriów",
+        details: [
+          ...tasks.map((t) => `obowiązek: ${shorten(t)}`),
+          ...strengths.map((s) => `mocna strona: ${s.name} (${s.levelLabel})`),
+          ...growth.map((g) => `do rozwoju: ${g.name} (${g.levelLabel})`),
+        ],
+      },
       { topic: "Realizacja celów", details: [input.goals ? `cel: ${input.goals}` : "cele nie zostały wyznaczone – pomiń ten punkt"] },
       { topic: "Kierunki rozwoju i potrzeby szkoleniowe", details: ["uzgodnij 1–3 działania rozwojowe – trafią do wniosków IPRZ w podsumowaniu oceny"] },
     ];
     for (const g of growth) {
-      const o = g.observations[0];
+      const o = illustrativeObservation(g, "growth", (x) => Boolean(x.situation));
       questions.push(
         o?.situation
           ? { text: `Wróćmy do sytuacji z ${formatDatePl(o.date)}: „${shorten(o.situation, 110)}”. Jak ją Pani/Pan dziś ocenia i co można było zrobić inaczej?`, why: `do rozwoju: ${g.name}` }
@@ -229,7 +249,7 @@ export function buildConversationPrep(input: PrepInput, model: CompetencyModelIn
       );
     }
     for (const s of strengths.slice(0, 2)) {
-      const o = s.observations[0];
+      const o = illustrativeObservation(s, "strength", (x) => Boolean(x.situation));
       questions.push(
         o?.situation
           ? { text: `Co pomogło w sytuacji z ${formatDatePl(o.date)}: „${shorten(o.situation, 110)}”? Jak wykorzystać to w innych zadaniach?`, why: `mocna strona: ${s.name}` }

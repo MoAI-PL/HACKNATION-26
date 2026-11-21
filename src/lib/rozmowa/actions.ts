@@ -9,11 +9,25 @@ import { loadPrepData } from "./repo";
 
 const isKind = (k: string): k is ConversationKind => (CONVERSATION_KINDS as string[]).includes(k);
 
+// Prosty limit zapytań do modelu na przełożonego (chroni darmowy limit dostawcy) – jak w asystencie formalnym.
+const WINDOW_MS = 60_000;
+const MAX_PER_WINDOW = 10;
+const hits = new Map<string, number[]>();
+function rateLimited(key: string): boolean {
+  const now = Date.now();
+  const recent = (hits.get(key) ?? []).filter((t) => now - t < WINDOW_MS);
+  recent.push(now);
+  hits.set(key, recent);
+  return recent.length > MAX_PER_WINDOW;
+}
+
 export async function polishConversationAction(employeeId: string, kind: string): Promise<PolishResult> {
   const user = await requireRole("PRZELOZONY");
   if (!isKind(kind)) return { ok: false, reason: "Nieznany rodzaj rozmowy." };
+  if (rateLimited(user.id)) return { ok: false, reason: "Zbyt wiele próśb do asystenta w krótkim czasie. Spróbuj ponownie za minutę." };
   const data = await loadPrepData(user.id, employeeId);
   if (!data) return { ok: false, reason: "Nie znaleziono pracownika wśród Twoich podwładnych." };
+  if (!data.allowed.includes(kind)) return { ok: false, reason: "Ten rodzaj rozmowy nie dotyczy oceny tego pracownika." };
   const prep = buildConversationPrep({ ...data.input, kind });
   return polishConversation(prep, data.input.employeeName);
 }

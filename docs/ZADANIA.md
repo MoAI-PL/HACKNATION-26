@@ -40,7 +40,7 @@ Kolejność: najpierw ★, potem pozostałe P0, potem P1 (w kolejności z tabeli
 | ★Z41 | Szybka notatka w 10 sekund | Z13, Z20 | gotowe | bartektymochowicz-collab | `bartek/z41-szybka-notatka` |
 | ★Z14 | Zakończenie oceny: karty zachowań, sugestia, decyzja przełożonego | Z09, Z13 | gotowe | geoglof | `z14-zakonczenie-oceny` |
 | ★Z15 | Podsumowanie i wynik, uzasadnienie, IPRZ | Z07, Z14 | gotowe | geoglof | `z15-podsumowanie` |
-| ★Z16 | PDF arkuszy B i C | Z07, Z12, Z14, Z15, Z26 | w toku | Kamson2077 | `z16-pdf-arkuszy` |
+| ★Z16 | PDF arkuszy B i C | Z07, Z12, Z14, Z15, Z26 | gotowe | Kamson2077 | `z16-pdf-arkuszy` |
 | Z17 | Ścieżka pierwszej oceny | Z07, Z08, Z14, Z16 | wolne | | |
 | Z18 | Panel HR, część 1 (oceny, terminy, przypomnienia) | Z04, Z08, Z10 | gotowe | Nadia | `z18-panel-hr` |
 | Z19 | Panel HR, część 2 (edycja modelu i przepisów) | Z05, Z18 | wolne | | |

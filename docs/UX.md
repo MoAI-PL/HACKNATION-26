@@ -41,6 +41,7 @@ Kolorów statusów nie używamy do dekoracji. Nowy kolor dodajemy tylko jako tok
 | `Notice` | `components/ui/notice.tsx` | komunikat z powodem, podstawą prawną i akcją; błędy/ostrzeżenia mają `role="alert"` |
 | `EmptyState` | `components/ui/empty-state.tsx` | pusta lista z instrukcją i przyciskiem |
 | `InfoTip`, `Term` | `components/ui/info-tip.tsx` | „ⓘ Dlaczego?” przy polach i krokach (treści: Z42), dymki żargonu ze słownika `GLOSSARY` |
+| `Dlaczego` | `components/ui/dlaczego.tsx` | „ⓘ Dlaczego?” z treścią z `data/podpowiedzi.json` (Z42): `<Dlaczego id="KRYTERIA_DODATKOWE" />` – wyjaśnienie, podstawa prawna, dosłowny cytat z bazy wiedzy, link do ISAP; temat w nazwie przycisku dla czytnika ekranu |
 | `Field`, `Input`, `Textarea` | `components/ui/field.tsx` | każde pole: etykieta, podpowiedź, błąd powiązane przez `aria-describedby` |
 | `ChoiceCardGroup` | `components/ui/choice-cards.tsx` | pojedynczy wybór kartami: karty zachowań (Z14), arkusz B/C (Z12) |
 | `ChoiceCardMulti` | `components/ui/choice-cards.tsx` | wybór wielokrotny z limitem: kryteria dodatkowe (maks. 3) |

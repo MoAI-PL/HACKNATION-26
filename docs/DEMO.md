@@ -62,7 +62,7 @@ Każde źródło można rozwinąć – widać cytat i miejsce w dokumencie (para
 
 ## 7. Uprawnienia (30 s)
 
-1. Wyloguj → **„Zaloguj jako Jan Nowak”** (oceniany).
+1. Wyloguj → **„Zaloguj jako Jan Nowak”** (oceniany) – trafia na **„Moje oceny”**: bieżąca ocena pokazuje tylko kryteria z uzasadnieniem wyboru i termin (bez roboczych punktów przełożonego), zakończona – pełny wynik z wyjaśnieniem.
 2. Próba wejścia na `/pulpit`, `/hr` albo `/asystent` przenosi z powrotem na własny ekran; wywołanie API `/api/v1/pracownicy` zwraca **403**, a bez zalogowania – **401**.
 
 ## Dla ciekawych

@@ -17,7 +17,7 @@ Ocena okresowa to dane osobowe pracownika (ocena jego pracy, nieobecności, uzas
 |---|---|
 | Przełożony | wyłącznie **swoi podwładni**: pulpit, oceny, dziennik obserwacji, asystent |
 | HR / administrator | panel HR (wszystkie oceny, terminy, przypomnienia, reset danych demo), asystent |
-| Oceniany | własny ekran; brak dostępu do ekranów i API innych ról |
+| Oceniany | tylko własne oceny (zapytania ograniczone do pracownika powiązanego z kontem – cudza ocena daje 404); przed sporządzeniem oceny widzi tylko część I arkusza; potwierdza zapoznanie się wyłącznie z własną oceną czekającą na zapoznanie; brak dostępu do ekranów i API innych ról |
 | Kierujący komórką | asystent; rola przygotowana do podpisu arkusza pierwszej oceny |
 
 **Trzy warstwy ochrony** – ukrycie przycisku nie jest zabezpieczeniem:

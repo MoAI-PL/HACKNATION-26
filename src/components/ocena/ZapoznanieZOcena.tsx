@@ -3,6 +3,7 @@
 import * as React from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { Dlaczego } from "@/components/ui/dlaczego";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Field, Input } from "@/components/ui/field";
 import type { IsoDate } from "@/lib/domain/types";
@@ -32,7 +33,11 @@ export function ZapoznanieZOcena({ evaluationId, evaluatedAt, today }: { evaluat
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Zapoznanie ocenianego z oceną</CardTitle>
+        <CardTitle className="flex flex-wrap items-center gap-2">
+          Zapoznanie ocenianego z oceną
+          <Dlaczego id="ZAPOZNANIE" />
+          <Dlaczego id="SPRZECIW" label="Termin na sprzeciw" />
+        </CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
         <p className="text-sm">

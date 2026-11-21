@@ -2,12 +2,13 @@
 // Czysta logika bez bazy. Terminy liczy silnik Z08 (openDeadlines z pulpitu Z11 + termin sprzeciwu) – tu je tylko układamy.
 // Testy: tests/dashboard/os-czasu.test.ts.
 
-import type { DeadlineUrgency, IsoDate } from "@/lib/domain/types";
+import type { DeadlineKind, DeadlineUrgency, IsoDate } from "@/lib/domain/types";
 import { ABSENCE_KIND_LABELS, EVALUATION_TYPE_LABELS, LEVEL_LABELS, RESULT_LABELS } from "@/lib/domain/slownik";
 import { DEADLINE_KIND_LABELS, deadlineUrgency, daysUntil, objectionDeadline } from "@/lib/rules/terminy";
 import { inclusiveDays } from "@/lib/rules/kalendarz";
 import { plural } from "@/lib/rules/tekst";
 import { openDeadlines, type EmployeeInfo } from "./pulpit";
+import type { HintId } from "@/lib/ui/dlaczego";
 
 export type TimelineKind = "ZDARZENIE" | "OKRES" | "TERMIN" | "DZIS";
 
@@ -26,7 +27,16 @@ export interface TimelineEntry {
   /** Tylko terminy: ile dni zostało i jak pilne. */
   daysLeft?: number;
   urgency?: DeadlineUrgency;
+  /** Z42: „ⓘ Dlaczego?” z przepisem i cytatem. */
+  hint?: HintId;
 }
+
+const DEADLINE_HINTS: Partial<Record<DeadlineKind, HintId>> = {
+  ROZMOWA_ROZPOCZYNAJACA: "TERMIN_ROZMOWY_ROZPOCZYNAJACEJ",
+  ROZMOWA_PO_NEGATYWNEJ: "TERMIN_ROZMOWY_ROZPOCZYNAJACEJ",
+  PONOWNE_KRYTERIA_PO_ZMIANIE_STANOWISKA: "ZMIANA_STANOWISKA",
+  SPRZECIW: "SPRZECIW",
+};
 
 // Kolejność w tym samym dniu: najpierw to, co się stało, potem znacznik „dziś”, na końcu terminy.
 const ORDER: Record<TimelineKind, number> = { OKRES: 0, ZDARZENIE: 1, DZIS: 2, TERMIN: 3 };
@@ -66,11 +76,13 @@ export function processTimeline(e: EmployeeInfo, today: IsoDate): TimelineEntry[
       title: `Nieobecność: ${ABSENCE_KIND_LABELS[a.kind].toLocaleLowerCase("pl")}`,
       detail: days(n),
       state: a.to < today ? "ZROBIONE" : a.from <= today ? "DZIS" : "PRZED_NAMI",
+      hint: "NIEOBECNOSC",
     });
   }
 
   for (const c of e.positionChanges) {
     event(c.date, "Zmiana stanowiska", c.significantDutiesChange ? "Istotna zmiana obowiązków" : undefined);
+    out.at(-1)!.hint = "ZMIANA_STANOWISKA";
   }
 
   // Terminy przełożonego na bieżącym etapie (silnik Z08) – z wyjaśnieniem i podstawą prawną.
@@ -95,10 +107,19 @@ export function processTimeline(e: EmployeeInfo, today: IsoDate): TimelineEntry[
       state: left < 0 ? "PO_TERMINIE" : left === 0 ? "DZIS" : "PRZED_NAMI",
       daysLeft: left,
       urgency: deadlineUrgency(d, today),
+      hint: DEADLINE_HINTS[d.kind],
     });
   }
 
   out.push({ kind: "DZIS", date: today, title: "Dziś", state: "DZIS" });
 
-  return out.sort((a, b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : ORDER[a.kind] - ORDER[b.kind]));
+  out.sort((a, b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : ORDER[a.kind] - ORDER[b.kind]));
+  // Ta sama podpowiedź „Dlaczego?” tylko przy pierwszym wystąpieniu (np. dwie nieobecności).
+  const seen = new Set<HintId>();
+  for (const x of out) {
+    if (!x.hint) continue;
+    if (seen.has(x.hint)) x.hint = undefined;
+    else seen.add(x.hint);
+  }
+  return out;
 }

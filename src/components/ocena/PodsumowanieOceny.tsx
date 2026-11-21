@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Field, Input, Textarea } from "@/components/ui/field";
-import { InfoTip } from "@/components/ui/info-tip";
+import { Dlaczego } from "@/components/ui/dlaczego";
 import { Notice } from "@/components/ui/notice";
 import { WizardFooter } from "@/components/ui/wizard";
 import { WynikOceny } from "@/components/ocena/WynikOceny";
@@ -104,7 +104,7 @@ export function PodsumowanieOceny({ data, result }: { data: SummaryData; result:
             }
             required={result.justificationRequired}
             error={fieldError("justification")}
-            aside={<InfoTip legalBasis="§ 11 ust. 3 i 4">Uzasadnienie jest obowiązkowe przy ocenie negatywnej, przy pozytywnej – dobrowolne.</InfoTip>}
+            aside={<Dlaczego id="UZASADNIENIE" />}
           >
             <Textarea value={form.justification} onChange={(e) => update({ justification: e.target.value })} rows={5} />
           </Field>
@@ -115,7 +115,7 @@ export function PodsumowanieOceny({ data, result }: { data: SummaryData; result:
             hint="Co pracownik ma rozwijać i jak: szkolenia, zadania rozwojowe, wsparcie przełożonego."
             required
             error={fieldError("developmentPlan")}
-            aside={<InfoTip legalBasis="§ 11 ust. 1 pkt 5">Wnioski do IPRZ wpisuje się do arkusza przy każdej ocenie.</InfoTip>}
+            aside={<Dlaczego id="IPRZ" />}
           >
             <Textarea value={form.developmentPlan} onChange={(e) => update({ developmentPlan: e.target.value })} rows={4} />
           </Field>
@@ -127,9 +127,7 @@ export function PodsumowanieOceny({ data, result }: { data: SummaryData; result:
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             Część III – wniosek o kolejny stopień służbowy
-            <InfoTip legalBasis="§ 11 ust. 5, art. 89 ustawy">
-              Przy ocenie pozytywnej urzędnika służby cywilnej oceniający może złożyć umotywowany wniosek o przyznanie kolejnego stopnia służbowego.
-            </InfoTip>
+            <Dlaczego id="WNIOSEK_O_STOPIEN" />
           </CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">

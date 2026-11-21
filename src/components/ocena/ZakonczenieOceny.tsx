@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChoiceCardGroup } from "@/components/ui/choice-cards";
 import { Field, Textarea } from "@/components/ui/field";
 import { InfoTip } from "@/components/ui/info-tip";
+import { Dlaczego } from "@/components/ui/dlaczego";
 import { Notice } from "@/components/ui/notice";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { WizardFooter, WizardProgress } from "@/components/ui/wizard";
@@ -290,8 +291,9 @@ function KryteriumKrok({
       <PanelSugestii suggestion={suggestion} />
 
       <section aria-labelledby="decyzja-tytul" className="flex flex-col gap-3">
-        <h3 id="decyzja-tytul" className="font-semibold">
+        <h3 id="decyzja-tytul" className="flex flex-wrap items-center gap-2 font-semibold">
           Twoja decyzja: ocena cząstkowa „{c.name}”
+          <Dlaczego id="OCENA_CZASTKOWA" />
         </h3>
         <ChoiceCardGroup
           label={`Ocena cząstkowa: ${c.name}`}
@@ -453,9 +455,12 @@ function Przeglad({
   }, [criteria, noteCounts, data]);
   return (
     <div className="flex flex-col gap-4">
-      <h2 ref={headingRef} tabIndex={-1} className="text-xl font-semibold outline-none">
-        Przegląd ocen cząstkowych
-      </h2>
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <h2 ref={headingRef} tabIndex={-1} className="text-xl font-semibold outline-none">
+          Przegląd ocen cząstkowych
+        </h2>
+        <Dlaczego id="ROZMOWA_OCENIAJACA" label="Przed sporządzeniem: rozmowa oceniająca" />
+      </div>
       <Lustro signals={signals} />
       <Card>
         <CardContent className="overflow-x-auto py-4">

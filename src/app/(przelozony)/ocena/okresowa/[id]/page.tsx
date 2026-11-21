@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Notice } from "@/components/ui/notice";
 import { EvaluationStatusBadge } from "@/components/ui/status-badge";
 import { CzescIArkusza } from "@/components/ocena/CzescIArkusza";
+import { PobierzArkusz } from "@/components/ocena/PobierzArkusz";
 import { KreatorOkresowej } from "@/components/ocena/KreatorOkresowej";
 import { requirePageRole } from "@/lib/auth/guard";
 import { loadWizardData } from "@/lib/ocena/dane-kreatora";
@@ -66,6 +67,7 @@ export default async function KreatorOcenyOkresowejPage({ params }: { params: Pr
         }
       />
       <div className="flex flex-col gap-4">
+        <PobierzArkusz evaluationId={data.evaluationId} type="OKRESOWA" status={data.status} hasCriteria={Boolean(saved.criteriaSetAt)} />
         {saved.sheetOverridden && (
           <Notice tone="info" title="Arkusz zmieniony przez przełożonego">
             Arkusz różni się od wskazanego przez OSP – powód zapisano w dzienniku decyzji.

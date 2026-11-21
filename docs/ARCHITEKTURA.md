@@ -93,7 +93,7 @@ Pełna specyfikacja: [`openapi.yaml`](openapi.yaml). Każdy endpoint (poza statu
 | `POST /api/asystent/formalny` | przełożony, HR, kierujący | pytanie → odpowiedź ze źródłami albo odmowa |
 | `POST /api/asystent/kryteria` | przełożony, HR | propozycja kryteriów dodatkowych z OSP (plik albo pracownik z bazy) |
 
-Ekrany zapisują dane akcjami serwerowymi Next.js (z walidacją zod i autoryzacją w każdej akcji). Integracja z EZD i systemem kadrowym (np. QNT): eksport oceny w JSON działa (`/api/v1/oceny/{id}`); import pracowników i OSP z systemu kadrowego oraz arkusz w PDF przez API są opisane w specyfikacji jako planowane.
+Ekrany zapisują dane akcjami serwerowymi Next.js (z walidacją zod i autoryzacją w każdej akcji). Integracja z EZD i systemem kadrowym (np. QNT): eksport oceny w JSON działa (`/api/v1/oceny/{id}`); arkusz B / C w PDF działa (`/api/v1/oceny/{id}/pdf`, Z16); import pracowników i OSP z systemu kadrowego jest opisany w specyfikacji jako planowany.
 
 ## Wdrożenie i skalowanie
 
@@ -301,6 +301,14 @@ Przełożony widzi wyłącznie swoich podwładnych: zapytania filtrujemy po `sup
 ## Spójność zapisu
 
 - Zmiany etapu oceny (zatwierdzenie części I, sporządzenie, zapoznanie się) zapisujemy `updateMany` z warunkiem na bieżący etap w transakcji. Drugi, równoczesny zapis nie zmienia już niczego i zwraca komunikat „odśwież stronę” – bez zdublowanych rozmów, ocen i wpisów w dzienniku.
+
+## PDF arkuszy B i C (Z16)
+
+- `@react-pdf/renderer` (MIT) z czcionką Noto Sans (OFL-1.1) – pliki TTF w `src/lib/pdf/czcionki/`, dołączane do funkcji serwerowej przez `outputFileTracingIncludes` w `next.config.ts` (Vercel). Bez zewnętrznych narzędzi (LaTeX, przeglądarka) – działa w zwykłej funkcji Node.
+- `src/lib/pdf/arkusz.ts` – czysta logika: dane z oceny (części I–III), warunki wydania (`sheetProblem`), zakres dostępu (`sheetScope`, jak w eksporcie Z38), linki do pobrania. `teksty-arkusza.ts` – stałe teksty i 18 przypisów ze wzorów. `ArkuszOkresowyPdf.tsx` – układ dokumentu.
+- `GET /api/v1/oceny/{id}/pdf?wariant=pelny|czesc-i`: pełny arkusz po sporządzeniu oceny (§ 12 ust. 2), część I po ustaleniu kryteriów (§ 6 ust. 3). Przyciski: część I oceny (Z12), podsumowanie (Z15), „Moje oceny” (Z46).
+- Dane pochodzą z oceny zapisanej przez Z12, Z14 i Z15. Pole bez danych (np. komórka i stanowisko oceniającego, gdy konto nie ma kartoteki pracownika; data przyznania stopnia) drukujemy jako wykropkowaną linię do wpisania ręcznie – jak we wzorze papierowym. Data rozmowy oceniającej: ostatnia rozmowa typu `OCENIAJACA`. Oceny sporządzone przed systemem (np. poprzednie w danych demo) nie mają `criteriaSetAt` – datą „od” jest wtedy początek okresu (przypis 6).
+- Testy: `tests/pdf/arkusz.test.ts` – mapowanie danych, warunki wydania, dostęp i odczyt tekstu z gotowego PDF (polskie znaki, „X” w polach, pouczenie, część III).
 
 ## Struktura katalogów
 

@@ -12,6 +12,7 @@ import { requirePageRole } from "@/lib/auth/guard";
 import { loadSummary, type SummaryData } from "@/lib/ocena/dane-podsumowania";
 import { missingText } from "@/lib/ocena/podsumowanie";
 import { formatDatePl } from "@/lib/rules/kalendarz";
+import { PobierzArkusz } from "@/components/ocena/PobierzArkusz";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Podsumowanie oceny – Kompas Kompetencji" };
@@ -68,6 +69,7 @@ export default async function PodsumowanieOcenyPage({ params }: { params: Promis
       <>
         {header(`Ocena sporządzona ${formatDatePl(data.form.evaluatedAt)}.`, backToList)}
         <div className="flex flex-col gap-6">
+          <PobierzArkusz evaluationId={data.evaluationId} type="OKRESOWA" status={data.status} hasCriteria />
           {data.status === "ZAKONCZONA" && data.objection && (
             <Notice tone="info" title={`Oceniany może złożyć sprzeciw do ${formatDatePl(data.objection.date)}`} legalBasis={data.objection.explanation.legalBasis}>
               Oceniany zapoznał się z oceną {data.acknowledgedAt ? formatDatePl(data.acknowledgedAt) : ""}. Sprzeciw składa się w ciągu 7 dni do

@@ -7,7 +7,8 @@ const envSchema = z.object({
   LLM_MODEL: z.string().trim().optional(),
   LLM_API_KEY: z.string().trim().optional(),
   LLM_EMBED_MODEL: z.string().trim().optional(),
-  LLM_TIMEOUT_MS: z.coerce.number().int().positive().optional(),
+  // Pusta wartość z .env.example (LLM_TIMEOUT_MS="") = brak ustawienia, a nie 0.
+  LLM_TIMEOUT_MS: z.preprocess((v) => (typeof v === "string" && v.trim() === "" ? undefined : v), z.coerce.number().int().positive().optional()),
 });
 
 export interface LLMConfig {

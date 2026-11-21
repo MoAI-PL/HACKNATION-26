@@ -27,6 +27,12 @@ describe("konfiguracja modelu z .env", () => {
     });
   });
 
+  it("puste wartości z .env.example oznaczają brak ustawienia (domyślny limit czasu)", () => {
+    const env = { LLM_BASE_URL: "", LLM_MODEL: "", LLM_API_KEY: "", LLM_EMBED_MODEL: "", LLM_TIMEOUT_MS: "" };
+    expect(readLLMConfig(env)).toBeNull();
+    expect(readLLMConfig({ ...env, LLM_BASE_URL: "http://x/v1", LLM_MODEL: "m" })?.timeoutMs).toBe(30_000);
+  });
+
   it("zmiana modelu w .env daje nowego dostawcę bez zmian w kodzie", () => {
     const a = getLLM({ LLM_BASE_URL: "http://a/v1", LLM_MODEL: "bielik" })!;
     const b = getLLM({ LLM_BASE_URL: "http://a/v1", LLM_MODEL: "pllum" })!;

@@ -26,6 +26,10 @@ npx license-checker-rseidelsohn --production --summary
 | next-auth (Auth.js) | 5 | ISC | logowanie, sesje |
 | bcryptjs | 3 | BSD-3-Clause | hashowanie haseł |
 | @prisma/client, prisma | 6.19 | Apache-2.0 | dostęp do bazy danych, migracje |
+| minisearch | 7.2 | MIT | wyszukiwanie BM25 w bazie wiedzy asystenta |
+| pdfjs-dist | 6.5 | Apache-2.0 | odczyt tekstu z PDF przy budowie bazy wiedzy (tylko skrypt) |
+| fflate | 0.8 | MIT | rozpakowanie plików .xlsx (ZIP) przy imporcie modelu kompetencji |
+| fast-xml-parser | 5 | MIT | odczyt XML z plików .xlsx przy imporcie modelu kompetencji (zależności: strnum, MIT) |
 | typescript | 5 | Apache-2.0 | język |
 | vitest | 3 | MIT | testy |
 | vite-tsconfig-paths | 6 | MIT | aliasy `@/` w testach |

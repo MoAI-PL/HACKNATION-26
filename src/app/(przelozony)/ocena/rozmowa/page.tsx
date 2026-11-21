@@ -4,11 +4,10 @@ import { MessagesSquare } from "lucide-react";
 import { PageHeader } from "@/components/layout/AppShell";
 import { buttonVariants } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
-import { StatusBadge } from "@/components/ui/status-badge";
+import { DeadlineBadge } from "@/components/ui/status-badge";
 import { requirePageRole } from "@/lib/auth/guard";
 import { CONVERSATION_LABELS } from "@/lib/rozmowa/przygotowanie";
 import { listConversationTargets } from "@/lib/rozmowa/repo";
-import { deadlineText } from "@/lib/ui/status";
 import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = { title: "Asystent rozmowy – Kompas Kompetencji" };
@@ -36,10 +35,10 @@ export default async function RozmowaPage() {
                 <p className="text-sm text-muted-foreground">
                   {t.positionTitle ?? "stanowisko nieuzupełnione"} · następna: {CONVERSATION_LABELS[t.suggested].toLocaleLowerCase("pl")}
                 </p>
-                {t.deadlineText && t.daysLeft !== null && (
+                {t.deadlineText && t.daysLeft !== null && t.urgency && (
                   <span className="flex flex-wrap items-center gap-2 text-sm">
                     {t.deadlineText}
-                    <StatusBadge tone={t.daysLeft < 0 ? "danger" : t.daysLeft <= 7 ? "danger" : t.daysLeft <= 30 ? "warning" : "success"}>{deadlineText(t.daysLeft)}</StatusBadge>
+                    <DeadlineBadge daysLeft={t.daysLeft} urgency={t.urgency} />
                   </span>
                 )}
               </div>

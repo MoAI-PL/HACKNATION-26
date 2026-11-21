@@ -1,5 +1,6 @@
 "use client";
 // Redakcja przez AI i własne notatki do rozmowy (Z24). Propozycja w <PropozycjaAI>, „Wstaw” dopisuje ją do notatek.
+// Notatki nie trafiają do systemu – zostają w tej przeglądarce (szkic na wypadek przełączenia zakładki) i na wydruku.
 
 import * as React from "react";
 import { Sparkles } from "lucide-react";
@@ -8,12 +9,37 @@ import { Button } from "@/components/ui/button";
 import { Field, Textarea } from "@/components/ui/field";
 import { logConversationAiDecisionAction, polishConversationAction } from "@/lib/rozmowa/actions";
 
+function readDraft(key: string): string {
+  try {
+    return window.localStorage.getItem(key) ?? "";
+  } catch {
+    return "";
+  }
+}
+
+function writeDraft(key: string, value: string) {
+  try {
+    if (value.trim()) window.localStorage.setItem(key, value);
+    else window.localStorage.removeItem(key);
+  } catch {
+    // tryb prywatny albo zablokowany magazyn – notatki działają dalej, tylko bez szkicu
+  }
+}
+
 export function RozmowaAI({ employeeId, kind }: { employeeId: string; kind: string }) {
+  const draftKey = `kompas:rozmowa:${employeeId}:${kind}`;
   const [state, setState] = React.useState<ProposalState | null>(null);
   const [proposal, setProposal] = React.useState("");
   const [reason, setReason] = React.useState<string | null>(null);
   const [notes, setNotes] = React.useState("");
   const cancelled = React.useRef(false);
+
+  // Szkic czytamy dopiero w przeglądarce (bez rozjazdu z renderowaniem na serwerze).
+  React.useEffect(() => setNotes(readDraft(draftKey)), [draftKey]);
+  const updateNotes = (value: string) => {
+    setNotes(value);
+    writeDraft(draftKey, value);
+  };
 
   const ask = async () => {
     cancelled.current = false;
@@ -32,12 +58,12 @@ export function RozmowaAI({ employeeId, kind }: { employeeId: string; kind: stri
 
   return (
     <section aria-labelledby="notatki-rozmowy" className="flex flex-col gap-4 print:break-inside-avoid">
-      <div className="flex flex-wrap items-center justify-between gap-3 print:hidden">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <h2 id="notatki-rozmowy" className="text-xl">
           Moje notatki do rozmowy
         </h2>
         {state === null && (
-          <Button variant="outline" className="h-10" onClick={ask}>
+          <Button variant="outline" className="h-10 print:hidden" onClick={ask}>
             <Sparkles aria-hidden /> Zredaguj otwarcie i informację zwrotną z AI
           </Button>
         )}
@@ -49,7 +75,7 @@ export function RozmowaAI({ employeeId, kind }: { employeeId: string; kind: stri
             title="Otwarcie rozmowy i informacja zwrotna"
             proposal={proposal}
             insertLabel="Wstaw do notatek"
-            onInsert={(text) => setNotes((n) => (n.trim() ? `${n.trim()}\n\n${text}` : text))}
+            onInsert={(text) => updateNotes(notes.trim() ? `${notes.trim()}\n\n${text}` : text)}
             onReject={() => undefined}
             onDecision={(d) => void logConversationAiDecisionAction(employeeId, { kind, ...d })}
             onCancel={() => {
@@ -61,9 +87,13 @@ export function RozmowaAI({ employeeId, kind }: { employeeId: string; kind: stri
           {state === "niedostepna" && reason && <p className="mt-2 text-sm text-muted-foreground">{reason}</p>}
         </div>
       )}
-      <Field label="Notatki" hint="Twoje punkty do rozmowy. Widoczne tylko na tym ekranie i na wydruku – nie zapisujemy ich w systemie.">
-        <Textarea value={notes} onChange={(e) => setNotes(e.target.value)} className="min-h-40 print:border-0" />
-      </Field>
+      <div className="print:hidden">
+        <Field label="Notatki" hint="Twoje punkty do rozmowy. Szkic zostaje tylko w tej przeglądarce i trafia na wydruk – nie zapisujemy go w systemie.">
+          <Textarea value={notes} onChange={(e) => updateNotes(e.target.value)} className="min-h-40" />
+        </Field>
+      </div>
+      {/* Na wydruku pełna treść notatek zamiast pola tekstowego, które ucina długi tekst. */}
+      <div className="hidden whitespace-pre-wrap print:block">{notes.trim() || "………………………………………………………………………………………………………………"}</div>
     </section>
   );
 }

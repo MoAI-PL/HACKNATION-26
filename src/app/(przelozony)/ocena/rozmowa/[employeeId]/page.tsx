@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PageHeader } from "@/components/layout/AppShell";
-import { PrintButton } from "@/components/hr/PrintButton";
+import { PrintButton } from "@/components/ui/print-button";
 import { RozmowaAI } from "@/components/rozmowa/RozmowaAI";
 import { buttonVariants } from "@/components/ui/button";
 import { InfoTip } from "@/components/ui/info-tip";
@@ -10,7 +10,7 @@ import { Notice } from "@/components/ui/notice";
 import { getFragment } from "@/lib/ai/rag/search";
 import { requirePageRole } from "@/lib/auth/guard";
 import { formatDatePl } from "@/lib/obserwacje/dziennik";
-import { buildConversationPrep, CONVERSATION_KINDS, CONVERSATION_LABELS, type ConversationKind, type IndicatorEvidence } from "@/lib/rozmowa/przygotowanie";
+import { buildConversationPrep, CONVERSATION_LABELS, type ConversationKind, type IndicatorEvidence } from "@/lib/rozmowa/przygotowanie";
 import { loadPrepData } from "@/lib/rozmowa/repo";
 import { cn } from "@/lib/utils";
 
@@ -58,7 +58,8 @@ export default async function PrzygotowanieRozmowyPage({
   const { typ } = await searchParams;
   const data = await loadPrepData(user.id, employeeId);
   if (!data) notFound();
-  const kind: ConversationKind = CONVERSATION_KINDS.includes(typ as ConversationKind) ? (typ as ConversationKind) : data.suggested;
+  // Rodzaj z adresu tylko, jeśli dotyczy oceny tego pracownika (np. pierwsza ocena ma wyłącznie rozmowę wstępną).
+  const kind: ConversationKind = data.allowed.includes(typ as ConversationKind) ? (typ as ConversationKind) : data.suggested;
   const prep = buildConversationPrep({ ...data.input, kind });
   const source = getFragment(prep.sourceFragmentId);
 
@@ -77,8 +78,9 @@ export default async function PrzygotowanieRozmowyPage({
         }
       />
 
+      {data.allowed.length > 1 && (
       <nav aria-label="Rodzaj rozmowy" className="flex flex-wrap gap-1 self-start rounded-lg border bg-card p-1 print:hidden">
-        {CONVERSATION_KINDS.map((k) => (
+        {data.allowed.map((k) => (
           <Link
             key={k}
             href={`/ocena/rozmowa/${employeeId}?typ=${k}`}
@@ -91,6 +93,7 @@ export default async function PrzygotowanieRozmowyPage({
           </Link>
         ))}
       </nav>
+      )}
 
       <Section id="cel" title="Cel rozmowy">
         <p>{prep.goal}</p>

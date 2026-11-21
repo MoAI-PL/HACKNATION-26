@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
 import { ChevronLeft, ChevronRight, Lightbulb, NotebookPen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -75,7 +76,7 @@ export function ZakonczenieOceny({ data }: { data: AssessmentData }) {
       <WizardProgress steps={steps} current={step + 1} onStepClick={(n) => goTo(n - 1)} />
 
       {review ? (
-        <Przeglad criteria={criteria} noteCounts={noteCounts} headingRef={headingRef} onGoTo={goTo} />
+        <Przeglad evaluationId={data.evaluationId} criteria={criteria} noteCounts={noteCounts} headingRef={headingRef} onGoTo={goTo} />
       ) : (
         <KryteriumKrok
           key={criteria[step]!.competency}
@@ -417,11 +418,13 @@ function PanelSugestii({ suggestion: s }: { suggestion: LevelSuggestion }) {
 // ---------------------------------------------------------------------------
 
 function Przeglad({
+  evaluationId,
   criteria,
   noteCounts,
   headingRef,
   onGoTo,
 }: {
+  evaluationId: string;
   criteria: CriterionData[];
   noteCounts: Map<string, number>;
   headingRef: React.RefObject<HTMLHeadingElement | null>;
@@ -493,7 +496,15 @@ function Przeglad({
           </ul>
         </Notice>
       ) : (
-        <Notice tone="success" title="Wszystkie oceny cząstkowe są gotowe">
+        <Notice
+          tone="success"
+          title="Wszystkie oceny cząstkowe są gotowe"
+          action={
+            <Button asChild>
+              <Link href={`/ocena/okresowa/${evaluationId}/podsumowanie`}>Dalej: podsumowanie i wynik</Link>
+            </Button>
+          }
+        >
           Kolejny krok to podsumowanie: średnia, poziom ogólny, wynik oceny, uzasadnienie i wnioski do IPRZ.
         </Notice>
       )}

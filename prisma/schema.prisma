@@ -157,29 +157,33 @@ model OrgUnit {
 }
 
 model Employee {
-  id              String    @id @default(cuid())
-  firstName       String
-  lastName        String
+  id               String    @id @default(cuid())
+  firstName        String
+  lastName         String
   /// true = urzędnik służby cywilnej (część III arkusza), false = pracownik służby cywilnej.
-  isCivilServant  Boolean   @default(false)
+  isCivilServant   Boolean   @default(false)
+  /// Część III arkusza (tylko urzędnik): rok mianowania, posiadany stopień służbowy (numer) i data jego przyznania.
+  appointmentYear  Int?
+  serviceGrade     Int?
+  serviceGradeDate DateTime? @db.Date
   /// Nawiązanie stosunku pracy (pierwsza ocena: rozmowa wstępna w 21 dni).
-  employmentStart DateTime  @db.Date
+  employmentStart  DateTime  @db.Date
   /// Zatrudnienie na czas nieokreślony (start 24-miesięcznego okresu oceny okresowej).
-  permanentFrom   DateTime? @db.Date
+  permanentFrom    DateTime? @db.Date
   /// Koniec umowy na czas określony (pierwsza ocena najpóźniej miesiąc przed końcem).
-  contractEnd     DateTime? @db.Date
-  orgUnitId       String?
-  orgUnit         OrgUnit?  @relation(fields: [orgUnitId], references: [id])
-  positionId      String?
-  position        Position? @relation(fields: [positionId], references: [id])
+  contractEnd      DateTime? @db.Date
+  orgUnitId        String?
+  orgUnit          OrgUnit?  @relation(fields: [orgUnitId], references: [id])
+  positionId       String?
+  position         Position? @relation(fields: [positionId], references: [id])
   /// Bezpośredni przełożony = oceniający.
-  supervisorId    String?
-  supervisor      User?     @relation("Supervisor", fields: [supervisorId], references: [id])
+  supervisorId     String?
+  supervisor       User?     @relation("Supervisor", fields: [supervisorId], references: [id])
   /// Kierujący komórką (podpis w pierwszej ocenie).
-  unitHeadId      String?
-  unitHead        User?     @relation("UnitHead", fields: [unitHeadId], references: [id])
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
+  unitHeadId       String?
+  unitHead         User?     @relation("UnitHead", fields: [unitHeadId], references: [id])
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
 
   user          User?          @relation("UserEmployee")
   evaluations   Evaluation[]
@@ -260,6 +264,8 @@ model Evaluation {
   /// Część III – wniosek o kolejny stopień służbowy (tylko urzędnik, ocena pozytywna).
   promotionRequest       Boolean @default(false)
   promotionJustification String? @db.Text
+  /// Numer stopnia służbowego, o który wnioskuje oceniający (art. 89 ust. 1 ustawy).
+  requestedGrade         Int?
 
   /// Pierwsza ocena: egzamin ze służby przygotowawczej.
   examResult    ExamResult?

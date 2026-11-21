@@ -26,7 +26,7 @@ Kolejność: najpierw ★, potem pozostałe P0, potem P1 (w kolejności z tabeli
 | ID | Zadanie | Zależy od | Status | Kto | Gałąź |
 |---|---|---|---|---|---|
 | ★Z07 | Silnik punktacji (§11, §10), walidacja kryteriów dodatkowych | Z03 | gotowe | geoglof | `z07-silnik-punktacji` |
-| ★Z08 | Silnik terminów (KC 112/115, święta, nieobecności) | Z03 | w toku | geoglof | `z08-silnik-terminow` |
+| ★Z08 | Silnik terminów (KC 112/115, święta, nieobecności) | Z03 | gotowe | geoglof | `z08-silnik-terminow` |
 | ★Z09 | Sugerowany poziom kompetencji i dane do „Dlaczego ten poziom?” | Z05, Z07 | wolne | | |
 
 ## D. Interfejs i ścieżki
@@ -61,7 +61,7 @@ Kolejność: najpierw ★, potem pozostałe P0, potem P1 (w kolejności z tabeli
 | ID | Zadanie | Zależy od | Status | Kto | Gałąź |
 |---|---|---|---|---|---|
 | ★Z27 | Pytania do mentorów (`docs/ZALOZENIA.md`) | — | wolne | | |
-| ★Z28 | Szkic w HackTribe – **wysłać przed 19:30** | Z01 | wolne | | |
+| ★Z28 | Szkic w HackTribe – **wysłać przed 19:30** | Z01 | w toku | geoglof | — |
 | ★Z29 | Publiczne demo | Z04, Z26 | wolne | | |
 | ★Z44 | Reset danych demo i działanie bez AI | Z20, Z26 | wolne | | |
 | Z30 | Testy ręczne, Playwright, dostępność, pomiar czasu oceny | Z15, Z16 | wolne | | |

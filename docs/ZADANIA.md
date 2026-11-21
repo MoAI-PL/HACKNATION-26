@@ -80,7 +80,7 @@ Kolejność: najpierw ★, potem pozostałe P0, potem P1 (w kolejności z tabeli
 | Z34 | Pseudonimizacja przed LLM | Z20 | wolne | | |
 | Z35 | Dziennik audytu z eksportem CSV | Z14 | wolne | | |
 | Z37 | Oś czasu procesu pracownika | Z08 | wolne | | |
-| Z38 | REST API `/api/v1` (eksport JSON) | Z15 | w toku | geoglof | `z38-rest-api` |
+| Z38 | REST API `/api/v1` (eksport JSON) | Z15 | gotowe | geoglof | `z38-rest-api` |
 
 ## H. P2
 

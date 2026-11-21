@@ -1,6 +1,6 @@
 # Wykorzystanie AI w Kompasie Kompetencji
 
-> Dokument rozwijany w trakcie prac (pełna wersja: Z31). Stan: warstwa modelu (Z20), baza wiedzy (Z21), asystent formalny (Z22).
+> Dokument rozwijany w trakcie prac (pełna wersja: Z31). Stan: warstwa modelu (Z20), baza wiedzy (Z21), asystent formalny (Z22), analiza OSP (Z23).
 
 ## Zasada nadrzędna
 
@@ -12,6 +12,7 @@
 |---|---|---|
 | Asystent formalny (pytania o procedurę) | tak | odpowiedź wyłącznie z fragmentów przepisów i poradników, zawsze ze źródłem |
 | Punktacja, wynik, terminy, wybór arkusza | **nie** | silnik reguł z testami |
+| Propozycja kryteriów dodatkowych z OSP (Z23) | tak | do 3 kryteriów z uzasadnieniem i cytatem zadania; kryteria i cytaty sprawdza kod, bez modelu działa propozycja ze słów kluczowych |
 | Sugerowany poziom kompetencji | **nie** | średnia z wybranych opisów zachowań, wzór widoczny w panelu „Dlaczego ten poziom?” |
 
 ## Model
@@ -33,12 +34,23 @@
 7. **Dziennik zapytań** (`AssistantQuery`): pytanie, użyte źródła, odpowiedź, odmowa, krok ścieżki, model, czas.
 8. **Limit zapytań** na endpoint (20/min na adres) chroni darmowy limit dostawcy.
 
+## Propozycja kryteriów dodatkowych z OSP (Z23) – jak ogranicza błędy
+
+1. **Lista kandydatów liczona przez kod:** 14 kryteriów z załącznika nr 1 bez obowiązkowych dla arkusza (silnik kryteriów Z07). Model wybiera tylko z tej listy, podając kody.
+2. **Zadania z OSP jako dane** w znacznikach `<zadanie nr="…">` (numeracja jak w OSP); znaki `<` `>` w treści OSP są neutralizowane, a prompt nakazuje ignorować polecenia w OSP.
+3. **Odpowiedź JSON walidowana schematem**, jedna ponowna próba.
+4. **Kontrola po odpowiedzi:** kryterium spoza listy albo obowiązkowe jest pomijane (z informacją dla użytkownika), powtórzenia usuwane, najwyżej 3 (`validateAdditionalCriteria`, § 5 ust. 2).
+5. **Cytat zawsze prawdziwy:** cytat modelu musi być dosłownym fragmentem zadania (bez względu na wielkość liter i spacje). Gdy go tam nie ma, szukamy go w innych zadaniach (i poprawiamy numer zadania), a w ostateczności pokazujemy początek wskazanego zadania. Model nie może „włożyć w usta” OSP zdania, którego w nim nie ma.
+6. **Bez modelu** (brak konfiguracji, błąd, limit, odpowiedź bez poprawnych kryteriów): propozycja deterministyczna – kompetencje miękkie wymienione w OSP oraz słowa kluczowe w zadaniach, z wyjaśnieniem, które słowa z którego zadania zadecydowały. Oznaczona jako propozycja bez AI.
+7. Propozycja nigdy nie trafia do arkusza sama: przełożony wstawia ją przyciskiem w `<PropozycjaAI>` (Z12), a „Wstaw” i „Odrzuć” trafiają do dziennika.
+8. API: `POST /api/asystent/kryteria` (plik OSP albo pracownik z bazy), tylko przełożony (własni podwładni) i HR, limit 10 zapytań na minutę na użytkownika.
+
 ## Gdzie przetwarzane są dane
 
 | Wariant | Gdzie trafia pytanie | Dane osobowe |
 |---|---|---|
 | lokalny (Ollama) | serwer urzędu | nie opuszczają urzędu |
-| demo (API w chmurze) | dostawca API | tylko dane fikcyjne; pytania asystenta formalnego dotyczą procedury, nie osób |
+| demo (API w chmurze) | dostawca API | tylko dane fikcyjne; pytania asystenta formalnego dotyczą procedury, nie osób; do analizy OSP wysyłamy treść stanowiska (zadania, cel, kompetencje), bez imion i nazwisk pracowników |
 
 ## Do zrobienia przed wdrożeniem produkcyjnym
 

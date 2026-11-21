@@ -21,6 +21,10 @@ materialy/          materiały źródłowe od organizatora (tylko do odczytu)
 docs/               tablica zadań, założenia, dokumentacja
 ```
 
+## Publiczne demo
+
+Adres demo: _(uzupełnić po wdrożeniu)_. Wdrożenie: Vercel + Neon – instrukcja w [`docs/WDROZENIE.md`](docs/WDROZENIE.md).
+
 ## Uruchomienie lokalne
 
 Wymagania: Node.js 20+, Docker.

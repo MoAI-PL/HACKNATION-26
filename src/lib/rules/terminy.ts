@@ -512,7 +512,9 @@ export function buildTodoItems(sources: readonly TodoSource[], today: IsoDate, o
       const actionLabel = TODO_ACTIONS[d.kind];
       if (!actionLabel) continue;
       const urgency = deadlineUrgency(d, today, r);
-      const when = urgency === "PO_TERMINIE" ? `termin minął ${formatDateShortPl(d.date)}` : `do ${formatDateShortPl(d.date)}`;
+      // Rok dopisujemy, gdy termin wypada w innym roku niż dziś – inaczej „22.12” byłoby niejednoznaczne.
+      const day = d.date.slice(0, 4) === today.slice(0, 4) ? formatDateShortPl(d.date) : formatDatePl(d.date);
+      const when = urgency === "PO_TERMINIE" ? `termin minął ${day}` : `do ${day}`;
       items.push({
         employeeId: s.employeeId,
         evaluationId: s.evaluationId,

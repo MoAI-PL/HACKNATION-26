@@ -17,6 +17,7 @@ import {
   missingText,
   type SummaryIssue,
 } from "@/lib/ocena/podsumowanie";
+import { applyAcknowledgment } from "@/lib/ocena/zapoznanie";
 
 const NOT_FOUND = "Nie znaleziono oceny. Odśwież stronę i spróbuj ponownie.";
 
@@ -127,27 +128,7 @@ export async function acknowledgeEvaluation(evaluationId: string, ackDate: strin
   const problem = acknowledgmentIssue(/^\d{4}-\d{2}-\d{2}$/.test(ackDate) ? ackDate : undefined, fromDbDate(ev.evaluatedAt), todayIso());
   if (problem) return { ok: false, error: problem };
 
-  await prisma.$transaction(async (tx) => {
-    await tx.evaluation.update({ where: { id: ev.id }, data: { status: "ZAKONCZONA", acknowledgedAt: toDbDate(ackDate) } });
-    const open = await tx.evaluation.count({
-      where: { employeeId: ev.employeeId, type: "OKRESOWA", status: { not: "ZAKONCZONA" }, id: { not: ev.id } },
-    });
-    if (open === 0) {
-      await tx.evaluation.create({
-        data: {
-          employeeId: ev.employeeId,
-          evaluatorId: ev.evaluatorId,
-          type: "OKRESOWA",
-          sheet: ev.sheet,
-          status: "DO_ROZPOCZECIA",
-          isReevaluation: ev.result === "NEGATYWNA",
-        },
-      });
-    }
-    await tx.auditLog.create({
-      data: { userId: user.id, action: "ZAPOZNANIE_Z_OCENA", entity: "Evaluation", entityId: ev.id, newValue: { data: ackDate } },
-    });
-  });
+  await prisma.$transaction((tx) => applyAcknowledgment(tx, ev, ackDate, user.id, "PRZELOZONY"));
   revalidatePath("/ocena/okresowa");
   revalidatePath(`/ocena/okresowa/${ev.id}`);
   revalidatePath("/pulpit");

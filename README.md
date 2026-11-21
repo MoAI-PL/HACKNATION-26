@@ -14,7 +14,7 @@ Rozwiązanie zadania Ministerstwa Cyfryzacji (Biuro Dyrektora Generalnego) „Ko
 |---|---|---|---|
 | **Przełożona – Ewa Kowalczyk** | `ewa.kowalczyk@demo.kompas.test` | `Kompas2026!` | pulpit „Do zrobienia”, ocena okresowa, dziennik obserwacji, asystent |
 | HR / administrator | `hr@demo.kompas.test` | `Kompas2026!` | panel HR: terminy z wydłużeniami, przypomnienia, reset danych demo |
-| Oceniany – Jan Nowak | `jan.nowak@demo.kompas.test` | `Kompas2026!` | rola z najwęższymi uprawnieniami – próba wejścia na ekrany przełożonego albo do API wraca na własny ekran / 403 |
+| Oceniany – Jan Nowak | `jan.nowak@demo.kompas.test` | `Kompas2026!` | własne oceny i potwierdzenie zapoznania się; rola z najwęższymi uprawnieniami – próba wejścia na ekrany przełożonego albo do API wraca na własny ekran / 403 |
 | Kierujący komórką | `kierujacy@demo.kompas.test` | `Kompas2026!` | asystent formalny; rola do podpisu arkusza pierwszej oceny |
 
 Scenariusz krok po kroku dla jury (ok. 10 minut): **[`docs/DEMO.md`](docs/DEMO.md)**.
@@ -34,6 +34,7 @@ Scenariusz krok po kroku dla jury (ok. 10 minut): **[`docs/DEMO.md`](docs/DEMO.m
 | ⚖️ | **Wynik zgodny z § 11** | średnia, poziom ogólny, wynik pozytywny/negatywny z wyjaśnieniem i podstawą prawną; uzasadnienie obowiązkowe przy ocenie negatywnej, IPRZ, część III, termin sprzeciwu |
 | 💬 | **Asystent formalny** | odpowiedzi tylko z 406 fragmentów przepisów i poradników, zawsze ze źródłem; uczciwa odmowa poza zakresem; **25/25 trafnych, 5/5 odmów** w zestawie testowym |
 | 🏛 | **Panel HR** | wszystkie oceny z terminami i wydłużeniami (np. „+44 dni: zwolnienie lekarskie”), przypomnienia, wzór zawiadomienia o zmianie terminu, ostrzeżenie z art. 71 |
+| 👤 | **Moje oceny (oceniany)** | pracownik widzi kryteria i termin bieżącej oceny (część I arkusza), a po sporządzeniu – wynik z wyjaśnieniem, uzasadnienie, IPRZ i termin sprzeciwu; sam potwierdza zapoznanie się z oceną |
 | 🔐 | **Role i bezpieczeństwo** | przełożony, HR, oceniany, kierujący; autoryzacja w każdym API i akcji serwerowej (401/403), przełożony widzi wyłącznie swoich podwładnych |
 
 | ![Ocena wskaźników kartami zachowań](docs/zrzuty/03-ocena-wskaznikow.jpg) | ![Asystent formalny ze źródłami](docs/zrzuty/04-asystent.jpg) |

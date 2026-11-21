@@ -50,7 +50,7 @@ const NAV_BY_ROLE: Record<Role, NavItem[]> = {
     { href: "/pulpit", label: "Pulpit", icon: "pulpit", description: "Co mam dziś zrobić" },
     { href: "/ocena/pierwsza", label: "Pierwsza ocena", icon: "pierwsza", pending: "Z17" },
     { href: "/ocena/okresowa", label: "Ocena okresowa", icon: "okresowa" },
-    { href: "/obserwacje", label: "Dziennik obserwacji", icon: "dziennik", pending: "Z13" },
+    { href: "/obserwacje", label: "Dziennik obserwacji", icon: "dziennik", description: "Notatki o zachowaniach na bieżąco" },
     ASYSTENT_FORMALNY,
     {
       href: "/ocena/rozmowa",

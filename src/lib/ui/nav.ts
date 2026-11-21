@@ -62,7 +62,11 @@ const NAV_BY_ROLE: Record<Role, NavItem[]> = {
   ],
   // Asystent formalny leży we wspólnej grupie (wspolne) – dostęp jak obszar „/asystent” w role.ts.
   KIERUJACY_KOMORKA: [{ href: "/kierujacy", label: "Arkusze do podpisu", icon: "podpis" }, ASYSTENT_FORMALNY],
-  HR: [{ href: "/hr", label: "Panel HR", icon: "hr", description: "Oceny, terminy, przypomnienia" }, ASYSTENT_FORMALNY],
+  HR: [
+    { href: "/hr", label: "Panel HR", icon: "hr", description: "Oceny, terminy, przypomnienia" },
+    { href: "/hr/lustro", label: "Lustro ocen", icon: "hr", description: "Rozkład ocen w komórkach (Z36)" },
+    ASYSTENT_FORMALNY,
+  ],
   OCENIANY: [{ href: "/moje-oceny", label: "Moje oceny", icon: "moje" }],
 };
 
@@ -87,6 +91,13 @@ export function plannedNavForRole(role: Role): NavItem[] {
 /** Czy pozycja menu jest aktywna dla bieżącej ścieżki (także podstrony). */
 export function isActivePath(pathname: string, href: string): boolean {
   return pathname === href || pathname.startsWith(`${href}/`);
+}
+
+/** Jedna aktywna pozycja menu: najdokładniej pasująca (np. /hr/lustro → „Lustro ocen”, a nie „Panel HR”). */
+export function activeHref(pathname: string, items: readonly NavItem[]): string | undefined {
+  return items
+    .filter((i) => isActivePath(pathname, i.href))
+    .sort((a, b) => b.href.length - a.href.length)[0]?.href;
 }
 
 /** Szybkie notatki robi tylko przełożony – i tylko gdy funkcja jest gotowa (Z41). */

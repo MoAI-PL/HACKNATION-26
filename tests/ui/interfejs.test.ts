@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { globalShortcutFor, isTypingTarget, matchesShortcut, SHORTCUT_EVENTS } from "@/lib/ui/shortcuts";
 import { autosaveText, deadlineText, urgencyFromDaysLeft, URGENCY_TONE, wizardStepLabel } from "@/lib/ui/status";
-import { ASSISTANT_HREF, isActivePath, isScreenReady, navForRole, plannedNavForRole, roleHasAssistant, roleHasQuickNote } from "@/lib/ui/nav";
+import { ASSISTANT_HREF, activeHref, isActivePath, isScreenReady, navForRole, plannedNavForRole, roleHasAssistant, roleHasQuickNote } from "@/lib/ui/nav";
 import { ROLES } from "@/lib/domain/types";
 
 const pole = (tagName: string) => ({ tagName, getAttribute: () => null });
@@ -87,7 +87,10 @@ describe("nawigacja", () => {
     expect(navForRole("OCENIANY").map((i) => i.href)).toEqual(["/moje-oceny"]);
     expect(roleHasAssistant("OCENIANY")).toBe(false);
     // Asystent formalny we wspólnej grupie (wspolne) – także dla HR i kierującego (role.ts: obszar /asystent).
-    expect(navForRole("HR").map((i) => i.href)).toEqual(["/hr", ASSISTANT_HREF]);
+    expect(navForRole("HR").map((i) => i.href)).toEqual(["/hr", "/hr/lustro", ASSISTANT_HREF]);
+    // Jedna aktywna pozycja – najdokładniej pasująca.
+    expect(activeHref("/hr/lustro", navForRole("HR"))).toBe("/hr/lustro");
+    expect(activeHref("/hr/zawiadomienie/1", navForRole("HR"))).toBe("/hr");
     expect(navForRole("KIERUJACY_KOMORKA").map((i) => i.href)).toEqual(["/kierujacy", ASSISTANT_HREF]);
     expect(roleHasAssistant("HR")).toBe(true);
     expect(roleHasQuickNote("OCENIANY", true)).toBe(false);

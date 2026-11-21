@@ -66,9 +66,9 @@ export default async function OcenaOkresowaPage() {
                         )}
                       </span>
                     </div>
-                    <Button asChild variant={i.status === "DO_ROZPOCZECIA" ? "default" : "outline"}>
-                      <Link href={`/ocena/okresowa/${i.evaluationId}`}>
-                        {i.status === "DO_ROZPOCZECIA" ? "Ustal kryteria" : "Zobacz część I"}
+                    <Button asChild variant={i.status === "DO_ROZPOCZECIA" || i.status === "W_OCENIE" ? "default" : "outline"}>
+                      <Link href={i.status === "W_OCENIE" ? `/ocena/okresowa/${i.evaluationId}/ocena` : `/ocena/okresowa/${i.evaluationId}`}>
+                        {i.status === "DO_ROZPOCZECIA" ? "Ustal kryteria" : i.status === "W_OCENIE" ? "Oceń" : "Zobacz część I"}
                       </Link>
                     </Button>
                   </CardContent>

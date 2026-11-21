@@ -45,9 +45,17 @@ export default async function KreatorOcenyOkresowejPage({ params }: { params: Pr
         }
         badge={badge}
         action={
-          <Button asChild variant="outline">
-            <Link href="/ocena/okresowa">Wróć do listy</Link>
-          </Button>
+          data.status === "W_OKRESIE_OCENY" || data.status === "W_OCENIE" ? (
+            <Button asChild>
+              <Link href={`/ocena/okresowa/${data.evaluationId}/ocena`}>
+                {data.status === "W_OCENIE" ? "Kontynuuj ocenę" : "Zakończ ocenę"}
+              </Link>
+            </Button>
+          ) : (
+            <Button asChild variant="outline">
+              <Link href="/ocena/okresowa">Wróć do listy</Link>
+            </Button>
+          )
         }
       />
       <div className="flex flex-col gap-4">

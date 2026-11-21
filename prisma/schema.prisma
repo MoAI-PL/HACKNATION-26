@@ -1,0 +1,20 @@
+// Model danych Kompasu Kompetencji.
+// Szkielet z Z02 – modele domenowe dodaje Z03 (kontrakt wspólny: zmiany małymi commitami i ogłaszamy zespołowi).
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Tymczasowy model techniczny, żeby migracje i klient działały przed Z03.
+// Z03 może go usunąć.
+model AppInfo {
+  id        Int      @id @default(autoincrement())
+  key       String   @unique
+  value     String
+  updatedAt DateTime @updatedAt
+}

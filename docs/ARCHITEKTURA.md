@@ -1,0 +1,45 @@
+# Architektura
+
+> Dokument rozwijany w trakcie prac. Pełny opis (diagram, model danych, API, wdrożenie i skalowanie) uzupełnia Z31.
+
+## Stos technologiczny
+
+| Warstwa | Technologia |
+|---|---|
+| Aplikacja (interfejs + API) | Next.js 15 (App Router), TypeScript w trybie ścisłym |
+| Interfejs | Tailwind CSS 4, shadcn/ui (Radix), lucide-react |
+| Walidacja | zod – wejście każdego endpointu i formularza |
+| Baza danych | PostgreSQL 16 przez Prisma 6 |
+| Testy | Vitest (logika, silnik reguł), Playwright (główna ścieżka) |
+
+## Decyzje
+
+| Data | Decyzja | Powód |
+|---|---|---|
+| 21.11 | **PostgreSQL** lokalnie przez `docker compose`, na demo darmowa instancja zarządzana (np. Neon) | jedna baza w dev i na demo, gotowa pod wdrożenie w urzędzie; SQLite zostaje jako plan awaryjny |
+| 21.11 | Prisma 6 (nie 7) | stabilna konfiguracja bez adapterów sterowników, mniej ryzyka w 16 godzin |
+| 21.11 | Jedna aplikacja Next.js zamiast osobnego backendu | szybsza praca zespołu, jeden deploy; API REST pod `/api/v1` gotowe do integracji z EZD i systemem kadrowym |
+
+## Struktura katalogów
+
+```
+materialy/                 materiały MC (tylko do odczytu)
+data/                      model kompetencji, parametry przepisów, baza wiedzy
+prisma/                    schema.prisma, seed.ts, seed-dane/
+src/
+  app/
+    (auth)/ (przelozony)/ (hr)/ (oceniany)/   ekrany według ról
+    api/v1/                REST API (np. /api/v1/status)
+    api/asystent/          endpointy asystentów
+  components/ui/ layout/ ocena/ asystent/
+  lib/
+    domain/                typy i słownik (kontrakt wspólny)
+    rules/                 silnik reguł: punktacja, terminy, sugestie
+    auth/  pdf/  import/
+    ai/llm/ ai/rag/ ai/funkcje/
+    db.ts                  klient Prisma
+scripts/                   import modelu, import wiedzy, eval asystenta
+tests/rules/               testy silnika reguł
+eval/                      zestaw testowy asystenta
+docs/                      dokumentacja, tablica zadań
+```

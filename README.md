@@ -21,11 +21,27 @@ materialy/          materiały źródłowe od organizatora (tylko do odczytu)
 docs/               tablica zadań, założenia, dokumentacja
 ```
 
-## Uruchomienie
+## Uruchomienie lokalne
 
-Instrukcja pojawi się wraz ze szkieletem aplikacji.
+Wymagania: Node.js 20+, Docker.
 
-> Na Windows przed klonowaniem: `git config --global core.longpaths true`
+1. `npm install`
+2. `cp .env.example .env` (na Windows: `copy .env.example .env`) i uzupełnij `AUTH_SECRET`
+3. `npm run db:up` – uruchamia PostgreSQL w Dockerze
+4. `npm run db:migrate` i `npm run seed`
+5. `npm run dev` – aplikacja pod http://localhost:3000
+
+## Skrypty
+
+| Polecenie | Co robi |
+|---|---|
+| `npm run dev` | serwer deweloperski |
+| `npm test` | testy (Vitest) |
+| `npm run typecheck` / `npm run lint` | kontrola typów / lint |
+| `npm run build` | build produkcyjny |
+| `npm run seed` | dane demo |
+| `npm run eval` | zestaw testowy asystenta formalnego |
+| `npm run db:up` / `db:migrate` / `db:generate` | baza danych: start, migracje, klient Prisma |
 
 ## Materiały źródłowe
 

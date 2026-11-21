@@ -1,0 +1,21 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: kompas-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: kompas
+      POSTGRES_PASSWORD: kompas
+      POSTGRES_DB: kompas
+    ports:
+      - "5432:5432"
+    volumes:
+      - kompas-db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U kompas -d kompas"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  kompas-db:

@@ -11,6 +11,7 @@ import { requirePageRole } from "@/lib/auth/guard";
 import { CONVERSATION_TYPE_LABELS, CRITERION_KIND_LABELS } from "@/lib/domain/slownik";
 import { formatDatePl } from "@/lib/rules/kalendarz";
 import { loadOwnEvaluation } from "@/lib/oceniany/dane";
+import { PobierzArkusz } from "@/components/ocena/PobierzArkusz";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Moja ocena – Kompas Kompetencji" };
@@ -27,7 +28,12 @@ export default async function MojaOcenaPage({ params }: { params: Promise<{ id: 
       <Link href="/moje-oceny" className="mb-4 inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
         <ArrowLeft className="size-4" aria-hidden /> Moje oceny
       </Link>
-      <PageHeader title={v.title} description={v.stageText} badge={<EvaluationStatusBadge type={v.type} status={v.status} />} />
+      <PageHeader
+        title={v.title}
+        description={v.stageText}
+        badge={<EvaluationStatusBadge type={v.type} status={v.status} />}
+        action={<PobierzArkusz evaluationId={v.id} type={v.type} status={v.status} hasCriteria={Boolean(v.criteriaSetAt)} />}
+      />
 
       <div className="flex flex-col gap-6">
         <Card>

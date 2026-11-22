@@ -16,7 +16,7 @@ flowchart LR
     RULES["Silnik reguł<br/>punktacja §11/§10 · terminy KC · arkusz · sugestia"]
     IMP["Import<br/>OSP .docx · model kompetencji .xlsx"]
     AI["Warstwa AI<br/>asystent formalny · kryteria z OSP"]
-    RAG["Baza wiedzy<br/>406 fragmentów, BM25"]
+    RAG["Baza wiedzy<br/>411 fragmentów, BM25"]
   end
   DB[("PostgreSQL<br/>Prisma")]
   LLM["Model językowy<br/>API zgodne z OpenAI<br/>Ollama lokalnie / Gemini na demo"]
@@ -106,7 +106,7 @@ Ekrany zapisują dane akcjami serwerowymi Next.js (z walidacją zod i autoryzacj
 Skalowanie:
 - **Aplikacja jest bezstanowa** (sesja JWT w ciasteczku), więc skaluje się poziomo – kolejne instancje za load balancerem. Jedyny stan w pamięci to limit zapytań do AI; przy wielu instancjach trzeba go przenieść do Redis.
 - **Baza:** obciążenie jest małe (kilkadziesiąt ocen na przełożonego co 2 lata); indeksy na przełożonym, ocenianym i etapie oceny. Pula połączeń (np. PgBouncer / pooler Neon).
-- **Model:** jedyny element kosztowny obliczeniowo. Wyszukiwanie BM25 działa w procesie aplikacji (406 fragmentów, milisekundy); do modelu trafia tylko 5 fragmentów i pytanie. Odmowa poza zakresem nie woła modelu.
+- **Model:** jedyny element kosztowny obliczeniowo. Wyszukiwanie BM25 działa w procesie aplikacji (411 fragmentów, milisekundy); do modelu trafia tylko 5 fragmentów i pytanie. Odmowa poza zakresem nie woła modelu.
 - **Wiele urzędów:** parametry przepisów i model kompetencji są danymi (`data/`), a struktura (`OrgUnit`) – drzewem, więc ta sama aplikacja obsłuży inny urząd po imporcie jego struktury i OSP.
 
 ## Stos technologiczny

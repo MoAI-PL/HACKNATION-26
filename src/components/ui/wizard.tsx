@@ -47,25 +47,25 @@ export function WizardProgress({
               >
                 {done ? <Check className="size-3.5" strokeWidth={3} /> : n}
               </span>
-              <span className={cn("line-clamp-2 leading-snug", active ? "font-semibold text-foreground" : "text-muted-foreground")}>
+              <span className={cn("min-w-0 truncate leading-snug", active ? "font-semibold text-foreground" : "text-muted-foreground")}>
                 {name}
                 {done && <span className="sr-only"> (ukończony)</span>}
               </span>
             </>
           );
           return (
-            <li key={name} aria-current={active ? "step" : undefined} className="flex flex-col gap-2" title={name}>
+            <li key={name} aria-current={active ? "step" : undefined} className="flex min-w-0 flex-col gap-2" title={name}>
               <span aria-hidden className={cn("h-1 rounded-full", done || active ? "bg-primary" : "bg-muted")} />
               {done && onStepClick ? (
                 <button
                   type="button"
                   onClick={() => onStepClick(n)}
-                  className="flex min-h-6 items-start gap-2 rounded-md text-left hover:underline"
+                  className="flex min-h-6 min-w-0 items-center gap-2 rounded-md text-left hover:underline"
                 >
                   {content}
                 </button>
               ) : (
-                <span className="flex min-h-6 items-start gap-2">{content}</span>
+                <span className="flex min-h-6 min-w-0 items-center gap-2">{content}</span>
               )}
             </li>
           );

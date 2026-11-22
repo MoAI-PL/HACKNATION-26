@@ -29,7 +29,7 @@ AI w Kompasie Kompetencji **wspiera** przełożonego – wyszukuje przepisy, red
 
 ## Asystent formalny – jak ogranicza halucynacje
 
-1. **Wyszukanie przed odpowiedzią:** BM25 na 406 fragmentach (rozporządzenia według § i ustępów, poradniki KPRM według rozdziałów, model kompetencji – po jednym fragmencie na wskaźnik, FAQ). Przy słabym dopasowaniu asystent odmawia **bez pytania modelu**: „Nie znalazłem tej informacji w dostępnych źródłach. Skontaktuj się z komórką kadr.”
+1. **Wyszukanie przed odpowiedzią:** BM25 na 411 fragmentach (rozporządzenia według § i ustępów, poradniki KPRM według rozdziałów, model kompetencji – po jednym fragmencie na wskaźnik, FAQ). Przy słabym dopasowaniu asystent odmawia **bez pytania modelu**: „Nie znalazłem tej informacji w dostępnych źródłach. Skontaktuj się z komórką kadr.”
 2. **Kontekst = tylko fragmenty.** Prompt systemowy wymaga odpowiedzi wyłącznie z fragmentów, zabrania wymyślania numerów przepisów i nakazuje zgłosić „brak w źródłach”.
 3. **Odpowiedź strukturalna (JSON)** z numerami użytych źródeł, walidowana schematem; jedna ponowna próba przy niezgodności.
 4. **Odpowiedź bez poprawnego źródła = odmowa.** Nie pokazujemy odpowiedzi, której nie da się przypisać do fragmentu.
@@ -120,7 +120,7 @@ Wspólny moduł `src/lib/ai/pseudonimizacja.ts`; każda funkcja AI, która przek
 - **Gdzie działa:** szybka notatka (Z41), asystent języka (Z40), asystent formalny (pytanie przed wyszukiwaniem, modelem i zapisem w dzienniku zapytań – w dzienniku zostaje wersja bez danych), analiza OSP (zadania i cel; nazw komórek tu nie ukrywamy, bo opisują stanowisko, a cytaty wracają w oryginalnym brzmieniu).
 - **Ostatnia linia obrony:** dostawca modelu (`openai-compatible.ts`) usuwa identyfikatory (e-mail, telefon, PESEL, konto, dowód) z każdego zapytania – także w przyszłych funkcjach, które zapomną o pseudonimizacji.
 - **Widać, co wyszło:** pod odpowiedzią asystenta i w oknie notatki: „Przed wysłaniem do modelu ukryto: 1 osobę, 1 adres e-mail. Asystent dostał: „…””.
-- **Testy (`tests/ai/pseudonimizacja.test.ts`):** każdy rodzaj danych osobno, przypadki negatywne (przymiotniki „Polski”, „Niski”, stanowiska „Pan Minister”, „ani”, „jasne”, nazwy instytucji), cała baza wiedzy (406 fragmentów) i trzy OSP z materiałów MC bez zmian, zapytania wysyłane do modelu bez imion.
+- **Testy (`tests/ai/pseudonimizacja.test.ts`):** każdy rodzaj danych osobno, przypadki negatywne (przymiotniki „Polski”, „Niski”, stanowiska „Pan Minister”, „ani”, „jasne”, nazwy instytucji), cała baza wiedzy (411 fragmentów) i trzy OSP z materiałów MC bez zmian, zapytania wysyłane do modelu bez imion.
 - **Ograniczenie:** osoby spoza zespołu rozpoznajemy heurystycznie (założenie #21) – nazwisko bez imienia i bez typowej końcówki („Nowak” u kogoś spoza zespołu) może przejść. Dlatego funkcje operujące na danych pracowników zawsze dostają listę podwładnych, a docelowo model działa lokalnie.
 - **Dla nowych funkcji AI (Z24, Z40):** `pseudonymize(tekst, podwladni)` przed `chatJson`, `restoreNames(odpowiedź, p.tags, podwladni, p.hidden)` po; `describeHidden(p.counts)` do komunikatu dla użytkownika.
 

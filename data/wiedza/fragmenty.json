@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-11-21T17:02:53.038Z",
+ "generatedAt": "2026-11-22T08:44:53.205Z",
  "fragments": [
   {
    "document": "ROZP_OKRESOWE",
@@ -4019,6 +4019,51 @@
    "unit": "Czy uzasadnienie oceny okresowej jest obowiązkowe?",
    "sourceFile": "data/wiedza/faq.json",
    "text": "Czy uzasadnienie oceny okresowej jest obowiązkowe?\nUzasadnienie jest obowiązkowe przy ocenie negatywnej. Przy ocenie pozytywnej oceniający może je sporządzić. Uzasadnienie może polegać na ogólnym omówieniu oceny albo na odniesieniu się do wszystkich lub niektórych ocen cząstkowych.\nPodstawa: § 11 ust. 3 i 4 rozporządzenia o ocenach okresowych; przypis do wzoru arkusza"
+  },
+  {
+   "id": "FAQ:skutki-oceny-negatywnej",
+   "document": "FAQ",
+   "documentTitle": "Najczęstsze pytania – opracowanie zespołu na podstawie przepisów i poradników KPRM",
+   "documentShort": "FAQ",
+   "unit": "Co się dzieje po negatywnej ocenie okresowej? Jakie są skutki oceny negatywnej?",
+   "sourceFile": "data/wiedza/faq.json",
+   "text": "Co się dzieje po negatywnej ocenie okresowej? Jakie są skutki oceny negatywnej?\nPo negatywnej ocenie okresowej oceniany podlega ponownej ocenie po upływie 6 miesięcy od dnia zapoznania się z oceną negatywną – to wyjątek od zasady oceny co 24 miesiące; tego terminu nie przedłuża usprawiedliwiona nieobecność ani nie skraca się go. Rozmowę rozpoczynającą kolejny okres przeprowadza się w terminie 7 dni od sporządzenia oceny negatywnej. Druga kolejna negatywna ocena okresowa oznacza rozwiązanie stosunku pracy. Niezależnie od wyniku ocenionemu sporządza się indywidualny program rozwoju zawodowego, a od oceny przysługuje sprzeciw do dyrektora generalnego urzędu w terminie 7 dni od dnia zapoznania się z nią.\nPodstawa: art. 81 ust. 9, art. 71 ust. 1 pkt 1, art. 83 ust. 1 i art. 108 ustawy o służbie cywilnej; § 7 rozporządzenia o ocenach okresowych; poradnik KPRM o ocenach okresowych, rozdz. 8"
+  },
+  {
+   "id": "FAQ:skutki-pierwszej-oceny",
+   "document": "FAQ",
+   "documentTitle": "Najczęstsze pytania – opracowanie zespołu na podstawie przepisów i poradników KPRM",
+   "documentShort": "FAQ",
+   "unit": "Co się dzieje po pierwszej ocenie – pozytywnej albo negatywnej? Jakie są skutki negatywnej pierwszej oceny?",
+   "sourceFile": "data/wiedza/faq.json",
+   "text": "Co się dzieje po pierwszej ocenie – pozytywnej albo negatywnej? Jakie są skutki negatywnej pierwszej oceny?\nPo pierwszej ocenie kierujący komórką organizacyjną kieruje do dyrektora generalnego urzędu wniosek dotyczący dalszego zatrudnienia. Przy ocenie pozytywnej – wniosek o zawarcie z ocenionym umowy o pracę na czas nieokreślony. Przy ocenie negatywnej – wniosek o niezawieranie umowy na czas nieokreślony albo o rozwiązanie umowy o pracę na czas określony. Decyzję podejmuje dyrektor generalny urzędu.\nPodstawa: art. 35 ust. 6 i art. 38 ust. 3 ustawy o służbie cywilnej; poradnik KPRM o pierwszej ocenie"
+  },
+  {
+   "id": "FAQ:elementy-pierwszej-oceny",
+   "document": "FAQ",
+   "documentTitle": "Najczęstsze pytania – opracowanie zespołu na podstawie przepisów i poradników KPRM",
+   "documentShort": "FAQ",
+   "unit": "Jakie elementy ocenia się w pierwszej ocenie? Co bierze się pod uwagę przy pierwszej ocenie?",
+   "sourceFile": "data/wiedza/faq.json",
+   "text": "Jakie elementy ocenia się w pierwszej ocenie? Co bierze się pod uwagę przy pierwszej ocenie?\nW pierwszej ocenie bierze się pod uwagę: 1) postawę ocenianego, jego zaangażowanie i postępy w pracy, relacje ze współpracownikami oraz terminowość wykonywania zadań – ocenianą za pomocą pięciu elementów: rzetelność, wykorzystywanie wiedzy i doskonalenie zawodowe, organizacja pracy i orientacja na osiąganie celów, komunikacja, współpraca; 2) wynik egzaminu ze służby przygotowawczej, jeżeli oceniany był obowiązany do niego przystąpić; 3) sprawozdanie sporządzone przez ocenianego. Każdy element ocenia się w skali 3, 5 albo 7 punktów.\nPodstawa: § 2 i § 7 rozporządzenia o pierwszej ocenie"
+  },
+  {
+   "id": "FAQ:dluga-nieobecnosc",
+   "document": "FAQ",
+   "documentTitle": "Najczęstsze pytania – opracowanie zespołu na podstawie przepisów i poradników KPRM",
+   "documentShort": "FAQ",
+   "unit": "Co zrobić, gdy oceniany był długo nieobecny, np. na zwolnieniu lekarskim, urlopie macierzyńskim albo wychowawczym?",
+   "sourceFile": "data/wiedza/faq.json",
+   "text": "Co zrobić, gdy oceniany był długo nieobecny, np. na zwolnieniu lekarskim, urlopie macierzyńskim albo wychowawczym?\nUsprawiedliwioną nieobecnością są wszystkie okresy pozostawania w stosunku pracy bez świadczenia pracy, które przepisy uznają za usprawiedliwione, np. urlop wypoczynkowy, urlop szkoleniowy, zwolnienie lekarskie, urlop bezpłatny, urlop macierzyński, urlop wychowawczy. W ocenie okresowej usprawiedliwiona nieobecność trwająca nieprzerwanie dłużej niż miesiąc wydłuża termin sporządzenia oceny o czas tej nieobecności – oceniający niezwłocznie zawiadamia ocenianego na piśmie o nowym terminie. W pierwszej ocenie bezpośredni przełożony w uzasadnionych przypadkach wyznacza nowy termin złożenia sprawozdania, przedłużając go o okres nieobecności.\nPodstawa: art. 81 ust. 7 ustawy o służbie cywilnej; § 8 rozporządzenia o ocenach okresowych; § 5 ust. 1 rozporządzenia o pierwszej ocenie; poradnik KPRM o ocenach okresowych, rozdz. 5.1"
+  },
+  {
+   "id": "FAQ:kto-pierwsza-ocena",
+   "document": "FAQ",
+   "documentTitle": "Najczęstsze pytania – opracowanie zespołu na podstawie przepisów i poradników KPRM",
+   "documentShort": "FAQ",
+   "unit": "Kto dokonuje pierwszej oceny? Kto ocenia nowego pracownika?",
+   "sourceFile": "data/wiedza/faq.json",
+   "text": "Kto dokonuje pierwszej oceny? Kto ocenia nowego pracownika?\nPierwszej oceny dokonuje bezpośredni przełożony ocenianego w porozumieniu z kierującym komórką organizacyjną, w której oceniany jest zatrudniony. Bezpośredni przełożony przeprowadza też rozmowę wstępną, wyznacza termin sprawozdania i sporządza ocenę na piśmie, a kierujący komórką po ocenie kieruje do dyrektora generalnego urzędu wniosek w sprawie dalszego zatrudnienia.\nPodstawa: art. 38 ustawy o służbie cywilnej; rozporządzenie o pierwszej ocenie; poradnik KPRM o pierwszej ocenie"
   },
   {
    "id": "MODEL_KOMPETENCJI:RZETELNOSC.1",

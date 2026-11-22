@@ -120,7 +120,7 @@ describe("podsumowanie dla użytkownika", () => {
 });
 
 describe("brak fałszywych trafień w materiałach", () => {
-  it("baza wiedzy (406 fragmentów przepisów i poradników): ostatnia linia obrony niczego nie zmienia", () => {
+  it("baza wiedzy (411 fragmentów przepisów i poradników): ostatnia linia obrony niczego nie zmienia", () => {
     const fragments = (knowledge as { fragments: { text: string }[] }).fragments;
     expect(fragments.length).toBeGreaterThan(100);
     for (const f of fragments) expect(redactIdentifiers(f.text)).toBe(f.text);

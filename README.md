@@ -49,7 +49,7 @@ Scenariusz krok po kroku dla jury (ok. 12 minut): **[`docs/DEMO.md`](docs/DEMO.m
 
 ## Zasady projektu
 
-1. **Przepisy liczy kod, nie model językowy.** Wybór arkusza, punkty, średnie, wynik i terminy to deterministyczne funkcje z testami (`src/lib/rules/`), z parametrami w `data/przepisy.json` (edytowalne bez zmian w kodzie).
+1. **Przepisy liczy kod, nie model językowy.** Wybór arkusza, punkty, średnie, wynik i terminy to deterministyczne funkcje z testami (`src/lib/rules/`), z parametrami w `data/przepisy.json` – HR zmienia je w panelu „Przepisy i model” bez zmian w kodzie, tak samo jak opisy zachowań z modelu kompetencji.
 2. **AI nigdy nie ustala oceny.** Każda propozycja AI jest oznaczona, edytowalna i wymaga decyzji człowieka; decyzje trafiają do dziennika.
 3. **Aplikacja działa także bez AI.** Brak modelu albo jego błąd nie blokuje żadnego kroku – asystent pokazuje wtedy pasujące fragmenty przepisów.
 4. **Zmiana modelu bez zmiany kodu.** Jeden interfejs zgodny z API OpenAI: lokalnie Ollama (np. Bielik, PLLuM – dane nie wychodzą z urzędu), na demo darmowy Gemini.

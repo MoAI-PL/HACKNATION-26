@@ -69,6 +69,7 @@ Każde źródło można rozwinąć – widać cytat i miejsce w dokumencie (para
 4. **Przypomnienia** – podgląd treści i „Wyślij” (symulacja z wpisem w dzienniku zdarzeń); **wzór zawiadomienia o zmianie terminu** (§ 8) do druku.
 5. Menu **Lustro ocen** – rozkład sporządzonych ocen w komórce bez nazwisk (od 3 ocen, żeby nie dało się rozpoznać osób) i sygnał, gdy któryś przełożony wyraźnie odstaje od średniej.
 6. Menu **Dziennik decyzji** – propozycje AI obok decyzji człowieka, zmiany sugestii z powodem, sporządzenie i zapoznanie się z oceną; **„Pobierz CSV”** otwiera się w Excelu z polskimi znakami.
+7. Menu **Przepisy i model** – parametry przepisów bez programisty. Zmień np. „Rozmowa rozpoczynająca” z 30 na 45 dni i zapisz z powodem: na pulpicie Ewy termin Marty Kamińskiej od razu przesuwa się o 15 dni, a zmiana trafia do historii i dziennika decyzji. W zakładce **„Opisy zachowań”** poprawisz opis poziomu wskaźnika – przełożony zobaczy go na karcie zachowania. **„Przywróć”** wraca do wartości z rozporządzenia.
 
 ## 8. Pozostałe role i uprawnienia (1 min)
 

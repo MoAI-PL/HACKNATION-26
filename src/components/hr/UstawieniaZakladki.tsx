@@ -1,4 +1,4 @@
-// Panel HR (Z19): zakładki „Parametry przepisów” / „Opisy zachowań” i historia zmian z dziennika decyzji.
+// Panel HR: zakładki „Parametry przepisów” / „Opisy zachowań” i historia zmian z dziennika decyzji.
 
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";

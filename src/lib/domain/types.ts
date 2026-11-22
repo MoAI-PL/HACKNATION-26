@@ -1,4 +1,4 @@
-// Kontrakt domeny Kompasu Kompetencji (Z03).
+// Kontrakt domeny Kompasu Kompetencji.
 // KONTRAKT WSPÓLNY: zmiany małymi, osobnymi commitami i zawsze ogłaszamy zespołowi.
 //
 // Konwencja: identyfikatory po angielsku, wartości domenowe po polsku (bez polskich znaków),
@@ -9,7 +9,7 @@
 // Wartości wyliczeniowe (listy `as const` + typy pochodne)
 // ---------------------------------------------------------------------------
 
-/** Role użytkowników (sekcja 3.3). */
+/** Role użytkowników. */
 export const ROLES = ["PRZELOZONY", "HR", "OCENIANY", "KIERUJACY_KOMORKA"] as const;
 export type Role = (typeof ROLES)[number];
 
@@ -61,7 +61,7 @@ export const LEVELS = [
 ] as const;
 export type Level = (typeof LEVELS)[number];
 
-/** Rodzaj rozmowy (sekcja 6). BIEZACA = rozmowa w trakcie okresu oceny (informacja zwrotna). */
+/** Rodzaj rozmowy. BIEZACA = rozmowa w trakcie okresu oceny (informacja zwrotna). */
 export const CONVERSATION_TYPES = ["WSTEPNA", "ROZPOCZYNAJACA", "OCENIAJACA", "BIEZACA"] as const;
 export type ConversationType = (typeof CONVERSATION_TYPES)[number];
 
@@ -139,7 +139,7 @@ export type FirstEvalPoints = 3 | 5 | 7;
 export type IndicatorId = `${CompetencyCode}.${number}`;
 
 // ---------------------------------------------------------------------------
-// Model kompetencji (wynik importu Z05: data/model-kompetencji.json)
+// Model kompetencji (wynik importu modelu kompetencji: data/model-kompetencji.json)
 // ---------------------------------------------------------------------------
 
 export interface IndicatorDefinition {
@@ -147,7 +147,7 @@ export interface IndicatorDefinition {
   competency: CompetencyCode;
   /** Nazwa wskaźnika – identyczna z załącznikiem nr 1 do rozporządzenia. */
   name: string;
-  /** Opisy zachowań dla poziomów 1–5 (karty zachowań w Z14). */
+  /** Opisy zachowań dla poziomów 1–5 (karty zachowań w ocenie wskaźników). */
   levels: Record<BehaviorLevel, string>;
 }
 
@@ -161,13 +161,13 @@ export interface CompetencyModel {
   /** Skąd zaimportowano (nazwa pliku) i kiedy (data "RRRR-MM-DD"). */
   source: string;
   importedAt: IsoDate;
-  /** Wskazówki z arkusza „Model kompetencji” – wyświetlane przy ocenie wskaźników (Z14). */
+  /** Wskazówki z arkusza „Model kompetencji” – wyświetlane przy ocenie wskaźników. */
   guidance: string[];
   competencies: CompetencyDefinition[];
 }
 
 // ---------------------------------------------------------------------------
-// Opis stanowiska pracy (wynik importu Z06)
+// Opis stanowiska pracy (wynik importu OSP)
 // ---------------------------------------------------------------------------
 
 export interface PositionDescription {
@@ -181,14 +181,14 @@ export interface PositionDescription {
   authorizations?: string;
   /** „Kompetencje miękkie” z OSP – nazwy kompetencji z modelu (załącznik nr 1). */
   requiredCompetencies: string[];
-  /** Te same kompetencje jako kody – do porównania z kryteriami obowiązkowymi i propozycji kryteriów dodatkowych (Z23). */
+  /** Te same kompetencje jako kody – do porównania z kryteriami obowiązkowymi i propozycji kryteriów dodatkowych. */
   requiredCompetencyCodes?: CompetencyCode[];
   /** Symbol stanowiska, np. "DSI WWI 5". */
   symbol?: string;
   office?: string;
   /** Stanowisko bezpośrednio nadzorujące, np. „naczelnik wydziału”. */
   supervisor?: string;
-  /** Opisy „Złożoność i kreatywność” oraz „Niezbędna samodzielność i inicjatywa” – kontekst dla AI (Z23). */
+  /** Opisy „Złożoność i kreatywność” oraz „Niezbędna samodzielność i inicjatywa” – kontekst dla AI. */
   complexity?: string;
   independence?: string;
   /** „Inne kompetencje, wiedza lub umiejętności” – wymagana znajomość przepisów i zagadnień. */
@@ -206,7 +206,7 @@ export interface SheetSelection {
 }
 
 // ---------------------------------------------------------------------------
-// Wyjaśnienia i ostrzeżenia (wspólne dla silników Z07, Z08, Z09, Z36)
+// Wyjaśnienia i ostrzeżenia (wspólne dla silników silniku punktacji)
 // ---------------------------------------------------------------------------
 
 /** Zdanie zwykłym językiem z podstawą prawną, np. { text: "Ocena jest negatywna, bo…", legalBasis: "§ 11 ust. 1 pkt 4" }. */
@@ -228,7 +228,7 @@ export interface Warning {
 }
 
 // ---------------------------------------------------------------------------
-// Wejście i wyjście silnika punktacji (Z07)
+// Wejście i wyjście silnika punktacji
 // ---------------------------------------------------------------------------
 
 export interface PartialScore {
@@ -266,10 +266,10 @@ export interface CriteriaValidation {
 }
 
 // ---------------------------------------------------------------------------
-// Sugerowany poziom kompetencji (Z09)
+// Sugerowany poziom kompetencji
 // ---------------------------------------------------------------------------
 
-/** Ocena jednego wskaźnika – wejście sugestii (Z09). */
+/** Ocena jednego wskaźnika – wejście sugestii. */
 export interface IndicatorRatingInput {
   indicatorId: IndicatorId;
   /** Wybrana karta zachowania albo „brak okazji do obserwacji”; null = wskaźnik jeszcze nieoceniony. */
@@ -309,7 +309,7 @@ export interface LevelSuggestion {
   warnings: Warning[];
 }
 
-/** Decyzja przełożonego o ocenie cząstkowej kryterium (Z14) – do walidacji przed zapisem. */
+/** Decyzja przełożonego o ocenie cząstkowej kryterium – do walidacji przed zapisem. */
 export interface FinalDecisionInput {
   suggestion: LevelSuggestion;
   finalPoints: number;
@@ -326,7 +326,7 @@ export interface FinalDecisionValidation {
 }
 
 // ---------------------------------------------------------------------------
-// Terminy (Z08) i karta „Do zrobienia” (Z11)
+// Terminy i karta „Do zrobienia”
 // ---------------------------------------------------------------------------
 
 export type DeadlineKind =
@@ -360,7 +360,7 @@ export interface PositionChangeEvent {
   significantDutiesChange: boolean;
 }
 
-/** Kolor odznaki terminu – zawsze razem z tekstem (sekcja 4.1 pkt 8). */
+/** Kolor odznaki terminu – zawsze razem z tekstem. */
 export type DeadlineUrgency = "PO_TERMINIE" | "PILNE" | "WKROTCE" | "W_TERMINIE";
 
 export interface TodoItem {

@@ -1,6 +1,6 @@
 "use server";
-// Tryb rozmowy (Z43): zapis przebiegu rozmowy (`Conversation`) – tylko przełożony, tylko własny podwładny,
-// tylko rodzaj rozmowy właściwy dla bieżącej oceny. Notatki do dziennika obserwacji zapisuje szybka notatka (Z41).
+// Tryb rozmowy: zapis przebiegu rozmowy (`Conversation`) – tylko przełożony, tylko własny podwładny,
+// tylko rodzaj rozmowy właściwy dla bieżącej oceny. Notatki do dziennika obserwacji zapisuje szybka notatka.
 
 import { revalidatePath } from "next/cache";
 import { z } from "zod";

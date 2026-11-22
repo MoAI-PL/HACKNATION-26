@@ -39,7 +39,7 @@ export class OpenAICompatibleProvider implements LLMProvider {
         },
         body: JSON.stringify({
           model: this.config.model,
-          // Z34: ostatnia linia obrony – e-mail, PESEL, telefon, numer konta i dowodu nie wychodzą do modelu w żadnej funkcji.
+          // Pseudonimizacja: ostatnia linia obrony – e-mail, PESEL, telefon, numer konta i dowodu nie wychodzą do modelu w żadnej funkcji.
           messages: messages.map((m) => ({ ...m, content: redactIdentifiers(m.content) })),
           temperature: options.temperature ?? 0.1,
           ...(options.maxTokens ? { max_tokens: options.maxTokens } : {}),

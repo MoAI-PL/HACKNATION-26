@@ -1,5 +1,5 @@
-// Dokument PDF arkusza pierwszej oceny w służbie cywilnej (Z17) – układ wzoru z załącznika nr 2 do rozporządzenia
-// (materialy/pierwsza-ocena/Arkusz_pierwszej_oceny.docx). Czcionka, style i drobne elementy – wspólne z arkuszami B/C (Z16).
+// Dokument PDF arkusza pierwszej oceny w służbie cywilnej – układ wzoru z załącznika nr 2 do rozporządzenia
+// (materialy/pierwsza-ocena/Arkusz_pierwszej_oceny.docx). Czcionka, style i drobne elementy – wspólne z arkuszami B/C.
 // Strona 1: część ogólna, rozmowa wstępna i oceniająca; strona 2: oceny elementów, wynik, uzasadnienie, wnioski i podpisy.
 
 import { Document, Page, StyleSheet, Text, View, renderToBuffer } from "@react-pdf/renderer";

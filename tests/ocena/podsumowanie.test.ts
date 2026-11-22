@@ -27,7 +27,7 @@ const form = (zmiany: Partial<SummaryForm> = {}): SummaryForm =>
 
 const ctx = (result: ReturnType<typeof wynik>, isCivilServant = false) => ({ result, isCivilServant, today: TODAY, periodStart: "2024-12-14" });
 
-describe("wynik z ocen cząstkowych (Z07)", () => {
+describe("wynik z ocen cząstkowych", () => {
   it("komplet ocen → średnia, poziom i wynik z wyjaśnieniem", () => {
     const r = wynik(5, 5, 5, 3, 3, 3);
     expect(r.average).toBe(4);

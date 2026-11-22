@@ -1,4 +1,4 @@
-// Akcje serwerowe dziennika (Z13): autoryzacja (Z04), zapis tylko dla własnych podwładnych, walidacja przed bazą.
+// Akcje serwerowe dziennika: autoryzacja, zapis tylko dla własnych podwładnych, walidacja przed bazą.
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const { authMock, prismaMock, redirectMock } = vi.hoisted(() => ({

@@ -1,8 +1,8 @@
-// API asystenta formalnego (Z22).
+// API asystenta formalnego.
 //   GET  /api/asystent/formalny?krok=OCENA → podpowiedzi pytań dla kroku i informacja, czy model AI jest dostępny
 //   POST /api/asystent/formalny { pytanie, krok? } → odpowiedź ze źródłami albo odmowa
 //
-// Dostęp (Z04): przełożony, HR i kierujący komórką; bez sesji 401, inna rola (oceniany) 403.
+// Dostęp: przełożony, HR i kierujący komórką; bez sesji 401, inna rola (oceniany) 403.
 
 import { NextResponse } from "next/server";
 import { z } from "zod";
@@ -39,7 +39,7 @@ function rateLimited(key: string): boolean {
 }
 
 /**
- * Z34: podwładni przełożonego – ich imiona i nazwiska w pytaniu zostaną ukryte przed modelem.
+ * Pseudonimizacja: podwładni przełożonego – ich imiona i nazwiska w pytaniu zostaną ukryte przed modelem.
  * Brak bazy nie blokuje odpowiedzi (wtedy działa samo rozpoznawanie imion i nazwisk ze słownika).
  */
 async function subordinatesOf(user: { id: string; role: Role }): Promise<PseudoPerson[]> {

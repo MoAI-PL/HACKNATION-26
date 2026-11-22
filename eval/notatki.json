@@ -1,5 +1,5 @@
 {
-  "opis": "Szybka notatka (Z41): 5 przykładowych zdań o zespole Ewy Kowalczyk z danych demo. „kompetencje” to akceptowane kompetencje wskaźnika (notatka może pasować do kilku), „osoba” – oczekiwany pracownik.",
+  "opis": "Szybka notatka: 5 przykładowych zdań o zespole Ewy Kowalczyk z danych demo. „kompetencje” to akceptowane kompetencje wskaźnika (notatka może pasować do kilku), „osoba” – oczekiwany pracownik.",
   "zespol": [
     { "id": "kw", "firstName": "Katarzyna", "lastName": "Wójcik" },
     { "id": "pl", "firstName": "Piotr", "lastName": "Lewandowski" },

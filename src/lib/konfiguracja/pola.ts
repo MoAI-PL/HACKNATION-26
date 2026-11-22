@@ -1,5 +1,5 @@
-// Formularz parametrów przepisów w panelu HR (Z19): które parametry można zmienić, jak je opisać i jak sprawdzić.
-// Czysta logika (bez bazy), wspólna dla ekranu i akcji serwerowej. Ostateczna walidacja: rulesSchema (zod) z Z03.
+// Formularz parametrów przepisów w panelu HR: które parametry można zmienić, jak je opisać i jak sprawdzić.
+// Czysta logika (bez bazy), wspólna dla ekranu i akcji serwerowej. Ostateczna walidacja: rulesSchema (zod) z kontraktu domeny.
 
 import { rulesSchema, type Rules } from "@/lib/domain/przepisy";
 

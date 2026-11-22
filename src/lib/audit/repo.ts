@@ -1,4 +1,4 @@
-// Odczyt dziennika decyzji (Z35) – tylko po stronie serwera, tylko dla HR (sprawdza wywołujący).
+// Odczyt dziennika decyzji – tylko po stronie serwera, tylko dla HR (sprawdza wywołujący).
 
 import { prisma } from "@/lib/db";
 import { auditWhere, type AuditFilters, type AuditRow } from "./dziennik";

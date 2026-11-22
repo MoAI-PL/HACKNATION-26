@@ -46,7 +46,7 @@ function rec(over: Partial<HrEvaluationRecord> = {}, emp: Partial<HrEvaluationRe
   };
 }
 
-describe("bieżący termin oceny (silnik Z08)", () => {
+describe("bieżący termin oceny (silnik terminów)", () => {
   it("ocena okresowa: 24 miesiące od poprzedniej oceny", () => {
     const d = currentDeadline(rec())!;
     expect(d.kind).toBe("OCENA_OKRESOWA");

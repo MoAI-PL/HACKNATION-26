@@ -1,4 +1,4 @@
-// Odczyt danych ścieżki pierwszej oceny (Z17) – tylko po stronie serwera.
+// Odczyt danych ścieżki pierwszej oceny – tylko po stronie serwera.
 
 import { prisma } from "@/lib/db";
 import { fromDbDate, todayIso } from "@/lib/domain/daty";

@@ -1,5 +1,5 @@
 "use server";
-// Akcja serwerowa asystenta języka (Z40). Tylko przełożony i tylko w ocenie, którą sam prowadzi (Z04).
+// Akcja serwerowa asystenta języka. Tylko przełożony i tylko w ocenie, którą sam prowadzi.
 
 import { requireRole } from "@/lib/auth/guard";
 import { prisma } from "@/lib/db";

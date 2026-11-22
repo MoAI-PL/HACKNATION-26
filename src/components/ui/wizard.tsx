@@ -5,7 +5,7 @@ import { AlertCircle, Check, CheckCircle2, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { autosaveText, wizardStepLabel, type AutosaveState } from "@/lib/ui/status";
 
-// Kreator (Z10, sekcja 4.1 pkt 3): pasek postępu z nazwą i numerem kroku, znacznik autozapisu.
+// Kreator: pasek postępu z nazwą i numerem kroku, znacznik autozapisu.
 // Zasada: zmiany zapisują się same; nigdy „Utracisz niezapisane dane”.
 
 export function WizardProgress({

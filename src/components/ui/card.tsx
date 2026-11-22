@@ -1,7 +1,7 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 
-// Karta – podstawowy kontener treści (Z10).
+// Karta – podstawowy kontener treści.
 
 export function Card({ className, ...props }: React.ComponentProps<"div">) {
   return (

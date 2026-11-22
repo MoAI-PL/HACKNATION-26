@@ -2,7 +2,7 @@ import * as React from "react";
 import type { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-// Pusty stan, który uczy (Z10, sekcja 4.1 pkt 5):
+// Pusty stan, który uczy:
 // zamiast „Brak danych” – co tu będzie i jak to dodać, z jednym przyciskiem.
 
 export function EmptyState({

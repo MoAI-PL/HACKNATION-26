@@ -1,4 +1,4 @@
-// Akcja ocenianego (Z46): potwierdzenie zapoznania się – tylko rola OCENIANY, tylko własna ocena, tylko etap „czeka na zapoznanie”.
+// Akcja ocenianego: potwierdzenie zapoznania się – tylko rola OCENIANY, tylko własna ocena, tylko etap „czeka na zapoznanie”.
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const { authMock, prismaMock, applyMock } = vi.hoisted(() => ({

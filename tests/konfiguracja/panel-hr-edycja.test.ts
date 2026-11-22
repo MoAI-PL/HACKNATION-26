@@ -1,4 +1,4 @@
-// Panel HR, część 2 (Z19): zmiana parametrów przepisów i opisów zachowań bez zmian w kodzie.
+// Panel HR, część 2: zmiana parametrów przepisów i opisów zachowań bez zmian w kodzie.
 // Kryterium akceptacji: zmiana progu lub opisu wskaźnika od razu działa w ocenie. Każda zmiana = wpis w AuditLog.
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 

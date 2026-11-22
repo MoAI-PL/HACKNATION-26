@@ -1,5 +1,5 @@
-// Nawigacja główna według grafiki MC (materialy/Sciezki_oceny.png) – Z10.
-// Adresy leżą w obszarach ról z src/lib/auth/role.ts (PROTECTED_AREAS, Z04):
+// Nawigacja główna według grafiki MC (materialy/Sciezki_oceny.png).
+// Adresy leżą w obszarach ról z src/lib/auth/role.ts (PROTECTED_AREAS):
 // /pulpit, /ocena/…, /obserwacje i /asystent/… – przełożony; /kierujacy – kierujący komórką; /hr – HR; /moje-oceny – oceniany.
 // Nowy ekran w menu = nowy wpis tutaj (i ewentualnie nowy obszar w role.ts).
 
@@ -31,11 +31,11 @@ export interface NavItem {
 
 /** Funkcje włączane przez zadania, które je budują – do tego czasu ich przyciski są ukryte (zasada „bez atrap”). */
 export const FEATURES = {
-  /** Z41: szybka notatka (przycisk „Notatka” i skrót N). */
+  /** Szybka notatka: szybka notatka (przycisk „Notatka” i skrót N). */
   quickNote: true,
 } as const;
 
-/** Adres asystenta formalnego (Z22). */
+/** Adres asystenta formalnego. */
 export const ASSISTANT_HREF = "/asystent";
 
 const ASYSTENT_FORMALNY: NavItem = {
@@ -66,9 +66,9 @@ const NAV_BY_ROLE: Record<Role, NavItem[]> = {
   ],
   HR: [
     { href: "/hr", label: "Panel HR", icon: "hr", description: "Oceny, terminy, przypomnienia" },
-    { href: "/hr/lustro", label: "Lustro ocen", icon: "hr", description: "Rozkład ocen w komórkach (Z36)" },
-    { href: "/hr/dziennik", label: "Dziennik decyzji", icon: "hr", description: "Propozycje AI obok decyzji człowieka (Z35)" },
-    { href: "/hr/ustawienia", label: "Przepisy i model", icon: "hr", description: "Parametry przepisów i opisy zachowań bez zmian w kodzie (Z19)" },
+    { href: "/hr/lustro", label: "Lustro ocen", icon: "hr", description: "Rozkład ocen w komórkach" },
+    { href: "/hr/dziennik", label: "Dziennik decyzji", icon: "hr", description: "Propozycje AI obok decyzji człowieka" },
+    { href: "/hr/ustawienia", label: "Przepisy i model", icon: "hr", description: "Parametry przepisów i opisy zachowań bez zmian w kodzie" },
     ASYSTENT_FORMALNY,
   ],
   OCENIANY: [{ href: "/moje-oceny", label: "Moje oceny", icon: "moje" }],
@@ -81,7 +81,7 @@ export function navForRole(role: Role): NavItem[] {
 
 /**
  * Czy ekran (albo jego podstrona) jest już gotowy – według menu przełożonego: istnieje pozycja z tym adresem bez `pending`.
- * Jedno źródło prawdy dla linków z pulpitu (Z11): gdy zadanie ekranu usuwa `pending`, linki same zaczynają tam prowadzić.
+ * Jedno źródło prawdy dla linków z pulpitu: gdy zadanie ekranu usuwa `pending`, linki same zaczynają tam prowadzić.
  */
 export function isScreenReady(href: string): boolean {
   return NAV_BY_ROLE.PRZELOZONY.some((item) => !item.pending && isActivePath(href, item.href));
@@ -104,7 +104,7 @@ export function activeHref(pathname: string, items: readonly NavItem[]): string 
     .sort((a, b) => b.href.length - a.href.length)[0]?.href;
 }
 
-/** Szybkie notatki robi tylko przełożony – i tylko gdy funkcja jest gotowa (Z41). */
+/** Szybkie notatki robi tylko przełożony – i tylko gdy funkcja jest gotowa. */
 export function roleHasQuickNote(role: Role, enabled: boolean = FEATURES.quickNote): boolean {
   return enabled && role === "PRZELOZONY";
 }

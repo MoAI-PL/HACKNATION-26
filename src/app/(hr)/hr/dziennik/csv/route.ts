@@ -1,4 +1,4 @@
-// GET /hr/dziennik/csv – eksport dziennika decyzji do CSV (Z35). Tylko HR; te same filtry co ekran.
+// GET /hr/dziennik/csv – eksport dziennika decyzji do CSV. Tylko HR; te same filtry co ekran.
 
 import { withRole } from "@/lib/auth/guard";
 import { todayIso } from "@/lib/domain/daty";

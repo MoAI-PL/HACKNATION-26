@@ -1,4 +1,4 @@
-// Bezpośrednie wywołania API bez uprawnień (kryterium gotowości Z04): 401 bez sesji, 403 przy złej roli.
+// Bezpośrednie wywołania API bez uprawnień: 401 bez sesji, 403 przy złej roli.
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const { authMock, findManyMock } = vi.hoisted(() => ({ authMock: vi.fn(), findManyMock: vi.fn() }));

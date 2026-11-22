@@ -1,11 +1,11 @@
-// Asystent formalny (Z22): odpowiedzi wyłącznie na podstawie fragmentów bazy wiedzy (Z21), zawsze ze źródłami.
+// Asystent formalny: odpowiedzi wyłącznie na podstawie fragmentów bazy wiedzy, zawsze ze źródłami.
 //
 // Przebieg:
 //  1. wyszukanie fragmentów; słabe dopasowanie → odmowa bez pytania modelu;
 //  2. brak modelu albo błąd modelu → tryb bez AI: pokazujemy najlepiej pasujące fragmenty przepisów;
 //  3. model dostaje tylko fragmenty (jako dane w znacznikach) i odpowiada JSON-em z numerami źródeł;
 //  4. kontrola: numery źródeł muszą istnieć, a wymienione w odpowiedzi „art.” / „§” muszą występować w źródłach.
-// Z34: pytanie jest pseudonimizowane przed wyszukiwaniem, modelem i dziennikiem (np. „Czy mogę ocenić Kasię…” → „[OSOBA_1]”).
+// Pseudonimizacja: pytanie jest pseudonimizowane przed wyszukiwaniem, modelem i dziennikiem (np. „Czy mogę ocenić Kasię…” → „[OSOBA_1]”).
 
 import { z } from "zod";
 import { chatJson, getLLM, LLMError, type LLMProvider } from "@/lib/ai/llm";
@@ -41,11 +41,11 @@ export interface AssistantAnswer {
   /** Dodatkowa informacja dla użytkownika, np. o niedostępności modelu albo niezweryfikowanym przepisie. */
   notice?: string;
   model?: string;
-  /** Z44: odpowiedź zapasowa z data/demo-cache.json (model nie odpowiedział w trybie demo). */
+  /** Tryb demo: odpowiedź zapasowa z data/demo-cache.json (model nie odpowiedział w trybie demo). */
   fromCache?: boolean;
-  /** Z34: pytanie po pseudonimizacji – to trafiło do modelu i do dziennika (tylko gdy coś ukryto). */
+  /** Pseudonimizacja: pytanie po pseudonimizacji – to trafiło do modelu i do dziennika (tylko gdy coś ukryto). */
   sentQuestion?: string;
-  /** Z34: co ukryto przed modelem, np. „Przed wysłaniem do modelu ukryto: 1 osobę.” */
+  /** Pseudonimizacja: co ukryto przed modelem, np. „Przed wysłaniem do modelu ukryto: 1 osobę.” */
   privacy?: string;
   durationMs: number;
 }
@@ -118,7 +118,7 @@ function fallback(question: string, hits: SearchHit[], started: number, notice: 
 export interface AskOptions {
   /** Dostawca modelu; domyślnie z .env. null = wymuś tryb bez AI. */
   llm?: LLMProvider | null;
-  /** Z34: podwładni pytającego – ich imiona i nazwiska (z odmianą) nie trafią do modelu. */
+  /** Pseudonimizacja: podwładni pytającego – ich imiona i nazwiska (z odmianą) nie trafią do modelu. */
   people?: readonly PseudoPerson[];
 }
 
@@ -177,7 +177,7 @@ async function answerPseudonymized(question: string, options: AskOptions): Promi
     };
   } catch (e) {
     const reason = e instanceof LLMError ? e.message : "Nieoczekiwany błąd asystenta.";
-    // Z44: w trybie demo pytania ze scen pitchu mają przygotowaną wcześniej odpowiedź z tymi samymi źródłami.
+    // Tryb demo: w trybie demo pytania ze scen pitchu mają przygotowaną wcześniej odpowiedź z tymi samymi źródłami.
     const cached = demoCacheEnabled() ? cachedFormalAnswer(question) : undefined;
     const cachedSources = cached?.zrodla.map(getFragment).filter((f): f is KnowledgeFragment => f !== undefined) ?? [];
     if (cached && cachedSources.length > 0) {

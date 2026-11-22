@@ -1,6 +1,6 @@
 "use server";
 
-// Akcje serwerowe kreatora oceny okresowej (Z12). Każda sprawdza rolę i dostęp do oceny (Z04).
+// Akcje serwerowe kreatora oceny okresowej. Każda sprawdza rolę i dostęp do oceny.
 
 import { revalidatePath } from "next/cache";
 import type { Prisma } from "@prisma/client";
@@ -114,7 +114,7 @@ export interface AiDecisionInput {
   mode?: "AI" | "BEZ_AI";
 }
 
-/** Każde „Wstaw” i „Odrzuć” propozycji AI trafia do dziennika decyzji (sekcja 4.2). */
+/** Każde „Wstaw” i „Odrzuć” propozycji AI trafia do dziennika decyzji. */
 export async function logAiDecision(evaluationId: string, input: AiDecisionInput): Promise<{ ok: boolean }> {
   const { user, ev } = await ownEvaluation(evaluationId);
   if (!ev) return { ok: false };

@@ -1,4 +1,4 @@
-// Przypomnienia o regularnych notatkach (Z45): osoby w okresie oceny bez notatki od co najmniej 90 dni.
+// Przypomnienia o regularnych notatkach: osoby w okresie oceny bez notatki od co najmniej 90 dni.
 import { describe, expect, it } from "vitest";
 import { NOTE_REMINDER_DAYS, monthsAgoText, noteReminders } from "@/lib/dashboard/notatki";
 import type { EmployeeInfo, EvaluationInfo } from "@/lib/dashboard/pulpit";

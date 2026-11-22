@@ -1,4 +1,4 @@
-# Kompas Kompetencji
+# Kompas Kompetencji · sprawdz.my.kompetencje
 
 **Ocena oparta na zachowaniach, nie na wrażeniach.**
 
@@ -18,6 +18,41 @@ Rozwiązanie zadania Ministerstwa Cyfryzacji (Biuro Dyrektora Generalnego) „Ko
 | Kierujący komórką | `kierujacy@demo.kompas.test` | `Kompas2026!` | pierwsze oceny nowych pracowników komórki: etap, kalendarz terminów i jego rola (art. 38 ustawy); asystent formalny |
 
 Scenariusz krok po kroku dla jury (ok. 12 minut): **[`docs/DEMO.md`](docs/DEMO.md)**.
+
+## Dla jury
+
+### Sprawdzenie w 5 minut
+
+1. **„Zaloguj jako Ewa Kowalczyk”** – pulpit z terminami liczonymi z przepisów.
+2. **„Kontynuuj ocenę”** przy Katarzynie Wójcik – przy każdym wskaźniku wybierz opis zachowania (klawisze 1–5, strzałki – następny wskaźnik). Po ocenie wskaźników system pokazuje **sugerowany poziom** z wyjaśnieniem „Dlaczego ten poziom?”, a **decyzję podejmuje przełożona** (inna niż sugestia wymaga jednego zdania powodu).
+3. **Podsumowanie** – wynik według § 11 z wyjaśnieniem, uzasadnienie, wnioski do IPRZ, arkusz **PDF** według wzoru z rozporządzenia.
+4. **Asystent formalny** (klawisz `/`) – zadaj pytanie o pierwszą ocenę albo ocenę okresową; odpowiedź ze źródłem, a poza zakresem uczciwa odmowa.
+5. **Asystent rozmowy** – ściąga do rozmowy z pracownikiem: pytania, kwestie do omówienia, argumenty z notatek; tryb „5 minut przed rozmową”.
+6. Wyloguj → **HR**: statusy i terminy wszystkich ocen, przypomnienia, dziennik decyzji AI i człowieka.
+
+### Wymagania zadania – gdzie je zobaczyć
+
+| Wymaganie z treści zadania | Gdzie w rozwiązaniu |
+|---|---|
+| Działający prototyp, ścieżka przełożonego | demo powyżej; ocena okresowa (arkusze B i C) i pierwsza ocena – dwie odrębne ścieżki krok po kroku |
+| Model kompetencji ze wskaźnikami i opisami poziomów | 49 wskaźników z `materialy/Model_kompetencji.xlsx`; ocena przez wybór zachowania, sugestia poziomu, decyzja przełożonego |
+| Dobór kryteriów | arkusz B/C wybierany z opisu stanowiska (§ 3), kryteria obowiązkowe z rozporządzenia, do 3 dodatkowych z propozycją AI i cytatem z OSP |
+| Dokumentacja i formularze, PDF | część I i pełny arkusz oceny okresowej, arkusz pierwszej oceny – według wzorów z rozporządzeń |
+| Terminy i komunikacja | silnik terminów (ustawa, rozporządzenia, KC, święta, nieobecności), przypomnienia z panelu HR, ekran kierującego komórką, zawiadomienie o zmianie terminu |
+| Asystent AI: przepisy i przygotowanie do rozmowy | asystent formalny ze źródłami i odmową; asystent rozmowy, tryb rozmowy, „5 minut przed rozmową” – [`docs/AI.md`](docs/AI.md) |
+| AI tylko doradza | każda propozycja AI oznaczona, do decyzji człowieka, zapisana w dzienniku decyzji; punkty i wynik liczy kod, nie model |
+| Perspektywa HR / administratora | panel HR: statusy, terminy, przypomnienia, Lustro ocen, dziennik decyzji z CSV, przepisy i model bez zmian w kodzie |
+| Integracje (EZD, systemy kadrowe), API | REST API `/api/v1` – [`docs/openapi.yaml`](docs/openapi.yaml) |
+| Uwierzytelnianie, role, ochrona danych | 4 role, autoryzacja w każdym API i akcji, pseudonimizacja przed modelem, minimalizacja danych – [`docs/BEZPIECZENSTWO.md`](docs/BEZPIECZENSTWO.md) |
+| Technologie i architektura, rozwój i wdrożenie | [`docs/ARCHITEKTURA.md`](docs/ARCHITEKTURA.md), lista prac przed produkcją w [`docs/AI.md`](docs/AI.md) i [`docs/BEZPIECZENSTWO.md`](docs/BEZPIECZENSTWO.md) |
+| Darmowe narzędzia AI | demo na darmowym planie Gemini; docelowo model lokalny (Ollama: Bielik, PLLuM) – bez zmian w kodzie |
+| Czytelny interfejs w przeglądarce | WCAG 2.1 AA, ustawienia dostępności (tekst, kontrast, tryb ciemny), [deklaracja dostępności](https://sprawdz-my-kompetencje.vercel.app/deklaracja-dostepnosci) |
+
+### Jakość
+
+- **873 testy automatyczne** (Vitest) – silnik reguł, terminy, punktacja, uprawnienia, AI; testy end-to-end w przeglądarce (Playwright) z kontrolą dostępności axe.
+- Asystent formalny: **25/25 trafnych odpowiedzi ze źródłem i 5/5 poprawnych odmów** w zestawie testowym – [`eval/wynik.md`](eval/wynik.md).
+- Pełna ocena okresowa (7 kryteriów, 25 wskaźników) w kilka minut – pomiar w [`docs/UX.md`](docs/UX.md).
 
 ![Pulpit przełożonej z kartą „Do zrobienia”](docs/zrzuty/01-pulpit.jpg)
 
@@ -68,7 +103,6 @@ Scenariusz krok po kroku dla jury (ok. 12 minut): **[`docs/DEMO.md`](docs/DEMO.m
 | [`docs/WDROZENIE.md`](docs/WDROZENIE.md) | wdrożenie publicznego demo (Vercel + Neon) |
 | [`docs/LICENCJE.md`](docs/LICENCJE.md) | licencje zależności (wyłącznie permisywne) |
 | [`docs/ZALOZENIA.md`](docs/ZALOZENIA.md) | założenia interpretacyjne tam, gdzie przepisy nie rozstrzygają |
-| [`docs/ZADANIA.md`](docs/ZADANIA.md) | tablica zadań zespołu |
 
 ## Technologie
 
@@ -93,11 +127,12 @@ Model AI jest opcjonalny: bez `LLM_BASE_URL` i `LLM_MODEL` aplikacja działa w t
 | Osoba | Stanowisko | Scenariusz |
 |---|---|---|
 | Katarzyna Wójcik | radca (arkusz C) | ocena za kilka dni, 10 obserwacji w dzienniku – główna ścieżka oceny wskaźników |
-| Piotr Lewandowski | naczelnik wydziału (arkusz B) | okres oceny, kryteria dodatkowe z OSP |
+| Piotr Lewandowski | naczelnik wydziału (arkusz B) | okres oceny, kryteria dodatkowe z OSP; od ponad 3 miesięcy bez notatki – przypomnienie na pulpicie |
 | Jan Nowak (konto ocenianego) | starszy specjalista (arkusz C) | L4 44 dni wydłuża termin; większość notatek z ostatniego miesiąca |
 | Marcin Wróbel | starszy specjalista (arkusz C) | wcześniej ocena pozytywna, potem negatywna – ponowna ocena po 6 miesiącach |
 | Aleksandra Mazur | starszy specjalista | nowa pracownica – pierwsza ocena, rozmowa wstępna w 21 dni; widoczna też u kierującego komórką |
 | Marta Kamińska | radca (arkusz C) | zatrudniona na czas nieokreślony – ocena do rozpoczęcia od OSP |
+| Joanna Lewandowska | starszy specjalista | pierwsza ocena po sprawozdaniu i egzaminie – ocena pięciu elementów i wynik |
 
 ### Skrypty
 

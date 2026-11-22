@@ -104,7 +104,7 @@ describe("analiza OSP: zapasowa propozycja tylko przy błędzie modelu w trybie 
     expect(r.proposals[0].quote).toMatchObject({ taskNumber: 1, source: "ZADANIE_DOMINUJACE" });
   });
 
-  it("OSP z bazy (kreator Z12, bez symbolu) – dopasowanie po nazwie stanowiska", async () => {
+  it("OSP z bazy (kreator oceny okresowej, bez symbolu) – dopasowanie po nazwie stanowiska", async () => {
     const p = RADCA.position;
     const fromDb = positionFromRecord({
       title: p.title, purpose: p.purpose, dominantTasks: p.dominantTasks, otherTasks: p.otherTasks,

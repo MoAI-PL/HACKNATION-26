@@ -1,4 +1,4 @@
-// API analizy OSP (Z23): autoryzacja (Z04), plik OSP albo pracownik z bazy, tryb bez AI.
+// API analizy OSP: autoryzacja, plik OSP albo pracownik z bazy, tryb bez AI.
 import { readFileSync } from "node:fs";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 

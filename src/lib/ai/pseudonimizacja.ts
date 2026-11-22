@@ -1,4 +1,4 @@
-// Pseudonimizacja przed wysłaniem tekstu do modelu językowego (Z34, zasada AI nr 3: dane osobowe nie wychodzą do modelu).
+// Pseudonimizacja przed wysłaniem tekstu do modelu językowego (zasada AI nr 3: dane osobowe nie wychodzą do modelu).
 //
 // Co zastępujemy znacznikami (w tej kolejności):
 //  1. identyfikatory: adres e-mail, numer konta, PESEL, telefon, numer dowodu osobistego → [EMAIL_1], [NR_KONTA_1]…;

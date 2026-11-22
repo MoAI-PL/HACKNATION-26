@@ -8,7 +8,7 @@ import { selectClass } from "@/lib/obserwacje/stale";
 import type { Subordinate } from "@/lib/obserwacje/repo";
 import { cn } from "@/lib/utils";
 
-// Filtry dziennika (Z13): zwykły formularz GET – działa bez JavaScriptu, a wynik można udostępnić linkiem.
+// Filtry dziennika: zwykły formularz GET – działa bez JavaScriptu, a wynik można udostępnić linkiem.
 
 
 export function JournalFilters({ filters, people }: { filters: Filters; people: Subordinate[] }) {

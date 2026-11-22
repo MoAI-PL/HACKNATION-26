@@ -175,7 +175,7 @@ describe("oś czasu i widok według wskaźników", () => {
     expect(v.competencies[0].indicators[0].items.map((o) => o.id)).toEqual(["w2", "w", "o", "s", "n"]);
   });
 
-  it("notatki przy wskaźniku jednej osoby i liczniki dla sugestii (Z09)", () => {
+  it("notatki przy wskaźniku jednej osoby i liczniki dla sugestii", () => {
     const all = [...items, obs("e", "2026-11-21", "KOMUNIKACJA.2", "jan")];
     expect(observationsForIndicator(all, "kasia", "KOMUNIKACJA.2").map((o) => o.id)).toEqual(["c", "a"]);
     expect(Object.fromEntries(noteCountsByIndicator(all, "kasia"))).toEqual({ "KOMUNIKACJA.2": 2, "RZETELNOSC.1": 1 });

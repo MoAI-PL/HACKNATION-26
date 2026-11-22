@@ -5,9 +5,9 @@ import { RadioGroup } from "radix-ui";
 import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-// Wybór kartami zamiast list rozwijanych (Z10, sekcja 4.1 pkt 7).
-// Pojedynczy wybór: karty zachowań przy wskaźniku (Z14), wybór arkusza B/C (Z12).
-// Wielokrotny wybór: kryteria dodatkowe, maks. 3 (Z12).
+// Wybór kartami zamiast list rozwijanych.
+// Pojedynczy wybór: karty zachowań przy wskaźniku, wybór arkusza B/C.
+// Wielokrotny wybór: kryteria dodatkowe, maks. 3.
 // Obsługa klawiaturą: Tab do grupy, strzałki między kartami (pojedynczy), Spacja zaznacza.
 
 export interface ChoiceOption<V extends string = string> {

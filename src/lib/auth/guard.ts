@@ -1,6 +1,6 @@
-// Strażnicy autoryzacji (Z04). Używaj ich w KAŻDYM handlerze API, akcji serwerowej i układzie ekranów roli.
+// Strażnicy autoryzacji. Używaj ich w KAŻDYM handlerze API, akcji serwerowej i układzie ekranów roli.
 // Ukrycie przycisku w interfejsie nie jest zabezpieczeniem.
-// Po sprawdzeniu roli strażnik wczytuje zmiany przepisów i modelu z panelu HR (Z19), więc obowiązują od razu.
+// Po sprawdzeniu roli strażnik wczytuje zmiany przepisów i modelu z panelu HR, więc obowiązują od razu.
 import { NextResponse } from "next/server";
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";

@@ -40,19 +40,19 @@ Kolorów statusów nie używamy do dekoracji. Nowy kolor dodajemy tylko jako tok
 | `StatusBadge`, `DeadlineBadge`, `EvaluationStatusBadge` | `components/ui/status-badge.tsx` | etap oceny, termin (kolor wg `urgencyFromDaysLeft`); `size="md"` – większa odznaka; `variant="solid"` – pełne kolorowe tło i biały tekst (karta „Do zrobienia”) |
 | `Notice` | `components/ui/notice.tsx` | komunikat z powodem, podstawą prawną i akcją; błędy/ostrzeżenia mają `role="alert"` |
 | `EmptyState` | `components/ui/empty-state.tsx` | pusta lista z instrukcją i przyciskiem |
-| `InfoTip`, `Term` | `components/ui/info-tip.tsx` | „ⓘ Dlaczego?” przy polach i krokach (treści: Z42), dymki żargonu ze słownika `GLOSSARY` |
-| `Dlaczego` | `components/ui/dlaczego.tsx` | „ⓘ Dlaczego?” z treścią z `data/podpowiedzi.json` (Z42): `<Dlaczego id="KRYTERIA_DODATKOWE" />` – wyjaśnienie, podstawa prawna, dosłowny cytat z bazy wiedzy, link do ISAP; temat w nazwie przycisku dla czytnika ekranu |
+| `InfoTip`, `Term` | `components/ui/info-tip.tsx` | „ⓘ Dlaczego?” przy polach i krokach (treści: przepisy w kontekście), dymki żargonu ze słownika `GLOSSARY` |
+| `Dlaczego` | `components/ui/dlaczego.tsx` | „ⓘ Dlaczego?” z treścią z `data/podpowiedzi.json`: `<Dlaczego id="KRYTERIA_DODATKOWE" />` – wyjaśnienie, podstawa prawna, dosłowny cytat z bazy wiedzy, link do ISAP; temat w nazwie przycisku dla czytnika ekranu |
 | `Field`, `Input`, `Textarea` | `components/ui/field.tsx` | każde pole: etykieta, podpowiedź, błąd powiązane przez `aria-describedby` |
-| `ChoiceCardGroup` | `components/ui/choice-cards.tsx` | pojedynczy wybór kartami: karty zachowań (Z14), arkusz B/C (Z12) |
+| `ChoiceCardGroup` | `components/ui/choice-cards.tsx` | pojedynczy wybór kartami: karty zachowań, arkusz B/C |
 | `ChoiceCardMulti` | `components/ui/choice-cards.tsx` | wybór wielokrotny z limitem: kryteria dodatkowe (maks. 3) |
-| `WizardProgress`, `AutosaveIndicator`, `WizardFooter` | `components/ui/wizard.tsx` | kreatory (Z12, Z14, Z17) |
+| `WizardProgress`, `AutosaveIndicator`, `WizardFooter` | `components/ui/wizard.tsx` | kreatory |
 | `Dialog` | `components/ui/dialog.tsx` | okna (fokus w oknie, Esc zamyka) |
 | `Skeleton` | `components/ui/skeleton.tsx` | ładowanie |
 | `PropozycjaAI` | `components/asystent/PropozycjaAI.tsx` | **każda** propozycja AI (sekcja niżej) |
 
 ### Układ ekranu i menu
 
-Layouty grup tras `(przelozony)`, `(kierujacy)`, `(hr)`, `(oceniany)` sprawdzają rolę (Z04) i owijają treść w `AppShell`:
+Layouty grup tras `(przelozony)`, `(kierujacy)`, `(hr)`, `(oceniany)` sprawdzają rolę i owijają treść w `AppShell`:
 
 ```tsx
 const user = await requirePageRole("PRZELOZONY");
@@ -61,13 +61,13 @@ return <AppShell user={shellUser(user)} userMenu={<LogoutButton />}>{children}</
 
 - `AppShell` dostarcza jedyny `<main>`. Strona go **nie** dodaje: zaczyna się od `<PageHeader title="…" description="…" action={<Button>…</Button>} />`.
 - Menu jest w `src/lib/ui/nav.ts`. Adresy leżą w obszarach ról z `src/lib/auth/role.ts` (test to sprawdza).
-- **Bez martwych linków:** pozycja z `pending: "Z12"` jest ukryta, dopóki ekranu nie ma. Zadanie ekranu usuwa `pending` w commicie, który dodaje stronę.
-- Docelowe menu przełożonego: Pulpit (`/pulpit`), Pierwsza ocena (`/ocena/pierwsza`, Z17), Ocena okresowa (`/ocena/okresowa`, Z12), Dziennik obserwacji (`/obserwacje`, Z13), Asystent formalny (`/asystent`), Asystent rozmowy (`/ocena/rozmowa`, Z24).
-- Przycisk „Notatka” i skrót `N` – szybka notatka (Z41), włączone (`FEATURES.quickNote = true` w `nav.ts`).
+- **Bez martwych linków:** pozycja z `pending: "kreator oceny okresowej"` jest ukryta, dopóki ekranu nie ma. Zadanie ekranu usuwa `pending` w commicie, który dodaje stronę.
+- Docelowe menu przełożonego: Pulpit (`/pulpit`), Pierwsza ocena (`/ocena/pierwsza`), Ocena okresowa (`/ocena/okresowa`), Dziennik obserwacji (`/obserwacje`), Asystent formalny (`/asystent`), Asystent rozmowy (`/ocena/rozmowa`).
+- Przycisk „Notatka” i skrót `N` – szybka notatka, włączone (`FEATURES.quickNote = true` w `nav.ts`).
 - Asystent formalny (`/asystent`) leży we wspólnej grupie `(wspolne)` i jest w menu przełożonego, HR i kierującego.
 - Nieistniejący adres i rekord spoza uprawnień pokazują polską stronę „Nie znaleziono strony” (`src/app/not-found.tsx`), a nieoczekiwany błąd – „Coś poszło nie tak” z przyciskiem „Spróbuj ponownie” (`src/app/error.tsx`).
 
-### `<PropozycjaAI>` – wspólny wzorzec AI (sekcja 4.2)
+### `<PropozycjaAI>` – wspólny wzorzec AI
 
 ```tsx
 <PropozycjaAI
@@ -91,13 +91,13 @@ Gdy model nie odpowiada, ustaw `state="niedostepna"`. Komunikat jest spokojny i 
 | `N` | szybka notatka | wszędzie (przełożony) | `useShortcutEvent(SHORTCUT_EVENTS.quickNote, (e) => { e.preventDefault(); otwórz(); })` |
 | `/` | asystent formalny | wszędzie (role z asystentem) | domyślnie przejście na `/asystent`; panel boczny może przejąć skrót: `useShortcutEvent(SHORTCUT_EVENTS.assistant, (e) => { e.preventDefault(); otwórz(); })` |
 | `?` | lista skrótów | wszędzie | gotowe w `AppShell` |
-| `←` `→` | poprzedni / następny wskaźnik | ocena wskaźników | `useShortcut("ArrowRight", …)` – Z14 |
-| `1`–`5`, `0` | wybór zachowania / brak obserwacji | ocena wskaźników | `useShortcut("3", …)` – Z14 |
+| `←` `→` | poprzedni / następny wskaźnik | ocena wskaźników | `useShortcut("ArrowRight", …)` – ocena wskaźników |
+| `1`–`5`, `0` | wybór zachowania / brak obserwacji | ocena wskaźników | `useShortcut("3", …)` – ocena wskaźników |
 | `Esc` | zamknięcie okna | okna i panele | wbudowane w `Dialog`, `InfoTip` |
 
 Skróty jednoklawiszowe nie działają podczas pisania w polu ani z Ctrl/Cmd/Alt (`src/lib/ui/shortcuts.ts`). Ten sam efekt dają przyciski w nagłówku (Notatka, Zapytaj asystenta).
 
-## Kontrola jakości UX (przed statusem „gotowe”)
+## Kontrola jakości UX każdego ekranu
 
 - [ ] Ekran ma jedną główną akcję i jasny tytuł (`PageHeader`).
 - [ ] Działa bez myszy (Tab, Enter, Esc, skróty), fokus jest widoczny.
@@ -110,33 +110,13 @@ Skróty jednoklawiszowe nie działają podczas pisania w polu ani z Ctrl/Cmd/Alt
 
 | Data | Co | Wynik |
 |---|---|---|
-| 21.11 | `/komponenty` przy 768 i 1440 px (przed podpięciem do layoutów ról) | brak poziomego przewijania, 1 `h1`, 1 `main`, wszystkie pola z etykietami, cele kliknięcia ≥ 24 px, skróty /, ?, 1–5 działają, fokus widoczny (skrót N wyłączony do Z41) |
+| 21.11 | `/komponenty` przy 768 i 1440 px (przed podpięciem do layoutów ról) | brak poziomego przewijania, 1 `h1`, 1 `main`, wszystkie pola z etykietami, cele kliknięcia ≥ 24 px, skróty /, ?, 1–5 działają, fokus widoczny (skrót N wyłączony do szybkiej notatki) |
 | 21.11 | kontrast tokenów kolorów (obliczenie WCAG) | 22 z 23 par spełnia AA; wyjątek: ramka niezaznaczonej karty wyboru 1,4:1 (punkt 4 niżej) |
-| 21.11 | `/obserwacje`, `/obserwacje/nowa`, edycja (Z13) przy 768 i 1440 px na danych demo | brak poziomego przewijania, 1 `h1`, 1 `main`, etykiety połączone z polami (`label for`, `aria-describedby`), błędy jako `role="alert"` i `aria-invalid`, wpisany tekst zostaje po błędzie walidacji, okno usuwania łapie fokus i mówi, że operacji nie można cofnąć |
-| 21.11 | `/hr` i `/hr/zawiadomienie/[id]` (Z18) przy 768 i 1440 px na danych demo, jako HR | brak poziomego przewijania strony i tabeli (odznaki etapu zawijają tekst), 1 `h1`, 1 `main`, tabela z `caption`, nagłówkami kolumn i wierszy, terminy kolorem i tekstem, „Dlaczego ten termin?” jako `details`, komunikaty po akcji jako `role="status"` |
-| 21.11 | `/ocena/rozmowa` i ściąga (Z24) przy 768 i 1440 px na danych demo, jako przełożona | brak poziomego przewijania, 1 `h1`, 1 `main`, przełącznik rodzaju rozmowy z `aria-current`, sekcje z nagłówkami `h2`, bez modelu spokojny komunikat w `<PropozycjaAI>`, nagłówek aplikacji ukryty przy druku |
+| 21.11 | `/obserwacje`, `/obserwacje/nowa`, edycja przy 768 i 1440 px na danych demo | brak poziomego przewijania, 1 `h1`, 1 `main`, etykiety połączone z polami (`label for`, `aria-describedby`), błędy jako `role="alert"` i `aria-invalid`, wpisany tekst zostaje po błędzie walidacji, okno usuwania łapie fokus i mówi, że operacji nie można cofnąć |
+| 21.11 | `/hr` i `/hr/zawiadomienie/[id]` przy 768 i 1440 px na danych demo, jako HR | brak poziomego przewijania strony i tabeli (odznaki etapu zawijają tekst), 1 `h1`, 1 `main`, tabela z `caption`, nagłówkami kolumn i wierszy, terminy kolorem i tekstem, „Dlaczego ten termin?” jako `details`, komunikaty po akcji jako `role="status"` |
+| 21.11 | `/ocena/rozmowa` i ściąga przy 768 i 1440 px na danych demo, jako przełożona | brak poziomego przewijania, 1 `h1`, 1 `main`, przełącznik rodzaju rozmowy z `aria-current`, sekcje z nagłówkami `h2`, bez modelu spokojny komunikat w `<PropozycjaAI>`, nagłówek aplikacji ukryty przy druku |
 | 21.11, 23:00 | axe-core (WCAG 2.1 A/AA) automatycznie, Playwright: 18 ekranów × 4 role (logowanie, pulpit, karta pracownika, ocena okresowa – lista, część I, ocena wskaźników, podsumowanie; dziennik, asystent, panel HR, kierujący, moje oceny, komponenty) | **0 naruszeń**; 36 widoków (768 i 1440 px): 0 błędów konsoli, bez poziomego przewijania, 1 `h1`, 1 `main`, wylogowanie działa w każdej roli. Poprawione przy przeglądzie: przyciski kont demo na logowaniu przy 768 px wychodziły poza karty |
-| 22.11, 00:45 | testy end-to-end Playwright (`npm run e2e`, Z30): 4 role, 16 ekranów przy 768 i 1440 px (przełożona: pulpit, karta pracownika, dziennik i nowa obserwacja, ocena okresowa – lista, część I, ocena wskaźników, podsumowanie, asystent rozmowy, ściąga, tryb rozmowy, asystent formalny; HR: panel, dziennik decyzji, lustro, asystent), tryb rozmowy od startu do zapisu, pełna ocena okresowa z PDF | **11/11 testów**, 0 naruszeń axe (WCAG 2.1 A/AA), 1 `h1` i 1 `main` na każdym ekranie, bez poziomego przewijania, 0 błędów konsoli; złe hasło i wejście przełożonej do panelu HR odrzucone; pełna ocena (7 kryteriów, 25 wskaźników) do „Ocena sporządzona” i arkusz PDF (`application/pdf`) – 7 s czasu technicznego. Poprawione: tryb rozmowy nie miał `h1` w trakcie rozmowy |
-| 22.11, 00:55 | pomiar „pełna ocena w 15 minut” (Z30): ocena okresowa Katarzyny Wójcik od „Oceń” do „Ocena sporządzona” – 7 kryteriów, 25 wskaźników, karty zachowań z notatkami, decyzje, podsumowanie i wnioski do IPRZ, stoper | **2 min 35 s** – członek zespołu, który znał już ekran i szybko czyta (dolna granica, nie wynik typowego użytkownika). Szacunek zespołu dla osoby widzącej ekran pierwszy raz: **ok. 8 minut** (co najmniej 5 minut więcej na czytanie opisów zachowań i notatek) – szacunek, nie pomiar; do sprawdzenia z osobą spoza zespołu. Uwagi: wszystko jasne, nic nie spowalniało. Cel 15 minut spełniony także przy tym szacunku |
-| 22.11, 06:45 | ustawienia wyświetlania i deklaracja dostępności (Z47): axe-core (WCAG 2.1 A/AA) na pulpicie, dzienniku obserwacji, pierwszej ocenie, deklaracji i otwartym panelu „Dostępność” – domyślnie, przy 150% z wysokim kontrastem i przy 125%; sprawdzenie szerokości 375 i 874 px na ekranach przełożonej, HR i logowania | **0 naruszeń**, bez poziomego przewijania. Poprawione przy przeglądzie: przy 150% kafelki panelu HR i karty kont demo na logowaniu nie mieściły tekstu (stałe kolumny `md:`), na telefonie nie zawijały się przyciski nagłówka, przycisk akcji na pulpicie i przełącznik widoku dziennika; przyciski A/A+/A++ miały nazwę dostępną bez widocznego napisu (WCAG 2.5.3) |
-| — | Lighthouse (Z30) | nie wykonano – dostępność sprawdza automatycznie axe w testach end-to-end (wiersz wyżej) |
-
-## Z10 – co zostało do 100%
-
-Przegląd 21.11 wieczorem: Z10 działa i jest scalone, ale te punkty zostały otwarte. Kto bierze punkt, wpisuje się w nawiasie.
-
-| # | Co | Dlaczego | Jak sprawdzić |
-|---|---|---|---|
-| 1 | **Przegląd nagłówka i menu po zalogowaniu** każdą rolą (przełożona, HR, kierujący, oceniany) przy 768 i 1440 px | `AppShell` w layoutach ról nie był jeszcze oglądany na żywo (brak lokalnej bazy z danymi). Obok imienia doszło „Wyloguj” – nagłówek może się inaczej zawijać | brak poziomego przewijania, jedno `main`, menu zgodne z rolą, „Wyloguj” działa |
-| 2 | **`<PropozycjaAI>`: wymusić zapis do AuditLog** – `onDecision` obowiązkowy i wspólna akcja serwerowa (np. `logAiDecision`), która bierze użytkownika z sesji (Z04) | sekcja 4.2: każde „Wstaw” i „Odrzuć” trafia do AuditLog z treścią propozycji; dziś zależy to od pamięci autora funkcji AI | test akcji: wpis z `aiProposal` i `humanDecision`; brak `onDecision` = błąd typów |
-| 3 | **Automatyczny przegląd dostępności** (axe DevTools / Lighthouse ≥ 90) na `/logowanie`, `/pulpit`, `/asystent`, `/komponenty` i poprawki | wymóg WCAG 2.1 AA, punkt na slajd; dziś sprawdzone tylko ręcznie | wynik wpisany w tabeli „Wyniki przeglądów” (wspólnie z Z30) |
-| 4 | Ramka niezaznaczonej karty wyboru: `border-input` zamiast `border-border` | kontrast 1,4:1 < 3:1 (WCAG 1.4.11) | obliczony kontrast ≥ 3:1 |
-| 5 | `AutosaveIndicator`: ogłaszać czytnikowi tylko „Zapisano …” i błąd, nie każde „Zapisywanie…” | przy pisaniu czytnik ekranu odczytuje komunikat po każdej zmianie | NVDA / VoiceOver – jeden komunikat po zapisie |
-| 6 | Skrót `/` nie działa, gdy otwarte jest okno dialogowe | dziś `/` przy otwartym oknie (np. „Dodaj pracownika”) przenosi na stronę asystenta | test ręczny |
-| 7 | `/komponenty`: użytkownik z sesji zamiast stałej „Ewy”, a na produkcji tylko przy `DEMO_MODE` | każda rola widzi tam menu przełożonego; strona nie jest dla jury | HR na `/komponenty` widzi menu HR; bez `DEMO_MODE` – 404 |
-| 8 | Asystent formalny dla HR i kierującego – decyzja z Z04/Z22 | `role.ts` wpuszcza HR i kierującego na `/asystent`, ale strona leży w grupie `(przelozony)`, więc ich przekierowuje; w menu na razie tylko przełożony | po przeniesieniu strony do wspólnego layoutu dodać `ASYSTENT_FORMALNY` do menu HR i kierującego w `src/lib/ui/nav.ts` |
-| 9 | Krótki przewodnik po pierwszym logowaniu (3 dymki, sekcja 4.3) | nie jest przypisany do żadnego zadania; Z10 dał komponenty, przewodnika nie ma | po pierwszym logowaniu przełożonej 3 pomijalne dymki, potem już nie |
-
-**Stan punktów po przeglądzie 21.11, 23:00 (geoglof, gałąź `z10-poprawki`):** 1 – zrobione (audyt wszystkich ról przy 768 i 1440 px, poprawione logowanie przy 768 px); 2 – zrobione (`onDecision` obowiązkowy, wspólna akcja `logAiDecision` w `src/lib/audit/decyzje-ai.ts`); 3 – axe zrobione (0 naruszeń), Lighthouse zostaje w Z30; 4 – zrobione (`border-input`); 5 – zrobione (czytnik słyszy tylko „Zapisano …” i błąd); 6 – zrobione (skróty globalne nie działają przy otwartym oknie); 7 – zrobione (użytkownik z sesji, na produkcji tylko przy `DEMO_MODE`); 8 – zrobione (asystent w grupie `(wspolne)`, w menu HR i kierującego); 9 – otwarte.
-
-**Zależne od innych zadań (bez zmian w Z10):** Z41 włączyło „Notatkę” i skrót N; Z12 i Z13 dodały swoje ekrany. Z24 dodało asystenta rozmowy. Został Z17 (pierwsza ocena) – usuwa `pending` ze swojej pozycji menu w tym samym commicie, który dodaje stronę.
+| 22.11, 00:45 | testy end-to-end Playwright (`npm run e2e`): 4 role, 16 ekranów przy 768 i 1440 px (przełożona: pulpit, karta pracownika, dziennik i nowa obserwacja, ocena okresowa – lista, część I, ocena wskaźników, podsumowanie, asystent rozmowy, ściąga, tryb rozmowy, asystent formalny; HR: panel, dziennik decyzji, lustro, asystent), tryb rozmowy od startu do zapisu, pełna ocena okresowa z PDF | **11/11 testów**, 0 naruszeń axe (WCAG 2.1 A/AA), 1 `h1` i 1 `main` na każdym ekranie, bez poziomego przewijania, 0 błędów konsoli; złe hasło i wejście przełożonej do panelu HR odrzucone; pełna ocena (7 kryteriów, 25 wskaźników) do „Ocena sporządzona” i arkusz PDF (`application/pdf`) – 7 s czasu technicznego. Poprawione: tryb rozmowy nie miał `h1` w trakcie rozmowy |
+| 22.11, 00:55 | pomiar „pełna ocena w 15 minut”: ocena okresowa Katarzyny Wójcik od „Oceń” do „Ocena sporządzona” – 7 kryteriów, 25 wskaźników, karty zachowań z notatkami, decyzje, podsumowanie i wnioski do IPRZ, stoper | **2 min 35 s** – członek zespołu, który znał już ekran i szybko czyta (dolna granica, nie wynik typowego użytkownika). Szacunek zespołu dla osoby widzącej ekran pierwszy raz: **ok. 8 minut** (co najmniej 5 minut więcej na czytanie opisów zachowań i notatek) – szacunek, nie pomiar; do sprawdzenia z osobą spoza zespołu. Uwagi: wszystko jasne, nic nie spowalniało. Cel 15 minut spełniony także przy tym szacunku |
+| 22.11, 06:45 | ustawienia wyświetlania i deklaracja dostępności: axe-core (WCAG 2.1 A/AA) na pulpicie, dzienniku obserwacji, pierwszej ocenie, deklaracji i otwartym panelu „Dostępność” – domyślnie, przy 150% z wysokim kontrastem i przy 125%; sprawdzenie szerokości 375 i 874 px na ekranach przełożonej, HR i logowania | **0 naruszeń**, bez poziomego przewijania. Poprawione przy przeglądzie: przy 150% kafelki panelu HR i karty kont demo na logowaniu nie mieściły tekstu (stałe kolumny `md:`), na telefonie nie zawijały się przyciski nagłówka, przycisk akcji na pulpicie i przełącznik widoku dziennika; przyciski A/A+/A++ miały nazwę dostępną bez widocznego napisu (WCAG 2.5.3) |
+| — | Lighthouse | nie wykonano – dostępność sprawdza automatycznie axe w testach end-to-end (wiersz wyżej) |

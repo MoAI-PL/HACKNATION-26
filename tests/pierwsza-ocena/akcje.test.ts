@@ -1,4 +1,4 @@
-// Akcje pierwszej oceny (Z17): rola i dostęp, zmiana etapu odporna na podwójne kliknięcie, kryteria pięciu elementów,
+// Akcje pierwszej oceny: rola i dostęp, zmiana etapu odporna na podwójne kliknięcie, kryteria pięciu elementów,
 // sprawozdanie bez wyniku egzaminu (egzamin bywa później).
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { todayIso, toDbDate } from "@/lib/domain/daty";

@@ -1,4 +1,4 @@
-// Odczyt danych podsumowania oceny okresowej (Z15) – tylko po stronie serwera.
+// Odczyt danych podsumowania oceny okresowej – tylko po stronie serwera.
 
 import { prisma } from "@/lib/db";
 import { fromDbDate, todayIso } from "@/lib/domain/daty";

@@ -1,10 +1,10 @@
-// Tryb „5 minut przed rozmową” (Z39): jedna strona do przeczytania tuż przed rozmową –
+// Tryb „5 minut przed rozmową”: jedna strona do przeczytania tuż przed rozmową –
 // najważniejsze fakty, trzy pytania i trzy pułapki. Czysta logika bez bazy i bez AI.
 //
-// Wszystko pochodzi ze ściągi asystenta rozmowy (Z24, buildConversationPrep) i z danych w systemie:
-//  - fakty: rodzaj i zakres rozmowy, termin, stanowisko, poprzednia ocena, notatki z dziennika (Z13);
+// Wszystko pochodzi ze ściągi asystenta rozmowy (buildConversationPrep) i z danych w systemie:
+//  - fakty: rodzaj i zakres rozmowy, termin, stanowisko, poprzednia ocena, notatki z dziennika;
 //  - pytania: pierwsze trzy ze ściągi (już dopasowane do notatek i ocen wskaźników);
-//  - pułapki: sygnały Lustra oceniającego (Z36) z bieżących danych, trudne sytuacje właściwe dla tej osoby
+//  - pułapki: sygnały Lustra oceniającego z bieżących danych, trudne sytuacje właściwe dla tej osoby
 //    (np. poprzednia ocena negatywna), a na końcu pułapka typowa dla rodzaju rozmowy.
 
 import { RESULT_LABELS } from "@/lib/domain/slownik";

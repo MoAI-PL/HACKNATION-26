@@ -34,7 +34,7 @@ const URGENCY_BAR: Record<string, string> = {
   neutral: "border-l-border",
 };
 
-// Pulpit przełożonego (Z11): „co mam dziś zrobić”, a pod spodem lista ludzi (sekcja 4.1 pkt 1).
+// Pulpit przełożonego: „co mam dziś zrobić”, a pod spodem lista ludzi.
 export default async function PulpitPage() {
   const user = await requirePageRole("PRZELOZONY");
   const today = todayIso();

@@ -1,4 +1,4 @@
-// Asystent rozmowy (Z24): dane z bazy – tylko podwładni przełożonego.
+// Asystent rozmowy: dane z bazy – tylko podwładni przełożonego.
 //
 // Lista i ściąga wybierają tę samą ocenę jedną regułą (`currentEvaluation`): najnowsza ocena w toku
 // (bez zakończonych i czekających na zapoznanie). Rodzaj rozmowy wynika z rodzaju i etapu tej oceny,
@@ -86,7 +86,7 @@ export interface PastConversation {
   notes: string | null;
 }
 
-/** Zapisane rozmowy z pracownikiem (tryb rozmowy Z43, kreator Z12, pierwsza ocena Z17), od najnowszej. */
+/** Zapisane rozmowy z pracownikiem (tryb rozmowy, kreator oceny okresowej, pierwsza ocena), od najnowszej. */
 export async function listPastConversations(supervisorId: string, employeeId: string, limit = 10): Promise<PastConversation[]> {
   const rows = await prisma.conversation.findMany({
     where: { employeeId, employee: { supervisorId } },

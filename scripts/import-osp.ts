@@ -1,4 +1,4 @@
-// Podgląd importu opisu stanowiska pracy (Z06): co system odczyta z pliku .docx i jaki arkusz wybierze.
+// Podgląd importu opisu stanowiska pracy: co system odczyta z pliku .docx i jaki arkusz wybierze.
 //
 // Uruchomienie:
 //   npm run osp -- materialy/OSP/OSP_radca_DSI_WWI.docx

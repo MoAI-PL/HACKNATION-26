@@ -1,4 +1,4 @@
-// Sprawdzenie e-maila i hasła (Z04). Dostęp do bazy przekazywany z zewnątrz, żeby dało się to testować bez PostgreSQL.
+// Sprawdzenie e-maila i hasła. Dostęp do bazy przekazywany z zewnątrz, żeby dało się to testować bez PostgreSQL.
 import { z } from "zod";
 import type { Role } from "@/lib/domain/types";
 import { isRole } from "./role";

@@ -1,4 +1,4 @@
-// Dziennik obserwacji (Z13): odczyt i zapis w bazie.
+// Dziennik obserwacji: odczyt i zapis w bazie.
 // Zasada dostępu: przełożony widzi i zmienia wyłącznie obserwacje swoich bezpośrednich podwładnych
 // (Employee.supervisorId = przełożony). Cudza obserwacja wygląda jak nieistniejąca – bez ujawniania danych.
 

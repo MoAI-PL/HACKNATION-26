@@ -1,14 +1,14 @@
-// Analiza OSP: propozycja kryteriów dodatkowych (Z23).
+// Analiza OSP: propozycja kryteriów dodatkowych.
 // Wybór kryteriów dodatkowych uzasadnia charakter obowiązków z opisu stanowiska (§ 2 ust. 2, § 5 ust. 2) – do 3 kryteriów.
 //
 // Przebieg:
-//  1. kandydaci = kryteria z wykazu (załącznik nr 1) bez obowiązkowych dla arkusza (silnik kryteriów Z07);
+//  1. kandydaci = kryteria z wykazu (załącznik nr 1) bez obowiązkowych dla arkusza (silnik punktacji);
 //  2. model dostaje zadania z OSP jako dane (w znacznikach) i zwraca JSON: kryterium, uzasadnienie, numer zadania, cytat;
 //  3. kontrola deterministyczna: kryterium musi być kandydatem, numer zadania musi istnieć, a cytat musi być
 //     dosłownym fragmentem tego zadania – w przeciwnym razie zastępujemy go początkiem zadania (cytat jest zawsze prawdziwy);
 //     wynik przechodzi przez validateAdditionalCriteria (maks. 3, bez obowiązkowych);
 //  4. brak modelu albo błąd → propozycja bez AI: kompetencje miękkie z OSP i słowa kluczowe w zadaniach.
-// Propozycja nigdy nie trafia do arkusza sama – przełożony klika „Wstaw do formularza” w <PropozycjaAI> (Z12).
+// Propozycja nigdy nie trafia do arkusza sama – przełożony klika „Wstaw do formularza” w <PropozycjaAI>.
 
 import { z } from "zod";
 import { chatJson, getLLM, LLMError, type ChatMessage, type LLMProvider } from "@/lib/ai/llm";
@@ -38,7 +38,7 @@ export interface CriteriaProposalResult {
   /** Informacja dla użytkownika, np. o trybie bez AI albo pominiętej propozycji modelu. */
   notice?: string;
   model?: string;
-  /** Z44: propozycja zapasowa z data/demo-cache.json (model nie odpowiedział w trybie demo). */
+  /** Tryb demo: propozycja zapasowa z data/demo-cache.json (model nie odpowiedział w trybie demo). */
   fromCache?: boolean;
   durationMs: number;
 }
@@ -134,7 +134,7 @@ export function buildMessages(position: PositionDescription, sheet: "B" | "C", c
 }
 
 /**
- * Z34: OSP przed wysłaniem do modelu bez danych osobowych (np. „uzgadnia z Janem Kowalskim”, e-mail lub telefon w zadaniu).
+ * Pseudonimizacja: OSP przed wysłaniem do modelu bez danych osobowych (np. „uzgadnia z Janem Kowalskim”, e-mail lub telefon w zadaniu).
  * Nazw komórek nie ukrywamy – opisują zadania stanowiska, a nie osoby. `restore` przywraca oryginał w cytatach z odpowiedzi.
  */
 export function pseudonymizePosition(position: PositionDescription): { position: PositionDescription; restore: (text: string) => string } {
@@ -319,7 +319,7 @@ export async function proposeAdditionalCriteria(
     };
   } catch (e) {
     const reason = e instanceof LLMError ? e.message : "Asystent AI jest chwilowo niedostępny.";
-    // Z44: w trybie demo OSP z materiałów MC mają przygotowaną wcześniej propozycję; cytaty sprawdzamy tak samo jak odpowiedź modelu.
+    // Tryb demo: w trybie demo OSP z materiałów MC mają przygotowaną wcześniej propozycję; cytaty sprawdzamy tak samo jak odpowiedź modelu.
     const cached = demoCacheEnabled() ? cachedCriteria(position, sheet) : undefined;
     if (cached) {
       const proposals = cached.propozycje.flatMap((p): CriterionProposal[] => {

@@ -1,5 +1,5 @@
-// Przepisy w kontekście (Z42, wyróżnik ⑥): treści „ⓘ Dlaczego?” przy polach i krokach.
-// Źródło: data/podpowiedzi.json – krótkie wyjaśnienie, jednostka redakcyjna i dosłowny cytat z bazy wiedzy (Z21).
+// Przepisy w kontekście: treści „ⓘ Dlaczego?” przy polach i krokach.
+// Źródło: data/podpowiedzi.json – krótkie wyjaśnienie, jednostka redakcyjna i dosłowny cytat z bazy wiedzy.
 // Mały plik (bez całej bazy wiedzy), więc można go używać także w komponentach przeglądarki.
 // Zgodność cytatów z bazą wiedzy i komplet identyfikatorów sprawdza tests/ui/podpowiedzi.test.ts.
 

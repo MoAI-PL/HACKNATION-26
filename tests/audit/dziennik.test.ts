@@ -1,4 +1,4 @@
-// Dziennik decyzji (Z35): filtry, etykiety, CSV (Excel, polskie znaki, ochrona przed formułami), dostęp tylko dla HR.
+// Dziennik decyzji: filtry, etykiety, CSV (Excel, polskie znaki, ochrona przed formułami), dostęp tylko dla HR.
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const { authMock, findManyMock } = vi.hoisted(() => ({ authMock: vi.fn(), findManyMock: vi.fn() }));

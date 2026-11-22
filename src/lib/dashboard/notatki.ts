@@ -1,8 +1,8 @@
-// Przypomnienia o regularnych notatkach (Z45): pulpit przełożonego pokazuje osoby w okresie oceny,
+// Przypomnienia o regularnych notatkach: pulpit przełożonego pokazuje osoby w okresie oceny,
 // o których od dawna nie ma notatki w dzienniku obserwacji. Czysta logika – dane z loadSubordinates.
 //
 // Po co: ocena ma objąć cały okres (§ 10 rozporządzenia), a notatki tylko z ostatnich tygodni to efekt
-// świeżości (Lustro, Z36). Przypomnienie jest zachętą – niczego nie blokuje.
+// świeżości (Lustro). Przypomnienie jest zachętą – niczego nie blokuje.
 //
 // ZAŁOŻENIE: próg 90 dni bez notatki (docs/ZALOZENIA.md #24); liczony od ostatniej notatki, a gdy w okresie
 // oceny jej nie ma – od początku okresu (ustalenia kryteriów albo rozmowy wstępnej).

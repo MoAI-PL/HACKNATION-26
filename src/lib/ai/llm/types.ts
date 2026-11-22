@@ -1,4 +1,4 @@
-// Warstwa modelu językowego (Z20). Format zgodny z API OpenAI (chat/completions),
+// Warstwa modelu językowego. Format zgodny z API OpenAI (chat/completions),
 // więc działa z Ollamą (lokalnie, np. Bielik / PLLuM) i z darmowymi API w chmurze – bez zmian w kodzie.
 
 export type ChatRole = "system" | "user" | "assistant";

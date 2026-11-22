@@ -1,5 +1,5 @@
-// GET /api/v1/oceny – lista ocen (Z38), np. dla systemu kadrowego. Filtry: ?status=…&typ=…&pracownikId=…
-// Dostęp (Z04): HR – wszystkie, przełożony – swoich podwładnych, oceniany – własne sporządzone; inne role 403.
+// GET /api/v1/oceny – lista ocen, np. dla systemu kadrowego. Filtry: ?status=…&typ=…&pracownikId=…
+// Dostęp: HR – wszystkie, przełożony – swoich podwładnych, oceniany – własne sporządzone; inne role 403.
 
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";

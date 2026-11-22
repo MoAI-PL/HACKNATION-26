@@ -1,5 +1,5 @@
-// Arkusz oceny okresowej B / C w PDF (Z16) – czysta logika: co drukujemy, z jakich danych i kiedy wolno.
-// Dane pochodzą z oceny zapisanej przez Z12 (część I), Z14 (oceny cząstkowe) i Z15 (wynik, uzasadnienie, IPRZ,
+// Arkusz oceny okresowej B / C w PDF – czysta logika: co drukujemy, z jakich danych i kiedy wolno.
+// Dane pochodzą z oceny zapisanej w kreatorze oceny okresowej (część I), w ocenie wskaźników (oceny cząstkowe) i w podsumowaniu (wynik, uzasadnienie, IPRZ,
 // część III, zapoznanie). Puste pole (np. brak danych oceniającego w kartotece) drukujemy jako linię do wpisania,
 // tak jak we wzorze papierowym – niczego nie zgadujemy. Testy: tests/pdf/arkusz.test.ts.
 
@@ -67,7 +67,7 @@ export interface SheetData {
 // ---------------------------------------------------------------------------
 
 /**
- * Kto może pobrać arkusz (Z04): HR – wszystkie, przełożony – jak w eksporcie Z38 (oceniający albo bezpośredni przełożony),
+ * Kto może pobrać arkusz: HR – wszystkie, przełożony – jak w eksporcie REST API (oceniający albo bezpośredni przełożony),
  * oceniany – pełny arkusz po sporządzeniu oceny (§ 12 ust. 2), część I po ustaleniu kryteriów (§ 6 ust. 3).
  * Kierujący komórką – brak dostępu (null).
  */
@@ -247,7 +247,7 @@ export function sheetFileName(data: Pick<SheetData, "sheet" | "employee" | "vari
 }
 
 // ---------------------------------------------------------------------------
-// Linki do pobrania (przyciski na ekranach Z12, Z15 i Z46)
+// Linki do pobrania (przyciski na ekranach kreator oceny okresowej)
 // ---------------------------------------------------------------------------
 
 export function sheetHref(evaluationId: string, variant: SheetVariant): string {
@@ -262,7 +262,7 @@ export function sheetDownloads(ev: {
   hasCriteria: boolean;
 }): { href: string; label: string }[] {
   if (ev.status === "DO_ROZPOCZECIA") return [];
-  // Pierwsza ocena (Z17): jeden arkusz – po rozmowie wstępnej z jej danymi, po sporządzeniu oceny z wynikiem.
+  // Pierwsza ocena: jeden arkusz – po rozmowie wstępnej z jej danymi, po sporządzeniu oceny z wynikiem.
   if (ev.type === "PIERWSZA") return [{ href: sheetHref(ev.evaluationId, "PELNY"), label: "Pobierz arkusz pierwszej oceny (PDF)" }];
   if (ev.type !== "OKRESOWA") return [];
   const finalized = FINALIZED_STATUSES.includes(ev.status);

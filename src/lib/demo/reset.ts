@@ -1,6 +1,6 @@
-// Reset danych demo (Z44): przywraca stan początkowy jednym kliknięciem z panelu HR.
+// Reset danych demo: przywraca stan początkowy jednym kliknięciem z panelu HR.
 // Konta demo zostają (sesje się nie urywają), a pracownicy, oceny, obserwacje i przypomnienia powstają od nowa
-// z datami liczonymi od dzisiaj – tak samo jak przy wdrożeniu (Z29).
+// z datami liczonymi od dzisiaj – tak samo jak przy wdrożeniu.
 
 import type { PrismaClient } from "@prisma/client";
 import { isDemoMode } from "@/lib/auth/demo";

@@ -1,4 +1,4 @@
-// Słownik nazw domenowych (Z03): kody w kodzie → pełne polskie nazwy w interfejsie i PDF.
+// Słownik nazw domenowych: kody w kodzie → pełne polskie nazwy w interfejsie i PDF.
 // KONTRAKT WSPÓLNY: zmiany ogłaszamy zespołowi.
 // Nazwy kryteriów są dosłownie z załącznika nr 1 do rozporządzenia PRM z 4.04.2016 (Dz.U. poz. 470).
 
@@ -38,7 +38,7 @@ export const COMPETENCY_NAMES: Record<CompetencyCode, string> = {
   DECYZJE: "Podejmowanie decyzji i odpowiedzialność",
 };
 
-/** Nazwy arkuszy w materialy/Model_kompetencji.xlsx (Excel skraca je do 31 znaków) – dla importu Z05. */
+/** Nazwy arkuszy w materialy/Model_kompetencji.xlsx (Excel skraca je do 31 znaków) – dla importu modelu kompetencji. */
 export const COMPETENCY_XLSX_SHEETS: Record<CompetencyCode, string> = {
   RZETELNOSC: "RZETELNOŚĆ",
   KOMUNIKACJA: "KOMUNIKACJA",
@@ -134,7 +134,7 @@ export const CONVERSATION_TYPE_LABELS: Record<ConversationType, string> = {
   BIEZACA: "Rozmowa bieżąca",
 };
 
-/** Opcje dosłownie jak w polu „LICZBA PODLEGŁYCH PRACOWNIKÓW” w OSP (do rozpoznawania w imporcie Z06). */
+/** Opcje dosłownie jak w polu „LICZBA PODLEGŁYCH PRACOWNIKÓW” w OSP (do rozpoznawania w imporcie OSP). */
 export const SUBORDINATE_LABELS: Record<SubordinateOption, string> = {
   BRAK: "brak podległych pracowników",
   DO_4: "bezpośrednio kieruje lub koordynuje pracę do 4 pracowników",
@@ -165,7 +165,7 @@ export const EXAM_EXEMPTION_LABELS: Record<ExamExemption, string> = {
   WYZSZE_STANOWISKO: "zatrudniony na wyższym stanowisku w służbie cywilnej",
 };
 
-/** Krótkie wyjaśnienia żargonu do dymków (sekcja 4.1 pkt 4). */
+/** Krótkie wyjaśnienia żargonu do dymków. */
 export const GLOSSARY: Record<string, string> = {
   OSP: "Opis stanowiska pracy – dokument z celem stanowiska, zadaniami i wymaganiami.",
   IPRZ: "Indywidualny program rozwoju zawodowego – plan szkoleń i działań rozwojowych pracownika.",

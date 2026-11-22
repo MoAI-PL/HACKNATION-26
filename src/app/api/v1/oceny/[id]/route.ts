@@ -1,4 +1,4 @@
-// GET /api/v1/oceny/{id} – eksport oceny w JSON (Z38) pod EZD i system kadrowy (docs/openapi.yaml).
+// GET /api/v1/oceny/{id} – eksport oceny w JSON pod EZD i system kadrowy (docs/openapi.yaml).
 // Dostęp jak w liście ocen; ocena spoza zakresu użytkownika = 404 (bez ujawniania, że istnieje).
 
 import { NextResponse } from "next/server";

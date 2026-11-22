@@ -1,4 +1,4 @@
-// Odbyte rozmowy na ściądze (Z24): tylko rozmowy pracowników tego przełożonego, od najnowszej, daty jako ISO.
+// Odbyte rozmowy na ściądze: tylko rozmowy pracowników tego przełożonego, od najnowszej, daty jako ISO.
 import { describe, expect, it, vi } from "vitest";
 
 const { prismaMock } = vi.hoisted(() => ({ prismaMock: { conversation: { findMany: vi.fn() } } }));

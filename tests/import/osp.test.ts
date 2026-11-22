@@ -25,7 +25,7 @@ function expectOspError(data: Uint8Array, fragment: RegExp) {
   throw new Error("Oczekiwano błędu importu OSP.");
 }
 
-describe("wybór arkusza z OSP od MC (kryterium gotowości Z06)", () => {
+describe("wybór arkusza z OSP od MC", () => {
   it("radca → arkusz C (brak podległych pracowników)", () => {
     expect(radca.position.subordinates).toBe("BRAK");
     expect(radca.sheet.sheet).toBe("C");
@@ -129,7 +129,7 @@ describe("treść OSP od MC", () => {
   });
 });
 
-describe("dane demo (Z26) zgodne z plikami OSP", () => {
+describe("dane demo zgodne z plikami OSP", () => {
   it.each(Object.entries(seedOsp))("%s", (_klucz, wpis) => {
     const r = parseOsp(readFileSync(wpis.sourceFileName));
     expect({

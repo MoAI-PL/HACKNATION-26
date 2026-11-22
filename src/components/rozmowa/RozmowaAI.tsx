@@ -1,5 +1,5 @@
 "use client";
-// Redakcja przez AI i własne notatki do rozmowy (Z24). Propozycja w <PropozycjaAI>, „Wstaw” dopisuje ją do notatek.
+// Redakcja przez AI i własne notatki do rozmowy. Propozycja w <PropozycjaAI>, „Wstaw” dopisuje ją do notatek.
 // Notatki nie trafiają do systemu – zostają w tej przeglądarce (szkic na wypadek przełączenia zakładki) i na wydruku.
 
 import * as React from "react";

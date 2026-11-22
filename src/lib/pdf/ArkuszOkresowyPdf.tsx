@@ -1,4 +1,4 @@
-// Dokument PDF arkusza oceny okresowej B / C (Z16); czcionka, style i drobne elementy używa też arkusz pierwszej oceny (Z17) – @react-pdf/renderer (MIT), czcionka Noto Sans (OFL-1.1) z polskimi znakami.
+// Dokument PDF arkusza oceny okresowej B / C; czcionka, style i drobne elementy używa też arkusz pierwszej oceny – @react-pdf/renderer (MIT), czcionka Noto Sans (OFL-1.1) z polskimi znakami.
 // Układ odwzorowuje wzory z materialy/ocena-okresowa/ (załączniki nr 3 i 4 do rozporządzenia): część I, część II z pouczeniem,
 // część III tylko przy wniosku o stopień; każda część od nowej strony, przypisy pod częścią.
 

@@ -1,4 +1,4 @@
-// Szybka notatka (Z41): pseudonimizacja, propozycja z modelem i bez, walidacja zapisu.
+// Szybka notatka: pseudonimizacja, propozycja z modelem i bez, walidacja zapisu.
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import {
@@ -29,7 +29,7 @@ function fakeLLM(...replies: (string | Error)[]): LLMProvider & { prompts: ChatM
   };
 }
 
-// Zespół Ewy Kowalczyk z danych demo (Z26) + Anna do przykładu ze scenariusza demo.
+// Zespół Ewy Kowalczyk z danych demo + Anna do przykładu ze scenariusza demo.
 const people: NotePerson[] = [
   { id: "kw", firstName: "Katarzyna", lastName: "Wójcik" },
   { id: "pl", firstName: "Piotr", lastName: "Lewandowski" },
@@ -49,7 +49,7 @@ describe("pseudonimizacja przed modelem", () => {
     expect(p.tags).toEqual({ OSOBA_1: "an", OSOBA_2: "kw", OSOBA_3: "pl", OSOBA_4: "mk", OSOBA_5: "am" });
   });
 
-  it("nazwiska (także odmienione) i ta sama osoba = ten sam znacznik (imię i nazwisko zwinięte do jednego – Z34)", () => {
+  it("nazwiska (także odmienione) i ta sama osoba = ten sam znacznik (imię i nazwisko zwinięte do jednego)", () => {
     const p = pseudonymize("Jan Nowak przygotował raport. Nowakowi podziękowałem, Janem jestem zachwycony", people);
     expect(p.text).toBe("[OSOBA_1] przygotował raport. [OSOBA_1] podziękowałem, [OSOBA_1] jestem zachwycony");
     expect(p.mentioned).toEqual(["jn"]);

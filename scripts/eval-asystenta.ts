@@ -1,4 +1,4 @@
-// Zestaw testowy asystenta formalnego (Z25): `npm run eval`.
+// Zestaw testowy asystenta formalnego: `npm run eval`.
 //
 //   npm run eval              – wyszukiwanie + odpowiedzi modelu (gdy model jest w .env)
 //   npm run eval -- --bez-ai  – tylko poziom wyszukiwania (bez modelu, kilka sekund)

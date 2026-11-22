@@ -1,6 +1,6 @@
-// Dziennik obserwacji (Z13): czysta logika bez bazy – walidacja wpisu SDR, filtry, oś czasu, widok według wskaźników.
+// Dziennik obserwacji: czysta logika bez bazy – walidacja wpisu SDR, filtry, oś czasu, widok według wskaźników.
 // Obserwacja = Sytuacja – Działanie – Rezultat, przypięta do pracownika i (opcjonalnie, do czasu przypięcia) do wskaźnika
-// z modelu kompetencji. Te same dane zasilają ocenę: notatki przy wskaźniku (Z14) i `hasNote` sugestii (Z09).
+// z modelu kompetencji. Te same dane zasilają ocenę: notatki przy wskaźniku i `hasNote` sugestii.
 
 import { z } from "zod";
 import { competencyModel as defaultModel } from "@/lib/domain/model-kompetencji-dane";
@@ -229,7 +229,7 @@ export interface CompetencyGroup {
 
 export interface IndicatorView {
   competencies: CompetencyGroup[];
-  /** Notatki jeszcze nieprzypięte do wskaźnika (np. szybka notatka bez AI – Z41). */
+  /** Notatki jeszcze nieprzypięte do wskaźnika (np. szybka notatka bez AI). */
   unpinned: ObservationView[];
 }
 
@@ -255,12 +255,12 @@ export function groupByIndicator(items: ObservationView[], model: CompetencyMode
   return { competencies, unpinned: newestFirst.filter((o) => !o.indicatorId || !known.has(o.indicatorId)) };
 }
 
-/** Notatki przy wskaźnikach jednej osoby (Z14: panel obok kart zachowań; Z09: `hasNote`). */
+/** Notatki przy wskaźnikach jednej osoby (panel obok kart zachowań; sugestia poziomu: `hasNote`). */
 export function observationsForIndicator(items: ObservationView[], employeeId: string, indicatorId: string): ObservationView[] {
   return items.filter((o) => o.employeeId === employeeId && o.indicatorId === indicatorId).sort((a, b) => b.date.localeCompare(a.date));
 }
 
-/** Liczba notatek przy każdym wskaźniku pracownika – wejście `hasNote` sugestii (Z09). */
+/** Liczba notatek przy każdym wskaźniku pracownika – wejście `hasNote` sugestii. */
 export function noteCountsByIndicator(items: ObservationView[], employeeId: string): Map<string, number> {
   const counts = new Map<string, number>();
   for (const o of items) if (o.employeeId === employeeId && o.indicatorId) counts.set(o.indicatorId, (counts.get(o.indicatorId) ?? 0) + 1);

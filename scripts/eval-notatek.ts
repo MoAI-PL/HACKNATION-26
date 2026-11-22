@@ -1,4 +1,4 @@
-// Szybka notatka (Z41): czy 5 przykładowych zdań trafia w sensowny wskaźnik – `npm run eval:notatki`.
+// Szybka notatka: czy 5 przykładowych zdań trafia w sensowny wskaźnik – `npm run eval:notatki`.
 // Wymaga modelu w .env (LLM_BASE_URL, LLM_MODEL, LLM_API_KEY). Wynik: eval/notatki-wynik.md.
 import { readFileSync, writeFileSync } from "node:fs";
 import { proposeQuickNote, type NotePerson } from "../src/lib/ai/funkcje/szybka-notatka";

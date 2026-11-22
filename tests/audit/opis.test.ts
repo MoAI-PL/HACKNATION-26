@@ -1,4 +1,4 @@
-// Dziennik decyzji (Z35): wpisy zwykłym językiem zamiast surowego JSON.
+// Dziennik decyzji: wpisy zwykłym językiem zamiast surowego JSON.
 import { describe, expect, it } from "vitest";
 import { describeAudit, plainFields, plainReason, plainValue, shorten } from "@/lib/audit/opis";
 

@@ -1,4 +1,4 @@
-// Odczyt danych do zakończenia oceny okresowej (Z14) i oceny elementów pierwszej oceny (Z17) – tylko po stronie serwera.
+// Odczyt danych do zakończenia oceny okresowej i oceny elementów pierwszej oceny – tylko po stronie serwera.
 
 import { prisma } from "@/lib/db";
 import { fromDbDate, todayIso } from "@/lib/domain/daty";
@@ -26,7 +26,7 @@ export interface CriterionData extends CriterionForAssessment {
 
 export interface AssessmentData {
   evaluationId: string;
-  /** OKRESOWA (Z14, skala 1–9) albo PIERWSZA (Z17, skala 3/5/7). */
+  /** OKRESOWA (skala 1–9) albo PIERWSZA (skala 3/5/7). */
   evaluationType: EvaluationType;
   status: EvaluationStatus;
   today: IsoDate;
@@ -35,13 +35,13 @@ export interface AssessmentData {
   periodStart?: IsoDate;
   dueDate?: IsoDate;
   criteria: CriterionData[];
-  /** Notatki z dziennika z okresu oceny (Z13). */
+  /** Notatki z dziennika z okresu oceny. */
   observations: ObservationView[];
-  /** Wskazówki z modelu kompetencji do pokazania przy ocenie (sekcja 8.4). */
+  /** Wskazówki z modelu kompetencji do pokazania przy ocenie. */
   guidance: string[];
   /** Kryterium, do którego wracamy (indeks od 0). */
   resumeCriterion: number;
-  /** Dane do Lustra oceniającego (Z36): średnie wcześniejszych ocen przełożonego i ocen w komórce (bez nazwisk). */
+  /** Dane do Lustra oceniającego: średnie wcześniejszych ocen przełożonego i ocen w komórce (bez nazwisk). */
   mirror: { supervisorAverages: number[]; unitAverages: number[] };
 }
 
@@ -63,7 +63,7 @@ async function mirrorContext(evaluationId: string, evaluatorId: string, orgUnitI
 export const ASSESSABLE: EvaluationStatus[] = ["W_OKRESIE_OCENY", "W_OCENIE"];
 
 /**
- * Statusy, w których można oceniać wskaźniki – zależnie od rodzaju oceny. Elementy pierwszej oceny (Z17) ocenia się
+ * Statusy, w których można oceniać wskaźniki – zależnie od rodzaju oceny. Elementy pierwszej oceny ocenia się
  * po odnotowaniu sprawozdania (etap „Do oceny”), bo jego złożenie w terminie jest warunkiem wyniku (§ 10 ust. 1 pkt 2).
  */
 export function assessableStatuses(type: EvaluationType): EvaluationStatus[] {

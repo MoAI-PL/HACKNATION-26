@@ -1,8 +1,8 @@
 "use server";
 
-// Wspólny zapis decyzji o propozycji AI do dziennika decyzji (sekcja 4.2, Z10 punkt 2).
+// Wspólny zapis decyzji o propozycji AI do dziennika decyzji.
 // Każde „Wstaw” i „Odrzuć” w <PropozycjaAI> trafia do AuditLog razem z treścią propozycji.
-// Użytkownik zawsze z sesji (Z04) – nie z danych przesłanych przez przeglądarkę.
+// Użytkownik zawsze z sesji – nie z danych przesłanych przez przeglądarkę.
 
 import type { Prisma } from "@prisma/client";
 import { z } from "zod";

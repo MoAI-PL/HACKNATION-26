@@ -1,4 +1,4 @@
-// Odczyt własnych ocen ocenianego (Z46) – tylko po stronie serwera.
+// Odczyt własnych ocen ocenianego – tylko po stronie serwera.
 // Każde zapytanie jest ograniczone do pracownika powiązanego z kontem (`Employee.user`), więc cudza ocena
 // wygląda jak nieistniejąca (404).
 

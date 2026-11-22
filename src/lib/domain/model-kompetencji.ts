@@ -1,7 +1,7 @@
-// Model kompetencji (Z05): schemat zod i indeks do szybkiego wyszukiwania.
+// Model kompetencji: schemat zod i indeks do szybkiego wyszukiwania.
 // Bez odczytu plików – dane z data/model-kompetencji.json ładuje model-kompetencji-dane.ts.
 // Tym samym schematem waliduje się wynik importu xlsx (src/lib/import/model-kompetencji.ts)
-// i edycję opisów zachowań w panelu HR (Z19).
+// i edycję opisów zachowań w panelu HR.
 
 import { z } from "zod";
 import { COMPETENCY_NAMES } from "./slownik";
@@ -68,7 +68,7 @@ export interface CompetencyModelIndex {
   indicators: IndicatorDefinition[];
   getCompetency(code: CompetencyCode): CompetencyDefinition;
   getIndicator(id: IndicatorId | string): IndicatorDefinition | undefined;
-  /** Opis zachowania dla wskaźnika i poziomu 1–5 (karta zachowania w Z14). */
+  /** Opis zachowania dla wskaźnika i poziomu 1–5 (karta zachowania w ocenie wskaźników). */
   behaviorDescription(id: IndicatorId | string, level: BehaviorLevel): string | undefined;
 }
 

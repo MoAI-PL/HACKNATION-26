@@ -1,5 +1,5 @@
 "use client";
-// Przycisk „Resetuj dane demo” (Z44) z potwierdzeniem – przed pitchem i po testach jury przywraca stan początkowy.
+// Przycisk „Resetuj dane demo” z potwierdzeniem – przed pitchem i po testach jury przywraca stan początkowy.
 
 import * as React from "react";
 import { useFormStatus } from "react-dom";

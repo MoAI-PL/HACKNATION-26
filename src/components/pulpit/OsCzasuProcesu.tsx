@@ -1,4 +1,4 @@
-// Oś czasu procesu pracownika (Z37) na karcie pracownika: historia, nieobecności, terminy prawne i „dziś” na jednej linii.
+// Oś czasu procesu pracownika na karcie pracownika: historia, nieobecności, terminy prawne i „dziś” na jednej linii.
 // Komponent serwerowy, bez JavaScriptu po stronie przeglądarki. Dane: processTimeline() z src/lib/dashboard/os-czasu.ts.
 
 import { CalendarRange, Check, Clock, MapPin, TriangleAlert } from "lucide-react";

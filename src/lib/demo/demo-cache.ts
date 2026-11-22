@@ -1,4 +1,4 @@
-// Zapasowe odpowiedzi AI dla scen pitchu (Z44) – data/demo-cache.json.
+// Zapasowe odpowiedzi AI dla scen pitchu – data/demo-cache.json.
 //
 // Kiedy działają: tylko przy DEMO_MODE=true i tylko gdy model JEST skonfigurowany, ale nie odpowiedział
 // (błąd, limit, przekroczony czas). Gdy modelu nie ma wcale, aplikacja działa w zwykłym trybie bez AI.
@@ -14,7 +14,7 @@ const cacheSchema = z.object({
   kryteriaZOsp: z.array(
     z.object({
       symbol: z.string(),
-      /** Nazwa stanowiska – OSP zapisany w bazie (kreator Z12) nie ma symbolu. */
+      /** Nazwa stanowiska – OSP zapisany w bazie (kreator oceny okresowej) nie ma symbolu. */
       tytul: z.string(),
       arkusz: z.enum(["B", "C"]),
       propozycje: z.array(z.object({ kryterium: z.string(), uzasadnienie: z.string(), zadanie: z.number().int().positive(), cytat: z.string() })).min(1).max(3),

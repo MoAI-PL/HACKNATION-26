@@ -1,4 +1,4 @@
-// Reset danych demo (Z44): tylko HR, tylko przy DEMO_MODE=true, wpis w dzienniku zdarzeń.
+// Reset danych demo: tylko HR, tylko przy DEMO_MODE=true, wpis w dzienniku zdarzeń.
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const { authMock, seedMock, auditMock, redirectMock } = vi.hoisted(() => ({

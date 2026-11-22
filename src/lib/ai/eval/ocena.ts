@@ -1,4 +1,4 @@
-// Ocena asystenta formalnego na zestawie testowym (Z25). Czysta logika bez modelu i bazy – testowana w tests/ai/eval.test.ts.
+// Ocena asystenta formalnego na zestawie testowym. Czysta logika bez modelu i bazy – testowana w tests/ai/eval.test.ts.
 //
 // Dwa poziomy:
 //  1. WYSZUKIWANIE (zawsze, bez modelu): czy baza wiedzy zwraca właściwy fragment i czy odmawia przy pytaniach spoza zakresu;

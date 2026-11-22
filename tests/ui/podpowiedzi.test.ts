@@ -1,4 +1,4 @@
-// Przepisy w kontekście (Z42): każda podpowiedź „Dlaczego?” ma cytat dosłownie z bazy wiedzy, właściwą jednostkę redakcyjną
+// Przepisy w kontekście: każda podpowiedź „Dlaczego?” ma cytat dosłownie z bazy wiedzy, właściwą jednostkę redakcyjną
 // i link do aktu w ISAP; każda jest użyta na ekranie.
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";

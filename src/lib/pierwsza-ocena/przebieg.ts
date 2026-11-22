@@ -1,6 +1,6 @@
-// Przebieg pierwszej oceny (Z17) – czysta logika bez bazy i Reacta, używana w formularzach i ponownie na serwerze.
+// Przebieg pierwszej oceny – czysta logika bez bazy i Reacta, używana w formularzach i ponownie na serwerze.
 // Etapy: rozmowa wstępna (§ 3) → sprawozdanie i egzamin (§ 4–6, § 10 ust. 3) → ocena 5 elementów w skali 3/5/7
-// (§ 2 pkt 1, § 9 ust. 1) → wynik według § 10 → zapoznanie. Terminy liczy silnik Z08, wynik – silnik Z07.
+// (§ 2 pkt 1, § 9 ust. 1) → wynik według § 10 → zapoznanie. Terminy liczy silnik terminów, wynik – silnik punktacji.
 
 import { z } from "zod";
 import { rules as defaultRules, type Rules } from "@/lib/domain/przepisy";
@@ -89,7 +89,7 @@ export function proposedReportWindow(p: FirstEvalPerson, r: Rules = defaultRules
   return { dueFrom, dueTo, deadline };
 }
 
-/** Termin sprawozdania po wydłużeniach o nieobecności (silnik Z08, § 5). */
+/** Termin sprawozdania po wydłużeniach o nieobecności (silnik terminów, § 5). */
 export function effectiveReportDeadline(p: FirstEvalPerson, dueTo: IsoDate, r: Rules = defaultRules): Deadline {
   return reportDeadline({ employmentStart: p.employmentStart, reportDue: dueTo, absences: p.absences }, r);
 }
@@ -239,7 +239,7 @@ export function examMissing(exam: ExamResult | undefined, exemption: ExamExempti
   return !exam || (exam === "NIE_DOTYCZY" && !exemption);
 }
 
-/** Wynik z silnika Z07 – gdy brakuje ocen elementów albo egzaminu, zwraca listę braków zamiast wyjątku. */
+/** Wynik z silnika punktacji – gdy brakuje ocen elementów albo egzaminu, zwraca listę braków zamiast wyjątku. */
 export function firstEvalSummary(input: FirstEvalSummaryInput, r: Rules = defaultRules): FirstEvalSummary {
   const missing: string[] = [];
   for (const el of r.firstEval.elements) {

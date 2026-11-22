@@ -16,7 +16,7 @@ import { PobierzArkusz } from "@/components/ocena/PobierzArkusz";
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Moja ocena – Kompas Kompetencji" };
 
-// Szczegóły własnej oceny (Z46). Przed sporządzeniem: część I arkusza. Po sporządzeniu: cała ocena i potwierdzenie zapoznania się.
+// Szczegóły własnej oceny. Przed sporządzeniem: część I arkusza. Po sporządzeniu: cała ocena i potwierdzenie zapoznania się.
 export default async function MojaOcenaPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const user = await requirePageRole("OCENIANY");

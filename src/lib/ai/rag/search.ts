@@ -1,11 +1,11 @@
-// Wyszukiwarka bazy wiedzy (Z21): BM25 (MiniSearch) z prostą normalizacją dla języka polskiego.
-// Asystent formalny (Z22) bierze do kontekstu wyłącznie `hits`, a przy `sufficient === false` odmawia odpowiedzi.
+// Wyszukiwarka bazy wiedzy: BM25 (MiniSearch) z prostą normalizacją dla języka polskiego.
+// Asystent formalny bierze do kontekstu wyłącznie `hits`, a przy `sufficient === false` odmawia odpowiedzi.
 
 import MiniSearch from "minisearch";
 import knowledgeBase from "../../../../data/wiedza/fragmenty.json";
 import type { KnowledgeBase, KnowledgeFragment, SearchHit, SearchOptions, SearchResult } from "./types";
 
-// ZAŁOŻENIE: progi dopasowania dobrane na pytaniach z zestawu testowego (tests/rag, eval/pytania.json – Z25).
+// ZAŁOŻENIE: progi dopasowania dobrane na pytaniach z zestawu testowego (tests/rag, eval/pytania.json).
 /** Minimalny udział słów pytania obecnych w najlepszym fragmencie (pytania z 3+ słów znaczących). */
 export const MIN_COVERAGE = 0.6;
 /** Minimalny wynik BM25 najlepszego fragmentu. */
@@ -36,7 +36,7 @@ export function foldPolish(s: string): string {
 }
 
 // ZAŁOŻENIE: „stemming przez obcięcie” – pierwsze 6 znaków słowa łączy odmiany (sprzeciw/sprzeciwu, kryteria/kryteriów).
-// Krótkie słowa (5–6 znaków) tracą ostatnią literę, żeby łączyć końcówki fleksyjne: ocena/oceny/ocenę → „ocen” (Z25).
+// Krótkie słowa (5–6 znaków) tracą ostatnią literę, żeby łączyć końcówki fleksyjne: ocena/oceny/ocenę → „ocen”.
 const STEM_LENGTH = 6;
 
 /** Normalizacja słowa: bez polskich znaków, bez słów pomijanych, obcięte do rdzenia. */

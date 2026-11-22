@@ -13,7 +13,7 @@ import { currentRuntimeConfig, defaultRules } from "@/lib/konfiguracja/stan";
 export const metadata: Metadata = { title: "Parametry przepisów – Kompas Kompetencji" };
 export const dynamic = "force-dynamic";
 
-// Panel HR, część 2 (Z19): parametry przepisów bez zmian w kodzie. Zmiana działa od razu w terminach, ocenie i Lustrze.
+// Panel HR, część 2: parametry przepisów bez zmian w kodzie. Zmiana działa od razu w terminach, ocenie i Lustrze.
 export default async function ParametryPrzepisowPage() {
   await requirePageRole("HR");
   const file = defaultRules();

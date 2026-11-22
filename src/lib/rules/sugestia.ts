@@ -1,4 +1,4 @@
-// Sugerowany poziom kompetencji (Z09) i dane do panelu „Dlaczego ten poziom?”.
+// Sugerowany poziom kompetencji i dane do panelu „Dlaczego ten poziom?”.
 //
 // ZAŁOŻENIE: reguła sugestii jest naszą propozycją, nie przepisem (docs/ZALOZENIA.md #2, #16):
 //  - poziom zachowania 1–5 przeliczamy na punkty skali oceny (data/przepisy.json → behaviorToPoints):
@@ -139,7 +139,7 @@ export function suggestLevel(competency: CompetencyCode, ratings: IndicatorRatin
   const explanations: Explanation[] = [];
   const lbNegative = type === "OKRESOWA" ? r.periodic.legalBasis.negative : `${r.firstEval.legalBasis.positive} pkt 3`;
 
-  // Ostrzeżenia przy wskaźnikach (do pokazania przy kartach w Z14).
+  // Ostrzeżenia przy wskaźnikach (do pokazania przy kartach w ocenie wskaźników).
   for (const i of indicators) {
     if (i.value === 1) {
       warnings.push({

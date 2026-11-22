@@ -14,7 +14,7 @@ import type { OwnEvaluationView } from "@/lib/oceniany/moje-oceny";
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Moje oceny – Kompas Kompetencji" };
 
-// Ekran ocenianego (Z46): własne oceny – bieżąca (część I) i sporządzone (wynik, potwierdzenie zapoznania się).
+// Ekran ocenianego: własne oceny – bieżąca (część I) i sporządzone (wynik, potwierdzenie zapoznania się).
 export default async function MojeOcenyPage() {
   const user = await requirePageRole("OCENIANY");
   const [views, linked] = await Promise.all([loadOwnEvaluations(user.id), hasEmployeeRecord(user.id)]);

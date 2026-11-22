@@ -1,4 +1,4 @@
-// Dziennik decyzji (Z35): wpis AuditLog zwykłym językiem – dla HR na ekranie, zamiast surowego JSON.
+// Dziennik decyzji: wpis AuditLog zwykłym językiem – dla HR na ekranie, zamiast surowego JSON.
 // Eksport CSV zostaje z pełnymi danymi (JSON), bo służy do dalszej obróbki.
 //
 // Zasada: znane rodzaje wpisów opisujemy wprost („Arkusz C · rozmowa 15.12.2024”), nieznane – ogólnie

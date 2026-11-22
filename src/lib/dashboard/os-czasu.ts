@@ -1,5 +1,5 @@
-// Oś czasu procesu pracownika (Z37): co już się wydarzyło i jakie terminy prawne są przed nami – na jednej linii z „dziś”.
-// Czysta logika bez bazy. Terminy liczy silnik Z08 (openDeadlines z pulpitu Z11 + termin sprzeciwu) – tu je tylko układamy.
+// Oś czasu procesu pracownika: co już się wydarzyło i jakie terminy prawne są przed nami – na jednej linii z „dziś”.
+// Czysta logika bez bazy. Terminy liczy silnik terminów (openDeadlines z pulpitu przełożonego + termin sprzeciwu) – tu je tylko układamy.
 // Testy: tests/dashboard/os-czasu.test.ts.
 
 import type { DeadlineKind, DeadlineUrgency, IsoDate } from "@/lib/domain/types";
@@ -27,7 +27,7 @@ export interface TimelineEntry {
   /** Tylko terminy: ile dni zostało i jak pilne. */
   daysLeft?: number;
   urgency?: DeadlineUrgency;
-  /** Z42: „ⓘ Dlaczego?” z przepisem i cytatem. */
+  /** Przepisy w kontekście: „ⓘ Dlaczego?” z przepisem i cytatem. */
   hint?: HintId;
 }
 
@@ -85,7 +85,7 @@ export function processTimeline(e: EmployeeInfo, today: IsoDate): TimelineEntry[
     out.at(-1)!.hint = "ZMIANA_STANOWISKA";
   }
 
-  // Terminy przełożonego na bieżącym etapie (silnik Z08) – z wyjaśnieniem i podstawą prawną.
+  // Terminy przełożonego na bieżącym etapie (silnik terminów) – z wyjaśnieniem i podstawą prawną.
   const deadlines = [...openDeadlines(e)];
   // Termin sprzeciwu ocenianego po ostatnim zapoznaniu – pokazujemy, dopóki nie minął tydzień po nim.
   const lastAck = e.evaluations.filter((ev) => ev.acknowledgedAt).at(-1)?.acknowledgedAt;

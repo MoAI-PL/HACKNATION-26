@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 
-// Wspólny wzorzec propozycji AI (Z10, sekcja 4.2). Każda funkcja AI w aplikacji używa TEGO komponentu.
+// Wspólny wzorzec propozycji AI. Każda funkcja AI w aplikacji używa TEGO komponentu.
 // - fioletowa ramka, ikona ✦ i etykieta „Propozycja AI”;
 // - treść edytowalna przed wstawieniem;
 // - zawsze „Wstaw” (główny) i „Odrzuć”, przy funkcjach opartych na źródłach – lista źródeł;
@@ -37,7 +37,7 @@ export interface PropozycjaAIProps {
   state: ProposalState;
   /** Co to za propozycja, np. „Kryteria dodatkowe dla stanowiska”. */
   title?: string;
-  /** Tekst propozycji (edytowalny). Dla propozycji strukturalnych (Z23, Z41) użyj children. */
+  /** Tekst propozycji (edytowalny). Dla propozycji strukturalnych użyj children. */
   proposal?: string;
   /** Własna treść propozycji zamiast pola tekstowego, np. lista kryteriów z cytatami. */
   children?: React.ReactNode;
@@ -48,7 +48,7 @@ export interface PropozycjaAIProps {
   onInsert: (text: string) => void;
   onReject: () => void;
   /**
-   * Zapis decyzji do AuditLog (sekcja 4.2) – obowiązkowy. Najprościej: wspólna akcja `logAiDecision`
+   * Zapis decyzji do AuditLog – obowiązkowy. Najprościej: wspólna akcja `logAiDecision`
    * z `@/lib/audit/decyzje-ai` (użytkownik z sesji), albo akcja ekranu, która sprawdza dostęp do obiektu.
    */
   onDecision: (decision: ProposalDecision) => void;

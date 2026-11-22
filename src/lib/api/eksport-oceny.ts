@@ -1,4 +1,4 @@
-// REST API v1 (Z38): eksport oceny w JSON pod integrację z EZD i systemem kadrowym (specyfikacja: docs/openapi.yaml).
+// REST API v1: eksport oceny w JSON pod integrację z EZD i systemem kadrowym (specyfikacja: docs/openapi.yaml).
 // Konwencja jak w kontrakcie domeny: klucze po angielsku, wartości domenowe po polsku (kody enumów), daty "RRRR-MM-DD".
 
 import type { Prisma } from "@prisma/client";
@@ -27,7 +27,7 @@ export const API_VERSION = "1";
 export const VISIBLE_TO_EMPLOYEE: EvaluationStatus[] = [...FINALIZED_STATUSES];
 
 /**
- * Zakres ocen dostępnych dla użytkownika (Z04):
+ * Zakres ocen dostępnych dla użytkownika:
  * HR – wszystkie; przełożony – jako oceniający albo bezpośredni przełożony; oceniany – własne sporządzone oceny.
  * Kierujący komórką nie ma dostępu (null).
  */

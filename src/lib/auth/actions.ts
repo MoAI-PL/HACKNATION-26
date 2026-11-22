@@ -1,5 +1,5 @@
 "use server";
-// Akcje serwerowe logowania i wylogowania (Z04).
+// Akcje serwerowe logowania i wylogowania.
 import { AuthError } from "next-auth";
 import { signIn, signOut } from "@/auth";
 import { prisma } from "@/lib/db";

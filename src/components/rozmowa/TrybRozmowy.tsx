@@ -1,5 +1,5 @@
 "use client";
-// Tryb rozmowy (Z43): jeden punkt na ekranie, duża czcionka, zegar, odhaczanie i notatki w trakcie rozmowy.
+// Tryb rozmowy: jeden punkt na ekranie, duża czcionka, zegar, odhaczanie i notatki w trakcie rozmowy.
 // Szkic (krok, odhaczone punkty, notatki, czas) zostaje w tej przeglądarce do zapisu – odświeżenie strony nic nie gubi.
 // Klawiatura: → / PageDown – dalej, ← / PageUp – wstecz (poza polem notatki).
 
@@ -67,13 +67,13 @@ export interface TrybRozmowyProps {
   kind: ConversationKind;
   title: string;
   steps: ConversationStep[];
-  /** Ściąga z Z24 – powrót. */
+  /** Ściąga z asystenta rozmowy – powrót. */
   prepHref: string;
 }
 
 export function TrybRozmowy({ employeeId, kind, title, steps, prepHref }: TrybRozmowyProps) {
   const draftKey = `kompas:tryb-rozmowy:${employeeId}:${kind}`;
-  // Notatki przygotowane na ekranie ściągi (Z24) – pokazujemy je w kroku otwarcia.
+  // Notatki przygotowane na ekranie ściągi – pokazujemy je w kroku otwarcia.
   const prepNotesKey = `kompas:rozmowa:${employeeId}:${kind}`;
 
   const [phase, setPhase] = React.useState<Phase>("start");

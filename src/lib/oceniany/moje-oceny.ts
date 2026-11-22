@@ -1,4 +1,4 @@
-// Widok ocen dla ocenianego (Z46) – czysta logika: co oceniany może zobaczyć na danym etapie.
+// Widok ocen dla ocenianego – czysta logika: co oceniany może zobaczyć na danym etapie.
 //
 // Zasady:
 //  - przed sporządzeniem oceny oceniany widzi to, co i tak dostaje na piśmie po rozmowie rozpoczynającej

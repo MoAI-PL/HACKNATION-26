@@ -1,4 +1,4 @@
-// Odczyt pliku OSP przesłanego z formularza pulpitu (Z11) – parser i wybór arkusza dostarcza Z06.
+// Odczyt pliku OSP przesłanego z formularza pulpitu – parser i wybór arkusza dostarcza moduł importu OSP.
 import { OspImportError, parseOsp, type OspImportResult } from "@/lib/import/osp";
 import type { SheetSelection, SubordinateOption } from "@/lib/domain/types";
 import { ospFileProblem } from "./nowy-pracownik";

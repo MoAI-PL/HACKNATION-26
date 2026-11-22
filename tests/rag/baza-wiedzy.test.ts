@@ -71,7 +71,7 @@ describe("baza wiedzy: normalizacja", () => {
 });
 
 describe("baza wiedzy: wyszukiwanie", () => {
-  it("kryterium gotowości Z21: „sprzeciw” zwraca art. 83 i pouczenie", () => {
+  it("kryterium gotowości baza wiedzy: „sprzeciw” zwraca art. 83 i pouczenie", () => {
     const r = searchKnowledge("sprzeciw", { limit: 10 });
     expect(r.sufficient).toBe(true);
     expect(r.hits.some((h) => h.fragment.text.includes("art. 83"))).toBe(true);

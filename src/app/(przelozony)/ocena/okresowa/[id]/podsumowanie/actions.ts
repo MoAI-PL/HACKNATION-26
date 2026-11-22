@@ -1,7 +1,7 @@
 "use server";
 
-// Akcje serwerowe podsumowania oceny okresowej (Z15). Każda sprawdza rolę i dostęp do oceny (Z04),
-// a wynik liczy od nowa z ocen cząstkowych zapisanych w bazie (silnik Z07).
+// Akcje serwerowe podsumowania oceny okresowej. Każda sprawdza rolę i dostęp do oceny,
+// a wynik liczy od nowa z ocen cząstkowych zapisanych w bazie (silnik punktacji).
 
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/db";

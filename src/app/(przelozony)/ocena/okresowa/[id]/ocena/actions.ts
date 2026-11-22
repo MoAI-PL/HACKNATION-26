@@ -1,7 +1,7 @@
 "use server";
 
-// Akcje serwerowe zakończenia oceny (Z14) – wspólne z oceną elementów pierwszej oceny (Z17, skala 3/5/7).
-// Każda sprawdza rolę i dostęp do oceny (Z04), a decyzję o ocenie cząstkowej waliduje z sugestią
+// Akcje serwerowe zakończenia oceny – wspólne z oceną elementów pierwszej oceny (skala 3/5/7).
+// Każda sprawdza rolę i dostęp do oceny, a decyzję o ocenie cząstkowej waliduje z sugestią
 // policzoną od nowa z ocen zapisanych w bazie.
 
 import { revalidatePath } from "next/cache";

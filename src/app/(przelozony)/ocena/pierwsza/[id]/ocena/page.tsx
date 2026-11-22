@@ -11,7 +11,7 @@ import { assessableStatuses, loadAssessment } from "@/lib/ocena/dane-oceny";
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Ocena elementów – Kompas Kompetencji" };
 
-/** Ocena 5 elementów pierwszej oceny kartami zachowań – te same komponenty co w Z14, skala 3/5/7 (§ 9 ust. 1). */
+/** Ocena 5 elementów pierwszej oceny kartami zachowań – te same komponenty co w ocenie wskaźników, skala 3/5/7 (§ 9 ust. 1). */
 export default async function OcenaElementowPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const user = await requirePageRole("PRZELOZONY");

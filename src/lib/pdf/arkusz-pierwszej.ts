@@ -1,4 +1,4 @@
-// Dane do PDF arkusza pierwszej oceny w służbie cywilnej (Z17) – wzór: załącznik nr 2 do rozporządzenia PRM
+// Dane do PDF arkusza pierwszej oceny w służbie cywilnej – wzór: załącznik nr 2 do rozporządzenia PRM
 // z 23.07.2015 (Dz.U. poz. 1144), plik materialy/pierwsza-ocena/Arkusz_pierwszej_oceny.docx.
 // Wydruk po rozmowie wstępnej (podpisy pod rozmową wstępną); wynik i część oceny – po sporządzeniu oceny.
 

@@ -109,7 +109,7 @@ describe("karta „Do zrobienia” i lista podwładnych", () => {
     employee({ id: "bez", lastName: "Bąk", evaluations: [] }),
   ];
 
-  it("sortuje od najpilniejszego; rozmowa rozpoczynająca prowadzi do kreatora Z12", () => {
+  it("sortuje od najpilniejszego; rozmowa rozpoczynająca prowadzi do kreatora kreator oceny okresowej", () => {
     const todo = buildDashboardTodo(ludzie, TODAY, 5, () => true);
     expect(todo.map((t) => t.employeeId)).toEqual(["pilne", "pozniej"]);
     expect(todo[0]!.href).toBe(periodicEvaluationHref("b"));
@@ -124,7 +124,7 @@ describe("karta „Do zrobienia” i lista podwładnych", () => {
     expect(todo[0]!.actionLabel).toBe("Zobacz szczegóły");
   });
 
-  it("sporządzenie oceny prowadzi do zakończenia oceny (Z14), pierwsza ocena – do jej przebiegu (Z17)", () => {
+  it("sporządzenie oceny prowadzi do zakończenia oceny, pierwsza ocena – do jej przebiegu", () => {
     const prev = addDays(addMonths(TODAY, -24), 9);
     const wOcenie = employee({ id: "kasia", evaluations: [done("p", prev), open("c", { status: "W_OCENIE" })] });
     const wOkresie = employee({ id: "piotr", evaluations: [done("p2", addDays(addMonths(TODAY, -24), 20)), open("d")] });
@@ -145,14 +145,14 @@ describe("karta „Do zrobienia” i lista podwładnych", () => {
     expect([item!.actionLabel, item!.href]).toEqual(["Zakończ ocenę", periodicAssessmentHref("r")]);
   });
 
-  it("bez gotowego ekranu Z14 sporządzenie oceny wraca na kartę pracownika", () => {
+  it("bez gotowego ekranu ocena wskaźników sporządzenie oceny wraca na kartę pracownika", () => {
     const prev = addDays(addMonths(TODAY, -24), 9);
     const wOcenie = employee({ id: "kasia", evaluations: [done("p", prev), open("c", { status: "W_OCENIE" })] });
     const [item] = buildDashboardTodo([wOcenie], TODAY, 5, (h) => !h.endsWith("/ocena"));
     expect(item!.actionLabel).toBe("Zobacz szczegóły");
   });
 
-  it("na aktualnym menu: kreator Z12 i ekran pierwszej oceny (Z17) są gotowe", () => {
+  it("na aktualnym menu: kreator oceny okresowej i ekran pierwszej oceny są gotowe", () => {
     const [item] = buildDashboardTodo([ludzie[1]!], TODAY);
     expect(item!.actionLabel).toBe("Ustal kryteria");
     expect(pathEntries(ludzie).map((p) => p.key)).toContain("PIERWSZA");
@@ -221,7 +221,7 @@ describe("wejścia w ścieżki i karta pracownika", () => {
   });
 });
 
-describe("linki do dziennika obserwacji (Z13)", () => {
+describe("linki do dziennika obserwacji", () => {
   it("lista notatek osoby i nowa notatka z wybraną osobą", () => {
     expect(journalLinks("abc 1", () => true)).toEqual({ list: "/obserwacje?osoba=abc%201", add: "/obserwacje/nowa?osoba=abc%201" });
   });

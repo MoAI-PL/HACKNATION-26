@@ -6,7 +6,7 @@ import { requirePageRole } from "@/lib/auth/guard";
 import { isDemoMode } from "@/lib/auth/demo";
 import { Showcase } from "./Showcase";
 
-// Katalog komponentów bazowych (Z10) – podgląd dla zespołu i do kontroli dostępności.
+// Katalog komponentów bazowych – podgląd dla zespołu i do kontroli dostępności.
 // Dane są fikcyjne; ekran nie jest częścią ścieżki demo dla jury.
 // Na produkcji dostępny tylko w trybie demo; menu i nagłówek – zalogowanego użytkownika (jego rola).
 

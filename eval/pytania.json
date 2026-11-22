@@ -1,5 +1,5 @@
 {
-  "opis": "Zestaw testowy asystenta formalnego (Z25). Pytania w zakresie sformułowane inaczej niż w FAQ, żeby nie sprawdzać samego dopasowania tekstu. „zrodla” to akceptowane identyfikatory fragmentów bazy wiedzy (dokładnie albo jako prefiks przed „:”). „kluczowe” to grupy słów: odpowiedź musi zawierać co najmniej jedno słowo z każdej grupy (bez względu na wielkość liter i polskie znaki).",
+  "opis": "Zestaw testowy asystenta formalnego. Pytania w zakresie sformułowane inaczej niż w FAQ, żeby nie sprawdzać samego dopasowania tekstu. „zrodla” to akceptowane identyfikatory fragmentów bazy wiedzy (dokładnie albo jako prefiks przed „:”). „kluczowe” to grupy słów: odpowiedź musi zawierać co najmniej jedno słowo z każdej grupy (bez względu na wielkość liter i polskie znaki).",
   "pytania": [
     {
       "id": "Q01",

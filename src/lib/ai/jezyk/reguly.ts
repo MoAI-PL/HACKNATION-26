@@ -1,4 +1,4 @@
-// Asystent języka (Z40, wyróżnik ④) – reguły bez AI. Działają w przeglądarce, od razu po przerwie w pisaniu.
+// Asystent języka – reguły bez AI. Działają w przeglądarce, od razu po przerwie w pisaniu.
 // Wykrywają w uzasadnieniu, IPRZ i wnioskach opis OSOBY zamiast opisu ZACHOWANIA:
 //  - oceny charakteru („jest leniwy”, „niekomunikatywna”, „ma trudny charakter”),
 //  - etykiety („bałaganiarz”, „typ samotnika”),

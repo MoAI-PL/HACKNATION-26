@@ -8,7 +8,7 @@ import { formatDatePl } from "@/lib/rules/kalendarz";
 import type { HrRow } from "@/lib/hr/panel";
 import { addReminderAction } from "@/lib/hr/actions";
 
-// Tabela ocen w panelu HR (Z18): etap, termin z kolorem i tekstem, wydłużenia z powodem, ostrzeżenia, akcje.
+// Tabela ocen w panelu HR: etap, termin z kolorem i tekstem, wydłużenia z powodem, ostrzeżenia, akcje.
 
 export function HrEvaluationsTable({ rows, reminderFor }: { rows: HrRow[]; reminderFor: (row: HrRow) => boolean }) {
   return (

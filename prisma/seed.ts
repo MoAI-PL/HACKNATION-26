@@ -1,4 +1,4 @@
-// Dane demo. Konta logowania: Z04. Pełne dane wokół persony (pracownicy, oceny, obserwacje): Z26.
+// Dane demo: konta logowania oraz pełne dane wokół persony przełożonej (pracownicy, oceny, obserwacje).
 // Seed jest idempotentny – można go uruchamiać wielokrotnie.
 import { PrismaClient } from "@prisma/client";
 import { DEMO_ACCOUNTS, DEMO_PASSWORD } from "../src/lib/auth/demo";

@@ -1,4 +1,4 @@
-// Wspólne kroki testów end-to-end (Z30).
+// Wspólne kroki testów end-to-end.
 import AxeBuilder from "@axe-core/playwright";
 import { expect, type Page } from "@playwright/test";
 import { DEMO_ACCOUNTS, DEMO_PASSWORD, type DemoAccount } from "../src/lib/auth/demo";

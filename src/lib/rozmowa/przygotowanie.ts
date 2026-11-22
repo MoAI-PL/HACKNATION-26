@@ -1,9 +1,9 @@
-// Asystent rozmowy (Z24): przygotowanie rozmowy wstępnej, rozpoczynającej i oceniającej – czysta logika bez bazy i bez AI.
+// Asystent rozmowy: przygotowanie rozmowy wstępnej, rozpoczynającej i oceniającej – czysta logika bez bazy i bez AI.
 //
 // Ściąga powstaje z danych, które już są w systemie:
 //  - zakres rozmowy z przepisów (§ 3 rozp. o pierwszej ocenie, § 5 ust. 1 i § 10 rozp. o ocenach okresowych);
-//  - zadania z OSP, kryteria, oczekiwania i cele z rozmowy rozpoczynającej (Z12);
-//  - oceny wskaźników (Z14), a gdy ich jeszcze nie ma – opisy zachowań wskazane w notatkach z dziennika (Z13).
+//  - zadania z OSP, kryteria, oczekiwania i cele z rozmowy rozpoczynającej;
+//  - oceny wskaźników, a gdy ich jeszcze nie ma – opisy zachowań wskazane w notatkach z dziennika.
 // AI (src/lib/rozmowa/ai.ts) tylko redaguje otwarcie i informację zwrotną – decyzja i treść należą do przełożonego.
 
 import { competencyModel as defaultModel } from "@/lib/domain/model-kompetencji-dane";
@@ -29,7 +29,7 @@ export interface PrepInput {
   dominantTasks: string[];
   /** Kryteria oceny (okresowa); puste = wszystkie kompetencje z notatek. */
   criteria: { competency: CompetencyCode; kind: "OBOWIAZKOWE" | "DODATKOWE" }[];
-  /** Oceny wskaźników z Z14 (jeśli przełożony już je wybrał). */
+  /** Oceny wskaźników z oceny wskaźników (jeśli przełożony już je wybrał). */
   ratings: { indicatorId: string; value: IndicatorRatingValue }[];
   observations: ObservationView[];
   expectations?: string | null;
@@ -98,12 +98,12 @@ export interface ConversationPrep {
   notes: string[];
 }
 
-/** Poziom do etykiety: najbliższy, a remis (np. 4,5) w dół – tak samo jak sugestia poziomu w Z09 (wariant ostrożny). */
+/** Poziom do etykiety: najbliższy, a remis (np. 4,5) w dół – tak samo jak sugestia poziomu w sugestii poziomu (wariant ostrożny). */
 export const roundLevel = (level: number) => Math.min(5, Math.max(1, Math.ceil(level - 0.5))) as BehaviorLevel;
 const levelLabel = (level: number) => LEVEL_LABELS[BEHAVIOR_LEVEL_TO_LEVEL[roundLevel(level)]];
 const shorten = (t: string, max = 140) => (t.length > max ? `${t.slice(0, max).replace(/\s+\S*$/, "")}…` : t);
 
-/** Poziom każdego wskaźnika: ocena z Z14 ma pierwszeństwo, w przeciwnym razie średnia z notatek z poziomem zachowania. */
+/** Poziom każdego wskaźnika: ocena z oceny wskaźników ma pierwszeństwo, w przeciwnym razie średnia z notatek z poziomem zachowania. */
 export function indicatorEvidence(input: Pick<PrepInput, "ratings" | "observations" | "criteria">, model: CompetencyModelIndex = defaultModel): IndicatorEvidence[] {
   const allowed = new Set(input.criteria.map((c) => c.competency));
   const byIndicator = new Map<string, ObservationView[]>();
@@ -287,7 +287,7 @@ export function buildConversationPrep(input: PrepInput, model: CompetencyModelIn
     }
   }
 
-  // Pierwsza ocena ma tylko rozmowę wstępną – po jej zapisaniu (Z17: etap sprawozdania albo oceny) ściąga to mówi.
+  // Pierwsza ocena ma tylko rozmowę wstępną – po jej zapisaniu (etap sprawozdania albo oceny) ściąga to mówi.
   const initialDone = input.kind === "WSTEPNA" && !!input.stage && input.stage.status !== "DO_ROZPOCZECIA";
   if (initialDone && input.stage) {
     notes.push(

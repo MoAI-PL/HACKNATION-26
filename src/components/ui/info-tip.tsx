@@ -6,7 +6,7 @@ import { Info, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { GLOSSARY } from "@/lib/domain/slownik";
 
-// „ⓘ Dlaczego?” (Z10 – komponent, Z42 – treści) i dymki z wyjaśnieniem żargonu (sekcja 4.1 pkt 4).
+// „ⓘ Dlaczego?” (komponent, przepisy w kontekście – treści) i dymki z wyjaśnieniem żargonu.
 // Otwierane kliknięciem lub klawiszem Enter/Spacja, zamykane Esc – działa bez myszy i na tablecie
 // (nie używamy samego najechania kursorem).
 
@@ -15,13 +15,13 @@ export interface InfoTipProps {
   children: React.ReactNode;
   /** Podstawa prawna, np. „§ 5 ust. 2 rozporządzenia o ocenach okresowych”. */
   legalBasis?: string;
-  /** Cytat z przepisu (baza wiedzy Z21). */
+  /** Cytat z przepisu (baza wiedzy). */
   quote?: string;
   /** Link do źródła. */
   href?: string;
   /** Tekst przycisku; domyślnie „Dlaczego?”. */
   label?: string;
-  /** Temat dla czytnika ekranu („Dlaczego? – kryteria dodatkowe”), gdy na stronie jest kilka przycisków „Dlaczego?” (Z42). */
+  /** Temat dla czytnika ekranu („Dlaczego? – kryteria dodatkowe”), gdy na stronie jest kilka przycisków „Dlaczego?”. */
   topic?: string;
   className?: string;
 }

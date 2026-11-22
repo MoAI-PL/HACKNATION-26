@@ -4,7 +4,7 @@ import type { EvaluationStatus, EvaluationType } from "@/lib/domain/types";
 import { sheetDownloads } from "@/lib/pdf/arkusz";
 
 /**
- * Pobranie arkusza B / C w PDF (Z16): część I po ustaleniu kryteriów (kopia dla ocenianego, § 6 ust. 3),
+ * Pobranie arkusza B / C w PDF: część I po ustaleniu kryteriów (kopia dla ocenianego, § 6 ust. 3),
  * pełny arkusz po sporządzeniu oceny (§ 12 ust. 2). Gdy wydruk nie jest jeszcze możliwy – nic nie pokazujemy (bez martwych linków).
  */
 export function PobierzArkusz({

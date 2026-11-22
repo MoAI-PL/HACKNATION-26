@@ -1,10 +1,10 @@
-// Skróty klawiaturowe (Z10, sekcja 4.1 pkt 7). Czysta logika – testy w tests/ui/shortcuts.test.ts.
+// Skróty klawiaturowe. Czysta logika – testy w tests/ui/shortcuts.test.ts.
 //
 // Globalne skróty wysyłają zdarzenia w oknie, a funkcje nasłuchują ich u siebie:
-//   N → SHORTCUT_EVENTS.quickNote (szybka notatka, Z41)
-//   / → SHORTCUT_EVENTS.assistant (asystent formalny, Z22)
+//   N → SHORTCUT_EVENTS.quickNote (szybka notatka)
+//   / → SHORTCUT_EVENTS.assistant (asystent formalny)
 //   ? → SHORTCUT_EVENTS.help (lista skrótów)
-// Skróty lokalne (← → poprzedni/następny wskaźnik, 1–5 wybór zachowania) obsługuje ekran oceny (Z14) przez useShortcut.
+// Skróty lokalne (← → poprzedni/następny wskaźnik, 1–5 wybór zachowania) obsługuje ekran oceny przez useShortcut.
 
 export const SHORTCUT_EVENTS = {
   quickNote: "kompas:szybka-notatka",

@@ -1,4 +1,4 @@
-// Zmiany przepisów i modelu z panelu HR (Z19) – odczyt i zapis w bazie (tabela AppInfo) oraz wpis w AuditLog.
+// Zmiany przepisów i modelu z panelu HR – odczyt i zapis w bazie (tabela AppInfo) oraz wpis w AuditLog.
 // Tylko serwer. Stan w pamięci i walidacja: ./stan.ts.
 
 import type { Prisma } from "@prisma/client";

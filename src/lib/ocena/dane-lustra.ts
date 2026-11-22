@@ -1,4 +1,4 @@
-// Dane panelu HR „Lustro ocen” (Z36) – sporządzone oceny okresowe pogrupowane według komórek, bez nazwisk ocenianych.
+// Dane panelu HR „Lustro ocen” – sporządzone oceny okresowe pogrupowane według komórek, bez nazwisk ocenianych.
 
 import { prisma } from "@/lib/db";
 import type { CompletedEvaluation } from "@/lib/rules/lustro";

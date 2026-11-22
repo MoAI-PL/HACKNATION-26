@@ -1,8 +1,8 @@
-// Pulpit przełożonego (Z11) – czysta logika, bez bazy danych. Testy: tests/dashboard/pulpit.test.ts.
+// Pulpit przełożonego – czysta logika, bez bazy danych. Testy: tests/dashboard/pulpit.test.ts.
 //
 // Z danych pracownika (bieżąca ocena, poprzednie oceny, nieobecności, zmiany stanowiska) ustalamy,
-// jakie terminy są teraz OTWARTE dla przełożonego. Terminy liczy silnik Z08 – tu decydujemy tylko, który dotyczy
-// danego etapu procesu. Z tego powstaje karta „Do zrobienia” (buildTodoItems z Z08) i lista podwładnych.
+// jakie terminy są teraz OTWARTE dla przełożonego. Terminy liczy silnik terminów – tu decydujemy tylko, który dotyczy
+// danego etapu procesu. Z tego powstaje karta „Do zrobienia” (buildTodoItems z silnika terminów) i lista podwładnych.
 
 import type {
   Deadline,
@@ -218,12 +218,12 @@ export function sortRows(rows: EmployeeRow[]): EmployeeRow[] {
 // Karta „Do zrobienia”
 // ---------------------------------------------------------------------------
 
-/** Karta pracownika na pulpicie – szczegóły terminów z wyjaśnieniem (Z11). */
+/** Karta pracownika na pulpicie – szczegóły terminów z wyjaśnieniem. */
 export function employeeHref(employeeId: string): string {
   return `/pulpit/pracownik/${encodeURIComponent(employeeId)}`;
 }
 
-/** Kreator oceny okresowej (Z12) dla danej oceny. */
+/** Kreator oceny okresowej dla danej oceny. */
 export function periodicEvaluationHref(evaluationId: string): string {
   return `/ocena/okresowa/${encodeURIComponent(evaluationId)}`;
 }
@@ -233,12 +233,12 @@ export interface TodoTarget {
   label: string;
 }
 
-/** Przebieg pierwszej oceny (Z17): rozmowa wstępna, sprawozdanie i egzamin, wynik, zapoznanie. */
+/** Przebieg pierwszej oceny: rozmowa wstępna, sprawozdanie i egzamin, wynik, zapoznanie. */
 export function firstEvalHref(evaluationId: string): string {
   return `/ocena/pierwsza/${encodeURIComponent(evaluationId)}`;
 }
 
-/** Terminy pierwszej oceny prowadzące do jej przebiegu (Z17). */
+/** Terminy pierwszej oceny prowadzące do jej przebiegu. */
 const FIRST_EVAL_KINDS = new Set(["ROZMOWA_WSTEPNA", "SPRAWOZDANIE", "PIERWSZA_OCENA_OD", "PIERWSZA_OCENA_DO"]);
 
 const FIRST_EVAL_LABELS: Partial<Record<EvaluationStatus, string>> = {
@@ -247,25 +247,25 @@ const FIRST_EVAL_LABELS: Partial<Record<EvaluationStatus, string>> = {
   W_OCENIE: "Oceń elementy",
 };
 
-/** Zakończenie oceny okresowej – karty zachowań, sugestia i decyzja przełożonego (Z14). */
+/** Zakończenie oceny okresowej – karty zachowań, sugestia i decyzja przełożonego. */
 export function periodicAssessmentHref(evaluationId: string): string {
   return `${periodicEvaluationHref(evaluationId)}/ocena`;
 }
 
-/** Terminy, przy których przełożony sporządza ocenę okresową (ekran Z14). */
+/** Terminy, przy których przełożony sporządza ocenę okresową (ekran oceny wskaźników). */
 const ASSESSMENT_KINDS = new Set(["OCENA_OKRESOWA", "PONOWNA_OCENA_PO_NEGATYWNEJ", "OCENA_PRZY_ZMIANIE_STANOWISKA"]);
 
-/** „Kontynuuj ocenę”, gdy przełożony już zaczął oceniać wskaźniki, w przeciwnym razie „Zakończ ocenę” (jak w Z12/Z14). */
+/** „Kontynuuj ocenę”, gdy przełożony już zaczął oceniać wskaźniki, w przeciwnym razie „Zakończ ocenę” (jak w kreatorze oceny okresowej). */
 function assessmentLabel(status: EvaluationStatus | undefined): string {
   return status === "W_OCENIE" ? "Kontynuuj ocenę" : "Zakończ ocenę";
 }
 
 /**
  * Dokąd prowadzi przycisk sprawy z „Do zrobienia”.
- * - rozmowa rozpoczynająca (także po ocenie negatywnej) → kreator części I (Z12): „Ustal kryteria”;
- * - sporządzenie oceny okresowej (24 mies., ponowna po negatywnej, przy zmianie stanowiska) → zakończenie oceny (Z14):
+ * - rozmowa rozpoczynająca (także po ocenie negatywnej) → kreator części I: „Ustal kryteria”;
+ * - sporządzenie oceny okresowej (24 mies., ponowna po negatywnej, przy zmianie stanowiska) → zakończenie oceny:
  *   „Zakończ ocenę” / „Kontynuuj ocenę”;
- * - pierwsza ocena (rozmowa wstępna, sprawozdanie, okno oceny) → przebieg pierwszej oceny (Z17);
+ * - pierwsza ocena (rozmowa wstępna, sprawozdanie, okno oceny) → przebieg pierwszej oceny;
  * - pozostałe sprawy (ponowne kryteria po zmianie stanowiska) → karta pracownika z wyjaśnieniem terminu.
  * Gotowość ekranu bierzemy z menu (isScreenReady) – bez martwych linków i bez obietnic, których ekran nie spełni.
  */
@@ -373,7 +373,7 @@ export function pathEntries(employees: EmployeeInfo[], ready: (href: string) => 
 }
 
 // ---------------------------------------------------------------------------
-// Dziennik obserwacji (Z13)
+// Dziennik obserwacji
 // ---------------------------------------------------------------------------
 
 export interface JournalLinks {

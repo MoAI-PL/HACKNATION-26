@@ -1,4 +1,4 @@
-// Middleware (Z04): przekierowanie niezalogowanych na /logowanie i pilnowanie obszarów ról.
+// Middleware: przekierowanie niezalogowanych na /logowanie i pilnowanie obszarów ról.
 // To pierwsza linia obrony. Każdy ekran i handler API i tak sprawdza rolę po stronie serwera (src/lib/auth/guard.ts).
 import NextAuth from "next-auth";
 import { authConfig } from "@/auth.config";

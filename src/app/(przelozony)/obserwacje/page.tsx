@@ -15,7 +15,7 @@ import { cn } from "@/lib/utils";
 export const metadata: Metadata = { title: "Dziennik obserwacji – Kompas Kompetencji" };
 export const dynamic = "force-dynamic";
 
-// Dziennik obserwacji (Z13): notatki Sytuacja – Działanie – Rezultat o podwładnych, zbierane na bieżąco przez cały okres oceny.
+// Dziennik obserwacji: notatki Sytuacja – Działanie – Rezultat o podwładnych, zbierane na bieżąco przez cały okres oceny.
 
 const SAVED: Record<string, string> = {
   nowa: "Obserwacja zapisana. Zobaczysz ją także przy wskaźniku podczas oceny.",

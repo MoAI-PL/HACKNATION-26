@@ -1,5 +1,5 @@
-// Szybkie dodanie pracownika z pulpitu (Z11) – walidacja i wybór arkusza. Czysta logika, testy w tests/dashboard.
-// Import pliku OSP (docx) robi Z06; tutaj przełożony odpowiada na jedno pytanie z OSP: liczba podległych pracowników.
+// Szybkie dodanie pracownika z pulpitu – walidacja i wybór arkusza. Czysta logika, testy w tests/dashboard.
+// Import pliku OSP (docx) robi parser OSP; tutaj przełożony odpowiada na jedno pytanie z OSP: liczba podległych pracowników.
 
 import { z } from "zod";
 import { rules } from "@/lib/domain/przepisy";
@@ -97,7 +97,7 @@ export function fieldErrors(error: z.ZodError): FieldErrors {
 }
 
 // ---------------------------------------------------------------------------
-// Plik OSP – sprawdzenie przed wysłaniem (także w przeglądarce; parser Z06 działa tylko na serwerze)
+// Plik OSP – sprawdzenie przed wysłaniem (także w przeglądarce; parser OSP działa tylko na serwerze)
 // ---------------------------------------------------------------------------
 
 /** Akcje serwerowe Next.js przyjmują domyślnie do 1 MB – pliki OSP mają ok. 50 KB. */

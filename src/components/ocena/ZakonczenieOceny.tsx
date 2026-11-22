@@ -37,7 +37,7 @@ const toCard = (v: IndicatorRatingValue | undefined): CardValue | undefined =>
   v === undefined ? undefined : v === "BRAK_OBSERWACJI" ? NONE : (String(v) as CardValue);
 const fromCard = (v: CardValue): IndicatorRatingValue => (v === NONE ? "BRAK_OBSERWACJI" : (Number(v) as BehaviorLevel));
 
-/** Skrót klawiaturowy karty – wygląda jak klawisz; czytnik ekranu słyszy „klawisz 1”. To nie punktacja (karty bez liczb, Z14). */
+/** Skrót klawiaturowy karty – wygląda jak klawisz; czytnik ekranu słyszy „klawisz 1”. To nie punktacja (karty bez liczb). */
 function KeyHint({ k }: { k: string }) {
   return (
     <span className="inline-flex items-center gap-1.5 text-xs font-normal text-muted-foreground">
@@ -556,7 +556,7 @@ function Przeglad({
 }
 
 // ---------------------------------------------------------------------------
-// Lustro oceniającego (Z36) – sygnały informacyjne, nigdy nie blokują
+// Lustro oceniającego – sygnały informacyjne, nigdy nie blokują
 // ---------------------------------------------------------------------------
 
 function Lustro({ signals }: { signals: MirrorSignal[] }) {

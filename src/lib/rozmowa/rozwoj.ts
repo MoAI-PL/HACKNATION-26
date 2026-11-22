@@ -1,4 +1,4 @@
-// Propozycje działań rozwojowych do rozmowy (Z24) – po 3 na kompetencję z modelu.
+// Propozycje działań rozwojowych do rozmowy – po 3 na kompetencję z modelu.
 // ZAŁOŻENIE: katalog przygotowany przez zespół na podstawie typowych form rozwoju w administracji
 // (mentoring, coaching, szkolenia, zadania rozwojowe). Przełożony wybiera i dopasowuje – to podpowiedź, nie zalecenie.
 

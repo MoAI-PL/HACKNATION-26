@@ -1,4 +1,4 @@
-// „ⓘ Dlaczego?” z treścią z data/podpowiedzi.json (Z42): wyjaśnienie, podstawa prawna, cytat z przepisu i link do ISAP.
+// „ⓘ Dlaczego?” z treścią z data/podpowiedzi.json: wyjaśnienie, podstawa prawna, cytat z przepisu i link do ISAP.
 //   <Dlaczego id="KRYTERIA_DODATKOWE" />
 
 import { InfoTip } from "@/components/ui/info-tip";

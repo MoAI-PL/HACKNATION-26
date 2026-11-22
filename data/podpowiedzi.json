@@ -1,5 +1,5 @@
 {
-  "opis": "Treści „ⓘ Dlaczego?” (Z42): krótkie wyjaśnienie, jednostka redakcyjna i dosłowny cytat z bazy wiedzy (data/wiedza/fragmenty.json). Zgodność cytatów sprawdza test tests/ui/podpowiedzi.test.ts.",
+  "opis": "Treści „ⓘ Dlaczego?”: krótkie wyjaśnienie, jednostka redakcyjna i dosłowny cytat z bazy wiedzy (data/wiedza/fragmenty.json). Zgodność cytatów sprawdza test tests/ui/podpowiedzi.test.ts.",
   "podpowiedzi": [
     {
       "id": "ARKUSZ",

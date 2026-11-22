@@ -1,5 +1,5 @@
-// Konta demo (Z04). Widoczne na ekranie logowania i w README tylko przy DEMO_MODE=true.
-// Dane są fikcyjne. Z26 dopina do nich kartoteki pracowników i podwładnych.
+// Konta demo. Widoczne na ekranie logowania i w README tylko przy DEMO_MODE=true.
+// Dane są fikcyjne. Dane demo dopinają do nich kartoteki pracowników i podwładnych.
 import type { Role } from "@/lib/domain/types";
 
 /** Wspólne hasło kont demo – jawne celowo, żeby jury mogło się zalogować bez naszej pomocy. */

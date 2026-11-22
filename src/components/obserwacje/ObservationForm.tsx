@@ -1,6 +1,6 @@
 "use client";
-// Formularz obserwacji (Z13): osoba, data, wskaźnik (opcjonalnie), najbliższy opis zachowania i Sytuacja – Działanie – Rezultat.
-// Poziom zachowania wybiera się kartami z opisami zachowań, bez liczb (sekcja 4.1 pkt 7, zasada z Z14).
+// Formularz obserwacji: osoba, data, wskaźnik (opcjonalnie), najbliższy opis zachowania i Sytuacja – Działanie – Rezultat.
+// Poziom zachowania wybiera się kartami z opisami zachowań, bez liczb (zasada z oceny wskaźników).
 
 import * as React from "react";
 import { useActionState } from "react";

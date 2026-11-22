@@ -1,4 +1,4 @@
-// Tryb „5 minut przed rozmową” (Z39): jedna strona z faktami, trzema pytaniami i trzema pułapkami.
+// Tryb „5 minut przed rozmową”: jedna strona z faktami, trzema pytaniami i trzema pułapkami.
 import { describe, expect, it } from "vitest";
 import type { ObservationView } from "@/lib/obserwacje/dziennik";
 import { BRIEF_MAX_FACTS, BRIEF_MAX_PITFALLS, BRIEF_MAX_QUESTIONS, buildFiveMinuteBrief } from "@/lib/rozmowa/piec-minut";

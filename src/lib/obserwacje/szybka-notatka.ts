@@ -1,5 +1,5 @@
 "use server";
-// Akcje serwerowe szybkiej notatki (Z41). Autoryzacja w każdej akcji (Z04): tylko przełożony i tylko własni podwładni.
+// Akcje serwerowe szybkiej notatki. Autoryzacja w każdej akcji: tylko przełożony i tylko własni podwładni.
 
 import { revalidatePath } from "next/cache";
 import type { Prisma } from "@prisma/client";
@@ -122,7 +122,7 @@ export async function saveQuickNoteAction(input: {
 
   if (input.fromAi && input.proposal) {
     const p = input.proposal;
-    // Ten sam kształt co wspólna akcja logAiDecision (Z10), żeby dziennik decyzji (Z35) pokazywał wszystko jednolicie.
+    // Ten sam kształt co wspólna akcja logAiDecision, żeby dziennik decyzji pokazywał wszystko jednolicie.
     const aiProposal = {
       funkcja: "SZYBKA_NOTATKA",
       tryb: "AI",
@@ -145,7 +145,7 @@ export async function saveQuickNoteAction(input: {
       rezultat: d.outcome,
     } satisfies Prisma.InputJsonValue;
     await prisma.auditLog
-      .create({ data: { userId: user.id, action: "AI_WSTAW", entity: "Observation", entityId: created.id, aiProposal, humanDecision: final, reason: "Szybka notatka (Z41)" } })
+      .create({ data: { userId: user.id, action: "AI_WSTAW", entity: "Observation", entityId: created.id, aiProposal, humanDecision: final, reason: "Szybka notatka" } })
       .catch(() => undefined); // dziennik nie może zablokować zapisu notatki
   }
 
@@ -154,7 +154,7 @@ export async function saveQuickNoteAction(input: {
   return { ok: true, id: created.id, employeeId: employee.id, employeeName: `${employee.firstName} ${employee.lastName}`, pinned: !!d.indicatorId };
 }
 
-/** Odrzucenie propozycji AI – zapis decyzji (sekcja 4.2). */
+/** Odrzucenie propozycji AI – zapis decyzji. */
 export async function rejectQuickNoteProposalAction(proposal: Partial<QuickNoteProposal>): Promise<void> {
   const user = await requireRole("PRZELOZONY");
   await prisma.auditLog
@@ -168,7 +168,7 @@ export async function rejectQuickNoteProposalAction(proposal: Partial<QuickNoteP
           tryb: "AI",
           propozycja: { wskaznik: proposal.indicatorId ?? null, poziom: proposal.behaviorLevel ?? null, model: proposal.model ?? null },
         },
-        reason: "Szybka notatka (Z41)",
+        reason: "Szybka notatka",
       },
     })
     .catch(() => undefined);

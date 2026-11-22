@@ -22,10 +22,10 @@ import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = { title: "Panel HR – Kompas Kompetencji" };
 export const dynamic = "force-dynamic";
-// Reset danych demo (Z44) zapisuje kilkadziesiąt rekordów – na Vercelu z bazą Neon potrzebuje więcej niż domyślny limit czasu.
+// Reset danych demo zapisuje kilkadziesiąt rekordów – na Vercelu z bazą Neon potrzebuje więcej niż domyślny limit czasu.
 export const maxDuration = 60;
 
-// Panel HR, część 1 (Z18): wszystkie oceny z terminami z silnika (z wydłużeniami), filtry i kolejka przypomnień.
+// Panel HR, część 1: wszystkie oceny z terminami z silnika (z wydłużeniami), filtry i kolejka przypomnień.
 
 const MESSAGES: Record<string, { tone: "success" | "info" | "warning"; text: string }> = {
   wyslano: { tone: "success", text: "Przypomnienie wysłane (symulacja). Znacznik „wysłano” i wpis w dzienniku zdarzeń zapisane." },

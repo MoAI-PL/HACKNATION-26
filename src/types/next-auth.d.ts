@@ -1,4 +1,4 @@
-// Rozszerzenie typów Auth.js o id i rolę użytkownika (Z04).
+// Rozszerzenie typów Auth.js o id i rolę użytkownika.
 import type { DefaultSession } from "next-auth";
 import type { Role } from "@/lib/domain/types";
 

@@ -3,7 +3,7 @@
 @import "shadcn/tailwind.css";
 
 /*
- * System wizualny Kompasu Kompetencji (Z10) – zasady w docs/UX.md.
+ * System wizualny Kompasu Kompetencji – zasady w docs/UX.md.
  * Spokojny, urzędowy wygląd: jasne tło, jeden kolor akcentu (granat),
  * kolor tylko do statusów i do propozycji AI (fiolet).
  * Wszystkie pary tekst/tło mają kontrast ≥ 4,5:1 (WCAG 2.1 AA), obramowania pól ≥ 3:1.
@@ -270,7 +270,7 @@ html.wysoki-kontrast :focus-visible {
     @apply font-semibold tracking-tight text-foreground;
   }
 
-  /* Widoczny fokus z klawiatury na każdym elemencie interaktywnym (sekcja 4.1 pkt 9). */
+  /* Widoczny fokus z klawiatury na każdym elemencie interaktywnym. */
   :focus-visible {
     outline: 3px solid var(--ring);
     outline-offset: 2px;

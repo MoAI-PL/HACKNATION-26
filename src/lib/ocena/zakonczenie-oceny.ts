@@ -1,6 +1,6 @@
-// Zakończenie oceny okresowej (Z14): ocena wskaźników kartami zachowań, sugestia i decyzja przełożonego.
+// Zakończenie oceny okresowej: ocena wskaźników kartami zachowań, sugestia i decyzja przełożonego.
 // Czysta logika (bez bazy i Reacta) – używana w kreatorze i ponownie na serwerze przed zapisem decyzji.
-// Sugestię liczy Z09 (src/lib/rules/sugestia.ts), skalę punktów § 11 ust. 1 pkt 1 – data/przepisy.json.
+// Sugestię liczy sugestia poziomu (src/lib/rules/sugestia.ts), skalę punktów § 11 ust. 1 pkt 1 – data/przepisy.json.
 
 import { z } from "zod";
 import { rules as defaultRules, type Rules } from "@/lib/domain/przepisy";
@@ -28,7 +28,7 @@ export interface CriterionForAssessment {
   score: number | null;
 }
 
-/** Wejście sugestii Z09 dla kryterium. `noteCounts` = liczba notatek z dziennika przy wskaźniku. */
+/** Wejście sugestii sugestia poziomu dla kryterium. `noteCounts` = liczba notatek z dziennika przy wskaźniku. */
 export function ratingInputs(c: Pick<CriterionForAssessment, "indicatorIds" | "ratings">, noteCounts: Map<string, number>): IndicatorRatingInput[] {
   return c.indicatorIds.map((id) => ({
     indicatorId: id as IndicatorId,
@@ -37,7 +37,7 @@ export function ratingInputs(c: Pick<CriterionForAssessment, "indicatorIds" | "r
   }));
 }
 
-/** Sugestia dla kryterium oceny okresowej albo elementu pierwszej oceny (skala 3/5/7 – Z17). */
+/** Sugestia dla kryterium oceny okresowej albo elementu pierwszej oceny (skala 3/5/7). */
 export function suggestionFor(
   c: Pick<CriterionForAssessment, "competency" | "indicatorIds" | "ratings">,
   noteCounts: Map<string, number>,
@@ -79,7 +79,7 @@ export function firstUnratedIndex(c: Pick<CriterionForAssessment, "indicatorIds"
   return i === -1 ? 0 : i;
 }
 
-/** Braki przed przejściem do podsumowania (Z15): każde kryterium musi mieć ocenę cząstkową. */
+/** Braki przed przejściem do podsumowania: każde kryterium musi mieć ocenę cząstkową. */
 export function assessmentIssues(criteria: CriterionForAssessment[]): { competency: CompetencyCode; text: string }[] {
   return criteria
     .filter((c) => c.score === null)

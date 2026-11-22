@@ -1,4 +1,4 @@
-// Lustro oceniającego (Z36, wyróżnik ⑤): łagodne, nieblokujące sygnały typowych błędów oceniania.
+// Lustro oceniającego: łagodne, nieblokujące sygnały typowych błędów oceniania.
 // ZAŁOŻENIE: progi z data/przepisy.json („mirror”, docs/ZALOZENIA.md #11) – do potwierdzenia przez urząd:
 //  - efekt świeżości: ≥ 60% notatek o osobie z ostatnich 30 dni okresu oceny;
 //  - efekt aureoli: wszystkie zaobserwowane wskaźniki na jednym poziomie (przy ≥ 5 wskaźnikach);

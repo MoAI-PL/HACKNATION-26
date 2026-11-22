@@ -3,7 +3,7 @@ info:
   title: Kompas Kompetencji – REST API
   version: "1"
   description: |
-    API pod integrację z EZD i systemem kadrowym (Z38). Wszystkie odpowiedzi w JSON.
+    API pod integrację z EZD i systemem kadrowym. Wszystkie odpowiedzi w JSON.
     Konwencja: klucze po angielsku, wartości domenowe po polsku (kody jak w `src/lib/domain/types.ts`), daty `RRRR-MM-DD`.
     Autoryzacja: sesja Auth.js (ciasteczko po zalogowaniu). Bez sesji – 401, rola bez dostępu – 403,
     zasób spoza zakresu użytkownika – 404 (bez ujawniania, że istnieje).
@@ -78,7 +78,7 @@ paths:
       x-status: planowane
       description: |
         Docelowo: system kadrowy (np. QNT) przekazuje dane zatrudnienia (data nawiązania stosunku pracy, zatrudnienie
-        na czas nieokreślony, koniec umowy, stanowisko z OSP, nieobecności), a Kompas wylicza z nich terminy (Z08).
+        na czas nieokreślony, koniec umowy, stanowisko z OSP, nieobecności), a Kompas wylicza z nich terminy.
         Dziś pracownika dodaje się z pulpitu przełożonego albo z danych demo.
       responses:
         "501": { description: Jeszcze niedostępne }
@@ -128,7 +128,7 @@ paths:
 
   /oceny/{id}/pdf:
     get:
-      summary: Arkusz oceny okresowej B / C w PDF (Z16)
+      summary: Arkusz oceny okresowej B / C w PDF
       description: |
         Ten sam PDF co w aplikacji (przyciski „Pobierz arkusz” i „Pobierz część I”), np. do dołączenia do sprawy w EZD.
         Układ wzorów z rozporządzenia (załączniki nr 3 i 4): część I, część II z pouczeniem (art. 83), część III tylko przy wniosku o stopień.
@@ -151,7 +151,7 @@ paths:
   /asystent/formalny:
     servers: [{ url: /api }]
     post:
-      summary: Pytanie do asystenta formalnego (Z22)
+      summary: Pytanie do asystenta formalnego
       description: Odpowiedź wyłącznie na podstawie przepisów i poradników KPRM, ze źródłami; poza zakresem – odmowa.
       requestBody:
         required: true
@@ -170,7 +170,7 @@ paths:
   /asystent/kryteria:
     servers: [{ url: /api }]
     post:
-      summary: Propozycja kryteriów dodatkowych z OSP (Z23)
+      summary: Propozycja kryteriów dodatkowych z OSP
       requestBody:
         content:
           application/json:

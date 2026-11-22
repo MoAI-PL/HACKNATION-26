@@ -7,7 +7,7 @@ import { COMPETENCY_NAMES, CRITERION_KIND_LABELS, SHEET_LABELS } from "@/lib/dom
 import type { CompetencyCode, Deadline, IsoDate, Sheet } from "@/lib/domain/types";
 import { formatDatePl } from "@/lib/rules/kalendarz";
 
-// Część I arkusza oceny okresowej (Z12): kryteria i termin sporządzenia oceny (§ 5 ust. 3).
+// Część I arkusza oceny okresowej: kryteria i termin sporządzenia oceny (§ 5 ust. 3).
 // Ten sam widok w ostatnim kroku kreatora (podgląd przed zatwierdzeniem) i po zatwierdzeniu.
 
 export interface PartOneCriterion {

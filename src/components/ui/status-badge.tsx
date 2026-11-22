@@ -18,7 +18,7 @@ import type { DeadlineUrgency, EvaluationStatus, EvaluationType } from "@/lib/do
 import { EVALUATION_STATUS_LABELS } from "@/lib/domain/slownik";
 import { URGENCY_TONE, deadlineText, type Tone } from "@/lib/ui/status";
 
-// Odznaki statusów (Z10, sekcja 4.1 pkt 8): kolor ZAWSZE razem z ikoną i tekstem.
+// Odznaki statusów: kolor ZAWSZE razem z ikoną i tekstem.
 // Jeden język kolorów w całej aplikacji – każda odznaka wyraźna, z pełnym tłem i białym tekstem:
 //  - termin (pilność): czerwony (pilne / po terminie), pomarańczowy (wkrótce), zielony (w terminie);
 //  - etap oceny: granat z ikoną etapu; zakończona ocena – zielona;

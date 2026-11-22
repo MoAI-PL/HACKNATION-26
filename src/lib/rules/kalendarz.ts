@@ -1,4 +1,4 @@
-// Kalendarz silnika terminów (Z08): arytmetyka dat "RRRR-MM-DD", dni wolne i zasady liczenia terminów z KC.
+// Kalendarz silnika terminów: arytmetyka dat "RRRR-MM-DD", dni wolne i zasady liczenia terminów z KC.
 // - art. 111 § 2 KC: termin w dniach liczymy od dnia następnego po zdarzeniu;
 // - art. 112 KC: termin w miesiącach kończy się w dniu o tej samej dacie, a gdy go nie ma – w ostatnim dniu miesiąca;
 // - art. 115 KC: koniec terminu w dzień ustawowo wolny od pracy lub w sobotę przesuwa się na następny dzień roboczy;

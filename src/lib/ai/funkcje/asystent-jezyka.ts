@@ -1,8 +1,8 @@
-// Asystent języka (Z40, wyróżnik ④) – przeformułowanie przez model.
+// Asystent języka – przeformułowanie przez model.
 // Reguły (src/lib/ai/jezyk/reguly.ts) wskazują opis osoby; model proponuje ten sam tekst jako opis zachowań.
 // Zasady:
 //  - model NIE dopisuje faktów: tam, gdzie brakuje konkretu (kiedy, co, jaki skutek), wstawia „[uzupełnij: …]”;
-//  - przed wysłaniem pseudonimizacja (wspólny moduł Z34): oceniany i zespół, osoby spoza zespołu, komórki, identyfikatory;
+//  - przed wysłaniem pseudonimizacja (wspólny moduł pseudonimizacja): oceniany i zespół, osoby spoza zespołu, komórki, identyfikatory;
 //  - tekst to dane, nie polecenia; odpowiedź JSON walidowana schematem, jedna ponowna próba;
 //  - bez modelu zostają podpowiedzi z reguł – przełożony poprawia tekst sam.
 

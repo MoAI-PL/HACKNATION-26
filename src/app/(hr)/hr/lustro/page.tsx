@@ -16,7 +16,7 @@ import { formatPoints, plural } from "@/lib/rules/tekst";
 export const metadata: Metadata = { title: "Lustro ocen – Kompas Kompetencji" };
 export const dynamic = "force-dynamic";
 
-// Panel HR „Lustro ocen” (Z36): zanonimizowany rozkład ocen w komórkach i przełożeni odstający od średniej komórki.
+// Panel HR „Lustro ocen”: zanonimizowany rozkład ocen w komórkach i przełożeni odstający od średniej komórki.
 export default async function LustroOcenPage() {
   await requirePageRole("HR");
   const units = unitMirror(await loadCompletedForMirror());

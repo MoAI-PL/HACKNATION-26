@@ -1,13 +1,13 @@
-// Dane demo wokół persony przełożonej (Z26). Wszystkie osoby i zdarzenia są fikcyjne;
+// Dane demo wokół persony przełożonej. Wszystkie osoby i zdarzenia są fikcyjne;
 // opisy stanowisk pochodzą z materiałów MC (materialy/OSP → prisma/seed-dane/osp.json).
 //
 // Daty liczymy względem dnia uruchomienia (`today`), więc karta „Do zrobienia” zawsze pokazuje aktualne terminy.
-// Terminy liczy silnik Z08, a wyniki poprzednich ocen silnik Z07 – dane są spójne z przepisami.
+// Terminy liczy silnik terminów, a wyniki poprzednich ocen silnik punktacji – dane są spójne z przepisami.
 //
 // ZAŁOŻENIE: dla jednego konta demo Ewa Kowalczyk jest bezpośrednią przełożoną wszystkich siedmiu osób,
 // choć w OSP stanowiska podlegają różnym przełożonym (uproszczenie demo, opisane w docs/ZALOZENIA.md).
 //
-// Użycie: seedDemoData(prisma) – usuwa poprzednie dane demo (poza kontami) i tworzy je od nowa. Z44 (reset demo) woła to samo.
+// Użycie: seedDemoData(prisma) – usuwa poprzednie dane demo (poza kontami) i tworzy je od nowa. Reset danych demo woła to samo.
 
 import type { Prisma, PrismaClient } from "@prisma/client";
 import ospData from "../../../prisma/seed-dane/osp.json";
@@ -59,7 +59,7 @@ const OBS_PIOTR: Obs[] = [
   [330, "LUDZIE.4", 2, "Błędy w rozliczeniu dotacji przygotowanym przez pracownika.", "Poprawił dokument sam, nie omawiając błędów z pracownikiem.", "Podobne błędy powtórzyły się w następnym rozliczeniu."],
   [210, "ORGANIZACJA.4", 4, "Przesunięcie wizyty delegacji zagranicznej o tydzień.", "W ciągu jednego dnia przebudował plan wizyty i rezerwacje.", "Wizyta odbyła się bez kosztów dodatkowych."],
   [120, "LUDZIE.5", 4, "Konflikt dwóch pracowników o podział obsługi delegacji.", "Przeprowadził rozmowę z obiema osobami i ustalił zasady rotacji.", "Konflikt nie powrócił, zasady stosowane w całym wydziale."],
-  // 100 dni temu: od ponad 3 miesięcy brak notatki – pulpit pokazuje przypomnienie o regularnych notatkach (Z45).
+  // 100 dni temu: od ponad 3 miesięcy brak notatki – pulpit pokazuje przypomnienie o regularnych notatkach.
   [100, "NEGOCJOWANIE.3", 4, "Renegocjacja warunków umowy na bilety lotnicze.", "Przygotował stanowisko z wariantami ustępstw i uzgodnił je z dyrektorem.", "Uzyskał niższe opłaty serwisowe akceptowane przez kierownictwo."],
 ];
 
@@ -87,7 +87,7 @@ const OBS_ALEKSANDRA: Obs[] = [
   [3, "WIEDZA.3", 3, "Pierwsza analiza zgłoszenia incydentu.", "Skorzystała z bazy wiedzy wydziału i wzorów dokumentów.", "Analiza poprawna, z drobnymi uzupełnieniami."],
 ];
 
-// Joanna Lewandowska – pierwsza ocena po sprawozdaniu: notatki do pięciu elementów z § 2 pkt 1 (pełna ścieżka Z17 na demo).
+// Joanna Lewandowska – pierwsza ocena po sprawozdaniu: notatki do pięciu elementów z § 2 pkt 1 (pełna ścieżka pierwsza ocena na demo).
 const OBS_JOANNA: Obs[] = [
   [200, "RZETELNOSC.1", 3, "Przygotowanie odpowiedzi na wniosek o udostępnienie informacji publicznej.", "Sprawdziła podstawę prawną i terminy, poprosiła radcę o weryfikację.", "Odpowiedź wysłana w terminie, bez uwag radcy."],
   [150, "WIEDZA.2", 4, "Nowe wytyczne dotyczące rejestru umów w wydziale.", "Sama zapisała się na szkolenie i przygotowała notatkę dla zespołu.", "Zespół stosuje nowe zasady od pierwszego dnia ich obowiązywania."],
@@ -126,7 +126,7 @@ export async function clearDemoData(prisma: PrismaClient): Promise<void> {
     prisma.employee.deleteMany({}), // kaskadowo: oceny, kryteria, oceny wskaźników, obserwacje, rozmowy, nieobecności, zmiany stanowiska
     prisma.position.deleteMany({}),
     prisma.orgUnit.deleteMany({}),
-    // Zmiany przepisów i opisów zachowań z panelu HR (Z19) – demo wraca do wartości z plików.
+    // Zmiany przepisów i opisów zachowań z panelu HR – demo wraca do wartości z plików.
     prisma.appInfo.deleteMany({ where: { key: { in: [RULES_KEY, MODEL_KEY] } } }),
   ]);
   resetRuntimeConfig();
@@ -152,7 +152,7 @@ export async function seedDemoData(prisma: PrismaClient, today: IsoDate = todayI
   const janUser = byRole("OCENIANY");
   const hrUser = byRole("HR");
 
-  // Dziennik decyzji (Z35) zgodny z historią danych demo – po wdrożeniu i po „Resetuj dane demo” nie jest pusty.
+  // Dziennik decyzji zgodny z historią danych demo – po wdrożeniu i po „Resetuj dane demo” nie jest pusty.
   // Wpisy z datami zdarzeń (sporządzenie, zapoznanie, ustalenie kryteriów, decyzje o propozycjach AI, przypomnienie).
   const audit: Prisma.AuditLogCreateManyInput[] = [];
   const log = (at: IsoDate, hour: number, entry: Omit<Prisma.AuditLogCreateManyInput, "createdAt">) =>
@@ -251,7 +251,7 @@ export async function seedDemoData(prisma: PrismaClient, today: IsoDate = todayI
       })),
     });
 
-  /** Zakończona ocena okresowa z wynikiem policzonym silnikiem Z07. */
+  /** Zakończona ocena okresowa z wynikiem policzonym silnikiem punktacji. */
   const pastPeriodic = async (employeeId: string, sheet: "B" | "C", evaluatedAt: IsoDate, codes: CompetencyCode[], points: PeriodicPoints[], justification?: string) => {
     const s = scorePeriodic(periodicScores(codes, points));
     const past = await prisma.evaluation.create({
@@ -412,7 +412,7 @@ export async function seedDemoData(prisma: PrismaClient, today: IsoDate = todayI
   {
     const e = await employee({ firstName: "Marcin", lastName: "Wróbel", osp: "STARSZY_SPECJALISTA", employmentStart: "2021-09-01", permanentFrom: "2021-09-01" });
     const evaluatedAt = d(-40);
-    // Wcześniejszy cykl (pozytywny) – trzecia sporządzona ocena w komórce, więc Lustro ocen (Z36) pokazuje rozkład
+    // Wcześniejszy cykl (pozytywny) – trzecia sporządzona ocena w komórce, więc Lustro ocen pokazuje rozkład
     // (próg anonimowości: co najmniej 3 oceny w komórce).
     await pastPeriodic(e.id, "C", addMonths(evaluatedAt, -24), ["WIEDZA", "RZETELNOSC", "ORGANIZACJA", "WSPOLPRACA", "KOMUNIKACJA"], [5, 5, 5, 3, 5]);
     const prev = await pastPeriodic(
@@ -464,7 +464,7 @@ export async function seedDemoData(prisma: PrismaClient, today: IsoDate = todayI
     });
   }
 
-  // --- 5a. Joanna Lewandowska – pierwsza ocena po sprawozdaniu (pełna ścieżka Z17 na demo) ------------------
+  // --- 5a. Joanna Lewandowska – pierwsza ocena po sprawozdaniu (pełna ścieżka pierwsza ocena na demo) ------------------
   // Zatrudniona ok. 9 miesięcy temu na 12 miesięcy: rozmowa wstępna i sprawozdanie za nią, egzamin zdany,
   // okno pierwszej oceny otwarte – przełożona ocenia pięć elementów kartami zachowań i sporządza ocenę.
   {

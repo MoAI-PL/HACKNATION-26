@@ -1,5 +1,5 @@
 "use client";
-// Zmiany przepisów i modelu z panelu HR (Z19) w przeglądarce: kreator, ocena wskaźników i podsumowanie liczą
+// Zmiany przepisów i modelu z panelu HR w przeglądarce: kreator, ocena wskaźników i podsumowanie liczą
 // na żywo tymi samymi funkcjami co serwer, więc dostają te same parametry. Stosujemy je przed wyrenderowaniem
 // dzieci (render rodzica poprzedza render dzieci), idempotentnie po znaczniku wersji.
 

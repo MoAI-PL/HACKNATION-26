@@ -21,7 +21,7 @@ function kryterium(zmiany: Partial<CriterionForAssessment> = {}): CriterionForAs
   return { competency: "KOMUNIKACJA", kind: "OBOWIAZKOWE", indicatorIds: ids("KOMUNIKACJA"), ratings: {}, score: null, ...zmiany };
 }
 
-describe("oceny wskaźników → sugestia (Z09)", () => {
+describe("oceny wskaźników → sugestia", () => {
   it("wejście sugestii: nieoceniony = null, notatka z dziennika = hasNote", () => {
     const [k1, k2] = ids("KOMUNIKACJA");
     const wej = ratingInputs(kryterium({ ratings: { [k1!]: 4 } }), new Map([[k2!, 2]]));

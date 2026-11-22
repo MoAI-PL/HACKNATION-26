@@ -1,4 +1,4 @@
-// Historia zmian z panelu HR (Z19) – wpisy z dziennika decyzji w postaci do wyświetlenia. Tylko serwer.
+// Historia zmian z panelu HR – wpisy z dziennika decyzji w postaci do wyświetlenia. Tylko serwer.
 
 import type { ChangeView } from "@/components/hr/UstawieniaZakladki";
 import { actionLabel } from "@/lib/audit/dziennik";

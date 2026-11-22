@@ -1,5 +1,4 @@
-// Zapoznanie ocenianego z oceną (§ 12 rozp. o ocenach okresowych) – wspólna logika dla przełożonego (Z15:
-// odnotowuje datę zapoznania) i ocenianego (Z46: potwierdza zapoznanie się na swoim ekranie).
+// Zapoznanie ocenianego z oceną (§ 12 rozp. o ocenach okresowych) – wspólna logika dla przełożonego (odnotowuje datę zapoznania) i ocenianego (potwierdza zapoznanie się na swoim ekranie).
 // Ocena przechodzi do „Zakończona”, a dla kolejnego okresu powstaje nowa ocena okresowa do ustalenia kryteriów
 // (po ocenie negatywnej – ponowna, art. 81 ust. 9). Każde zapoznanie trafia do dziennika zdarzeń.
 // Zwraca false, gdy ocena nie czekała już na zapoznanie (ktoś potwierdził je wcześniej).
@@ -32,7 +31,7 @@ export async function applyAcknowledgment(
     data: { status: "ZAKONCZONA", acknowledgedAt: toDbDate(ackDate) },
   });
   if (updated.count === 0) return false;
-  // Po pierwszej ocenie (Z17) nie zakładamy oceny okresowej: zależy od dalszego zatrudnienia (umowa na czas
+  // Po pierwszej ocenie nie zakładamy oceny okresowej: zależy od dalszego zatrudnienia (umowa na czas
   // nieokreślony), a arkusz B/C – od stanowiska. Termin oceny okresowej liczy się od zatrudnienia na czas nieokreślony (HR).
   const open =
     ev.sheet === "PIERWSZA"

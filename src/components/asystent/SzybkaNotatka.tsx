@@ -1,5 +1,5 @@
 "use client";
-// Szybka notatka w 10 sekund (Z41, wyróżnik ①). Skrót N albo przycisk „Notatka” w nagłówku otwiera okno z jednym polem.
+// Szybka notatka w 10 sekund. Skrót N albo przycisk „Notatka” w nagłówku otwiera okno z jednym polem.
 // Asystent proponuje pracownika, wskaźnik, Sytuację – Działanie – Rezultat i najbliższy opis zachowania (<PropozycjaAI>).
 // Przełożony zapisuje jednym przyciskiem albo poprawia listami wyboru. Bez AI notatka zapisuje się jako tekst do przypięcia.
 

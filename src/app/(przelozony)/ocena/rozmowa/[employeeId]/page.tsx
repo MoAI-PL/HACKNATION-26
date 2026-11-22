@@ -18,7 +18,7 @@ import { cn } from "@/lib/utils";
 export const metadata: Metadata = { title: "Przygotowanie rozmowy – Kompas Kompetencji" };
 export const dynamic = "force-dynamic";
 
-// Ściąga do rozmowy (Z24) – do przeczytania przed rozmową i do wydruku.
+// Ściąga do rozmowy – do przeczytania przed rozmową i do wydruku.
 
 function Evidence({ items, empty }: { items: IndicatorEvidence[]; empty: string }) {
   if (items.length === 0) return <p className="text-sm text-muted-foreground">{empty}</p>;

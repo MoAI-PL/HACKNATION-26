@@ -9,8 +9,8 @@ import { dispatchShortcut, useShortcutEvent } from "./useShortcut";
 
 /**
  * Globalne skróty klawiaturowe (N, /, ?) i okno z listą skrótów. Montowany raz w AppShell.
- * - N: zdarzenie dla szybkiej notatki (Z41) – tylko gdy funkcja jest włączona;
- * - /: zdarzenie dla asystenta; jeśli żaden ekran go nie przejmie, przejście na stronę asystenta (Z22);
+ * - N: zdarzenie dla szybkiej notatki – tylko gdy funkcja jest włączona;
+ * - /: zdarzenie dla asystenta; jeśli żaden ekran go nie przejmie, przejście na stronę asystenta;
  * - ?: okno z listą skrótów.
  */
 export function GlobalShortcuts({ quickNote, assistant }: { quickNote: boolean; assistant: boolean }) {

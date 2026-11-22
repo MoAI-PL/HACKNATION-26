@@ -6,7 +6,7 @@ import { renderFirstSheetPdf } from "@/lib/pdf/ArkuszPierwszejPdf";
 
 const d = (iso: string) => new Date(`${iso}T00:00:00Z`);
 
-/** Pierwsza ocena sporządzona – jak po ścieżce Z17 (rozmowa wstępna, sprawozdanie, 5 elementów, wynik). */
+/** Pierwsza ocena sporządzona – jak po ścieżce pierwsza ocena (rozmowa wstępna, sprawozdanie, 5 elementów, wynik). */
 function row(over: Partial<Record<string, unknown>> = {}): FirstSheetRow {
   const base = {
     id: "ev1",

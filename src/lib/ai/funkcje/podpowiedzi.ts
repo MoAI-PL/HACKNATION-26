@@ -1,4 +1,4 @@
-// Podpowiedzi pytań do asystenta formalnego zależne od kroku ścieżki (Z22, sekcja 4.1 – „przełożony nie musi wiedzieć, o co zapytać”).
+// Podpowiedzi pytań do asystenta formalnego zależne od kroku ścieżki („przełożony nie musi wiedzieć, o co zapytać”).
 // Każde pytanie ma odpowiedź w bazie wiedzy – pilnuje tego test tests/ai/asystent-formalny.test.ts.
 
 export const ASSISTANT_STEPS = [

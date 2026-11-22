@@ -1,4 +1,4 @@
-// Role i dostęp do ekranów (Z04). Czysta logika bez zależności od Next.js i Auth.js,
+// Role i dostęp do ekranów. Czysta logika bez zależności od Next.js i Auth.js,
 // więc działa też w middleware (edge) i w testach.
 import type { Role } from "@/lib/domain/types";
 import { ROLES } from "@/lib/domain/types";

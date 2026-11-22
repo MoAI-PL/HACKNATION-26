@@ -1,6 +1,6 @@
 // Wskaźniki behawioralne dosłownie z załącznika nr 1 do rozporządzenia PRM z 4.04.2016 (Dz.U. poz. 470),
 // „Wykaz kryteriów oceny”, s. 5–7 pliku materialy/ocena-okresowa/Rozporzadzenie_oceny_okresowe_2016_wariant-a.pdf.
-// Niezależne źródło prawdy dla testu importu modelu kompetencji (Z05): nazwy w xlsx muszą być z nim identyczne.
+// Niezależne źródło prawdy dla testu importu modelu kompetencji: nazwy w xlsx muszą być z nim identyczne.
 
 import type { CompetencyCode } from "@/lib/domain/types";
 

@@ -1,4 +1,4 @@
-// Kryteria oceny okresowej (Z07): obowiązkowe według arkusza (§ 4) i walidacja dodatkowych (§ 5 ust. 2).
+// Kryteria oceny okresowej: obowiązkowe według arkusza (§ 4) i walidacja dodatkowych (§ 5 ust. 2).
 // Parametry z data/przepisy.json (parametr `r`, domyślnie `rules`).
 
 import { rules as defaultRules, type Rules } from "@/lib/domain/przepisy";

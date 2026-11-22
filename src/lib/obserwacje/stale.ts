@@ -1,4 +1,4 @@
-// Stałe dziennika obserwacji (Z13) – bez zależności, więc mogą trafić także do komponentów w przeglądarce.
+// Stałe dziennika obserwacji – bez zależności, więc mogą trafić także do komponentów w przeglądarce.
 
 /** Najdłuższy opis jednego pola Sytuacja / Działanie / Rezultat. */
 export const MAX_SDR_LENGTH = 2000;

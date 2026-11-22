@@ -1,4 +1,4 @@
-// Dziennik decyzji (Z35): wpisy AuditLog – propozycje AI obok decyzji człowieka – z filtrami i eksportem CSV.
+// Dziennik decyzji: wpisy AuditLog – propozycje AI obok decyzji człowieka – z filtrami i eksportem CSV.
 // Czysta logika (etykiety, filtry, CSV); zapytanie do bazy jest w trasie i na stronie panelu HR.
 
 import type { Prisma } from "@prisma/client";

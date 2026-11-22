@@ -1,4 +1,4 @@
-// Budowa bazy wiedzy asystenta formalnego (Z21): PDF-y z materialy/ → data/wiedza/fragmenty.json.
+// Budowa bazy wiedzy asystenta formalnego: PDF-y z materialy/ → data/wiedza/fragmenty.json.
 // Uruchomienie: npm run wiedza
 //
 // Podział:
@@ -6,7 +6,7 @@
 //    wzory arkuszy – części arkusza i pouczenie;
 //  - poradniki KPRM: rozdziały ze spisu treści, długie rozdziały cięte na kawałki ok. 1200 znaków;
 //  - FAQ zespołu: data/wiedza/faq.json;
-//  - model kompetencji: data/model-kompetencji.json (jeśli już istnieje – Z05).
+//  - model kompetencji: data/model-kompetencji.json (jeśli już istnieje).
 // Fragmenty mają metadane: dokument, jednostka redakcyjna / rozdział, strona, data aktu, publikator.
 
 import { existsSync, readFileSync, writeFileSync, mkdirSync } from "node:fs";
@@ -333,7 +333,7 @@ function faqFragments(): KnowledgeFragment[] {
 function competencyModelFragments(): KnowledgeFragment[] {
   const file = "data/model-kompetencji.json";
   if (!existsSync(file)) {
-    console.log("  (pominięto model kompetencji – brak data/model-kompetencji.json, powstanie w Z05)");
+    console.log("  (pominięto model kompetencji – brak data/model-kompetencji.json, powstanie w imporcie modelu kompetencji)");
     return [];
   }
   const model = JSON.parse(readFileSync(file, "utf8")) as CompetencyModel;

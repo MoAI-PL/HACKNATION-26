@@ -71,7 +71,7 @@ describe("import modelu kompetencji z pliku MC", () => {
     }
   });
 
-  it("wskazówki do oceny z arkusza „Model kompetencji” (sekcja 8.4)", () => {
+  it("wskazówki do oceny z arkusza „Model kompetencji”", () => {
     expect(model.guidance).toHaveLength(3);
     expect(model.guidance[0]).toMatch(/^Dobierz wskaźniki do zadań/);
     expect(model.guidance[1]).toMatch(/Zapisz sytuację, działanie i jego rezultat/);

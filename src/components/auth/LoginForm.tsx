@@ -1,5 +1,5 @@
 "use client";
-// Formularz logowania e-mailem i hasłem (Z04).
+// Formularz logowania e-mailem i hasłem.
 import { useActionState } from "react";
 import { Button } from "@/components/ui/button";
 import { loginAction } from "@/lib/auth/actions";

@@ -1,4 +1,4 @@
-// Akcje panelu HR (Z18): tylko rola HR, wysyłka jako symulacja z wpisem w dzienniku zdarzeń.
+// Akcje panelu HR: tylko rola HR, wysyłka jako symulacja z wpisem w dzienniku zdarzeń.
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const { authMock, prismaMock, redirectMock } = vi.hoisted(() => {

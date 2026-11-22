@@ -13,7 +13,7 @@ import { cn } from "@/lib/utils";
 export const metadata: Metadata = { title: "Asystent rozmowy – Kompas Kompetencji" };
 export const dynamic = "force-dynamic";
 
-// Asystent rozmowy (Z24): lista podwładnych z rozmową, która jest następna według etapu oceny.
+// Asystent rozmowy: lista podwładnych z rozmową, która jest następna według etapu oceny.
 
 export default async function RozmowaPage() {
   const user = await requirePageRole("PRZELOZONY");

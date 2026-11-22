@@ -1,7 +1,7 @@
 // Model kompetencji z data/model-kompetencji.json (tworzony przez `npm run model` z materialy/Model_kompetencji.xlsx).
 // Walidacja przy starcie – uszkodzony plik zatrzymuje aplikację z czytelnym komunikatem, zamiast psuć ocenę.
 //
-// Użycie (Z09, Z14, Z41 …):
+// Użycie (szybka notatka …):
 //   import { competencyModel } from "@/lib/domain/model-kompetencji-dane";
 //   competencyModel.getCompetency("KOMUNIKACJA").indicators
 //   competencyModel.behaviorDescription("KOMUNIKACJA.2", 3)

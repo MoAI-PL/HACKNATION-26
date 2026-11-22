@@ -1,4 +1,4 @@
-// Pseudonimizacja przed LLM (Z34): podwładni, osoby spoza zespołu, komórki, identyfikatory; brak fałszywych trafień
+// Pseudonimizacja przed LLM: podwładni, osoby spoza zespołu, komórki, identyfikatory; brak fałszywych trafień
 // w przepisach i OSP; zastosowanie w asystencie formalnym, analizie OSP i ostatniej linii obrony w warstwie LLM.
 import { readFileSync, readdirSync } from "node:fs";
 import { describe, expect, it, vi } from "vitest";

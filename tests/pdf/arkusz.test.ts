@@ -17,7 +17,7 @@ import { przypisy } from "@/lib/pdf/teksty-arkusza";
 
 const d = (iso: string) => new Date(`${iso}T00:00:00Z`);
 
-/** Ocena sporządzona – jak po Z12, Z14 i Z15 (urzędnik z wnioskiem o stopień). */
+/** Ocena sporządzona – jak po kreator oceny okresowej, ocena wskaźników i podsumowanie oceny (urzędnik z wnioskiem o stopień). */
 function row(over: Partial<SheetRow> = {}): SheetRow {
   const base = {
     id: "ev1",

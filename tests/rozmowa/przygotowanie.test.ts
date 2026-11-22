@@ -31,15 +31,15 @@ const base: PrepInput = {
   deadline: { date: "2026-11-30", label: "ocena okresowa do pon. 30.11" },
 };
 
-describe("poziomy wskaźników: ocena z Z14 ma pierwszeństwo przed notatkami", () => {
+describe("poziomy wskaźników: ocena z oceny wskaźników ma pierwszeństwo przed notatkami", () => {
   it("średnia z notatek z poziomem zachowania, tylko kryteria oceny", () => {
     const ev = indicatorEvidence({ ...base, observations: [...base.observations, obs("x", "KRYZYS.1", 1)] });
-    expect(ev.find((e) => e.indicatorId === "KOMUNIKACJA.4")).toMatchObject({ level: 1.5, source: "NOTATKI", levelLabel: "znacznie poniżej oczekiwań" }); // remis w dół, jak w Z09
+    expect(ev.find((e) => e.indicatorId === "KOMUNIKACJA.4")).toMatchObject({ level: 1.5, source: "NOTATKI", levelLabel: "znacznie poniżej oczekiwań" }); // remis w dół, jak w sugestii poziomu
     expect(ev.some((e) => e.indicatorId === "KRYZYS.1")).toBe(false); // KRYZYS nie jest kryterium tej oceny
     expect(ev.find((e) => e.indicatorId === "ANALITYCZNE.3")!.name).toBe("Formułowanie wniosków"); // bez kropki
   });
 
-  it("ocena wskaźnika z Z14 zastępuje średnią z notatek; „brak obserwacji” – pomijany", () => {
+  it("ocena wskaźnika z oceny wskaźników zastępuje średnią z notatek; „brak obserwacji” – pomijany", () => {
     const ev = indicatorEvidence({ ...base, ratings: [{ indicatorId: "KOMUNIKACJA.4", value: 3 }, { indicatorId: "WSPOLPRACA.2", value: "BRAK_OBSERWACJI" }] });
     expect(ev.find((e) => e.indicatorId === "KOMUNIKACJA.4")).toMatchObject({ level: 3, source: "OCENA" });
     expect(ev.find((e) => e.indicatorId === "WSPOLPRACA.2")).toMatchObject({ level: 4, source: "NOTATKI" });
@@ -161,7 +161,7 @@ describe("następna rozmowa według etapu oceny", () => {
     expect(suggestedKind(type, status)).toBe(kind);
   });
 
-  it("rozmowa wstępna po jej zapisaniu (Z17): informacja zamiast terminu innego etapu", () => {
+  it("rozmowa wstępna po jej zapisaniu: informacja zamiast terminu innego etapu", () => {
     const stage = { status: "W_OCENIE" as const, suggested: "WSTEPNA" as const, criteriaSetAt: "2026-02-12" };
     const p = buildConversationPrep({ ...base, kind: "WSTEPNA", stage, deadline: { date: "2026-12-01", label: "pierwsza ocena do wt. 1.12" } });
     expect(p.notes.join(" ")).toMatch(/Rozmowa wstępna odbyła się 12 lutego 2026/);
@@ -185,7 +185,7 @@ describe("następna rozmowa według etapu oceny", () => {
 });
 
 describe("etap oceny a otwarta rozmowa", () => {
-  it("remis poziomu (4,5) w dół – jak sugestia w Z09", () => {
+  it("remis poziomu (4,5) w dół – jak sugestia w sugestii poziomu", () => {
     expect([roundLevel(4.5), roundLevel(4.51), roundLevel(2.5), roundLevel(1), roundLevel(5)]).toEqual([4, 5, 2, 1, 5]);
     const ev = indicatorEvidence({ ...base, observations: [obs("p", "WSPOLPRACA.2", 4), obs("q", "WSPOLPRACA.2", 5)] });
     expect(ev[0]).toMatchObject({ level: 4.5, levelLabel: "powyżej oczekiwań" });

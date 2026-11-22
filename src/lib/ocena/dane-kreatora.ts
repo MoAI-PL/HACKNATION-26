@@ -1,4 +1,4 @@
-// Odczyt danych kreatora oceny okresowej (Z12) z bazy – tylko po stronie serwera.
+// Odczyt danych kreatora oceny okresowej z bazy – tylko po stronie serwera.
 // Przełożony widzi wyłącznie oceny, w których jest oceniającym albo bezpośrednim przełożonym ocenianego.
 
 import { prisma } from "@/lib/db";
@@ -14,7 +14,7 @@ const iso = (d: Date | null | undefined): IsoDate | undefined => (d ? fromDbDate
 
 /**
  * Poprzednia ocena okresowa jako punkt odniesienia terminów.
- * ZAŁOŻENIE: ocena sporządzona przed wprowadzeniem pracownika do systemu (pulpit Z11 – „Dodaj pracownika”)
+ * ZAŁOŻENIE: ocena sporządzona przed wprowadzeniem pracownika do systemu (pulpit przełożonego – „Dodaj pracownika”)
  * ma datę, ale nie ma wyniku; liczymy ją jak ocenę pozytywną (zwykły cykl 24 miesięcy) – tak samo jak pulpit.
  */
 function toPrevious(

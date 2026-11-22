@@ -21,7 +21,7 @@ import { processTimeline } from "@/lib/dashboard/os-czasu";
 export const metadata: Metadata = { title: "Pracownik – Kompas Kompetencji" };
 export const dynamic = "force-dynamic";
 
-// Karta pracownika na pulpicie (Z11): etap oceny i terminy z wyjaśnieniem i podstawą prawną.
+// Karta pracownika na pulpicie: etap oceny i terminy z wyjaśnieniem i podstawą prawną.
 // Dostęp tylko dla bezpośredniego przełożonego – inaczej 404 (bez ujawniania, czy pracownik istnieje).
 export default async function PracownikPage({ params }: { params: Promise<{ id: string }> }) {
   const user = await requirePageRole("PRZELOZONY");
@@ -189,7 +189,7 @@ export default async function PracownikPage({ params }: { params: Promise<{ id: 
         </div>
       </div>
 
-      {/* Z37: oś czasu procesu – historia i terminy prawne na jednej linii z „dziś”. */}
+      {/* Oś czasu: oś czasu procesu – historia i terminy prawne na jednej linii z „dziś”. */}
       <OsCzasuProcesu entries={processTimeline(employee, today)} className="mt-6" />
     </>
   );

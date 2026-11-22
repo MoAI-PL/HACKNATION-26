@@ -159,7 +159,7 @@ describe("wynik według § 10 i sporządzenie oceny", () => {
   });
 });
 
-describe("karty zachowań Z14 w skali pierwszej oceny", () => {
+describe("karty zachowań ocena wskaźników w skali pierwszej oceny", () => {
   it("decyzja w skali 3/5/7 i sugestia z mapowania behaviorToPoints.firstEval", () => {
     expect(decisionOptions(undefined, "PIERWSZA").map((o) => o.points)).toEqual([3, 5, 7]);
     expect(decisionOptions().map((o) => o.points)).toEqual([1, 3, 5, 7, 9]);

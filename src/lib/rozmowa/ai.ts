@@ -1,7 +1,7 @@
-// Asystent rozmowy (Z24): redakcja przez AI – otwarcie rozmowy i informacja zwrotna w schemacie zachowanie–skutek–oczekiwanie,
+// Asystent rozmowy: redakcja przez AI – otwarcie rozmowy i informacja zwrotna w schemacie zachowanie–skutek–oczekiwanie,
 // przeredagowana na bezpośrednie zwroty do pracownika („Zestawiła Pani…”).
 //
-// Prywatność: treść ściągi przechodzi przez pseudonimizację (Z34) – podwładni → [OSOBA_n], komórki i identyfikatory → znaczniki.
+// Prywatność: treść ściągi przechodzi przez pseudonimizację – podwładni → [OSOBA_n], komórki i identyfikatory → znaczniki.
 // Do modelu nie wysyłamy też poziomów wskaźników (model nie ma czego „ocenić”).
 //
 // Zasada „nic nie dopisuj” jest sprawdzana, a nie tylko zapisana w prompcie. Każdy punkt informacji zwrotnej

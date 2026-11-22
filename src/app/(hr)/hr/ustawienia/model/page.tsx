@@ -16,7 +16,7 @@ import { LEVEL_KEYS, currentRuntimeConfig, defaultBehavior } from "@/lib/konfigu
 export const metadata: Metadata = { title: "Opisy zachowań – Kompas Kompetencji" };
 export const dynamic = "force-dynamic";
 
-// Panel HR, część 2 (Z19): opisy zachowań z modelu kompetencji (karty zachowań w ocenie, Z14) bez zmian w kodzie.
+// Panel HR, część 2: opisy zachowań z modelu kompetencji (karty zachowań w ocenie) bez zmian w kodzie.
 export default async function OpisyZachowanPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   await requirePageRole("HR");
   const requested = (await searchParams).wskaznik;

@@ -1,5 +1,5 @@
 {
-  "opis": "Zapasowe odpowiedzi AI dla scen pitchu (Z44). Używane wyłącznie przy DEMO_MODE=true i wyłącznie wtedy, gdy model jest skonfigurowany, ale nie odpowiedział (błąd, limit, przekroczony czas). Każde użycie jest oznaczone w interfejsie i w logach serwera. Źródła i cytaty sprawdza test tests/demo/demo-cache.test.ts.",
+  "opis": "Zapasowe odpowiedzi AI dla scen pitchu. Używane wyłącznie przy DEMO_MODE=true i wyłącznie wtedy, gdy model jest skonfigurowany, ale nie odpowiedział (błąd, limit, przekroczony czas). Każde użycie jest oznaczone w interfejsie i w logach serwera. Źródła i cytaty sprawdza test tests/demo/demo-cache.test.ts.",
   "asystentFormalny": [
     {
       "pytania": [

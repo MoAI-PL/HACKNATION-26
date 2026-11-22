@@ -1,4 +1,4 @@
-// Tryb rozmowy (Z43): ściąga z Z24 jako kroki do przejścia w trakcie rozmowy – czysta logika bez bazy i bez AI.
+// Tryb rozmowy: ściąga z asystenta rozmowy jako kroki do przejścia w trakcie rozmowy – czysta logika bez bazy i bez AI.
 //
 // Kroki: otwarcie → punkty zakresu rozmowy z przepisu (agenda) → informacja zwrotna → pytania → działania rozwojowe → zamknięcie.
 // Punkty zakresu z przepisu (§ 3 rozp. o pierwszej ocenie, § 5 ust. 1 i § 10 rozp. o ocenach okresowych) są obowiązkowe:
@@ -139,8 +139,8 @@ export type SavePlan = { action: "CREATE" } | { action: "APPEND"; conversationId
 
 /**
  * Jak zapisać przebieg rozmowy, żeby nie dublować zapisów:
- *  - rozmowę rozpoczynającą zapisuje kreator oceny okresowej (Z12) razem z kryteriami, a rozmowę wstępną – przebieg
- *    pierwszej oceny (Z17) razem z terminem sprawozdania; tryb rozmowy tylko dopisuje notatki do istniejącego zapisu,
+ *  - rozmowę rozpoczynającą zapisuje kreator oceny okresowej razem z kryteriami, a rozmowę wstępną – przebieg
+ *    pierwszej oceny razem z terminem sprawozdania; tryb rozmowy tylko dopisuje notatki do istniejącego zapisu,
  *    a bez niego odsyła do właściwego formularza;
  *  - ten sam rodzaj rozmowy w tej samej ocenie tego samego dnia (np. dokończona po przerwie) – dopisujemy do zapisu;
  *  - w pozostałych przypadkach – nowy zapis.

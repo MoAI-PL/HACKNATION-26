@@ -1,5 +1,5 @@
 "use server";
-// Akcja „Resetuj dane demo” (Z44) – tylko rola HR i tylko przy DEMO_MODE=true.
+// Akcja „Resetuj dane demo” – tylko rola HR i tylko przy DEMO_MODE=true.
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";

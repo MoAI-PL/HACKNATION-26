@@ -15,7 +15,7 @@ import { cn } from "@/lib/utils";
 export const metadata: Metadata = { title: "5 minut przed rozmową – Kompas Kompetencji" };
 export const dynamic = "force-dynamic";
 
-// Tryb „5 minut przed rozmową” (Z39): jedna strona – fakty, trzy pytania, trzy pułapki. Pełna ściąga: Z24, przebieg: Z43.
+// Tryb „5 minut przed rozmową”: jedna strona – fakty, trzy pytania, trzy pułapki. Pełna ściąga: asystent rozmowy, przebieg: tryb rozmowy.
 
 function Block({ id, title, icon, children }: { id: string; title: string; icon: React.ReactNode; children: React.ReactNode }) {
   return (

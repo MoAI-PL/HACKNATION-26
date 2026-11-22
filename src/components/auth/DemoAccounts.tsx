@@ -1,5 +1,5 @@
 "use client";
-// Karty kont demo na ekranie logowania (Z04, sekcja 4.3). Renderowane tylko przy DEMO_MODE=true.
+// Karty kont demo na ekranie logowania. Renderowane tylko przy DEMO_MODE=true.
 import { useActionState } from "react";
 import { Button } from "@/components/ui/button";
 import { Avatar } from "@/components/ui/avatar";

@@ -1,4 +1,4 @@
-// Konfiguracja Auth.js bez bazy danych i bcrypt (Z04) – bezpieczna dla middleware (edge).
+// Konfiguracja Auth.js bez bazy danych i bcrypt – bezpieczna dla middleware (edge).
 // Pełna konfiguracja z dostawcą logowania jest w src/auth.ts.
 import type { NextAuthConfig } from "next-auth";
 import { canAccessPath, isOpenPath, isPublicPath, isRole, ROLE_HOME } from "@/lib/auth/role";

@@ -1,7 +1,7 @@
 "use server";
 
-// Akcje serwerowe ścieżki pierwszej oceny (Z17). Każda sprawdza rolę i dostęp do oceny (Z04), waliduje dane
-// tą samą logiką co formularz (src/lib/pierwsza-ocena/przebieg.ts), a wynik liczy od nowa z danych w bazie (Z07).
+// Akcje serwerowe ścieżki pierwszej oceny. Każda sprawdza rolę i dostęp do oceny, waliduje dane
+// tą samą logiką co formularz (src/lib/pierwsza-ocena/przebieg.ts), a wynik liczy od nowa z danych w bazie.
 // Zmiana etapu jest warunkiem w samym zapisie (updateMany z filtrem statusu) – podwójne kliknięcie nic nie psuje.
 
 import { revalidatePath } from "next/cache";

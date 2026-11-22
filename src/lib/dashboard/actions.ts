@@ -1,5 +1,5 @@
 "use server";
-// Akcje serwerowe pulpitu (Z11). Każda sprawdza rolę na serwerze (Z04), niezależnie od ukrycia przycisku.
+// Akcje serwerowe pulpitu. Każda sprawdza rolę na serwerze, niezależnie od ukrycia przycisku.
 
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/db";
@@ -16,7 +16,7 @@ export type AddEmployeeState =
 
 export type OspPreviewState = { status: "ok"; preview: OspPreview } | { status: "error"; problems: string[] };
 
-/** Podgląd pliku OSP w formularzu: wypełnia stanowisko, komórkę i liczbę podległych, wyjaśnia wybór arkusza (Z06). */
+/** Podgląd pliku OSP w formularzu: wypełnia stanowisko, komórkę i liczbę podległych, wyjaśnia wybór arkusza. */
 export async function previewOspAction(form: FormData): Promise<OspPreviewState> {
   try {
     await requireRole("PRZELOZONY");
@@ -106,7 +106,7 @@ export async function addEmployeeAction(_prev: AddEmployeeState, form: FormData)
           type: v.evaluationType,
           sheet,
           status: "DO_ROZPOCZECIA",
-          // Pierwsza ocena: pięć elementów z § 2 pkt 1 od razu (kryteria oceny okresowej ustala się w rozmowie rozpoczynającej, Z12).
+          // Pierwsza ocena: pięć elementów z § 2 pkt 1 od razu (kryteria oceny okresowej ustala się w rozmowie rozpoczynającej).
           ...(v.evaluationType === "PIERWSZA" ? { criteria: { create: firstEvalCriteria() } } : {}),
         },
       });

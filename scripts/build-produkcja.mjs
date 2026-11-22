@@ -1,4 +1,4 @@
-// Build publicznego demo (Z29) – uruchamiany przez Vercel (vercel.json → buildCommand).
+// Build publicznego demo – uruchamiany przez Vercel (vercel.json → buildCommand).
 //
 // Tylko wdrożenie produkcyjne (VERCEL_ENV=production) dotyka bazy:
 //   1. prisma migrate deploy – migracje,

@@ -1,4 +1,4 @@
-// Akcje asystenta rozmowy (Z24): tylko przełożony, tylko własni podwładni, decyzje AI w dzienniku decyzji.
+// Akcje asystenta rozmowy: tylko przełożony, tylko własni podwładni, decyzje AI w dzienniku decyzji.
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const { authMock, prismaMock } = vi.hoisted(() => ({

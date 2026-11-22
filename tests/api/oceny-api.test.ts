@@ -1,4 +1,4 @@
-// REST API v1 – oceny (Z38): dostęp według ról, filtry, eksport bez danych wewnętrznych, zgodność ze specyfikacją.
+// REST API v1 – oceny: dostęp według ról, filtry, eksport bez danych wewnętrznych, zgodność ze specyfikacją.
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { readFileSync } from "node:fs";
 

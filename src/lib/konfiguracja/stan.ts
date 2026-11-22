@@ -1,6 +1,6 @@
-// Zmiany przepisów i modelu kompetencji z panelu HR (Z19) – stan w pamięci procesu, bez bazy.
+// Zmiany przepisów i modelu kompetencji z panelu HR – stan w pamięci procesu, bez bazy.
 //
-// Silniki (Z07, Z08, Z09, Z36) i ekrany czytają wspólne obiekty `rules` (data/przepisy.json) i `competencyModel`
+// Silniki i ekrany czytają wspólne obiekty `rules` (data/przepisy.json) i `competencyModel`
 // (data/model-kompetencji.json). Zmiana z panelu HR podmienia ich zawartość w miejscu, więc działa od razu wszędzie –
 // bez przekazywania parametrów przez kod i bez zmian w sygnaturach funkcji.
 //   - serwer: strażnicy autoryzacji (src/lib/auth/guard.ts) przed każdym ekranem, akcją i API wczytują zmiany z bazy;

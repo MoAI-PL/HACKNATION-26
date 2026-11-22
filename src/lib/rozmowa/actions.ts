@@ -1,5 +1,5 @@
 "use server";
-// Akcje asystenta rozmowy (Z24): redakcja przez AI i zapis decyzji „Wstaw / Odrzuć” w dzienniku decyzji (sekcja 4.2).
+// Akcje asystenta rozmowy: redakcja przez AI i zapis decyzji „Wstaw / Odrzuć” w dzienniku decyzji.
 
 import { z } from "zod";
 import { requireRole } from "@/lib/auth/guard";
@@ -58,7 +58,7 @@ export async function logConversationAiDecisionAction(employeeId: string, raw: u
       action: input.decision === "WSTAW" ? "AI_WSTAW" : "AI_ODRZUC",
       entity: "Employee",
       entityId: employee.id,
-      // Ten sam format co wspólne logAiDecision (Z10) – eksport dziennika (Z35) czyta wszystkie decyzje AI jednakowo.
+      // Ten sam format co wspólne logAiDecision – eksport dziennika czyta wszystkie decyzje AI jednakowo.
       aiProposal: { funkcja: "ASYSTENT_ROZMOWY", tryb: "AI", rozmowa: input.kind, propozycja: input.proposal },
       humanDecision: { decyzja: input.decision, wstawiono: input.final ?? null },
     },

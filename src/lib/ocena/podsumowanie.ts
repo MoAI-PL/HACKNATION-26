@@ -1,6 +1,6 @@
-// Podsumowanie i wynik oceny okresowej (Z15) – czysta logika.
+// Podsumowanie i wynik oceny okresowej – czysta logika.
 // § 11 ust. 1 pkt 2–5 (poziom ogólny, wynik, wnioski do IPRZ), § 11 ust. 3–5 (uzasadnienie, część III),
-// § 12 (zapoznanie z oceną), art. 83 ustawy (sprzeciw). Wynik liczy silnik Z07.
+// § 12 (zapoznanie z oceną), art. 83 ustawy (sprzeciw). Wynik liczy silnik punktacji.
 
 import { z } from "zod";
 import { rules as defaultRules, type Rules } from "@/lib/domain/przepisy";
@@ -19,7 +19,7 @@ export type SummaryResult =
   | { complete: true; result: PeriodicScoreResult }
   | { complete: false; missing: CompetencyCode[] };
 
-/** Wynik oceny z ocen cząstkowych (Z07) albo lista kryteriów bez oceny. */
+/** Wynik oceny z ocen cząstkowych albo lista kryteriów bez oceny. */
 export function summarize(criteria: ScoredCriterion[], r: Rules = defaultRules): SummaryResult {
   const missing = criteria.filter((c) => c.score === null).map((c) => c.competency);
   if (missing.length || criteria.length === 0) return { complete: false, missing };

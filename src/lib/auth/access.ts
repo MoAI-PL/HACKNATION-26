@@ -1,4 +1,4 @@
-// Autoryzacja po stronie serwera (Z04): wspólna decyzja dla API, akcji serwerowych i ekranów.
+// Autoryzacja po stronie serwera: wspólna decyzja dla API, akcji serwerowych i ekranów.
 // Czysta logika – sesję podaje wywołujący, więc testy nie potrzebują Auth.js.
 import type { Role } from "@/lib/domain/types";
 import { isRole } from "./role";

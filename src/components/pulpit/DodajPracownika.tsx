@@ -17,8 +17,8 @@ import { addEmployeeAction, previewOspAction, type AddEmployeeState } from "@/li
 import type { OspPreview } from "@/lib/dashboard/osp-plik";
 import { employeeHref } from "@/lib/dashboard/pulpit";
 
-// Szybkie dodanie pracownika z pulpitu (Z11) – jury może wprowadzić własne fikcyjne dane w mniej niż minutę.
-// Plik OSP (opcjonalny) wypełnia stanowisko, komórkę i liczbę podległych; parser i wybór arkusza – Z06.
+// Szybkie dodanie pracownika z pulpitu – jury może wprowadzić własne fikcyjne dane w mniej niż minutę.
+// Plik OSP (opcjonalny) wypełnia stanowisko, komórkę i liczbę podległych; parser i wybór arkusza – moduł importu OSP.
 
 const INITIAL: AddEmployeeState = { status: "idle" };
 

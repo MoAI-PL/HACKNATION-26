@@ -1,4 +1,4 @@
-// Statusy i znaczniki w interfejsie (Z10). Czysta logika – testy w tests/ui/status.test.ts.
+// Statusy i znaczniki w interfejsie. Czysta logika – testy w tests/ui/status.test.ts.
 
 import type { DeadlineUrgency } from "@/lib/domain/types";
 import { rules } from "@/lib/domain/przepisy";
@@ -29,7 +29,7 @@ export function pluralDays(n: number): string {
   return Math.abs(n) === 1 ? "dzień" : "dni";
 }
 
-/** Tekst odznaki terminu – zawsze obok koloru (sekcja 4.1 pkt 8). */
+/** Tekst odznaki terminu – zawsze obok koloru. */
 export function deadlineText(daysLeft: number): string {
   if (daysLeft < 0) return `Po terminie (${-daysLeft} ${pluralDays(daysLeft)})`;
   if (daysLeft === 0) return "Termin dziś";
@@ -65,7 +65,7 @@ export function autosaveText(state: AutosaveState): string {
   }
 }
 
-/** „Krok 3 z 6: Ocena wskaźników” (sekcja 4.1 pkt 3). */
+/** „Krok 3 z 6: Ocena wskaźników”. */
 export function wizardStepLabel(current: number, total: number, name: string): string {
   return `Krok ${current} z ${total}: ${name}`;
 }

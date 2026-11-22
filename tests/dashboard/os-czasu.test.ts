@@ -1,4 +1,4 @@
-// Oś czasu procesu pracownika (Z37): kolejność, stany (zrobione / dziś / przed nami / po terminie), terminy z podstawą prawną.
+// Oś czasu procesu pracownika: kolejność, stany (zrobione / dziś / przed nami / po terminie), terminy z podstawą prawną.
 import { describe, expect, it } from "vitest";
 import { processTimeline } from "@/lib/dashboard/os-czasu";
 import type { EmployeeInfo, EvaluationInfo } from "@/lib/dashboard/pulpit";
@@ -76,7 +76,7 @@ describe("oś czasu procesu", () => {
     expect(t.indexOf(termin)).toBeLessThan(t.findIndex((x) => x.kind === "DZIS"));
   });
 
-  it("podpowiedzi „Dlaczego?” (Z42): nieobecność i sprzeciw – ta sama podpowiedź tylko raz", () => {
+  it("podpowiedzi „Dlaczego?”: nieobecność i sprzeciw – ta sama podpowiedź tylko raz", () => {
     const e = employee({
       evaluations: [ev({ id: "p", status: "ZAKONCZONA", evaluatedAt: "2026-11-10", acknowledgedAt: "2026-11-18", result: "POZYTYWNA" })],
       absences: [

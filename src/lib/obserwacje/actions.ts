@@ -1,5 +1,5 @@
 "use server";
-// Akcje serwerowe dziennika obserwacji (Z13). Autoryzacja w każdej akcji (Z04), nie tylko w layoucie.
+// Akcje serwerowe dziennika obserwacji. Autoryzacja w każdej akcji, nie tylko w layoucie.
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";

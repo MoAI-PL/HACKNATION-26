@@ -1,4 +1,4 @@
-// Przycisk wylogowania w nagłówku AppShell (Z04 – akcja, Z10 – miejsce w układzie).
+// Przycisk wylogowania w nagłówku AppShell (akcja wylogowania i miejsce w układzie).
 import { LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { logoutAction } from "@/lib/auth/actions";

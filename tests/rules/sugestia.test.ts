@@ -146,7 +146,7 @@ describe("sugestia – ocena okresowa (skala 1/3/5/7/9)", () => {
     expect(teksty(s)).toMatch(/To tylko propozycja/);
   });
 
-  it("sugestia nadaje się wprost jako ocena cząstkowa silnika punktacji (Z07)", () => {
+  it("sugestia nadaje się wprost jako ocena cząstkowa silnika punktacji", () => {
     const s = sugestia("KOMUNIKACJA", [3, 3, 3, 3]);
     const wynik = scorePeriodic([{ competency: "KOMUNIKACJA", kind: "OBOWIAZKOWE", points: s.suggestedPoints as 5 }]);
     expect(wynik.overallLevel).toBe(s.suggestedLevel);

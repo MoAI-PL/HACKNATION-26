@@ -1,6 +1,6 @@
-// Panel HR, część 1 (Z18): czysta logika bez bazy – bieżący termin każdej oceny, filtry, przypomnienia i zawiadomienie.
+// Panel HR, część 1: czysta logika bez bazy – bieżący termin każdej oceny, filtry, przypomnienia i zawiadomienie.
 //
-// Terminy liczy zawsze silnik Z08 (src/lib/rules/terminy.ts) na podstawie danych pracownika i nieobecności,
+// Terminy liczy zawsze silnik terminów (src/lib/rules/terminy.ts) na podstawie danych pracownika i nieobecności,
 // a nie zapisane `Evaluation.dueDate`. Dzięki temu nieobecność dopisana później od razu wydłuża termin w panelu,
 // a HR widzi wyjaśnienie, np. „+44 dni: zwolnienie lekarskie 12.03–24.04”.
 
@@ -90,7 +90,7 @@ function periodicAnchor(e: HrEvaluationRecord) {
   return null;
 }
 
-/** Bieżący termin oceny według etapu procesu (silnik Z08). */
+/** Bieżący termin oceny według etapu procesu (silnik terminów). */
 export function currentDeadline(e: HrEvaluationRecord, r: Rules = defaultRules): Deadline | null {
   if (e.status === "CZEKA_NA_ZAPOZNANIE" || e.status === "ZAKONCZONA") return null;
 

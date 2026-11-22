@@ -2,7 +2,7 @@ import { FileDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { firstSheetHref } from "@/lib/pdf/arkusz-pierwszej";
 
-/** Pobranie arkusza pierwszej oceny w PDF (Z17) – po rozmowie wstępnej, z wynikiem po sporządzeniu oceny. */
+/** Pobranie arkusza pierwszej oceny w PDF – po rozmowie wstępnej, z wynikiem po sporządzeniu oceny. */
 export function PobierzArkuszPierwszej({ evaluationId, label = "Pobierz arkusz pierwszej oceny (PDF)" }: { evaluationId: string; label?: string }) {
   return (
     <div className="flex flex-wrap gap-2">

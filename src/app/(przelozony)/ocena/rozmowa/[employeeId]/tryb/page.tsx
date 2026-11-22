@@ -9,7 +9,7 @@ import { buildConversationSteps } from "@/lib/rozmowa/tryb";
 export const metadata: Metadata = { title: "Tryb rozmowy – Kompas Kompetencji" };
 export const dynamic = "force-dynamic";
 
-// Tryb rozmowy (Z43): ta sama ściąga co w Z24, ale jako kroki do przejścia w trakcie rozmowy.
+// Tryb rozmowy: ta sama ściąga co w asystencie rozmowy, ale jako kroki do przejścia w trakcie rozmowy.
 
 export default async function TrybRozmowyPage({
   params,

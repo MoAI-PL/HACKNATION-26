@@ -1,10 +1,10 @@
-// API analizy OSP (Z23): propozycja do 3 kryteriów dodatkowych z uzasadnieniem i cytatem zadania.
+// API analizy OSP: propozycja do 3 kryteriów dodatkowych z uzasadnieniem i cytatem zadania.
 //   POST /api/asystent/kryteria  (multipart/form-data: plik = OSP .docx, arkusz? = B|C)
 //   POST /api/asystent/kryteria  (JSON: { pracownikId, arkusz? })  – OSP pracownika zapisany w bazie
 // Odpowiedź: { propozycja: CriteriaProposalResult, arkusz: SheetSelection & { wybrany }, stanowisko, uwagi }.
-// Arkusz domyślnie z OSP (§ 3); przełożony może go zmienić w kreatorze (Z12) i przekazać w polu „arkusz”.
+// Arkusz domyślnie z OSP (§ 3); przełożony może go zmienić w kreatorze i przekazać w polu „arkusz”.
 //
-// Dostęp (Z04): przełożony (tylko własni podwładni) i HR; bez sesji 401, inna rola 403.
+// Dostęp: przełożony (tylko własni podwładni) i HR; bez sesji 401, inna rola 403.
 
 import { NextResponse } from "next/server";
 import { z } from "zod";

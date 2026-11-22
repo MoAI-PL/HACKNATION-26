@@ -1,4 +1,4 @@
-// Silnik terminów (Z08).
+// Silnik terminów.
 // Ocena okresowa: art. 81 ust. 4, 6, 7 i 9 oraz art. 83 ustawy o służbie cywilnej, § 7 i § 9 rozporządzenia
 // z 4.04.2016 (Dz.U. poz. 470). Pierwsza ocena: art. 38 ust. 1 ustawy, § 3–5 rozporządzenia z 23.07.2015 (Dz.U. poz. 1144).
 // Liczenie terminów: art. 111, 112 i 115 KC (kalendarz.ts). Doprecyzowania z poradnika KPRM o ocenach okresowych

@@ -1,8 +1,8 @@
-// GET /api/v1/oceny/{id}/pdf?wariant=pelny|czesc-i – arkusz oceny okresowej B / C w PDF (Z16),
-// a dla pierwszej oceny – arkusz pierwszej oceny w służbie cywilnej (Z17, bez wariantów: po rozmowie wstępnej
+// GET /api/v1/oceny/{id}/pdf?wariant=pelny|czesc-i – arkusz oceny okresowej B / C w PDF,
+// a dla pierwszej oceny – arkusz pierwszej oceny w służbie cywilnej (bez wariantów: po rozmowie wstępnej
 // z danymi rozmowy, po sporządzeniu oceny – z wynikiem).
 // pelny (domyślnie) – po sporządzeniu oceny (części I–III); czesc-i – kopia części I dla ocenianego (§ 6 ust. 3).
-// Dostęp jak w eksporcie oceny (Z38): HR, przełożony (oceniający albo bezpośredni przełożony), oceniany – własna ocena
+// Dostęp jak w eksporcie oceny: HR, przełożony (oceniający albo bezpośredni przełożony), oceniany – własna ocena
 // (pełny arkusz po sporządzeniu, § 12 ust. 2; część I po ustaleniu kryteriów). Ocena spoza zakresu = 404.
 
 import { NextResponse } from "next/server";

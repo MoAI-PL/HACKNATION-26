@@ -1,4 +1,4 @@
-// Asystent języka (Z40): reguły bez AI i przeformułowanie przez model.
+// Asystent języka: reguły bez AI i przeformułowanie przez model.
 import { describe, expect, it } from "vitest";
 import { detectLanguageIssues } from "@/lib/ai/jezyk/reguly";
 import { placeholdersIn, rewriteToBehavior } from "@/lib/ai/funkcje/asystent-jezyka";

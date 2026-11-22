@@ -7,8 +7,8 @@ import { BEHAVIOR_LEVEL_TO_LEVEL, COMPETENCY_NAMES, LEVEL_LABELS } from "@/lib/d
 import { formatDatePl, type ObservationView } from "@/lib/obserwacje/dziennik";
 import { cn } from "@/lib/utils";
 
-// Jedna obserwacja z dziennika (Z13): data, osoba, wskaźnik, opis zachowania i Sytuacja – Działanie – Rezultat.
-// Używana na osi czasu, w widoku według wskaźników i obok kart zachowań w ocenie (Z14, przez IndicatorNotes).
+// Jedna obserwacja z dziennika: data, osoba, wskaźnik, opis zachowania i Sytuacja – Działanie – Rezultat.
+// Używana na osi czasu, w widoku według wskaźników i obok kart zachowań w ocenie (przez IndicatorNotes).
 
 const SDR: { key: "situation" | "action" | "outcome"; label: string }[] = [
   { key: "situation", label: "Sytuacja" },
@@ -84,7 +84,7 @@ export function ObservationCard({
   );
 }
 
-/** Notatki z dziennika przy jednym wskaźniku (Z14: obok kart zachowań). */
+/** Notatki z dziennika przy jednym wskaźniku (obok kart zachowań). */
 export function IndicatorNotes({ observations, emptyText = "Brak notatek przy tym wskaźniku." }: { observations: ObservationView[]; emptyText?: string }) {
   if (observations.length === 0) return <p className="text-sm text-muted-foreground">{emptyText}</p>;
   return (

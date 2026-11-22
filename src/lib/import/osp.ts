@@ -1,4 +1,4 @@
-// Import opisu stanowiska pracy (OSP) z pliku .docx (Z06) i automatyczny wybór arkusza B/C.
+// Import opisu stanowiska pracy (OSP) z pliku .docx i automatyczny wybór arkusza B/C.
 //
 // Układ formularza (wzór OSP stanowiska niebędącego wyższym stanowiskiem w służbie cywilnej, pliki MC w materialy/OSP/):
 //  - część I: tabela „etykieta | wartość” (nazwa urzędu, komórki, stanowiska, symbol, stanowiska nadzorujące);
@@ -7,7 +7,7 @@
 //  - pola wyboru ☒/☐ – stan odczytuje docx.ts.
 // Sekcje szukamy po nagłówkach, a nie po numerach wierszy, bo urzędy dodają wiersze (np. więcej zadań).
 // Błąd importu tylko wtedy, gdy bez danej informacji nie da się pracować (nazwa stanowiska, liczba podległych);
-// brak pozostałych sekcji to uwaga – przełożony uzupełni je w kreatorze (Z12).
+// brak pozostałych sekcji to uwaga – przełożony uzupełni je w kreatorze.
 
 import { COMPETENCY_NAMES, SUBORDINATE_LABELS } from "@/lib/domain/slownik";
 import { COMPETENCY_CODES, SUBORDINATE_OPTIONS, type CompetencyCode, type PositionDescription, type SheetSelection, type SubordinateOption } from "@/lib/domain/types";
@@ -28,10 +28,10 @@ export interface OspImportResult {
   sheet: SheetSelection;
   /**
    * Kompetencje miękkie z OSP, które nie są kryteriami obowiązkowymi wybranego arkusza – kandydaci na kryteria dodatkowe
-   * (podpowiedź bez AI dla Z12/Z23; wybór i limit 3 kryteriów sprawdza silnik kryteriów).
+   * (podpowiedź bez AI dla kreatora oceny okresowej/propozycja kryteriów z OSP; wybór i limit 3 kryteriów sprawdza silnik kryteriów).
    */
   additionalCriteriaFromOsp: CompetencyCode[];
-  /** Pełny tekst dokumentu (Position.rawText, kontekst dla AI w Z23). */
+  /** Pełny tekst dokumentu (Position.rawText, kontekst dla AI w propozycji kryteriów z OSP). */
   rawText: string;
   warnings: string[];
 }

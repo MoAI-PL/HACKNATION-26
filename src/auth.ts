@@ -1,4 +1,4 @@
-// Auth.js (Z04): logowanie e-mailem i hasłem, sesja JWT w ciasteczku httpOnly.
+// Auth.js: logowanie e-mailem i hasłem, sesja JWT w ciasteczku httpOnly.
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { prisma } from "@/lib/db";

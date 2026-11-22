@@ -14,10 +14,10 @@ import { SzybkaNotatka } from "@/components/asystent/SzybkaNotatka";
 import { ZastosujKonfiguracje } from "@/components/konfiguracja/ZastosujKonfiguracje";
 import { currentRuntimeConfig } from "@/lib/konfiguracja/stan";
 
-// Układ aplikacji po zalogowaniu (Z10): link „Przejdź do treści”, nagłówek z nazwą, rolą i akcjami,
+// Układ aplikacji po zalogowaniu: link „Przejdź do treści”, nagłówek z nazwą, rolą i akcjami,
 // menu według grafiki MC, treść z jednym <main>.
 //
-// Użycie w layoutach grup tras (rola sprawdzana przez Z04):
+// Użycie w layoutach grup tras (rola sprawdzana przy logowaniu):
 //   const user = await requirePageRole("PRZELOZONY");
 //   return <AppShell user={shellUser(user)} userMenu={<LogoutButton />}>{children}</AppShell>;
 
@@ -26,7 +26,7 @@ export interface ShellUser {
   role: Role;
 }
 
-/** Dane do nagłówka z użytkownika sesji (Z04). */
+/** Dane do nagłówka z użytkownika sesji. */
 export function shellUser(user: { name?: string | null; email?: string | null; role: Role }): ShellUser {
   return { name: user.name || user.email || "Użytkownik", role: user.role };
 }
@@ -37,7 +37,7 @@ export function AppShell({
   children,
 }: {
   user: ShellUser;
-  /** Miejsce na przycisk wylogowania / menu konta (Z04). */
+  /** Miejsce na przycisk wylogowania / menu konta. */
   userMenu?: React.ReactNode;
   children: React.ReactNode;
 }) {
@@ -88,11 +88,11 @@ export function AppShell({
       {quickNote && <SzybkaNotatka />}
     </div>
   );
-  // Zmiany przepisów i modelu z panelu HR (Z19) – także w obliczeniach w przeglądarce.
+  // Zmiany przepisów i modelu z panelu HR – także w obliczeniach w przeglądarce.
   return <ZastosujKonfiguracje config={currentRuntimeConfig()}>{shell}</ZastosujKonfiguracje>;
 }
 
-/** Nagłówek ekranu: jeden tytuł (h1), opis i miejsce na jedną główną akcję (sekcja 4.1 pkt 2). */
+/** Nagłówek ekranu: jeden tytuł (h1), opis i miejsce na jedną główną akcję. */
 export function PageHeader({
   title,
   description,

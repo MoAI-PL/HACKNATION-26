@@ -1,4 +1,4 @@
-// Dostęp do API asystenta formalnego (Z04 + Z22): 401 bez sesji, 403 dla ocenianego, 200 dla przełożonego, HR i kierującego.
+// Dostęp do API asystenta formalnego: 401 bez sesji, 403 dla ocenianego, 200 dla przełożonego, HR i kierującego.
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const { authMock } = vi.hoisted(() => ({ authMock: vi.fn() }));

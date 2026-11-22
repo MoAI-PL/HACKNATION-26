@@ -10,7 +10,7 @@ import type { PreviousSummary } from "@/lib/ocena/dane-podsumowania";
 import type { ScoredCriterion } from "@/lib/ocena/podsumowanie";
 import { cn } from "@/lib/utils";
 
-// Wynik oceny okresowej (Z15): oceny cząstkowe, średnia, poziom ogólny, wynik z wyjaśnieniem (§ 11 ust. 1 pkt 1–4)
+// Wynik oceny okresowej: oceny cząstkowe, średnia, poziom ogólny, wynik z wyjaśnieniem (§ 11 ust. 1 pkt 1–4)
 // i dane poprzedniej oceny. Ten sam widok przed sporządzeniem oceny i po nim.
 
 export function WynikOceny({

@@ -1,5 +1,5 @@
 "use client";
-// Panel HR (Z19): opisy zachowań jednego wskaźnika (5 poziomów) – te same teksty widzi przełożony na kartach zachowań.
+// Panel HR: opisy zachowań jednego wskaźnika (5 poziomów) – te same teksty widzi przełożony na kartach zachowań.
 
 import * as React from "react";
 import { RotateCcw, Save } from "lucide-react";

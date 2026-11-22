@@ -1,4 +1,4 @@
-// Spójność danych demo (Z26): bez bazy – definicje; z TEST_DATABASE_URL – pełny seed na PostgreSQL.
+// Spójność danych demo: bez bazy – definicje; z TEST_DATABASE_URL – pełny seed na PostgreSQL.
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { PrismaClient } from "@prisma/client";
 import { DEMO_OBSERVATIONS, DEMO_OSP, seedDemoData } from "@/lib/demo/dane-demo";
@@ -11,7 +11,7 @@ import { addDays } from "@/lib/rules/kalendarz";
 import { NOTE_REMINDER_DAYS } from "@/lib/dashboard/notatki";
 
 describe("dane demo – definicje", () => {
-  it("Piotr Lewandowski bez notatki od ponad 3 miesięcy – pulpit pokazuje przypomnienie o regularnych notatkach (Z45)", () => {
+  it("Piotr Lewandowski bez notatki od ponad 3 miesięcy – pulpit pokazuje przypomnienie o regularnych notatkach", () => {
     const newest = Math.min(...DEMO_OBSERVATIONS.PIOTR.map(([ago]) => ago));
     expect(newest).toBeGreaterThanOrEqual(NOTE_REMINDER_DAYS);
     // Pozostałe osoby w okresie oceny mają świeże notatki – przypomnienie jest jedno, czytelne.
@@ -106,14 +106,14 @@ describe.skipIf(!url)("dane demo – seed na PostgreSQL", () => {
     expect(cur.previousResult).toBe("NEGATYWNA");
   });
 
-  it("dziennik decyzji (Z35) po zasianiu danych nie jest pusty: sporządzenie, zapoznanie, kryteria, propozycje AI, przypomnienie", async () => {
+  it("dziennik decyzji po zasianiu danych nie jest pusty: sporządzenie, zapoznanie, kryteria, propozycje AI, przypomnienie", async () => {
     const actions = new Set((await prisma.auditLog.findMany({ where: { NOT: { action: "LOGOWANIE" } }, select: { action: true } })).map((r) => r.action));
     for (const a of ["SPORZADZENIE_OCENY", "ZAPOZNANIE_Z_OCENA", "USTALENIE_KRYTERIOW", "AI_WSTAW", "PRZYPOMNIENIE_WYSLANE"]) expect(actions).toContain(a);
     const ai = await prisma.auditLog.findFirstOrThrow({ where: { action: "AI_WSTAW", reason: { not: null } } });
     expect(ai.humanDecision).toMatchObject({ decyzja: "WSTAW" });
   });
 
-  it("Lustro ocen (Z36): co najmniej jedna komórka ma 3 sporządzone oceny okresowe, więc rozkład jest widoczny", async () => {
+  it("Lustro ocen: co najmniej jedna komórka ma 3 sporządzone oceny okresowe, więc rozkład jest widoczny", async () => {
     const rows = await prisma.evaluation.findMany({ where: { type: "OKRESOWA", average: { not: null } }, select: { employee: { select: { orgUnitId: true } } } });
     const perUnit = new Map<string, number>();
     for (const r of rows) perUnit.set(r.employee.orgUnitId ?? "", (perUnit.get(r.employee.orgUnitId ?? "") ?? 0) + 1);

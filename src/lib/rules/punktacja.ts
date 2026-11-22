@@ -1,8 +1,8 @@
-// Silnik punktacji (Z07).
+// Silnik punktacji.
 // - ocena okresowa: § 11 ust. 1 i 3 rozporządzenia PRM z 4.04.2016 (Dz.U. poz. 470);
 // - pierwsza ocena: § 9 i § 10 rozporządzenia PRM z 23.07.2015 (Dz.U. poz. 1144).
 // Wszystkie progi i skale pochodzą z data/przepisy.json (parametr `r`, domyślnie `rules`),
-// dzięki czemu zmiana w panelu HR (Z19) nie wymaga zmian w kodzie.
+// dzięki czemu zmiana w panelu HR nie wymaga zmian w kodzie.
 //
 // Porównania średniej z progami robimy na sumach (suma ≤ próg × liczba ocen), a nie na ułamkach,
 // żeby granice 2,00 / 4,00 / 6,00 / 8,00 nigdy nie zależały od zaokrągleń liczb zmiennoprzecinkowych.

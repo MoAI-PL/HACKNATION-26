@@ -1,4 +1,4 @@
-// Panel HR (Z18): odczyt i zapis w bazie. HR widzi wszystkie oceny i przypomnienia w urzędzie.
+// Panel HR: odczyt i zapis w bazie. HR widzi wszystkie oceny i przypomnienia w urzędzie.
 
 import type { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/db";
@@ -40,7 +40,7 @@ const iso = (d: Date | null) => (d ? fromDbDate(d) : null);
 
 /**
  * Oceny z danymi do terminów; historia wyników liczona w pamięci (dane jednego urzędu są małe).
- * `employeeIds` – tylko oceny tych pracowników (np. podwładnych przełożonego w asystencie rozmowy, Z24).
+ * `employeeIds` – tylko oceny tych pracowników (np. podwładnych przełożonego w asystencie rozmowy).
  * `where` – dodatkowy warunek (np. pierwsze oceny w komórce kierującego). Bez filtrów – wszystkie oceny (HR).
  */
 export async function listHrRecords(filter: { employeeIds?: string[]; where?: Prisma.EvaluationWhereInput } = {}): Promise<HrEvaluationRecord[]> {

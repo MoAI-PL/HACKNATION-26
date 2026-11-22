@@ -5,7 +5,7 @@
 // ma znane podatności. Format OOXML w zakresie, którego potrzebujemy, jest prosty: ZIP + kilka plików XML.
 // Zależności: fflate (MIT) do ZIP i fast-xml-parser (MIT) do XML.
 //
-// Zabezpieczenia dla plików wgrywanych przez użytkownika (panel HR, Z19): ooxml.ts (limit rozmiaru, odrzucenie DOCTYPE)
+// Zabezpieczenia dla plików wgrywanych przez użytkownika (panel HR): ooxml.ts (limit rozmiaru, odrzucenie DOCTYPE)
 // i odczyt wyłącznie części wskazanych w relacjach skoroszytu.
 
 import { XMLParser } from "fast-xml-parser";

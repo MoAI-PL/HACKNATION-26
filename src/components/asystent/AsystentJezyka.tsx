@@ -1,7 +1,7 @@
 "use client";
-// Asystent języka (Z40, wyróżnik ④). Pod polem uzasadnienia, IPRZ i wniosku: gdy tekst opisuje osobę zamiast zachowania,
+// Asystent języka. Pod polem uzasadnienia, IPRZ i wniosku: gdy tekst opisuje osobę zamiast zachowania,
 // pojawia się podpowiedź z reguł (od razu, bez AI), a na prośbę – propozycja przeformułowania od modelu z przyciskiem „Zastosuj”.
-// Działa po przerwie w pisaniu (nie przy każdym znaku). Decyzje „Zastosuj” / „Odrzuć” trafiają do dziennika decyzji (Z10, Z35).
+// Działa po przerwie w pisaniu (nie przy każdym znaku). Decyzje „Zastosuj” / „Odrzuć” trafiają do dziennika decyzji.
 
 import * as React from "react";
 import { Lightbulb, ShieldCheck, Sparkles } from "lucide-react";

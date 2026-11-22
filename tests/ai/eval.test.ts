@@ -1,4 +1,4 @@
-// Zestaw testowy asystenta formalnego (Z25): poprawność pliku pytań, logika oceny i próg jakości wyszukiwania.
+// Zestaw testowy asystenta formalnego: poprawność pliku pytań, logika oceny i próg jakości wyszukiwania.
 // Pełny pomiar z modelem: `npm run eval`.
 import { describe, expect, it } from "vitest";
 import pytania from "../../eval/pytania.json";

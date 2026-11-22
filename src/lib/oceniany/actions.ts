@@ -1,6 +1,6 @@
 "use server";
 
-// Akcja ocenianego (Z46): potwierdzenie zapoznania się z oceną (§ 12 ust. 1).
+// Akcja ocenianego: potwierdzenie zapoznania się z oceną (§ 12 ust. 1).
 // Rola OCENIANY sprawdzana na serwerze; tylko własna ocena czekająca na zapoznanie; data = dzisiaj.
 
 import { revalidatePath } from "next/cache";

@@ -5,7 +5,7 @@ import { Dialog as RadixDialog } from "radix-ui";
 import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-// Okno dialogowe (Z10): fokus zamknięty w oknie, Esc zamyka, fokus wraca do przycisku, który je otworzył.
+// Okno dialogowe: fokus zamknięty w oknie, Esc zamyka, fokus wraca do przycisku, który je otworzył.
 
 export function Dialog({
   open,

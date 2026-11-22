@@ -64,7 +64,7 @@ export function KreatorOkresowej({ data }: { data: WizardData }) {
   const sheet = effectiveSheet(draft, sheetFromOsp?.sheet ?? null);
   const update = React.useCallback((patch: Partial<WizardDraft>) => setDraft((d) => ({ ...d, ...patch })), []);
 
-  // Autozapis (sekcja 4.1 pkt 3): zmiana kroku od razu, pisanie po krótkiej przerwie.
+  // Autozapis: zmiana kroku od razu, pisanie po krótkiej przerwie.
   const firstRender = React.useRef(true);
   const savedStep = React.useRef(draft.step);
   React.useEffect(() => {
@@ -455,7 +455,7 @@ function KrokKryteria({
     }
   };
 
-  // Limit z przepisów (§ 5 ust. 2) – panel HR (Z19) może go zmienić bez zmian w kodzie.
+  // Limit z przepisów (§ 5 ust. 2) – panel HR może go zmienić bez zmian w kodzie.
   const maxAdditional = rules.periodic.maxAdditionalCriteria;
   const result = ai.status === "gotowa" ? ai.result : undefined;
   const proposals = (result?.proposals ?? []).filter((p) => available.includes(p.competency)).slice(0, maxAdditional);

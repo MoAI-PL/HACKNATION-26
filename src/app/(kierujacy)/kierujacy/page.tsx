@@ -16,7 +16,7 @@ export const dynamic = "force-dynamic";
 export const metadata = { title: "Pierwsze oceny w komórce – Kompas Kompetencji" };
 
 // Ekran kierującego komórką: pierwsze oceny nowych pracowników komórki (Employee.unitHeadId = kierujący),
-// z terminami z silnika Z08 i opisem roli kierującego w procesie. Podgląd – oceny sporządza bezpośredni przełożony.
+// z terminami z silnika terminów i opisem roli kierującego w procesie. Podgląd – oceny sporządza bezpośredni przełożony.
 export default async function KierujacyPage() {
   const user = await requirePageRole("KIERUJACY_KOMORKA");
   const today = todayIso();

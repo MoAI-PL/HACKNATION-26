@@ -1,4 +1,4 @@
-// Punkt wejścia warstwy LLM (Z20).
+// Punkt wejścia warstwy LLM.
 //   const llm = getLLM();            // null = brak modelu → tryb bez AI
 //   const r = await llm.chat([...]);
 //   const dane = await chatJson(llm, [...], schemat);   // odpowiedź JSON walidowana zod

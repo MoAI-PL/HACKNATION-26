@@ -1,4 +1,4 @@
-// Import modelu kompetencji (Z05): materialy/Model_kompetencji.xlsx → data/model-kompetencji.json.
+// Import modelu kompetencji: materialy/Model_kompetencji.xlsx → data/model-kompetencji.json.
 //
 // Uruchomienie:
 //   npm run model                      – import z domyślnego pliku

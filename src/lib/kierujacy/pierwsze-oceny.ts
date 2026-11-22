@@ -6,7 +6,7 @@
 //  - wnioski dotyczące rozwoju zawodowego – w porozumieniu z kierującym (§ 10 ust. 6);
 //  - po ocenie kierujący składa wniosek do dyrektora generalnego urzędu o umowę na czas nieokreślony
 //    albo o jej niezawieranie / rozwiązanie umowy (art. 38 ust. 3 ustawy).
-// Terminy liczy silnik Z08, tak samo jak w panelu HR.
+// Terminy liczy silnik terminów, tak samo jak w panelu HR.
 
 import type { Deadline, DeadlineUrgency, IsoDate } from "@/lib/domain/types";
 import { DEADLINE_KIND_LABELS, daysUntil, firstEvalWindow, initialConversationDeadline } from "@/lib/rules/terminy";

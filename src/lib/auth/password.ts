@@ -1,4 +1,4 @@
-// Hasła: bcrypt (Z04). Wersja w czystym JS – bez kompilacji modułów natywnych na Windows i Vercelu.
+// Hasła: bcrypt. Wersja w czystym JS – bez kompilacji modułów natywnych na Windows i Vercelu.
 import bcrypt from "bcryptjs";
 
 /** Koszt bcrypt. 10 to rozsądny kompromis dla prototypu (ok. 50–100 ms na hash). */

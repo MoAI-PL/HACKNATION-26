@@ -3,7 +3,7 @@ import { AsystentFormalny } from "@/components/asystent/AsystentFormalny";
 
 export const metadata: Metadata = { title: "Asystent formalny – Kompas Kompetencji" };
 
-// Strona asystenta formalnego (Z22). Nagłówek, menu i <main> dostarcza AppShell (Z10) z layoutu grupy.
+// Strona asystenta formalnego. Nagłówek, menu i <main> dostarcza AppShell z layoutu grupy.
 export default async function AsystentPage({ searchParams }: { searchParams: Promise<{ krok?: string }> }) {
   const { krok } = await searchParams;
   return (

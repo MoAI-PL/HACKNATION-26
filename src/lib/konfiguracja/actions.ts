@@ -1,6 +1,6 @@
 "use server";
-// Akcje panelu HR, część 2 (Z19): zmiana parametrów przepisów i opisów zachowań bez zmian w kodzie.
-// Każda sprawdza rolę HR (Z04), waliduje zod-em i zapisuje wpis w AuditLog (kto, kiedy, stara i nowa wartość).
+// Akcje panelu HR, część 2: zmiana parametrów przepisów i opisów zachowań bez zmian w kodzie.
+// Każda sprawdza rolę HR, waliduje zod-em i zapisuje wpis w AuditLog (kto, kiedy, stara i nowa wartość).
 
 import { revalidatePath } from "next/cache";
 import { requireRole } from "@/lib/auth/guard";

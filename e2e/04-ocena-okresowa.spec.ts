@@ -1,4 +1,4 @@
-// Pełna ocena okresowa w przeglądarce (Z30, „serce rozwiązania”): ocena wskaźników kartami zachowań,
+// Pełna ocena okresowa w przeglądarce („serce rozwiązania”): ocena wskaźników kartami zachowań,
 // decyzja zgodna z sugestią, podsumowanie z wynikiem, sporządzenie oceny i arkusz PDF.
 // Test mierzy czas przejścia (bez myślenia człowieka) i liczbę wskaźników – wynik w raporcie i w docs/UX.md.
 import { expect, test } from "@playwright/test";

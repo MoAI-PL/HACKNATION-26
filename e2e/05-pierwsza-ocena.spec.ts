@@ -1,4 +1,4 @@
-// Pierwsza ocena (Z17) w przeglądarce: ekrany obu etapów demo i pełna ścieżka Joanny Lewandowskiej –
+// Pierwsza ocena w przeglądarce: ekrany obu etapów demo i pełna ścieżka Joanny Lewandowskiej –
 // ocena pięciu elementów w skali 3/5/7, wynik według § 10, sporządzenie, arkusz PDF i zapoznanie.
 import { expect, test } from "@playwright/test";
 import { EWA, expectGoodScreen, login, todayWarsaw } from "./pomocnicze";

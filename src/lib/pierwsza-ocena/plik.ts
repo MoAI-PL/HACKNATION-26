@@ -1,4 +1,4 @@
-// Wgranie sprawozdania z pierwszego okresu pracy (Z17): treść z pliku Word (.docx) albo tekstowego (.txt)
+// Wgranie sprawozdania z pierwszego okresu pracy: treść z pliku Word (.docx) albo tekstowego (.txt)
 // trafia do FirstEvalReport.content, a nazwa pliku – do fileName. Samego pliku nie przechowujemy.
 
 import { readDocx } from "@/lib/import/docx";

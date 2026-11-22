@@ -1,10 +1,10 @@
-// Szybka notatka w 10 sekund (Z41, wyróżnik ①).
+// Szybka notatka w 10 sekund.
 // Przełożony pisze jedno zdanie po swojemu, np. „Anka świetnie ogarnęła dziś spotkanie z DSI, mimo że się kłócili”.
 // Asystent proponuje: pracownika, wskaźnik z modelu kompetencji, rozbicie na Sytuację – Działanie – Rezultat
 // i najbliższy poziom zachowania. Decyzja zawsze należy do przełożonego (<PropozycjaAI>).
 //
 // Przebieg:
-//  1. pseudonimizacja (Z34, src/lib/ai/pseudonimizacja.ts): podwładni (z odmianą i zdrobnieniami), osoby spoza zespołu,
+//  1. pseudonimizacja (src/lib/ai/pseudonimizacja.ts): podwładni (z odmianą i zdrobnieniami), osoby spoza zespołu,
 //     komórki i identyfikatory → znaczniki [OSOBA_1], [KOMORKA_1], [EMAIL_1]…;
 //     przy okazji deterministycznie rozpoznajemy, o kim jest notatka;
 //  2. model dostaje notatkę w znacznikach i katalog wskaźników, zwraca JSON (zasada AI nr 4: zod + jedna ponowna próba);
@@ -29,7 +29,7 @@ export const MAX_NOTE_LENGTH = 1000;
 export type NotePerson = PseudoPerson;
 
 // ---------------------------------------------------------------------------
-// Pseudonimizacja – wspólny moduł (Z34): podwładni, osoby spoza zespołu, komórki, identyfikatory
+// Pseudonimizacja – wspólny moduł: podwładni, osoby spoza zespołu, komórki, identyfikatory
 // ---------------------------------------------------------------------------
 
 export { DIMINUTIVES, foldWord, inflections, pseudonymize, restoreNames, type Pseudonymized } from "@/lib/ai/pseudonimizacja";
@@ -53,7 +53,7 @@ export interface QuickNoteProposal {
   justification?: string;
   /** Tekst, który trafił do modelu (po pseudonimizacji) – pokazujemy go, żeby było widać, że imiona nie wychodzą. */
   sentText?: string;
-  /** Z34: co ukryto przed modelem, np. „Przed wysłaniem do modelu ukryto: 2 osoby, 1 adres e-mail.” */
+  /** Pseudonimizacja: co ukryto przed modelem, np. „Przed wysłaniem do modelu ukryto: 2 osoby, 1 adres e-mail.” */
   privacy?: string;
   notice?: string;
   model?: string;

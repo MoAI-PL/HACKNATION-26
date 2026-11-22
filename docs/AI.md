@@ -12,8 +12,8 @@ AI w Kompasie Kompetencji **wspiera** przełożonego – wyszukuje przepisy, red
 |---|---|---|
 | Asystent formalny (pytania o procedurę) | tak | odpowiedź wyłącznie z fragmentów przepisów i poradników, zawsze ze źródłem |
 | Punktacja, wynik, terminy, wybór arkusza | **nie** | silnik reguł z testami |
-| Propozycja kryteriów dodatkowych z OSP (Z23) | tak | do 3 kryteriów z uzasadnieniem i cytatem zadania; kryteria i cytaty sprawdza kod, bez modelu działa propozycja ze słów kluczowych |
-| Asystent rozmowy (Z24) | tak, opcjonalnie | AI przeredagowuje tylko otwarcie i informację zwrotną z gotowej ściągi na zwrot bezpośredni („Zestawiła Pani…”); pseudonimizacja Z34 (cały zespół przełożonego, komórki, identyfikatory), bez poziomów wskaźników; kontrola odpowiedzi: każdy punkt wskazuje przykład z notatek, nowe liczby lub nowa treść → brzmienie z notatek, zdania z oceną usuwane; ściąga powstaje bez AI z przepisów, ocen i notatek |
+| Propozycja kryteriów dodatkowych z OSP | tak | do 3 kryteriów z uzasadnieniem i cytatem zadania; kryteria i cytaty sprawdza kod, bez modelu działa propozycja ze słów kluczowych |
+| Asystent rozmowy | tak, opcjonalnie | AI przeredagowuje tylko otwarcie i informację zwrotną z gotowej ściągi na zwrot bezpośredni („Zestawiła Pani…”); pseudonimizacja (cały zespół przełożonego, komórki, identyfikatory), bez poziomów wskaźników; kontrola odpowiedzi: każdy punkt wskazuje przykład z notatek, nowe liczby lub nowa treść → brzmienie z notatek, zdania z oceną usuwane; ściąga powstaje bez AI z przepisów, ocen i notatek |
 | Sugerowany poziom kompetencji | **nie** | średnia z wybranych opisów zachowań, wzór widoczny w panelu „Dlaczego ten poziom?” |
 
 ## Model
@@ -38,25 +38,25 @@ AI w Kompasie Kompetencji **wspiera** przełożonego – wyszukuje przepisy, red
 7. **Dziennik zapytań** (`AssistantQuery`): pytanie, użyte źródła, odpowiedź, odmowa, krok ścieżki, model, czas.
 8. **Limit zapytań:** 20 pytań na minutę na użytkownika (chroni darmowy limit dostawcy); asystent jest dostępny tylko po zalogowaniu (przełożony, HR, kierujący).
 
-## Propozycja kryteriów dodatkowych z OSP (Z23) – jak ogranicza błędy
+## Propozycja kryteriów dodatkowych z OSP – jak ogranicza błędy
 
-1. **Lista kandydatów liczona przez kod:** 14 kryteriów z załącznika nr 1 bez obowiązkowych dla arkusza (silnik kryteriów Z07). Model wybiera tylko z tej listy, podając kody.
+1. **Lista kandydatów liczona przez kod:** 14 kryteriów z załącznika nr 1 bez obowiązkowych dla arkusza (silnik punktacji). Model wybiera tylko z tej listy, podając kody.
 2. **Zadania z OSP jako dane** w znacznikach `<zadanie nr="…">` (numeracja jak w OSP); znaki `<` `>` w treści OSP są neutralizowane, a prompt nakazuje ignorować polecenia w OSP.
 3. **Odpowiedź JSON walidowana schematem**, jedna ponowna próba.
 4. **Kontrola po odpowiedzi:** kryterium spoza listy albo obowiązkowe jest pomijane (z informacją dla użytkownika), powtórzenia usuwane, najwyżej 3 (`validateAdditionalCriteria`, § 5 ust. 2).
 5. **Cytat zawsze prawdziwy:** cytat modelu musi być dosłownym fragmentem zadania (bez względu na wielkość liter i spacje). Gdy go tam nie ma, szukamy go w innych zadaniach (i poprawiamy numer zadania), a w ostateczności pokazujemy początek wskazanego zadania. Model nie może „włożyć w usta” OSP zdania, którego w nim nie ma.
 6. **Bez modelu** (brak konfiguracji, błąd, limit, odpowiedź bez poprawnych kryteriów): propozycja deterministyczna – kompetencje miękkie wymienione w OSP oraz słowa kluczowe w zadaniach, z wyjaśnieniem, które słowa z którego zadania zadecydowały. Oznaczona jako propozycja bez AI.
-7. Propozycja nigdy nie trafia do arkusza sama: przełożony wstawia ją przyciskiem w `<PropozycjaAI>` (Z12), a „Wstaw” i „Odrzuć” trafiają do dziennika.
+7. Propozycja nigdy nie trafia do arkusza sama: przełożony wstawia ją przyciskiem w `<PropozycjaAI>`, a „Wstaw” i „Odrzuć” trafiają do dziennika.
 8. API: `POST /api/asystent/kryteria` (plik OSP albo pracownik z bazy), tylko przełożony (własni podwładni) i HR, limit 10 zapytań na minutę na użytkownika.
 
-## Zapasowe odpowiedzi na demo (Z44)
+## Zapasowe odpowiedzi na demo
 
 - Plik `data/demo-cache.json`: odpowiedzi na 4 pytania z pitchu (sprzeciw, kryteria dodatkowe, ocena negatywna, wydłużenie terminu) ze źródłami z bazy wiedzy i propozycje kryteriów dodatkowych dla trzech OSP od MC z cytatami zadań.
 - Działają **tylko** przy `DEMO_MODE=true` i **tylko** gdy skonfigurowany model nie odpowiedział (błąd, limit, czas). Bez modelu aplikacja działa w zwykłym trybie bez AI.
 - Każde użycie jest jawne: komunikat „Model AI jest chwilowo niedostępny – to odpowiedź przygotowana wcześniej dla demo…”, pole `fromCache: true` w odpowiedzi API i wpis `[demo-cache]` w logach serwera.
 - Nic nie jest wymyślone: test sprawdza, że każde źródło istnieje w bazie wiedzy, każde pytanie przechodzi próg trafności (nie kończy się odmową) i każdy cytat jest dosłownym fragmentem wskazanego zadania z OSP, a cytaty z pliku przechodzą tę samą kontrolę `verifyQuote` co odpowiedzi modelu.
 
-## Zestaw testowy asystenta (Z25)
+## Zestaw testowy asystenta
 
 - Pytania: `eval/pytania.json` – 25 pytań w zakresie (sformułowanych inaczej niż w FAQ) z odpowiedzią wzorcową, akceptowanymi źródłami i słowami kluczowymi oraz 5 pytań spoza zakresu (w tym próba prompt injection).
 - Uruchomienie: `npm run eval` (z modelem z `.env`) albo `npm run eval -- --bez-ai` (tylko wyszukiwanie, bez modelu). Wynik: `eval/wynik.md` (tabela na slajd) i `eval/wynik.json` (szczegóły każdej odpowiedzi).
@@ -69,7 +69,7 @@ AI w Kompasie Kompetencji **wspiera** przełożonego – wyszukuje przepisy, red
 
 **Wynik wyszukiwania (21.11, bez modelu):** właściwy fragment w top 5 – **25/25**; odmowa bez pytania modelu – **3/5**. Dwa pytania spoza zakresu (wynagrodzenie, urlop) mają słowa wspólne z poradnikami („dyrektor”, „pracownik”, „dni”), więc odmowę daje dopiero model na podstawie zasady „brak w źródłach”.
 
-**Strojenie (Z25):** zestaw wykazał, że „ocena / oceny / ocenę” miały różne rdzenie (obcinanie do 6 znaków nie łączyło krótkich słów), przez co pytanie „Kiedy najwcześniej można sporządzić pierwszą ocenę?” kończyło się odmową. Krótkie słowa tracą teraz ostatnią literę (`ocen`). Wynik wyszukiwania: 24/25 → 25/25, bez pogorszenia odmów.
+**Strojenie:** zestaw wykazał, że „ocena / oceny / ocenę” miały różne rdzenie (obcinanie do 6 znaków nie łączyło krótkich słów), przez co pytanie „Kiedy najwcześniej można sporządzić pierwszą ocenę?” kończyło się odmową. Krótkie słowa tracą teraz ostatnią literę (`ocen`). Wynik wyszukiwania: 24/25 → 25/25, bez pogorszenia odmów.
 
 **Wynik z modelem (21.11, `gemini-3.5-flash-lite`, darmowy plan Google AI Studio):**
 
@@ -89,10 +89,10 @@ Uwagi do pomiaru:
 - Model wybrany na demo: `gemini-3.5-flash-lite`. Większy `gemini-3.5-flash` na darmowym planie często zwracał 503 i 429, przekraczał 30 s i urywał odpowiedź JSON (tokeny rozumowania wliczają się do limitu `max_tokens`). Wersja lite odpowiada w ok. 1 s.
 - `npm run eval` ponawia zapytanie przy chwilowej niedostępności modelu (503/429/przekroczony czas, do 3 razy) i nie zapisuje wyniku, jeśli model nie odpowiedział na żadne pytanie.
 
-## Szybka notatka (Z41) – jak ogranicza błędy i chroni dane
+## Szybka notatka – jak ogranicza błędy i chroni dane
 
 1. **Skrót `N` albo przycisk „Notatka”** w nagłówku (tylko przełożony) otwiera okno z jednym polem. Ctrl + Enter wysyła notatkę do asystenta, Enter na „Zapisz notatkę” kończy – cel: 10 sekund.
-2. **Pseudonimizacja przed modelem (wspólny moduł Z34, opis niżej):** imiona i nazwiska podwładnych – z odmianą („Kasią”, „Nowakowi”, „Marcie”) i zdrobnieniami („Anka”, „Piotrek”, „Ola”) – są zamieniane na znaczniki `[OSOBA_1]`. Model nie dostaje żadnego imienia; w oknie widać dokładnie, jaki tekst trafił do modelu. Słowo pasujące do dwóch osób (dwie Marty) dostaje neutralny znacznik i osobę wybiera przełożony.
+2. **Pseudonimizacja przed modelem (wspólny moduł pseudonimizacja, opis niżej):** imiona i nazwiska podwładnych – z odmianą („Kasią”, „Nowakowi”, „Marcie”) i zdrobnieniami („Anka”, „Piotrek”, „Ola”) – są zamieniane na znaczniki `[OSOBA_1]`. Model nie dostaje żadnego imienia; w oknie widać dokładnie, jaki tekst trafił do modelu. Słowo pasujące do dwóch osób (dwie Marty) dostaje neutralny znacznik i osobę wybiera przełożony.
 3. **Osoba rozpoznawana bez AI:** to samo dopasowanie imion wskazuje pracownika, gdy notatka dotyczy jednej osoby – działa także w trybie bez modelu.
 4. **Wskaźnik tylko z modelu kompetencji:** model dostaje katalog 49 wskaźników i zwraca identyfikator; wskaźnik spoza katalogu jest odrzucany. Poziom zachowania (1–5) tylko przy wskaźniku – w oknie pokazujemy opis zachowania, nie liczbę.
 5. **Sytuacja – Działanie – Rezultat wyłącznie z faktów z notatki:** prompt zabrania dopisywania faktów i ocen charakteru; brak informacji = puste pole. Gdy model nie wypełni SDR, tekst notatki trafia do „Działania” – nic nie przepada.
@@ -104,7 +104,7 @@ Uwagi do pomiaru:
 
 **Wynik (21.11, `gemini-3.5-flash-lite`): 5/5** – właściwa osoba i sensowny wskaźnik dla każdego zdania, ok. 1 s na notatkę (np. „Kasia … poprowadziła spotkanie z DSI, mimo że strony się kłóciły” → Współpraca: dbanie o dobrą atmosferę i otwartość, „Piotrek … oddał raport po terminie i z błędami” → Rzetelność). Pierwsza wersja promptu przypinała spotkanie z innym departamentem do wystąpień publicznych; prompt każe teraz najpierw rozważać kompetencje obowiązkowe.
 
-## Pseudonimizacja przed modelem (Z34)
+## Pseudonimizacja przed modelem
 
 Wspólny moduł `src/lib/ai/pseudonimizacja.ts`; każda funkcja AI, która przekazuje modelowi tekst użytkownika, najpierw go pseudonimizuje.
 
@@ -117,19 +117,19 @@ Wspólny moduł `src/lib/ai/pseudonimizacja.ts`; każda funkcja AI, która przek
 
 - Ta sama osoba w innej formie dostaje ten sam znacznik („Kowalski” … „Kowalskiego”), imię i nazwisko – jeden znacznik.
 - Oryginały znaczników zostają na serwerze; w odpowiedzi modelu wracają (podwładny – imieniem, reszta – oryginalnym tekstem).
-- **Gdzie działa:** szybka notatka (Z41), asystent języka (Z40), asystent formalny (pytanie przed wyszukiwaniem, modelem i zapisem w dzienniku zapytań – w dzienniku zostaje wersja bez danych), analiza OSP (zadania i cel; nazw komórek tu nie ukrywamy, bo opisują stanowisko, a cytaty wracają w oryginalnym brzmieniu).
+- **Gdzie działa:** szybka notatka, asystent języka, asystent formalny (pytanie przed wyszukiwaniem, modelem i zapisem w dzienniku zapytań – w dzienniku zostaje wersja bez danych), analiza OSP (zadania i cel; nazw komórek tu nie ukrywamy, bo opisują stanowisko, a cytaty wracają w oryginalnym brzmieniu).
 - **Ostatnia linia obrony:** dostawca modelu (`openai-compatible.ts`) usuwa identyfikatory (e-mail, telefon, PESEL, konto, dowód) z każdego zapytania – także w przyszłych funkcjach, które zapomną o pseudonimizacji.
 - **Widać, co wyszło:** pod odpowiedzią asystenta i w oknie notatki: „Przed wysłaniem do modelu ukryto: 1 osobę, 1 adres e-mail. Asystent dostał: „…””.
 - **Testy (`tests/ai/pseudonimizacja.test.ts`):** każdy rodzaj danych osobno, przypadki negatywne (przymiotniki „Polski”, „Niski”, stanowiska „Pan Minister”, „ani”, „jasne”, nazwy instytucji), cała baza wiedzy (411 fragmentów) i trzy OSP z materiałów MC bez zmian, zapytania wysyłane do modelu bez imion.
 - **Ograniczenie:** osoby spoza zespołu rozpoznajemy heurystycznie (założenie #21) – nazwisko bez imienia i bez typowej końcówki („Nowak” u kogoś spoza zespołu) może przejść. Dlatego funkcje operujące na danych pracowników zawsze dostają listę podwładnych, a docelowo model działa lokalnie.
-- **Dla nowych funkcji AI (Z24, Z40):** `pseudonymize(tekst, podwladni)` przed `chatJson`, `restoreNames(odpowiedź, p.tags, podwladni, p.hidden)` po; `describeHidden(p.counts)` do komunikatu dla użytkownika.
+- **Dla nowych funkcji AI:** `pseudonymize(tekst, podwladni)` przed `chatJson`, `restoreNames(odpowiedź, p.tags, podwladni, p.hidden)` po; `describeHidden(p.counts)` do komunikatu dla użytkownika.
 
-## Asystent języka (Z40) – opis zachowania zamiast opisu osoby
+## Asystent języka – opis zachowania zamiast opisu osoby
 
-1. **Gdzie:** pod polami „Uzasadnienie oceny”, „Wnioski do IPRZ” i „Uzasadnienie wniosku” o stopień służbowy na ekranie podsumowania oceny (Z15).
+1. **Gdzie:** pod polami „Uzasadnienie oceny”, „Wnioski do IPRZ” i „Uzasadnienie wniosku” o stopień służbowy na ekranie podsumowania oceny.
 2. **Najpierw reguły, bez AI** (`src/lib/ai/jezyk/reguly.ts`, działają w przeglądarce po 0,9 s przerwy w pisaniu): oceny charakteru („jest leniwy”, „była niekomunikatywna”, także pochwały typu „pracowita”), etykiety („typ samotnika”, „ma problem z…”) i uogólnienia („zawsze”, „nigdy”). Pod polem pojawia się podpowiedź z przykładem opisu zachowania. Lista jest zachowawcza – lepiej przepuścić rzadkie sformułowanie niż oznaczać zdania o zachowaniu.
 3. **Potem model, na prośbę** („Przeformułuj z AI”): ten sam tekst jako opis zachowań i skutków w `<PropozycjaAI>` z przyciskiem „Zastosuj”. Model **nie dopisuje faktów** – gdzie brakuje konkretu, wstawia „[uzupełnij: kiedy i ile razy]”, a przełożony uzupełnia to sam.
-4. **Ochrona danych:** przed wysłaniem tekst przechodzi przez wspólną pseudonimizację (Z34): oceniany i zespół, osoby spoza zespołu, komórki i identyfikatory zamieniają się w znaczniki, które po odpowiedzi wracają do oryginału.
+4. **Ochrona danych:** przed wysłaniem tekst przechodzi przez wspólną pseudonimizację: oceniany i zespół, osoby spoza zespołu, komórki i identyfikatory zamieniają się w znaczniki, które po odpowiedzi wracają do oryginału.
 5. **Tekst to dane, nie polecenia;** odpowiedź JSON walidowana schematem, jedna ponowna próba; odpowiedź pusta albo nieproporcjonalnie długa jest odrzucana.
 6. **Bez AI** zostają podpowiedzi z reguł – nic nie blokuje sporządzenia oceny. Przycisk „Zostaw bez zmian” ukrywa podpowiedź.
 7. **Dostęp:** tylko przełożony prowadzący daną ocenę; limit 15 zapytań na minutę. „Zastosuj” i „Odrzuć” trafiają do dziennika decyzji (`logAiDecision`, funkcja `ASYSTENT_JEZYKA`).
@@ -139,12 +139,12 @@ Wspólny moduł `src/lib/ai/pseudonimizacja.ts`; każda funkcja AI, która przek
 | Wariant | Gdzie trafia pytanie | Dane osobowe |
 |---|---|---|
 | lokalny (Ollama) | serwer urzędu | nie opuszczają urzędu |
-| demo (API w chmurze) | dostawca API | tylko dane fikcyjne; każdy tekst użytkownika jest pseudonimizowany przed wysłaniem (Z34): osoby, komórki i identyfikatory zastępują znaczniki |
+| demo (API w chmurze) | dostawca API | tylko dane fikcyjne; każdy tekst użytkownika jest pseudonimizowany przed wysłaniem: osoby, komórki i identyfikatory zastępują znaczniki |
 
 ## Do zrobienia przed wdrożeniem produkcyjnym
 
 - **model lokalny** w infrastrukturze urzędu (Ollama z polskim modelem, np. Bielik / PLLuM) zamiast API w chmurze – zmiana wyłącznie w `.env`, potem ponowny pomiar `npm run eval`;
-- przegląd słownika imion i wyjątków pseudonimizacji (Z34) na tekstach z praktyki urzędu; rozpoznawanie nazwisk bez typowej końcówki przez listę pracowników urzędu, nie tylko podwładnych;
+- przegląd słownika imion i wyjątków pseudonimizacji na tekstach z praktyki urzędu; rozpoznawanie nazwisk bez typowej końcówki przez listę pracowników urzędu, nie tylko podwładnych;
 - dodanie ustawy o służbie cywilnej (tekst jednolity z ISAP) do bazy wiedzy i ponowny pomiar;
 - uzupełnienie bazy wiedzy o zestaw pytań i odpowiedzi MC i wewnętrzne procedury urzędu;
 - limit zapytań we współdzielonym magazynie (np. Redis) przy wielu instancjach;

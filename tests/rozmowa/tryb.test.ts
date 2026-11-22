@@ -1,4 +1,4 @@
-// Tryb rozmowy (Z43): kroki ze ściągi, obowiązkowy zakres z przepisu, zapis przebiegu bez dublowania rozmów.
+// Tryb rozmowy: kroki ze ściągi, obowiązkowy zakres z przepisu, zapis przebiegu bez dublowania rozmów.
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { buildConversationPrep, type PrepInput } from "@/lib/rozmowa/przygotowanie";
 import {
@@ -47,7 +47,7 @@ const base: PrepInput = {
   expectations: null,
 };
 
-describe("kroki rozmowy ze ściągi (Z24)", () => {
+describe("kroki rozmowy ze ściągi", () => {
   const prep = buildConversationPrep(base);
   const steps = buildConversationSteps(prep);
 
@@ -162,7 +162,7 @@ describe("zapis bez dublowania rozmów", () => {
     expect(conversationSavePlan("WSTEPNA", existing, today)).toEqual({ action: "KREATOR" });
   });
 
-  it("rozmowa wstępna: dopisanie do zapisu z pierwszej oceny (Z17), bez niego – odesłanie do pierwszej oceny", () => {
+  it("rozmowa wstępna: dopisanie do zapisu z pierwszej oceny, bez niego – odesłanie do pierwszej oceny", () => {
     expect(conversationSavePlan("WSTEPNA", [], today)).toEqual({ action: "KREATOR" });
     expect(conversationSavePlan("WSTEPNA", [{ id: "w", type: "WSTEPNA", date: "2026-03-01" }], today)).toEqual({ action: "APPEND", conversationId: "w" });
   });

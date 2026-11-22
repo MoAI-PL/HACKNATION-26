@@ -1,4 +1,4 @@
-// Import modelu kompetencji (Z05): materialy/Model_kompetencji.xlsx → CompetencyModel.
+// Import modelu kompetencji: materialy/Model_kompetencji.xlsx → CompetencyModel.
 //
 // Układ pliku (sprawdzony na pliku od MC):
 //  - arkusz „Model kompetencji”: tytuł, wiersz „14 kompetencji • 49 wskaźników • 5 poziomów”, wskazówki,
@@ -7,7 +7,7 @@
 //    wiersz 1 – nazwa kompetencji, wiersz 3 – nagłówki, od wiersza 4 – wskaźnik i 5 opisów zachowań.
 //
 // Import jest ścisły: każda niezgodność z tym układem to czytelny błąd z adresem komórki,
-// a nie cicho pominięty wiersz. Dzięki temu panel HR (Z19) może bezpiecznie przyjąć nową wersję pliku.
+// a nie cicho pominięty wiersz. Dzięki temu panel HR może bezpiecznie przyjąć nową wersję pliku.
 
 import { COMPETENCY_NAMES, COMPETENCY_XLSX_SHEETS, LEVEL_LABELS, indicatorId } from "@/lib/domain/slownik";
 import {

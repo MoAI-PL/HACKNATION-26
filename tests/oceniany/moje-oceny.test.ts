@@ -1,4 +1,4 @@
-// Ekran ocenianego (Z46): co oceniany widzi na danym etapie oceny.
+// Ekran ocenianego: co oceniany widzi na danym etapie oceny.
 import { describe, expect, it } from "vitest";
 import { ownEvaluationView, sortOwnEvaluations, type OwnEvaluationRow } from "@/lib/oceniany/moje-oceny";
 

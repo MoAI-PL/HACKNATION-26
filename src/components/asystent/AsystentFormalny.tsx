@@ -1,6 +1,6 @@
 "use client";
 
-// Czat asystenta formalnego (Z22). Można go osadzić na osobnej stronie albo w panelu bocznym (Z10).
+// Czat asystenta formalnego. Można go osadzić na osobnej stronie albo w panelu bocznym.
 //   <AsystentFormalny krok="OCENA" />
 
 import { useEffect, useId, useRef, useState } from "react";
@@ -202,7 +202,7 @@ function Odpowiedz({ odp }: { odp: AssistantAnswer }) {
   );
 }
 
-/** Z34: co ukryto przed modelem i jaki tekst pytania dostał asystent. */
+/** Pseudonimizacja: co ukryto przed modelem i jaki tekst pytania dostał asystent. */
 function Prywatnosc({ odp }: { odp: AssistantAnswer }) {
   if (odp.mode !== "AI" || !odp.privacy || !odp.sentQuestion) return null;
   return (

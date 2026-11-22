@@ -1,4 +1,4 @@
-// Kreator oceny okresowej, część 1 (Z12): od opisu stanowiska do części I arkusza.
+// Kreator oceny okresowej, część 1: od opisu stanowiska do części I arkusza.
 // Czysta logika (bez bazy i Reacta): szkic kreatora, kroki, terminy i walidacja przed zatwierdzeniem.
 // § 3 (arkusz), § 4 (kryteria obowiązkowe), § 5 (rozmowa rozpoczynająca, maks. 3 kryteria dodatkowe),
 // § 6 (zapoznanie i podpis), § 7 (termin rozmowy) rozporządzenia z 4.04.2016; art. 81 ust. 4, 7 i 9 ustawy (termin oceny).

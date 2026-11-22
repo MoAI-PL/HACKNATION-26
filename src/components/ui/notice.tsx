@@ -2,7 +2,7 @@ import * as React from "react";
 import { AlertTriangle, CheckCircle2, Info, XCircle, type LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-// Komunikat (Z10, sekcja 4.1 pkt 4): co się stało, dlaczego (podstawa prawna) i co zrobić.
+// Komunikat: co się stało, dlaczego (podstawa prawna) i co zrobić.
 // Błędy i ostrzeżenia ogłaszane czytnikom ekranu (role="alert"), informacje – grzecznie (role="status").
 
 type NoticeTone = "info" | "success" | "warning" | "error";

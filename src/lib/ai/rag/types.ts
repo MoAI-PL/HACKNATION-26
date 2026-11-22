@@ -1,4 +1,4 @@
-// Typy bazy wiedzy asystenta formalnego (Z21). Z nich korzysta asystent (Z22) i podpowiedzi „ⓘ Dlaczego?” (Z42).
+// Typy bazy wiedzy asystenta formalnego. Z nich korzysta asystent i podpowiedzi „ⓘ Dlaczego?”.
 
 /** Dokumenty źródłowe bazy wiedzy. */
 export const KNOWLEDGE_DOCUMENTS = [

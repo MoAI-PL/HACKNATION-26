@@ -1,7 +1,7 @@
 # Licencje zależności
 
 Zasada: wyłącznie licencje permisywne (MIT, Apache-2.0, BSD, ISC; OFL dla czcionek). **Zakaz GPL i AGPL.**
-Każdą nową zależność dopisz tutaj w tym samym commicie, w którym ją dodajesz.
+Każdą nową zależność dopisuje się tutaj razem z jej dodaniem.
 
 Sprawdzenie całego drzewa zależności produkcyjnych:
 
@@ -40,8 +40,8 @@ Prawa do kodu: zespół jest autorem całego kodu aplikacji; użyte biblioteki s
 | tsx | 4 | MIT | uruchamianie skryptów TS |
 | eslint, eslint-config-next, @eslint/eslintrc | 9 / 15.5 / 3 | MIT | lint |
 | Open Sans (przez `next/font`) | — | OFL-1.1 | czcionka interfejsu z polskimi znakami (jak portal gov.pl) |
-| @react-pdf/renderer | 4.9 | MIT | PDF arkuszy B i C (Z16); zależności przechodnie (pdfkit, fontkit i in.) – MIT/ISC |
-| Noto Sans – pliki TTF w `src/lib/pdf/czcionki/` | — | OFL-1.1 (`OFL.txt` obok plików) | czcionka arkusza PDF z polskimi znakami (Z16) |
+| @react-pdf/renderer | 4.9 | MIT | PDF arkuszy B i C; zależności przechodnie (pdfkit, fontkit i in.) – MIT/ISC |
+| Noto Sans – pliki TTF w `src/lib/pdf/czcionki/` | — | OFL-1.1 (`OFL.txt` obok plików) | czcionka arkusza PDF z polskimi znakami |
 
 ## Uwagi do zależności przechodnich
 

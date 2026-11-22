@@ -1,5 +1,5 @@
 "use client";
-// Panel HR (Z19): formularz parametrów przepisów. Walidacja na serwerze (zod, src/lib/konfiguracja/pola.ts),
+// Panel HR: formularz parametrów przepisów. Walidacja na serwerze (zod, src/lib/konfiguracja/pola.ts),
 // błąd przy polu z dozwolonym zakresem, wpisane wartości nie przepadają.
 
 import * as React from "react";

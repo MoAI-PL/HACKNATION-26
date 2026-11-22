@@ -78,7 +78,7 @@ describe("nawigacja", () => {
     expect(navForRole("PRZELOZONY").map((i) => i.href)).toEqual(["/pulpit", "/ocena/pierwsza", "/ocena/okresowa", "/obserwacje", ASSISTANT_HREF, "/ocena/rozmowa"]);
   });
 
-  it("adresy menu leżą w obszarach ról z Z04", async () => {
+  it("adresy menu leżą w obszarach ról z logowania i ról", async () => {
     const { canAccessPath } = await import("@/lib/auth/role");
     for (const r of ROLES) for (const i of plannedNavForRole(r)) expect(canAccessPath(r, i.href), `${r} ${i.href}`).toBe(true);
   });

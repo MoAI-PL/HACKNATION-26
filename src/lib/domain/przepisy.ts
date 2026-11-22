@@ -1,6 +1,6 @@
-// Parametry przepisów (Z03): schemat zod i typowany dostęp do data/przepisy.json.
-// KONTRAKT WSPÓLNY. Silniki (Z07, Z08, Z09, Z36) czytają parametry stąd, a nie z liczb na sztywno w kodzie.
-// Panel HR (Z19) waliduje edycję tym samym schematem (rulesSchema).
+// Parametry przepisów: schemat zod i typowany dostęp do data/przepisy.json.
+// KONTRAKT WSPÓLNY. Silniki czytają parametry stąd, a nie z liczb na sztywno w kodzie.
+// Panel HR waliduje edycję tym samym schematem (rulesSchema).
 
 import { z } from "zod";
 import rawRules from "../../../data/przepisy.json";
@@ -78,7 +78,7 @@ export const rulesSchema = z.object({
     requireNoteAtLevels: z.array(z.number().int().min(1).max(5)),
   }),
 
-  // ZAŁOŻENIE: progi Lustra oceniającego (Z36) – docs/ZALOZENIA.md #11.
+  // ZAŁOŻENIE: progi Lustra oceniającego – docs/ZALOZENIA.md #11.
   mirror: z.object({
     recencyWindowDays: positiveInt,
     recencyMinShare: z.number().min(0).max(1),

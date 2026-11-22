@@ -8,7 +8,7 @@ import type { DeadlineKind } from "@/lib/domain/types";
 import { sendReminderAction } from "@/lib/hr/actions";
 import type { ReminderView } from "@/lib/hr/repo";
 
-// Kolejka przypomnień (Z18): podgląd e-maila i „Wyślij” jako symulacja (znacznik „wysłano”, wpis w dzienniku zdarzeń).
+// Kolejka przypomnień: podgląd e-maila i „Wyślij” jako symulacja (znacznik „wysłano”, wpis w dzienniku zdarzeń).
 
 const timeFmt = new Intl.DateTimeFormat("pl-PL", { timeZone: "Europe/Warsaw", day: "numeric", month: "long", hour: "2-digit", minute: "2-digit" });
 

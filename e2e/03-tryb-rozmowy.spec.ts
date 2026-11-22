@@ -1,4 +1,4 @@
-// Tryb rozmowy (Z43) w przeglądarce: punkty po kolei, odhaczanie zakresu z przepisu, notatka do dziennika, zapis przebiegu.
+// Tryb rozmowy w przeglądarce: punkty po kolei, odhaczanie zakresu z przepisu, notatka do dziennika, zapis przebiegu.
 import { expect, test } from "@playwright/test";
 import { EWA, expectGoodScreen, login } from "./pomocnicze";
 

@@ -48,14 +48,14 @@ export function Showcase() {
   const [stan, setStan] = React.useState<ProposalState>("gotowa");
   const [ostatniSkrot, setOstatniSkrot] = React.useState("—");
 
-  // Skróty lokalne ekranu oceny (Z14) – przykład użycia useShortcut.
+  // Skróty lokalne ekranu oceny – przykład użycia useShortcut.
   useShortcut("1", () => setPoziom("1"));
   useShortcut("2", () => setPoziom("2"));
   useShortcut("3", () => setPoziom("3"));
   useShortcut("4", () => setPoziom("4"));
   useShortcut("5", () => setPoziom("5"));
-  useShortcutEvent(SHORTCUT_EVENTS.quickNote, () => setOstatniSkrot("N – szybka notatka (otworzy ją Z41)"));
-  useShortcutEvent(SHORTCUT_EVENTS.assistant, () => setOstatniSkrot("/ – asystent formalny (otworzy go Z22)"));
+  useShortcutEvent(SHORTCUT_EVENTS.quickNote, () => setOstatniSkrot("N – szybka notatka (otworzy ją szybka notatka)"));
+  useShortcutEvent(SHORTCUT_EVENTS.assistant, () => setOstatniSkrot("/ – asystent formalny (otworzy go asystent formalny)"));
 
   const zmienPole = (v: string) => {
     setUzasadnienie(v);
@@ -90,7 +90,7 @@ export function Showcase() {
         </div>
       </Section>
 
-      <Section id="karty" title="Karta „Do zrobienia” (wzór dla pulpitu Z11)">
+      <Section id="karty" title="Karta „Do zrobienia” (wzór dla pulpitu przełożonego)">
         <Card className="max-w-2xl">
           <CardHeader>
             <CardTitle>Do zrobienia</CardTitle>

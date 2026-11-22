@@ -1,4 +1,4 @@
-// Odczyt danych pulpitu z bazy (Z11) – tylko po stronie serwera.
+// Odczyt danych pulpitu z bazy – tylko po stronie serwera.
 // Przełożony widzi wyłącznie swoich podwładnych (Employee.supervisorId).
 import type { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/db";

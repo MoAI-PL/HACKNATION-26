@@ -1,5 +1,5 @@
 "use server";
-// Akcje serwerowe panelu HR (Z18). Każda sprawdza rolę HR (Z04).
+// Akcje serwerowe panelu HR. Każda sprawdza rolę HR.
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";

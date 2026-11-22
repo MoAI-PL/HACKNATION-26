@@ -204,6 +204,14 @@ Przełożony widzi wyłącznie swoich podwładnych: zapytania filtrujemy po `sup
 - Etap a rozmowa: gdy przełożony otworzy rozmowę inną niż następna według etapu, ściąga mówi to wprost (np. „Kryteria tej oceny nie są jeszcze ustalone…”, „Rozmowa rozpoczynająca odbyła się 14 grudnia 2024…”) i nie pokazuje terminu innego etapu. Poziom z notatek do etykiety: remis w dół, jak sugestia w Z09.
 - Decyzje AI: własna akcja ekranu (sprawdza, że pracownik jest podwładnym), zapis w tym samym formacie co wspólne `logAiDecision` z Z10 (`funkcja`, `tryb`, `propozycja`).
 
+## Tryb rozmowy (Z43)
+
+- Ekran `/ocena/rozmowa/[pracownik]/tryb?typ=…` (przycisk „Tryb rozmowy” na ściądze Z24): ta sama ściąga jako kroki do przejścia w trakcie rozmowy – jeden punkt na ekranie, duża czcionka, zegar z pauzą, klawisze ← / →, pasek punktów z odhaczonymi i obowiązkowymi.
+- Logika bez bazy i bez AI: `src/lib/rozmowa/tryb.ts` – kroki (otwarcie, punkty zakresu z przepisu, informacja zwrotna, pytania, działania rozwojowe, zamknięcie), lista nieomówionych punktów obowiązkowych i tekst przebiegu rozmowy. Obowiązkowe są tylko punkty agendy z § 3 rozp. o pierwszej ocenie, § 5 ust. 1 albo § 10 rozp. o ocenach okresowych; przed zapisem przełożony widzi, czego nie omówił, i może do tego wrócić.
+- Notatka do punktu trafia do przebiegu rozmowy; „Zapisz w dzienniku obserwacji” zapisuje ją od razu akcją szybkiej notatki (Z41) jako wpis do przypięcia. W kroku otwarcia widać notatki przygotowane na ściądze.
+- Zapis przebiegu (`saveConversationAction`, `src/lib/rozmowa/tryb-akcje.ts`) – `Conversation` z rodzajem rozmowy, datą i notatkami; tylko przełożony, tylko własny podwładny, tylko rodzaj właściwy dla bieżącej oceny. Bez dublowania (`conversationSavePlan`): rozmowę rozpoczynającą zapisuje kreator Z12 razem z kryteriami – tryb dopisuje notatki do tego zapisu, a bez niego odsyła do kreatora; ta sama rozmowa tego samego dnia – dopisanie.
+- Szkic (krok, odhaczenia, notatki, czas) w `localStorage` do zapisu; ostrzeżenie przy zamykaniu karty z niezapisanym przebiegiem.
+
 ## Zabezpieczenia demo (Z44)
 
 - `resetDemoData` (`src/lib/demo/reset.ts`) woła `seedDemoData` z Z26 (usuwa dane demo i tworzy je od nowa, konta zostają) i zapisuje `RESET_DEMO` w `AuditLog`. Poza `DEMO_MODE=true` rzuca `DemoResetDisabledError` i niczego nie zmienia.

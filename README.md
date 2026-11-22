@@ -104,6 +104,7 @@ Model AI jest opcjonalny: bez `LLM_BASE_URL` i `LLM_MODEL` aplikacja działa w t
 |---|---|
 | `npm run dev` / `npm run build` | serwer deweloperski / build produkcyjny |
 | `npm test` | testy (Vitest); testy na bazie danych uruchamia `TEST_DATABASE_URL` |
+| `npm run e2e` | testy end-to-end w przeglądarce (Playwright): role, ekrany przy 768 i 1440 px z axe (WCAG 2.1 A/AA), tryb rozmowy, pełna ocena okresowa z PDF; przed testami seed danych demo; raport: `npm run e2e:raport`. Pierwszy raz: `npx playwright install chromium` |
 | `npm run typecheck` / `npm run lint` | kontrola typów / lint |
 | `npm run seed` | konta i dane demo |
 | `npm run eval` | zestaw testowy asystenta formalnego (`-- --bez-ai`: tylko wyszukiwanie); wynik w `eval/wynik.md` |
@@ -122,6 +123,7 @@ prisma/      schemat bazy, migracje, seed i dane demo
 src/app/     ekrany według ról i API
 src/lib/     silnik reguł, import, AI, autoryzacja, logika ekranów
 tests/       testy (Vitest)
+e2e/         testy end-to-end (Playwright)
 eval/        zestaw testowy asystenta i wynik
 docs/        dokumentacja
 ```

@@ -45,6 +45,7 @@ Adres: **https://hacknation-26.vercel.app** · wszystkie dane są fikcyjne · na
 1. Menu **Asystent rozmowy** – podwładni z rozmową, która jest następna według etapu oceny, i jej terminem.
 2. Przy Katarzynie Wójcik otwórz **rozmowę oceniającą**: zakres z przepisu, agenda, mocne strony i obszary do rozwoju wyliczone z ocen wskaźników i notatek, pytania odwołujące się do konkretnych notatek, informacja zwrotna zachowanie – skutek – oczekiwanie i działania rozwojowe. Ściągę można wydrukować.
 3. **„Zaproponuj”** w ramce AI redaguje otwarcie i informację zwrotną – do modelu nie trafia imię i nazwisko; „Wstaw” albo „Odrzuć” trafia do dziennika decyzji. Bez modelu ściąga jest kompletna.
+4. **„Tryb rozmowy”** – punkty po jednym na ekranie, zegar, „Omówione” i notatka przy punkcie (klawisze ← / →). „Zakończ” pokazuje nieomówione punkty z § 10 i gotowy przebieg rozmowy do zapisania; notatkę z punktu można od razu zapisać w dzienniku obserwacji.
 
 ## 6. Asystent formalny (2 min)
 

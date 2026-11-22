@@ -43,7 +43,7 @@ Kolejność: najpierw ★, potem pozostałe P0, potem P1 (w kolejności z tabeli
 | ★Z16 | PDF arkuszy B i C | Z07, Z12, Z14, Z15, Z26 | gotowe | Kamson2077 | `z16-pdf-arkuszy` |
 | Z17 | Ścieżka pierwszej oceny | Z07, Z08, Z14, Z16 | w toku | Kamson2077 | `z17-pierwsza-ocena` |
 | Z18 | Panel HR, część 1 (oceny, terminy, przypomnienia) | Z04, Z08, Z10 | gotowe | Nadia | `z18-panel-hr` |
-| Z19 | Panel HR, część 2 (edycja modelu i przepisów) | Z05, Z18 | wolne | | |
+| Z19 | Panel HR, część 2 (edycja modelu i przepisów) | Z05, Z18 | w toku | geoglof | `z19-edycja-przepisow` |
 
 ## E. Sztuczna inteligencja
 
@@ -64,7 +64,7 @@ Kolejność: najpierw ★, potem pozostałe P0, potem P1 (w kolejności z tabeli
 | ★Z28 | Szkic w HackTribe – **wysłać przed 19:30** | Z01 | gotowe | geoglof | — |
 | ★Z29 | Publiczne demo | Z04, Z26 | gotowe | suzanne0401 | `z29-publiczne-demo` |
 | ★Z44 | Reset danych demo i działanie bez AI | Z20, Z26 | gotowe | Nadia | `z44-zabezpieczenia-demo` |
-| Z30 | Testy ręczne, Playwright, dostępność, pomiar czasu oceny | Z15, Z16 | wolne | | |
+| Z30 | Testy ręczne, Playwright, dostępność, pomiar czasu oceny | Z15, Z16 | gotowe | bartektymochowicz-collab | `bartek/z30-testy` |
 | Z31 | Dokumentacja (`README`, `docs/`) | całość | gotowe (aktualizacja przed zgłoszeniem) | suzanne0401 | `z31-dokumentacja` |
 | Z32 | Prezentacja, film, pitch | Z25, Z30 | wolne | | |
 | ★Z33 | Zgłoszenie finalne w HackTribe (ok. 08:00) | Z29, Z31, Z32 | wolne | | |
@@ -76,7 +76,7 @@ Kolejność: najpierw ★, potem pozostałe P0, potem P1 (w kolejności z tabeli
 | Z40 | Asystent języka (opis zachowania zamiast opisu osoby) | Z15, Z20 | gotowe | bartektymochowicz-collab | `bartek/z40-asystent-jezyka` |
 | Z36 | Lustro oceniającego | Z09, Z13, Z18 | gotowe | geoglof | `z36-lustro` |
 | Z42 | Przepisy w kontekście („ⓘ Dlaczego?”) | Z10, Z21 | gotowe | geoglof | `z42-przepisy-w-kontekscie` |
-| Z43 | Tryb rozmowy | Z24, Z15 | w toku | bartektymochowicz-collab | `bartek/z43-tryb-rozmowy` |
+| Z43 | Tryb rozmowy | Z24, Z15 | gotowe | bartektymochowicz-collab | `bartek/z43-tryb-rozmowy` |
 | Z34 | Pseudonimizacja przed LLM | Z20 | gotowe | geoglof | `z34-pseudonimizacja` |
 | Z35 | Dziennik audytu z eksportem CSV | Z14 | gotowe | geoglof | `z35-dziennik-audytu` |
 | Z37 | Oś czasu procesu pracownika | Z08 | gotowe | geoglof | `z37-os-czasu` |

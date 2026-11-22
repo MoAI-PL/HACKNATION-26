@@ -1,6 +1,6 @@
 # Tablica zadań – Kompas Kompetencji
 
-Biorąc zadanie: wpisz swoje imię, ustaw status „w toku”, podaj gałąź i **od razu wypchnij zmianę**.
+Biorąc zadanie: wpisz swoje imię, ustaw status „w toku”, podaj gałąź i **od razu wypchnij zmianę**. Sama zmiana tej tablicy nie uruchamia buildu na Vercelu, ale każdy push na `main` liczy się do limitu 100 wdrożeń dziennie – kod pushujemy paczkami ([zasady](WDROZENIE.md#limity-planu-hobby-stan-z-22112026)).
 Statusy: `wolne` / `w toku` / `do przeglądu` / `gotowe`. ★ = ścieżka krytyczna demo.
 Kolejność: najpierw ★, potem pozostałe P0, potem P1 (w kolejności z tabeli), P2 tylko na końcu.
 

@@ -22,7 +22,7 @@ Scenariusz krok po kroku dla jury (ok. 12 minut): **[`docs/DEMO.md`](docs/DEMO.m
 ## Prezentacja i film
 
 - **Prezentacja (10 slajdów, wersja animowana w przeglądarce):** https://papaya-concha-2cc565.netlify.app – strzałki ← → przełączają slajdy, klawisz F włącza pełny ekran.
-- **Film z demo:** https://www.youtube.com/watch?v=mNXQ7QiIoWw
+- **Film z demo:** https://youtu.be/4TxCuMBnI9g
 
 ## Zespół
 

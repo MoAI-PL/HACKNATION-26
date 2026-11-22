@@ -98,6 +98,13 @@ describe.skipIf(!url)("dane demo – seed na PostgreSQL", () => {
     expect(cur.previousResult).toBe("NEGATYWNA");
   });
 
+  it("dziennik decyzji (Z35) po zasianiu danych nie jest pusty: sporządzenie, zapoznanie, kryteria, propozycje AI, przypomnienie", async () => {
+    const actions = new Set((await prisma.auditLog.findMany({ where: { NOT: { action: "LOGOWANIE" } }, select: { action: true } })).map((r) => r.action));
+    for (const a of ["SPORZADZENIE_OCENY", "ZAPOZNANIE_Z_OCENA", "USTALENIE_KRYTERIOW", "AI_WSTAW", "PRZYPOMNIENIE_WYSLANE"]) expect(actions).toContain(a);
+    const ai = await prisma.auditLog.findFirstOrThrow({ where: { action: "AI_WSTAW", reason: { not: null } } });
+    expect(ai.humanDecision).toMatchObject({ decyzja: "WSTAW" });
+  });
+
   it("Lustro ocen (Z36): co najmniej jedna komórka ma 3 sporządzone oceny okresowe, więc rozkład jest widoczny", async () => {
     const rows = await prisma.evaluation.findMany({ where: { type: "OKRESOWA", average: { not: null } }, select: { employee: { select: { orgUnitId: true } } } });
     const perUnit = new Map<string, number>();

@@ -6,8 +6,26 @@ Demo: **Vercel** (aplikacja Next.js, darmowy plan Hobby, logowanie kontem GitHub
 
 - `vercel.json` ustawia build na `node scripts/build-produkcja.mjs`.
 - **Wdrożenie produkcyjne** (gałąź `main`): `prisma migrate deploy` → `npm run seed` (konta i dane demo od nowa, daty liczone od dnia wdrożenia) → `next build`. Migracje i seed idą połączeniem bezpośrednim (`DATABASE_URL_UNPOOLED` z integracji Neon), aplikacja – pulą połączeń (`DATABASE_URL`).
-- **Inne gałęzie nie są wdrażane.** `ignoreCommand` w `vercel.json` buduje tylko gałąź `main` (a gdy Vercel nie poda nazwy gałęzi – też buduje, żeby nie zablokować produkcji); pozostałe wdrożenia dostają status „Canceled” i nie zużywają limitu buildów planu Hobby. Pierwsza linia logu buildu pokazuje gałąź i środowisko. Gałąź utworzona przed tą zmianą ma starszy `vercel.json` – dlatego ta sama komenda jest też w **Settings → Build and Deployment → Ignored Build Step** (Custom). Gdyby ktoś wdrożył gałąź ręcznie, `build-produkcja.mjs` i tak nie dotknie bazy (tylko `VERCEL_ENV=production`).
+- **Wdrażana jest tylko gałąź `main`.** `git.deploymentEnabled` w `vercel.json` sprawia, że push na inną gałąź w ogóle nie tworzy wdrożenia (nie liczy się do limitu). Dodatkowo `ignoreCommand` uruchamia [`scripts/vercel-ignore.sh`](../scripts/vercel-ignore.sh): pomija build gałęzi innej niż `main` (zabezpieczenie dla starszych gałęzi, ta sama reguła jest w **Settings → Build and Deployment → Ignored Build Step**) oraz push, który od ostatniego wdrożenia zmienił tylko `docs/`, `README.md`, `e2e/` albo `tests/`. Przy każdej wątpliwości skrypt buduje, żeby nie zablokować produkcji; pierwsza linia logu buildu pokazuje jego decyzję. Gdyby ktoś wdrożył gałąź ręcznie, `build-produkcja.mjs` i tak nie dotknie bazy (tylko `VERCEL_ENV=production`).
 - `DEMO_MODE="true"` jest w `.env.production` (to nie sekret). Każde wdrożenie `main` przywraca dane demo do stanu początkowego; wyłączenie: zmienna `SEED_ON_DEPLOY=false`.
+
+### Limity planu Hobby (stan z 22.11.2026)
+
+| Limit | Hobby | Co to oznacza dla nas |
+|---|---|---|
+| Wdrożenia dziennie | **100** | 21–22.11 wyczerpaliśmy go w ok. 11 godzin (każdy push na `main` i na gałąź = osobne wdrożenie) – kolejne pushe nie dawały wdrożenia, a produkcja zostawała na starej wersji |
+| Buildy naraz | **1** | pushe kilku osób ustawiają się w kolejce; build trwa ok. 1,5 min (produkcja ma pierwszeństwo – „Prioritize Production Builds”) |
+| Czas buildu | 45 min | build trwa ok. 1,5 min |
+| Active CPU funkcji | 4 h / mies. | zużyte ok. 3 min |
+| Wywołania funkcji | 1 mln / mies. | zużyte ok. 2,6 tys. |
+
+Po przekroczeniu limitu miesięcznego Vercel wstrzymuje funkcję do końca 30 dni – demo przestałoby działać. Limit dzienny jest kroczący (24 godziny).
+
+**Zasady pushowania (żeby nie przekroczyć limitu):**
+1. Na `main` pushujemy rzadziej, paczką: kilka commitów lokalnie, potem jeden `git push` (Vercel buduje tylko ostatni commit z pushu).
+2. „Biorę zadanie” i inne zmiany samej dokumentacji nie uruchamiają już buildu, ale każdy push na `main` nadal tworzy wpis wdrożenia – łączymy je z commitem z kodem.
+3. Gałęzie pushujemy bez obaw – nie są wdrażane. Sprawdzamy lokalnie: `npm run typecheck`, `npm test`, `npm run build`.
+4. Na czas prezentacji przed jury – żadnych pushy na `main` (podmiana wersji w trakcie może dać jednorazowy błąd strony).
 
 ## Krok po kroku (ok. 10 minut)
 

@@ -2,6 +2,6 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "nextjs",
   "buildCommand": "node scripts/build-produkcja.mjs",
-  "ignoreCommand": "[ \"$VERCEL_ENV\" != \"production\" ]",
+  "ignoreCommand": "echo \"ref=${VERCEL_GIT_COMMIT_REF:-none} env=${VERCEL_ENV:-none}\"; if [ \"$VERCEL_GIT_COMMIT_REF\" = \"main\" ] || [ -z \"$VERCEL_GIT_COMMIT_REF\" ]; then exit 1; else exit 0; fi",
   "regions": ["fra1"]
 }

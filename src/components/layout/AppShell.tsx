@@ -112,7 +112,8 @@ export function PageHeader({
         </div>
         {description && <p className="max-w-3xl text-muted-foreground">{description}</p>}
       </div>
-      {action && <div className="flex shrink-0 items-center gap-2">{action}</div>}
+      {/* Przyciski zawijają się na wąskim ekranie i przy powiększonym tekście zamiast wypychać stronę w bok. */}
+      {action && <div className="flex max-w-full flex-wrap items-center gap-2">{action}</div>}
     </div>
   );
 }

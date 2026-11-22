@@ -60,7 +60,6 @@ Kolejność: najpierw ★, potem pozostałe P0, potem P1 (w kolejności z tabeli
 
 | ID | Zadanie | Zależy od | Status | Kto | Gałąź |
 |---|---|---|---|---|---|
-| ★Z27 | Pytania do mentorów (`docs/ZALOZENIA.md`) | — | wolne | | |
 | ★Z28 | Szkic w HackTribe – **wysłać przed 19:30** | Z01 | gotowe | geoglof | — |
 | ★Z29 | Publiczne demo | Z04, Z26 | gotowe | suzanne0401 | `z29-publiczne-demo` |
 | ★Z44 | Reset danych demo i działanie bez AI | Z20, Z26 | gotowe | Nadia | `z44-zabezpieczenia-demo` |
@@ -87,6 +86,6 @@ Kolejność: najpierw ★, potem pozostałe P0, potem P1 (w kolejności z tabeli
 
 | ID | Zadanie | Status | Kto | Gałąź |
 |---|---|---|---|---|
-| Z39 | Tryb „5 minut przed rozmową” | wolne | | |
+| Z39 | Tryb „5 minut przed rozmową” | gotowe | suzanne0401 | `main` |
 | Z45 | Przypomnienia o regularnych notatkach | wolne | | |
 | Z46 | Ekran ocenianego „Moje oceny” – lista i podgląd własnych ocen, potwierdzenie zapoznania się (dodane: luka widoczna dla jury) | gotowe | suzanne0401 | `z46-moje-oceny` |

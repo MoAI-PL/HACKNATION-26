@@ -42,9 +42,18 @@ export default async function RozmowaPage() {
                   </span>
                 )}
               </div>
-              <Link href={`/ocena/rozmowa/${t.employeeId}?typ=${t.suggested}`} className={cn(buttonVariants(), "h-10")} aria-label={`Przygotuj rozmowę: ${t.employeeName}`}>
-                Przygotuj rozmowę
-              </Link>
+              <div className="flex flex-wrap gap-2">
+                <Link
+                  href={`/ocena/rozmowa/${t.employeeId}/5-minut?typ=${t.suggested}`}
+                  className={cn(buttonVariants({ variant: "outline" }), "h-10")}
+                  aria-label={`5 minut przed rozmową: ${t.employeeName}`}
+                >
+                  5 minut przed rozmową
+                </Link>
+                <Link href={`/ocena/rozmowa/${t.employeeId}?typ=${t.suggested}`} className={cn(buttonVariants(), "h-10")} aria-label={`Przygotuj rozmowę: ${t.employeeName}`}>
+                  Przygotuj rozmowę
+                </Link>
+              </div>
             </li>
           ))}
         </ul>

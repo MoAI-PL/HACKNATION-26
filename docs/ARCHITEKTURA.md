@@ -204,6 +204,11 @@ Przełożony widzi wyłącznie swoich podwładnych: zapytania filtrujemy po `sup
 - Etap a rozmowa: gdy przełożony otworzy rozmowę inną niż następna według etapu, ściąga mówi to wprost (np. „Kryteria tej oceny nie są jeszcze ustalone…”, „Rozmowa rozpoczynająca odbyła się 14 grudnia 2024…”) i nie pokazuje terminu innego etapu. Poziom z notatek do etykiety: remis w dół, jak sugestia w Z09.
 - Decyzje AI: własna akcja ekranu (sprawdza, że pracownik jest podwładnym), zapis w tym samym formacie co wspólne `logAiDecision` z Z10 (`funkcja`, `tryb`, `propozycja`).
 
+## 5 minut przed rozmową (Z39)
+
+- Ekran `/ocena/rozmowa/[pracownik]/5-minut?typ=…` (przycisk na liście podwładnych i na ściądze Z24): jedna strona do przeczytania tuż przed rozmową.
+- Logika: `src/lib/rozmowa/piec-minut.ts` (`buildFiveMinuteBrief`) – czysta funkcja na wyniku `buildConversationPrep`, bez bazy i bez AI. Najwyżej 6 faktów (zakres rozmowy, termin, stanowisko, poprzednia ocena, mocna strona i obszar do rozwoju, notatki w dzienniku), zdanie na otwarcie, 3 pierwsze pytania ze ściągi, 3 pułapki: sygnały Lustra (Z36: efekt świeżości z dat notatek, aureola z ocen wskaźników), trudne sytuacje z podstawą prawną właściwe dla tej osoby, zawsze na końcu pułapka typowa dla rodzaju rozmowy.
+
 ## Tryb rozmowy (Z43)
 
 - Ekran `/ocena/rozmowa/[pracownik]/tryb?typ=…` (przycisk „Tryb rozmowy” na ściądze Z24): ta sama ściąga jako kroki do przejścia w trakcie rozmowy – jeden punkt na ekranie, duża czcionka, zegar z pauzą, klawisze ← / →, pasek punktów z odhaczonymi i obowiązkowymi.

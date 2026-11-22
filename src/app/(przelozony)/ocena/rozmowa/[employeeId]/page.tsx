@@ -69,11 +69,14 @@ export default async function PrzygotowanieRozmowyPage({
         title={prep.title}
         description={data.input.positionTitle ?? undefined}
         action={
-          <div className="flex gap-2 print:hidden">
+          <div className="flex flex-wrap gap-2 print:hidden">
             <Link href="/ocena/rozmowa" className={cn(buttonVariants({ variant: "outline" }), "h-10")}>
               Wszyscy podwładni
             </Link>
             <PrintButton />
+            <Link href={`/ocena/rozmowa/${encodeURIComponent(employeeId)}/5-minut?typ=${kind}`} className={cn(buttonVariants({ variant: "outline" }), "h-10")}>
+              5 minut przed
+            </Link>
             <Link href={`/ocena/rozmowa/${encodeURIComponent(employeeId)}/tryb?typ=${kind}`} className={cn(buttonVariants(), "h-10")}>
               Tryb rozmowy
             </Link>

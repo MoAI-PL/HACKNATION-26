@@ -33,7 +33,7 @@ Scenariusz krok po kroku dla jury (ok. 12 minut): **[`docs/DEMO.md`](docs/DEMO.m
 | 🃏 | **Ocena przez wybór zachowania** | przy każdym wskaźniku 5 opisów zachowań z modelu MC (bez liczb) + „brak okazji do obserwacji”, obok notatki z dziennika; klawisze 1–5 |
 | 🧭 | **„Dlaczego ten poziom?”** | sugerowany poziom kryterium z rozkładem wyborów, wzorem i ostrzeżeniami; zmiana sugestii wymaga jednego zdania powodu – oba wpisy trafiają do dziennika decyzji |
 | ⚖️ | **Wynik zgodny z § 11** | średnia, poziom ogólny, wynik pozytywny/negatywny z wyjaśnieniem i podstawą prawną; uzasadnienie obowiązkowe przy ocenie negatywnej, IPRZ, część III, termin sprzeciwu |
-| 🗣 | **Asystent rozmowy** | ściąga do rozmowy wstępnej, rozpoczynającej i oceniającej: zakres z przepisu, agenda, mocne strony i obszary do rozwoju z ocen i notatek, pytania, informacja zwrotna zachowanie–skutek–oczekiwanie, działania rozwojowe; do wydruku. AI tylko redaguje otwarcie i informację zwrotną |
+| 🗣 | **Asystent rozmowy** | ściąga do rozmowy wstępnej, rozpoczynającej i oceniającej: zakres z przepisu, agenda, mocne strony i obszary do rozwoju z ocen i notatek, pytania, informacja zwrotna zachowanie–skutek–oczekiwanie, działania rozwojowe; do wydruku. Tryb **„5 minut przed rozmową”**: jedna strona – fakty, zdanie na otwarcie, 3 pytania i 3 pułapki (także sygnały Lustra z danych). AI tylko redaguje otwarcie i informację zwrotną |
 | 💬 | **Asystent formalny** | odpowiedzi tylko z 406 fragmentów przepisów i poradników, zawsze ze źródłem; uczciwa odmowa poza zakresem; **25/25 trafnych, 5/5 odmów** w zestawie testowym |
 | 🏛 | **Panel HR** | wszystkie oceny z terminami i wydłużeniami (np. „+44 dni: zwolnienie lekarskie”), przypomnienia, wzór zawiadomienia o zmianie terminu, ostrzeżenie z art. 71 |
 | 🪞 | **Lustro oceniającego** | łagodne sygnały typowych błędów oceniania przed sporządzeniem oceny (efekt świeżości, aureoli, poziom skrajny bez notatki); w panelu HR zanonimizowany rozkład ocen w komórkach (od 3 ocen) i odstający przełożeni |
@@ -67,7 +67,7 @@ Scenariusz krok po kroku dla jury (ok. 12 minut): **[`docs/DEMO.md`](docs/DEMO.m
 | [`docs/openapi.yaml`](docs/openapi.yaml) | specyfikacja REST API: eksport oceny w JSON, lista ocen i pracowników, asystent (pod EZD i system kadrowy) |
 | [`docs/WDROZENIE.md`](docs/WDROZENIE.md) | wdrożenie publicznego demo (Vercel + Neon) |
 | [`docs/LICENCJE.md`](docs/LICENCJE.md) | licencje zależności (wyłącznie permisywne) |
-| [`docs/ZALOZENIA.md`](docs/ZALOZENIA.md) | założenia interpretacyjne i pytania do MC |
+| [`docs/ZALOZENIA.md`](docs/ZALOZENIA.md) | założenia interpretacyjne tam, gdzie przepisy nie rozstrzygają |
 | [`docs/ZADANIA.md`](docs/ZADANIA.md) | tablica zadań zespołu |
 
 ## Technologie

@@ -40,8 +40,9 @@ export async function saveSummaryDraft(evaluationId: string, input: unknown): Pr
   const parsed = summaryFormSchema.safeParse(input);
   if (!parsed.success) return { ok: false, error: "Niepoprawne dane formularza." };
   const f = parsed.data;
-  await prisma.evaluation.update({
-    where: { id: ev.id },
+  // Warunek statusu w zapisie: spóźniony autozapis nie nadpisze pól oceny sporządzonej w międzyczasie.
+  const saved = await prisma.evaluation.updateMany({
+    where: { id: ev.id, status: "W_OCENIE" },
     data: {
       justification: f.justification.trim() || null,
       developmentPlan: f.developmentPlan.trim() || null,
@@ -50,6 +51,7 @@ export async function saveSummaryDraft(evaluationId: string, input: unknown): Pr
       requestedGrade: f.promotionRequest ? f.requestedGrade : null,
     },
   });
+  if (saved.count === 0) return { ok: false, error: "Ocena jest już sporządzona – pól nie można zmieniać." };
   return { ok: true, savedAt: new Date().toISOString() };
 }
 

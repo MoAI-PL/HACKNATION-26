@@ -44,10 +44,12 @@ export async function saveDraft(evaluationId: string, draft: WizardDraft): Promi
   if (ev.status !== "DO_ROZPOCZECIA") return { ok: false, error: ALREADY_SET };
   const parsed = draftSchema.safeParse(draft);
   if (!parsed.success) return { ok: false, error: "Nie udało się zapisać zmian – niepoprawne dane formularza." };
-  await prisma.evaluation.update({
-    where: { id: ev.id },
+  // Warunek statusu w zapisie: spóźniony autozapis nie zmieni kreatora po ustaleniu kryteriów.
+  const saved = await prisma.evaluation.updateMany({
+    where: { id: ev.id, status: "DO_ROZPOCZECIA" },
     data: { wizardState: parsed.data as Prisma.InputJsonValue, lastWizardStep: String(parsed.data.step) },
   });
+  if (saved.count === 0) return { ok: false, error: ALREADY_SET };
   return { ok: true, savedAt: new Date().toISOString() };
 }
 

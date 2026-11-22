@@ -174,10 +174,12 @@ export async function saveCompletionDraft(evaluationId: string, input: unknown):
   if (ev.status !== "W_OCENIE") return { ok: false, error: "Ocena jest już sporządzona – pól nie można zmieniać." };
   const parsed = completionFormSchema.safeParse(input);
   if (!parsed.success) return { ok: false, error: "Niepoprawne dane formularza." };
-  await prisma.evaluation.update({
-    where: { id: ev.id },
+  // Warunek statusu w zapisie: spóźniony autozapis nie nadpisze pól oceny sporządzonej w międzyczasie.
+  const saved = await prisma.evaluation.updateMany({
+    where: { id: ev.id, status: "W_OCENIE" },
     data: { justification: parsed.data.justification.trim() || null, developmentPlan: parsed.data.developmentPlan.trim() || null },
   });
+  if (saved.count === 0) return { ok: false, error: "Ocena jest już sporządzona – pól nie można zmieniać." };
   return { ok: true, savedAt: new Date().toISOString() };
 }
 

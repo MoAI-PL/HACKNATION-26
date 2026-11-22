@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { addDays, addMonths } from "@/lib/rules/kalendarz";
 import {
+  firstEvalHref,
   buildDashboardTodo,
   currentEvaluation,
   employeeHref,
@@ -123,7 +124,7 @@ describe("karta „Do zrobienia” i lista podwładnych", () => {
     expect(todo[0]!.actionLabel).toBe("Zobacz szczegóły");
   });
 
-  it("sporządzenie oceny prowadzi do zakończenia oceny (Z14), pierwsza ocena – na kartę pracownika (do Z17)", () => {
+  it("sporządzenie oceny prowadzi do zakończenia oceny (Z14), pierwsza ocena – do jej przebiegu (Z17)", () => {
     const prev = addDays(addMonths(TODAY, -24), 9);
     const wOcenie = employee({ id: "kasia", evaluations: [done("p", prev), open("c", { status: "W_OCENIE" })] });
     const wOkresie = employee({ id: "piotr", evaluations: [done("p2", addDays(addMonths(TODAY, -24), 20)), open("d")] });
@@ -131,7 +132,7 @@ describe("karta „Do zrobienia” i lista podwładnych", () => {
     const nowa = employee({ id: "ola", employmentStart: start, contractEnd: addDays(addMonths(start, 12), -1), evaluations: [{ ...open("f", { type: "PIERWSZA", sheet: "PIERWSZA" }), status: "DO_ROZPOCZECIA" }] });
     const todo = buildDashboardTodo([wOcenie, wOkresie, nowa], TODAY, 5, () => true);
     expect(todo.map((t) => [t.employeeId, t.actionLabel, t.href])).toEqual([
-      ["ola", "Zobacz szczegóły", employeeHref("ola")],
+      ["ola", "Zapisz rozmowę wstępną", firstEvalHref("f")],
       ["kasia", "Kontynuuj ocenę", periodicAssessmentHref("c")],
       ["piotr", "Zakończ ocenę", periodicAssessmentHref("d")],
     ]);
@@ -151,10 +152,22 @@ describe("karta „Do zrobienia” i lista podwładnych", () => {
     expect(item!.actionLabel).toBe("Zobacz szczegóły");
   });
 
-  it("na aktualnym menu: kreator Z12 jest gotowy, ekran pierwszej oceny jeszcze nie", () => {
+  it("na aktualnym menu: kreator Z12 i ekran pierwszej oceny (Z17) są gotowe", () => {
     const [item] = buildDashboardTodo([ludzie[1]!], TODAY);
     expect(item!.actionLabel).toBe("Ustal kryteria");
-    expect(pathEntries(ludzie).map((p) => p.key)).not.toContain("PIERWSZA");
+    expect(pathEntries(ludzie).map((p) => p.key)).toContain("PIERWSZA");
+  });
+
+  it("pierwsza ocena: sprawozdanie i okno oceny prowadzą do przebiegu z etykietą etapu", () => {
+    const start = addDays(addMonths(TODAY, -8), -10);
+    const contractEnd = addDays(addMonths(start, 12), -1);
+    const base = { type: "PIERWSZA" as const, sheet: "PIERWSZA" as const };
+    const czeka = employee({ id: "ewa", employmentStart: start, contractEnd, evaluations: [open("g", { ...base, status: "W_OKRESIE_OCENY" })] });
+    const doOceny = employee({ id: "jan", employmentStart: start, contractEnd, evaluations: [open("h", { ...base, status: "W_OCENIE" })] });
+    const todo = buildDashboardTodo([czeka, doOceny], TODAY, 5, () => true);
+    expect(todo.find((t) => t.employeeId === "ewa")).toMatchObject({ href: firstEvalHref("g"), actionLabel: "Odnotuj sprawozdanie" });
+    expect(todo.find((t) => t.employeeId === "jan")).toMatchObject({ href: firstEvalHref("h"), actionLabel: "Oceń elementy" });
+    expect(buildDashboardTodo([doOceny], TODAY, 5, () => false)[0]!.href).toBe(employeeHref("jan"));
   });
 
   it("termin z innego roku ma rok w dacie (bez niejednoznaczności)", () => {
@@ -198,11 +211,12 @@ describe("wejścia w ścieżki i karta pracownika", () => {
     expect(pathEntries(ludzie, (h) => h === "/asystent").map((x) => x.key)).toEqual(["ASYSTENT_FORMALNY"]);
   });
 
-  it("karta pracownika: główna akcja do oceny okresowej, brak akcji przy pierwszej ocenie", () => {
+  it("karta pracownika: główna akcja do oceny okresowej albo przebiegu pierwszej oceny", () => {
     expect(evaluationLink(ludzie[0]!, () => true)).toEqual({ href: periodicEvaluationHref("a1"), label: "Ustal kryteria" });
     expect(evaluationLink(ludzie[1]!, () => true)).toEqual({ href: periodicAssessmentHref("b1"), label: "Zakończ ocenę" });
     expect(evaluationLink(ludzie[1]!, (h) => !h.endsWith("/ocena"))?.label).toBe("Otwórz ocenę okresową");
-    expect(evaluationLink(ludzie[2]!, () => true)).toBeNull();
+    expect(evaluationLink(ludzie[2]!, () => true)).toEqual({ href: firstEvalHref("c1"), label: "Zapisz rozmowę wstępną" });
+    expect(evaluationLink(ludzie[2]!, (h) => !h.startsWith("/ocena/pierwsza"))).toBeNull();
     expect(evaluationLink(ludzie[0]!, () => false)).toBeNull();
   });
 });

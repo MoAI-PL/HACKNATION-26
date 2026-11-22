@@ -1,4 +1,4 @@
-// Dokument PDF arkusza oceny okresowej B / C (Z16) – @react-pdf/renderer (MIT), czcionka Noto Sans (OFL-1.1) z polskimi znakami.
+// Dokument PDF arkusza oceny okresowej B / C (Z16); czcionka, style i drobne elementy używa też arkusz pierwszej oceny (Z17) – @react-pdf/renderer (MIT), czcionka Noto Sans (OFL-1.1) z polskimi znakami.
 // Układ odwzorowuje wzory z materialy/ocena-okresowa/ (załączniki nr 3 i 4 do rozporządzenia): część I, część II z pouczeniem,
 // część III tylko przy wniosku o stopień; każda część od nowej strony, przypisy pod częścią.
 
@@ -31,7 +31,7 @@ import {
 const FONT_DIR = path.join(process.cwd(), "src", "lib", "pdf", "czcionki");
 let fontsReady = false;
 
-function registerFonts() {
+export function registerFonts() {
   if (fontsReady) return;
   Font.register({
     family: "Noto Sans",
@@ -50,7 +50,7 @@ function registerFonts() {
 // ---------------------------------------------------------------------------
 
 const BORDER = "#000000";
-const s = StyleSheet.create({
+export const s = StyleSheet.create({
   page: { fontFamily: "Noto Sans", fontSize: 8, paddingTop: 26, paddingBottom: 34, paddingHorizontal: 36, lineHeight: 1.25 },
   annex: { textAlign: "right", fontSize: 8 },
   title: { textAlign: "center", fontSize: 12, fontWeight: 700, marginTop: 2, marginBottom: 2 },
@@ -85,17 +85,17 @@ const s = StyleSheet.create({
 
 const SUP = ["⁰", "¹", "²", "³", "⁴", "⁵", "⁶", "⁷", "⁸", "⁹"];
 /** Znacznik przypisu „)” jak we wzorze, np. ⁴⁾. */
-const fn = (n: number) => `${String(n).split("").map((d) => SUP[Number(d)]).join("")}⁾`;
+export const fn = (n: number) => `${String(n).split("").map((d) => SUP[Number(d)]).join("")}⁾`;
 
 const DOTS = "……………………………";
-const date = (d: string | null | undefined) => (d ? formatDatePl(d) : null);
+export const date = (d: string | null | undefined) => (d ? formatDatePl(d) : null);
 
 /** Wartość albo wykropkowane pole do uzupełnienia ręcznie. */
-function V({ children }: { children: string | number | null | undefined }) {
+export function V({ children }: { children: string | number | null | undefined }) {
   return children === null || children === undefined || children === "" ? <Text style={s.empty}>{DOTS}</Text> : <Text>{String(children)}</Text>;
 }
 
-function LabelRow({ label, value, last }: { label: string; value: string | number | null | undefined; last?: boolean }) {
+export function LabelRow({ label, value, last }: { label: string; value: string | number | null | undefined; last?: boolean }) {
   return (
     <View style={last ? s.rowLast : s.row}>
       <Text style={s.label}>{label}</Text>
@@ -106,9 +106,9 @@ function LabelRow({ label, value, last }: { label: string; value: string | numbe
   );
 }
 
-function Signatures({ items }: { items: { caption: string; value?: string | null }[] }) {
+export function Signatures({ items, compact }: { items: { caption: string; value?: string | null }[]; compact?: boolean }) {
   return (
-    <View style={s.signatures} wrap={false}>
+    <View style={compact ? [s.signatures, { marginTop: 4, marginBottom: 1 }] : s.signatures} wrap={false}>
       {items.map((it) => (
         <View key={it.caption} style={s.signature}>
           <View style={s.line}>{it.value ? <Text style={s.center}>{it.value}</Text> : null}</View>
@@ -413,7 +413,7 @@ function PartIII({ data }: { data: SheetData }) {
 // Dokument
 // ---------------------------------------------------------------------------
 
-function PageNumber() {
+export function PageNumber() {
   return <Text style={s.pageNumber} render={({ pageNumber, totalPages }) => `strona ${pageNumber} z ${totalPages}`} fixed />;
 }
 

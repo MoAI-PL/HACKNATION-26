@@ -254,14 +254,17 @@ export function sheetHref(evaluationId: string, variant: SheetVariant): string {
   return `/api/v1/oceny/${encodeURIComponent(evaluationId)}/pdf${variant === "CZESC_I" ? "?wariant=czesc-i" : ""}`;
 }
 
-/** Które wydruki są dostępne dla oceny – zgodnie z warunkami endpointu (sheetProblem). */
+/** Które wydruki są dostępne dla oceny – zgodnie z warunkami endpointu (sheetProblem, firstSheetProblem). */
 export function sheetDownloads(ev: {
   evaluationId: string;
   type: string;
   status: EvaluationStatus;
   hasCriteria: boolean;
 }): { href: string; label: string }[] {
-  if (ev.type !== "OKRESOWA" || ev.status === "DO_ROZPOCZECIA") return [];
+  if (ev.status === "DO_ROZPOCZECIA") return [];
+  // Pierwsza ocena (Z17): jeden arkusz – po rozmowie wstępnej z jej danymi, po sporządzeniu oceny z wynikiem.
+  if (ev.type === "PIERWSZA") return [{ href: sheetHref(ev.evaluationId, "PELNY"), label: "Pobierz arkusz pierwszej oceny (PDF)" }];
+  if (ev.type !== "OKRESOWA") return [];
   const finalized = FINALIZED_STATUSES.includes(ev.status);
   const out: { href: string; label: string }[] = [];
   if (finalized) out.push({ href: sheetHref(ev.evaluationId, "PELNY"), label: "Pobierz arkusz (PDF)" });

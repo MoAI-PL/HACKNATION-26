@@ -48,7 +48,7 @@ const ASYSTENT_FORMALNY: NavItem = {
 const NAV_BY_ROLE: Record<Role, NavItem[]> = {
   PRZELOZONY: [
     { href: "/pulpit", label: "Pulpit", icon: "pulpit", description: "Co mam dziś zrobić" },
-    { href: "/ocena/pierwsza", label: "Pierwsza ocena", icon: "pierwsza", pending: "Z17" },
+    { href: "/ocena/pierwsza", label: "Pierwsza ocena", icon: "pierwsza" },
     { href: "/ocena/okresowa", label: "Ocena okresowa", icon: "okresowa" },
     { href: "/obserwacje", label: "Dziennik obserwacji", icon: "dziennik", description: "Notatki o zachowaniach na bieżąco" },
     ASYSTENT_FORMALNY,

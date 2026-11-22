@@ -234,6 +234,20 @@ export interface TodoTarget {
 }
 
 /** Zakończenie oceny okresowej – karty zachowań, sugestia i decyzja przełożonego (Z14). */
+/** Przebieg pierwszej oceny (Z17): rozmowa wstępna, sprawozdanie i egzamin, wynik, zapoznanie. */
+export function firstEvalHref(evaluationId: string): string {
+  return `/ocena/pierwsza/${encodeURIComponent(evaluationId)}`;
+}
+
+/** Terminy pierwszej oceny prowadzące do jej przebiegu (Z17). */
+const FIRST_EVAL_KINDS = new Set(["ROZMOWA_WSTEPNA", "SPRAWOZDANIE", "PIERWSZA_OCENA_OD", "PIERWSZA_OCENA_DO"]);
+
+const FIRST_EVAL_LABELS: Partial<Record<EvaluationStatus, string>> = {
+  DO_ROZPOCZECIA: "Zapisz rozmowę wstępną",
+  W_OKRESIE_OCENY: "Odnotuj sprawozdanie",
+  W_OCENIE: "Oceń elementy",
+};
+
 export function periodicAssessmentHref(evaluationId: string): string {
   return `${periodicEvaluationHref(evaluationId)}/ocena`;
 }
@@ -251,7 +265,8 @@ function assessmentLabel(status: EvaluationStatus | undefined): string {
  * - rozmowa rozpoczynająca (także po ocenie negatywnej) → kreator części I (Z12): „Ustal kryteria”;
  * - sporządzenie oceny okresowej (24 mies., ponowna po negatywnej, przy zmianie stanowiska) → zakończenie oceny (Z14):
  *   „Zakończ ocenę” / „Kontynuuj ocenę”;
- * - pozostałe sprawy (pierwsza ocena – Z17, ponowne kryteria po zmianie stanowiska) → karta pracownika z wyjaśnieniem terminu.
+ * - pierwsza ocena (rozmowa wstępna, sprawozdanie, okno oceny) → przebieg pierwszej oceny (Z17);
+ * - pozostałe sprawy (ponowne kryteria po zmianie stanowiska) → karta pracownika z wyjaśnieniem terminu.
  * Gotowość ekranu bierzemy z menu (isScreenReady) – bez martwych linków i bez obietnic, których ekran nie spełni.
  */
 export function todoTarget(
@@ -268,6 +283,10 @@ export function todoTarget(
     if (ASSESSMENT_KINDS.has(kind) && (status === "W_OKRESIE_OCENY" || status === "W_OCENIE")) {
       const href = periodicAssessmentHref(item.evaluationId);
       if (ready(href)) return { href, label: assessmentLabel(status) };
+    }
+    if (FIRST_EVAL_KINDS.has(kind)) {
+      const href = firstEvalHref(item.evaluationId);
+      if (ready(href)) return { href, label: (status && FIRST_EVAL_LABELS[status]) ?? "Otwórz pierwszą ocenę" };
     }
   }
   return { href: employeeHref(item.employeeId), label: "Zobacz szczegóły" };
@@ -291,13 +310,18 @@ export function buildDashboardTodo(
   });
 }
 
-/** Główna akcja na karcie pracownika: kreator / część I oceny okresowej, gdy ekran jest gotowy. */
+/** Główna akcja na karcie pracownika: kreator / część I oceny okresowej albo przebieg pierwszej oceny, gdy ekran jest gotowy. */
 export function evaluationLink(
   e: EmployeeInfo,
   ready: (href: string) => boolean = isScreenReady,
 ): TodoTarget | null {
   const current = currentEvaluation(e);
-  if (!current || current.type !== "OKRESOWA") return null;
+  if (!current) return null;
+  if (current.type === "PIERWSZA") {
+    const href = firstEvalHref(current.id);
+    if (!ready(href)) return null;
+    return { href, label: FIRST_EVAL_LABELS[current.status] ?? "Otwórz pierwszą ocenę" };
+  }
   if (current.status === "W_OKRESIE_OCENY" || current.status === "W_OCENIE") {
     const href = periodicAssessmentHref(current.id);
     if (ready(href)) return { href, label: assessmentLabel(current.status) };

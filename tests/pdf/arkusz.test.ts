@@ -182,7 +182,7 @@ describe("arkusz – dane i warunki wydania", () => {
     );
   });
 
-  it("przyciski pobierania: część I po ustaleniu kryteriów, pełny po sporządzeniu, nic dla pierwszej oceny", () => {
+  it("przyciski pobierania: część I po ustaleniu kryteriów, pełny po sporządzeniu, pierwsza ocena – jeden arkusz po rozmowie wstępnej", () => {
     const base = { evaluationId: "e 1", type: "OKRESOWA" };
     expect(sheetDownloads({ ...base, status: "DO_ROZPOCZECIA", hasCriteria: false })).toEqual([]);
     expect(sheetDownloads({ ...base, status: "W_OKRESIE_OCENY", hasCriteria: true }).map((l) => l.href)).toEqual([
@@ -192,7 +192,8 @@ describe("arkusz – dane i warunki wydania", () => {
       "Pobierz arkusz (PDF)",
       "Pobierz część I (PDF)",
     ]);
-    expect(sheetDownloads({ ...base, type: "PIERWSZA", status: "W_OCENIE", hasCriteria: true })).toEqual([]);
+    expect(sheetDownloads({ ...base, type: "PIERWSZA", status: "W_OCENIE", hasCriteria: true })).toEqual([{ href: "/api/v1/oceny/e%201/pdf", label: "Pobierz arkusz pierwszej oceny (PDF)" }]);
+    expect(sheetDownloads({ ...base, type: "PIERWSZA", status: "DO_ROZPOCZECIA", hasCriteria: false })).toEqual([]);
   });
 
   it("część I: nieużyte wiersze kryteriów dodatkowych są puste, „—” gdy nie wybrano żadnego", () => {

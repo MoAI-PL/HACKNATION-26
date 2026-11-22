@@ -100,7 +100,7 @@ Ekrany zapisują dane akcjami serwerowymi Next.js (z walidacją zod i autoryzacj
 | Środowisko | Jak |
 |---|---|
 | **Lokalnie** | `docker compose up` (PostgreSQL 16) + `npm run dev`; model opcjonalny (Ollama) |
-| **Demo** | Vercel (aplikacja, region Frankfurt) + Neon (PostgreSQL, Frankfurt) + Gemini (darmowy plan) – [`WDROZENIE.md`](WDROZENIE.md). Każde wdrożenie gałęzi `main` stosuje migracje i odtwarza dane demo |
+| **Demo** | Vercel (aplikacja, region Frankfurt) + Neon (PostgreSQL, Frankfurt) + Gemini (darmowy plan) – [`WDROZENIE.md`](WDROZENIE.md). Wdrażana jest tylko gałąź `main` (stosuje migracje i odtwarza dane demo); inne gałęzie Vercel pomija |
 | **Docelowo w urzędzie** | kontener Node.js (`npm run build && npm start`) za reverse proxy z TLS, PostgreSQL urzędu, model lokalny przez Ollamę na serwerze z GPU (np. Bielik) – dane nie opuszczają infrastruktury urzędu |
 
 Skalowanie:

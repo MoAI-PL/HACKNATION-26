@@ -6,7 +6,7 @@ Demo: **Vercel** (aplikacja Next.js, darmowy plan Hobby, logowanie kontem GitHub
 
 - `vercel.json` ustawia build na `node scripts/build-produkcja.mjs`.
 - **Wdrożenie produkcyjne** (gałąź `main`): `prisma migrate deploy` → `npm run seed` (konta i dane demo od nowa, daty liczone od dnia wdrożenia) → `next build`. Migracje i seed idą połączeniem bezpośrednim (`DATABASE_URL_UNPOOLED` z integracji Neon), aplikacja – pulą połączeń (`DATABASE_URL`).
-- **Wdrożenia podglądowe** (inne gałęzie): tylko `next build` – nie zmieniają bazy demo.
+- **Inne gałęzie nie są wdrażane.** `ignoreCommand` w `vercel.json` pomija build każdego wdrożenia innego niż produkcyjne z gałęzi `main` – wdrożenie dostaje status „Canceled”, nie zużywa limitu buildów planu Hobby. Gałąź utworzona przed tą zmianą ma starszy `vercel.json` – dlatego ta sama reguła jest też w **Settings → Build and Deployment → Ignored Build Step** („Only build production”) projektu w Vercelu. Gdyby ktoś wdrożył gałąź ręcznie, `build-produkcja.mjs` i tak nie dotknie bazy (tylko `VERCEL_ENV=production`).
 - `DEMO_MODE="true"` jest w `.env.production` (to nie sekret). Każde wdrożenie `main` przywraca dane demo do stanu początkowego; wyłączenie: zmienna `SEED_ON_DEPLOY=false`.
 
 ## Krok po kroku (ok. 10 minut)

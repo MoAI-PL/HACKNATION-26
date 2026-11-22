@@ -240,6 +240,15 @@ Przełożony widzi wyłącznie swoich podwładnych: zapytania filtrujemy po `sup
 - Przypomnienia (`Reminder`): treść z wyjaśnienia terminu (`reminderFor`), odbiorca – oceniający; „Dodaj przypomnienie” przy terminach do 30 dni / po terminie, raz o danym terminie (ponownie, gdy termin się zmieni). „Wyślij” to symulacja: `sentAt` + wpis `PRZYPOMNIENIE_WYSLANE` w `AuditLog`.
 - Dostęp do bazy: `src/lib/hr/repo.ts`, akcje: `src/lib/hr/actions.ts` (rola HR w każdej akcji), komponenty: `src/components/hr/`.
 
+## Panel HR, część 2: przepisy i model bez zmian w kodzie (Z19)
+
+- Ekrany `/hr/ustawienia` (parametry przepisów) i `/hr/ustawienia/model` (opisy zachowań 49 wskaźników), rola HR. Zmiana działa od razu: silnik terminów, walidacja kryteriów w kreatorze, sugestia poziomu, Lustro i karty zachowań w ocenie.
+- Formularz parametrów (`src/lib/konfiguracja/pola.ts`): terminy oceny okresowej i pierwszej oceny, limit kryteriów dodatkowych, progi pilności, sugestii i Lustra (oznaczone jako założenia, nie przepisy). Przy każdym polu podstawa prawna z `data/przepisy.json`, dozwolony zakres i wartość z pliku, gdy jest zmieniona. Ostateczna walidacja – ten sam schemat zod (`rulesSchema`), którym aplikacja czyta plik przy starcie. Skali punktów i progów wyniku z § 11 nie zmieniamy w formularzu.
+- Zapis: tabela `AppInfo` (klucze `panel-hr:przepisy` – pełny zestaw parametrów, `panel-hr:model-kompetencji` – tylko różnice opisów względem pliku). Brak wiersza = wartości z plików; „Przywróć” usuwa wiersz. Każda zmiana to wpis `EDYCJA_PRZEPISOW` / `EDYCJA_MODELU` w `AuditLog` (kto, kiedy, stara i nowa wartość, powód) – widoczny w historii zmian i w dzienniku decyzji. Bez pełnego wersjonowania.
+- Jak zmiana dociera do kodu (`src/lib/konfiguracja/stan.ts`): obiekty `rules` i `competencyModel` są podmieniane w miejscu, więc żadna funkcja silnika nie zmienia sygnatury. Serwer: strażnicy autoryzacji (`requirePageRole`, `requireRole`, `withRole`) przed każdym ekranem, akcją i API wczytują zmiany z bazy (najwyżej raz na 2 s; działa też przy kilku instancjach serwera). Przeglądarka: `AppShell` przekazuje bieżące zmiany do `<ZastosujKonfiguracje>`, bo kreator i ocena liczą na żywo w komponentach klienta.
+- Reset danych demo (Z44) usuwa też zmiany z panelu HR. Uszkodzony wpis w bazie jest pomijany (obowiązują wartości z plików), a błąd trafia do logu serwera.
+- Cytaty przepisów w „ⓘ Dlaczego?” (Z42) i w bazie wiedzy asystenta to teksty aktów prawnych – po nowelizacji aktualizuje się je razem z bazą wiedzy (`npm run wiedza`), a parametry liczbowe – w panelu HR.
+
 ## Dziennik obserwacji (Z13)
 
 - Ekrany przełożonego: `/obserwacje` (oś czasu albo widok „Według wskaźników”, filtry osoba / kompetencja / okres w parametrach adresu – działają bez JavaScriptu i dają się udostępnić linkiem), `/obserwacje/nowa?osoba=…`, `/obserwacje/[id]` (edycja i usuwanie z potwierdzeniem).
@@ -340,7 +349,7 @@ src/
   app/
     (auth)/                logowanie
     (przelozony)/          pulpit, ocena okresowa (kreator, ocena wskaźników, podsumowanie), dziennik obserwacji
-    (hr)/                  panel HR, Lustro ocen, dziennik decyzji (CSV), zawiadomienie o zmianie terminu
+    (hr)/                  panel HR, Lustro ocen, dziennik decyzji (CSV), zawiadomienie o zmianie terminu, przepisy i model (Z19)
     (oceniany)/            moje oceny (lista, podgląd, potwierdzenie zapoznania się)
     (kierujacy)/           pierwsze oceny w komórce kierującego
     (wspolne)/             asystent formalny (przełożony, HR, kierujący)

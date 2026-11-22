@@ -14,6 +14,7 @@ import ospData from "../../../prisma/seed-dane/osp.json";
 import { DEMO_ACCOUNTS } from "@/lib/auth/demo";
 import { fromDbDate, toDbDate, todayIso } from "@/lib/domain/daty";
 import type { CompetencyCode, IsoDate, PartialScore, PeriodicPoints, PositionDescription } from "@/lib/domain/types";
+import { MODEL_KEY, RULES_KEY, resetRuntimeConfig } from "@/lib/konfiguracja/stan";
 import { addDays, addMonths } from "@/lib/rules/kalendarz";
 import { firstEvalCriteria, proposedReportWindow } from "@/lib/pierwsza-ocena/przebieg";
 import { mandatoryCriteria } from "@/lib/rules/kryteria";
@@ -115,7 +116,7 @@ export interface DemoSummary {
 
 const SALUTE = "Ministerstwo Cyfryzacji (dane demo)";
 
-/** Usuwa dane demo (pracownicy, stanowiska, komórki, oceny, przypomnienia) – konta użytkowników zostają. */
+/** Usuwa dane demo (pracownicy, stanowiska, komórki, oceny, przypomnienia, zmiany z panelu HR) – konta użytkowników zostają. */
 export async function clearDemoData(prisma: PrismaClient): Promise<void> {
   await prisma.$transaction([
     prisma.user.updateMany({ data: { employeeId: null } }),
@@ -124,7 +125,10 @@ export async function clearDemoData(prisma: PrismaClient): Promise<void> {
     prisma.employee.deleteMany({}), // kaskadowo: oceny, kryteria, oceny wskaźników, obserwacje, rozmowy, nieobecności, zmiany stanowiska
     prisma.position.deleteMany({}),
     prisma.orgUnit.deleteMany({}),
+    // Zmiany przepisów i opisów zachowań z panelu HR (Z19) – demo wraca do wartości z plików.
+    prisma.appInfo.deleteMany({ where: { key: { in: [RULES_KEY, MODEL_KEY] } } }),
   ]);
+  resetRuntimeConfig();
 }
 
 function periodicScores(codes: CompetencyCode[], points: PeriodicPoints[]): PartialScore[] {

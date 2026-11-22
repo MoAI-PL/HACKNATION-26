@@ -87,7 +87,7 @@ describe("nawigacja", () => {
     expect(navForRole("OCENIANY").map((i) => i.href)).toEqual(["/moje-oceny"]);
     expect(roleHasAssistant("OCENIANY")).toBe(false);
     // Asystent formalny we wspólnej grupie (wspolne) – także dla HR i kierującego (role.ts: obszar /asystent).
-    expect(navForRole("HR").map((i) => i.href)).toEqual(["/hr", "/hr/lustro", "/hr/dziennik", ASSISTANT_HREF]);
+    expect(navForRole("HR").map((i) => i.href)).toEqual(["/hr", "/hr/lustro", "/hr/dziennik", "/hr/ustawienia", ASSISTANT_HREF]);
     // Jedna aktywna pozycja – najdokładniej pasująca.
     expect(activeHref("/hr/lustro", navForRole("HR"))).toBe("/hr/lustro");
     expect(activeHref("/hr/zawiadomienie/1", navForRole("HR"))).toBe("/hr");

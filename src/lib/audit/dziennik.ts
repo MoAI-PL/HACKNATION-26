@@ -19,6 +19,7 @@ export const AUDIT_ACTION_LABELS: Record<string, string> = {
   DODANIE_PRACOWNIKA: "Dodanie pracownika",
   PRZYPOMNIENIE_WYSLANE: "Wysłane przypomnienie",
   EDYCJA_PRZEPISOW: "Zmiana parametrów przepisów",
+  EDYCJA_MODELU: "Zmiana opisów zachowań w modelu kompetencji",
   RESET_DEMO: "Reset danych demo",
   LOGOWANIE: "Logowanie",
 };

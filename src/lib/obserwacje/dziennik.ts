@@ -233,13 +233,19 @@ export interface IndicatorView {
   unpinned: ObservationView[];
 }
 
-/** Widok „przy wskaźnikach”: kompetencje i wskaźniki w kolejności modelu, w każdym wpisy od najnowszego. */
+/** Od najwyższego poziomu zachowania do najniższego; bez poziomu na końcu; przy remisie od najnowszej. */
+export function byLevelDesc(a: ObservationView, b: ObservationView): number {
+  return (b.behaviorLevel ?? 0) - (a.behaviorLevel ?? 0) || b.date.localeCompare(a.date);
+}
+
+/** Widok „przy wskaźnikach”: kompetencje i wskaźniki w kolejności modelu, w każdym wpisy od najlepszego zachowania do najsłabszego. */
 export function groupByIndicator(items: ObservationView[], model: CompetencyModelIndex = defaultModel): IndicatorView {
   const newestFirst = [...items].sort((a, b) => b.date.localeCompare(a.date));
+  const bestFirst = [...items].sort(byLevelDesc);
   const competencies: CompetencyGroup[] = [];
   for (const c of model.competencies) {
     const indicators = c.indicators
-      .map((ind) => ({ indicatorId: ind.id, name: ind.name, items: newestFirst.filter((o) => o.indicatorId === ind.id) }))
+      .map((ind) => ({ indicatorId: ind.id, name: ind.name, items: bestFirst.filter((o) => o.indicatorId === ind.id) }))
       .filter((g) => g.items.length > 0);
     if (indicators.length > 0) {
       competencies.push({ competency: c.code, name: COMPETENCY_NAMES[c.code], indicators, count: indicators.reduce((n, g) => n + g.items.length, 0) });

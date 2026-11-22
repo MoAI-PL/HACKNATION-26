@@ -64,7 +64,7 @@ export default async function ObserwacjePage({ searchParams }: { searchParams: P
       {people.length === 0 ? (
         <EmptyState
           icon={NotebookPen}
-          title="Nie masz jeszcze podwładnych w systemie"
+          title="Nie masz jeszcze pracowników w systemie"
           description="Dziennik prowadzisz dla osób, które Ci bezpośrednio podlegają. Poproś komórkę kadr o przypisanie pracowników."
         />
       ) : (

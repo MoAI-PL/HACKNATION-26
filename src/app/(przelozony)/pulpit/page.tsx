@@ -55,7 +55,7 @@ export default async function PulpitPage() {
               <EmptyState
                 icon={CalendarCheck2}
                 title="Nie masz teraz żadnych pilnych spraw."
-                description="Gdy zbliży się termin rozmowy lub oceny któregoś z podwładnych, zobaczysz go tutaj."
+                description="Gdy zbliży się termin rozmowy lub oceny któregoś z Twoich pracowników, zobaczysz go tutaj."
               />
             ) : (
               <ol className="flex flex-col divide-y">

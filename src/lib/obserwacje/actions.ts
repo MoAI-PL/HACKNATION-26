@@ -29,12 +29,12 @@ export async function saveObservationAction(_prev: ObservationFormState, formDat
   if (!result.ok) return failed({ errors: result.errors, message: "Popraw zaznaczone pola – obserwacja nie została zapisana." });
 
   if (!(await isSubordinate(user.id, result.data.employeeId))) {
-    return failed({ errors: { employeeId: "Możesz dodawać obserwacje tylko swoich podwładnych. Wybierz osobę z listy." } });
+    return failed({ errors: { employeeId: "Możesz dodawać obserwacje tylko swoich pracowników. Wybierz osobę z listy." } });
   }
 
   if (id) {
     if (!(await updateObservation(user.id, id, result.data))) {
-      return failed({ message: "Tej obserwacji już nie ma albo nie należy do Twoich podwładnych. Wróć do dziennika." });
+      return failed({ message: "Tej obserwacji już nie ma albo nie dotyczy Twoich pracowników. Wróć do dziennika." });
     }
   } else {
     await createObservation(user.id, result.data);

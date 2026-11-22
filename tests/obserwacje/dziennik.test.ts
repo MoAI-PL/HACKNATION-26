@@ -169,6 +169,12 @@ describe("oś czasu i widok według wskaźników", () => {
     expect(v.unpinned.map((o) => o.id)).toEqual(["d"]);
   });
 
+  it("w widoku według wskaźników notatki od najlepszego zachowania do najsłabszego, bez poziomu na końcu", () => {
+    const lv = (id: string, date: string, behaviorLevel: 1 | 2 | 3 | 4 | 5 | null) => obs(id, date, "KOMUNIKACJA.2", "kasia", { behaviorLevel });
+    const v = groupByIndicator([lv("n", "2026-11-21", null), lv("s", "2026-11-20", 2), lv("w", "2026-01-01", 5), lv("w2", "2026-06-01", 5), lv("o", "2026-03-01", 3)]);
+    expect(v.competencies[0].indicators[0].items.map((o) => o.id)).toEqual(["w2", "w", "o", "s", "n"]);
+  });
+
   it("notatki przy wskaźniku jednej osoby i liczniki dla sugestii (Z09)", () => {
     const all = [...items, obs("e", "2026-11-21", "KOMUNIKACJA.2", "jan")];
     expect(observationsForIndicator(all, "kasia", "KOMUNIKACJA.2").map((o) => o.id)).toEqual(["c", "a"]);

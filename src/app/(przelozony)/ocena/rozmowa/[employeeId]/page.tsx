@@ -71,7 +71,7 @@ export default async function PrzygotowanieRozmowyPage({
         action={
           <div className="flex flex-wrap gap-2 print:hidden">
             <Link href="/ocena/rozmowa" className={cn(buttonVariants({ variant: "outline" }), "h-10")}>
-              Wszyscy podwładni
+              Wszyscy pracownicy
             </Link>
             <PrintButton />
             <Link href={`/ocena/rozmowa/${encodeURIComponent(employeeId)}/5-minut?typ=${kind}`} className={cn(buttonVariants({ variant: "outline" }), "h-10")}>

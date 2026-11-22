@@ -19,8 +19,10 @@ export interface ChoiceOption<V extends string = string> {
   disabled?: boolean;
 }
 
+// Bez h-full: siatka sama wyrównuje wysokość kart w wierszu, a procentowa wysokość w Safari potrafiła
+// rozciągnąć kartę ponad wiersz i przykryć pola formularza pod spodem.
 const cardBase =
-  "group relative flex h-full w-full flex-col gap-1 rounded-lg border-2 border-input bg-card p-4 text-left transition-colors hover:border-primary/50 disabled:cursor-not-allowed disabled:opacity-50";
+  "group relative flex w-full flex-col gap-1 rounded-lg border-2 border-input bg-card p-4 text-left transition-colors hover:border-primary/50 disabled:cursor-not-allowed disabled:opacity-50";
 const cardChecked = "border-primary bg-secondary";
 
 function CheckMark({ checked }: { checked: boolean }) {

@@ -69,7 +69,7 @@ describe("redakcja przez AI", () => {
   it("pracownik spoza podwładnych – komunikat", async () => {
     zalogowany("PRZELOZONY");
     prismaMock.employee.findFirst.mockResolvedValue(null);
-    expect(await polishConversationAction("obcy", "OCENIAJACA")).toEqual({ ok: false, reason: "Nie znaleziono pracownika wśród Twoich podwładnych." });
+    expect(await polishConversationAction("obcy", "OCENIAJACA")).toEqual({ ok: false, reason: "Nie znaleziono tej osoby wśród Twoich pracowników." });
   });
 
   it("bez sesji – 401", async () => {

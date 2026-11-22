@@ -18,7 +18,7 @@ export const DEMO_ACCOUNTS: readonly DemoAccount[] = [
     email: "ewa.kowalczyk@demo.kompas.test",
     name: "Ewa Kowalczyk",
     role: "PRZELOZONY",
-    description: "Dyrektorka departamentu. Ocenia swoich podwładnych – główna ścieżka demo.",
+    description: "Dyrektorka departamentu. Ocenia swoich pracowników – główna ścieżka demo.",
   },
   {
     email: "hr@demo.kompas.test",

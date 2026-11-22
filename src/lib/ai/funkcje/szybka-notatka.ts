@@ -131,7 +131,7 @@ export async function proposeQuickNote(note: string, people: NotePerson[], optio
 
   if (!llm) return offline("Asystent AI nie jest skonfigurowany. Zapisz notatkę – przypniesz ją do wskaźnika później w dzienniku.");
   // Bez listy podwładnych nie ma czego pseudonimizować – nie wysyłamy notatki z imionami do modelu.
-  if (people.length === 0) return offline("Nie masz jeszcze przypisanych podwładnych, więc notatki nie wysyłamy do asystenta. Poproś komórkę kadr o przypisanie pracowników.");
+  if (people.length === 0) return offline("Nie masz jeszcze przypisanych pracowników, więc notatki nie wysyłamy do asystenta. Poproś komórkę kadr o przypisanie pracowników.");
 
   try {
     const { data, model: usedModel } = await chatJson(llm, buildMessages(p.text, Object.keys(p.tags), model), responseSchema, {

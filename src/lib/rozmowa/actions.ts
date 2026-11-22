@@ -27,13 +27,13 @@ export async function polishConversationAction(employeeId: string, kind: string)
   if (!isKind(kind)) return { ok: false, reason: "Nieznany rodzaj rozmowy." };
   if (rateLimited(user.id)) return { ok: false, reason: "Zbyt wiele próśb do asystenta w krótkim czasie. Spróbuj ponownie za minutę." };
   const data = await loadPrepData(user.id, employeeId);
-  if (!data) return { ok: false, reason: "Nie znaleziono pracownika wśród Twoich podwładnych." };
+  if (!data) return { ok: false, reason: "Nie znaleziono tej osoby wśród Twoich pracowników." };
   if (!data.allowed.includes(kind)) return { ok: false, reason: "Ten rodzaj rozmowy nie dotyczy oceny tego pracownika." };
   const prep = buildConversationPrep({ ...data.input, kind });
   // Cały zespół przełożonego – notatki mogą wymieniać innych podwładnych; pseudonimizacja ukrywa wszystkich.
   const team = await prisma.employee.findMany({ where: { supervisorId: user.id }, select: { id: true, firstName: true, lastName: true } });
   const employee = team.find((e) => e.id === employeeId);
-  if (!employee) return { ok: false, reason: "Nie znaleziono pracownika wśród Twoich podwładnych." };
+  if (!employee) return { ok: false, reason: "Nie znaleziono tej osoby wśród Twoich pracowników." };
   return polishConversation(prep, employee, team);
 }
 

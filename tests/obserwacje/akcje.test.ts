@@ -71,7 +71,7 @@ describe("zapis obserwacji", () => {
     zalogowany("PRZELOZONY");
     prismaMock.employee.count.mockResolvedValue(0);
     const state = await saveObservationAction(undefined, form(poprawne));
-    expect(state?.errors?.employeeId).toMatch(/tylko swoich podwładnych/);
+    expect(state?.errors?.employeeId).toMatch(/tylko swoich pracowników/);
     expect(prismaMock.observation.create).not.toHaveBeenCalled();
   });
 

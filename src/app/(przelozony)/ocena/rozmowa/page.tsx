@@ -25,7 +25,7 @@ export default async function RozmowaPage() {
         description="Przygotuj rozmowę wstępną, rozpoczynającą albo oceniającą: agenda według przepisów, pytania oparte na notatkach z dziennika, informacja zwrotna i pomysły na rozwój. Ściągę możesz wydrukować."
       />
       {targets.length === 0 ? (
-        <EmptyState icon={MessagesSquare} title="Nie masz jeszcze podwładnych w systemie" description="Asystent rozmowy przygotowuje rozmowy z osobami, które Ci bezpośrednio podlegają." />
+        <EmptyState icon={MessagesSquare} title="Nie masz jeszcze pracowników w systemie" description="Asystent rozmowy przygotowuje rozmowy z osobami, które Ci bezpośrednio podlegają." />
       ) : (
         <ul className="flex flex-col gap-3">
           {targets.map((t) => (

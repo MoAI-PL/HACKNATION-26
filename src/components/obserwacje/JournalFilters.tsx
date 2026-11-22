@@ -18,7 +18,7 @@ export function JournalFilters({ filters, people }: { filters: Filters; people: 
       {filters.view === "wskazniki" && <input type="hidden" name="widok" value="wskazniki" />}
       <Field label="Osoba">
         <select name="osoba" defaultValue={filters.employeeId ?? ""} className={selectClass}>
-          <option value="">Wszyscy podwładni</option>
+          <option value="">Wszyscy pracownicy</option>
           {people.map((p) => (
             <option key={p.id} value={p.id}>
               {p.name}

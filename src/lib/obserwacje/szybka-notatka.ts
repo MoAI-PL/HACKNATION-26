@@ -100,7 +100,7 @@ export async function saveQuickNoteAction(input: {
     select: { id: true, firstName: true, lastName: true },
   });
   if (!employee) {
-    return { ok: false, errors: { employeeId: "Notatki dodajesz tylko swoim podwładnym. Wybierz osobę z listy." }, message: "Wybierz pracownika z listy." };
+    return { ok: false, errors: { employeeId: "Notatki dodajesz tylko swoim pracownikom. Wybierz osobę z listy." }, message: "Wybierz pracownika z listy." };
   }
 
   const created = await prisma.observation.create({

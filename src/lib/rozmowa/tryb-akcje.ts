@@ -33,7 +33,7 @@ export async function saveConversationAction(employeeId: string, raw: unknown): 
   const { kind, notes } = parsed.data;
 
   const data = await loadPrepData(user.id, employeeId);
-  if (!data) return { ok: false, reason: "Nie znaleziono pracownika wśród Twoich podwładnych." };
+  if (!data) return { ok: false, reason: "Nie znaleziono tej osoby wśród Twoich pracowników." };
   if (!data.allowed.includes(kind)) return { ok: false, reason: "Ten rodzaj rozmowy nie dotyczy oceny tego pracownika." };
 
   const today = todayIso();

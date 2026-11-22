@@ -19,6 +19,15 @@ Rozwiązanie zadania Ministerstwa Cyfryzacji (Biuro Dyrektora Generalnego) „Ko
 
 Scenariusz krok po kroku dla jury (ok. 12 minut): **[`docs/DEMO.md`](docs/DEMO.md)**.
 
+## Prezentacja i film
+
+- **Prezentacja (10 slajdów, wersja animowana w przeglądarce):** https://papaya-concha-2cc565.netlify.app – strzałki ← → przełączają slajdy, klawisz F włącza pełny ekran.
+- **Film z demo:** https://www.youtube.com/watch?v=mNXQ7QiIoWw
+
+## Zespół
+
+**SKNSI MoAI** – Zuzanna Marciniak, Nadia Klimek, Jakub Goleman, Kacper Gałan, Kamil Utkowski, Bartosz Tymochowicz.
+
 ## Dla jury
 
 ### Sprawdzenie w 5 minut

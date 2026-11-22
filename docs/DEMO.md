@@ -1,6 +1,6 @@
 # Scenariusz demo (ok. 12 minut)
 
-Adres: **https://hacknation-26.vercel.app** · wszystkie dane są fikcyjne · najlepiej w zwykłym oknie przeglądarki na komputerze (aplikacja nie jest przeznaczona na smartfony).
+Adres: **https://sprawdz-my-kompetencje.vercel.app** · wszystkie dane są fikcyjne · najlepiej w zwykłym oknie przeglądarki na komputerze (aplikacja nie jest przeznaczona na smartfony).
 
 Ścieżka pokrywa walidację z treści zadania: **rozpoczęcie procesu → praca z kryteriami i kompetencjami → ocena wskaźników behawioralnych → sugerowany poziom → ostateczna decyzja przełożonego**, a także pytania do asystenta AI.
 

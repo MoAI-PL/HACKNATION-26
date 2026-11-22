@@ -37,6 +37,18 @@ const toCard = (v: IndicatorRatingValue | undefined): CardValue | undefined =>
   v === undefined ? undefined : v === "BRAK_OBSERWACJI" ? NONE : (String(v) as CardValue);
 const fromCard = (v: CardValue): IndicatorRatingValue => (v === NONE ? "BRAK_OBSERWACJI" : (Number(v) as BehaviorLevel));
 
+/** Skrót klawiaturowy karty – wygląda jak klawisz; czytnik ekranu słyszy „klawisz 1”. To nie punktacja (karty bez liczb, Z14). */
+function KeyHint({ k }: { k: string }) {
+  return (
+    <span className="inline-flex items-center gap-1.5 text-xs font-normal text-muted-foreground">
+      <span className="sr-only">klawisz </span>
+      <kbd className="inline-flex min-w-5 items-center justify-center rounded border border-b-2 bg-muted px-1 font-mono text-[0.7rem] leading-4 text-foreground">
+        {k}
+      </kbd>
+    </span>
+  );
+}
+
 export function ZakonczenieOceny({ data }: { data: AssessmentData }) {
   const [criteria, setCriteria] = React.useState<CriterionData[]>(data.criteria);
   const [step, setStep] = React.useState(Math.min(data.resumeCriterion, data.criteria.length)); // indeks kryterium; length = przegląd
@@ -192,9 +204,9 @@ function KryteriumKrok({
     ...BEHAVIOR_LEVELS.map((l) => ({
       value: String(l) as CardValue,
       label: indicator.levels[l],
-      hint: `Klawisz ${l}`,
+      hint: <KeyHint k={String(l)} />,
     })),
-    { value: NONE as CardValue, label: "Brak okazji do obserwacji", hint: "Klawisz 0", description: "Wskaźnik nie wejdzie do sugestii." },
+    { value: NONE as CardValue, label: "Brak okazji do obserwacji", hint: <KeyHint k="0" />, description: "Wskaźnik nie wejdzie do sugestii." },
   ];
 
   return (
@@ -225,19 +237,19 @@ function KryteriumKrok({
           {c.indicators.map((ind, k) => {
             const v = c.ratings[ind.id];
             return (
-              <li key={ind.id}>
+              <li key={ind.id} className="max-w-full min-w-0">
                 <button
                   type="button"
                   onClick={() => setCurrent(k)}
                   aria-current={k === current ? "step" : undefined}
                   className={
-                    "flex min-h-8 items-center gap-1.5 rounded-md border px-2.5 py-1 text-sm " +
+                    "flex min-h-8 max-w-full min-w-0 items-center gap-1.5 rounded-md border px-2.5 py-1 text-sm " +
                     (k === current ? "border-primary bg-secondary font-medium" : "bg-card hover:border-primary/50")
                   }
                 >
                   <span aria-hidden>{k + 1}.</span>
-                  <span className="max-w-56 truncate">{ind.name}</span>
-                  <span className="text-xs text-muted-foreground">
+                  <span className="max-w-56 min-w-0 truncate">{ind.name}</span>
+                  <span className="shrink-0 text-xs whitespace-nowrap text-muted-foreground">
                     {v === undefined ? "– do oceny" : v === "BRAK_OBSERWACJI" ? "– brak obserwacji" : "– ocenione"}
                   </span>
                 </button>
@@ -464,7 +476,7 @@ function Przeglad({
       </div>
       <Lustro signals={signals} />
       <Card>
-        <CardContent className="overflow-x-auto py-4">
+        <CardContent className="relative overflow-x-auto py-4" tabIndex={0} role="region" aria-label="Przegląd ocen kryteriów">
           <table className="w-full text-left text-sm">
             <caption className="sr-only">Oceny cząstkowe kryteriów</caption>
             <thead>

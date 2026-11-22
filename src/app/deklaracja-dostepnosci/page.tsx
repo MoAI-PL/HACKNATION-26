@@ -92,7 +92,7 @@ export default function DeklaracjaDostepnosciPage() {
           <section>
             <h2>Ułatwienia w aplikacji</h2>
             <ul>
-              <li>Przycisk „Dostępność” w nagłówku: większy tekst (125% i 150%) i wysoki kontrast. Ustawienie zapamiętuje przeglądarka.</li>
+              <li>Przycisk „Dostępność” w nagłówku: większy tekst (125% i 150%), wysoki kontrast oraz motyw jasny, ciemny albo zgodny z ustawieniem systemu. Ustawienie zapamiętuje przeglądarka.</li>
               <li>Link „Przejdź do treści” – pierwszy element na każdej stronie, widoczny po naciśnięciu klawisza Tab.</li>
               <li>Widoczny fokus na każdym elemencie, obsługa całej aplikacji klawiaturą, etykiety wszystkich pól formularzy.</li>
               <li>Kontrast tekstu co najmniej 4,5:1; status nigdy nie jest przekazywany samym kolorem – zawsze także tekstem i ikoną.</li>
@@ -104,7 +104,7 @@ export default function DeklaracjaDostepnosciPage() {
           <section>
             <h2>Skróty klawiaturowe</h2>
             <p className="mb-3">Pełną listę pokazuje klawisz „?” na każdym ekranie po zalogowaniu.</p>
-            <div className="max-w-2xl overflow-x-auto" tabIndex={0} role="region" aria-label="Tabela skrótów klawiaturowych">
+            <div className="relative max-w-2xl overflow-x-auto" tabIndex={0} role="region" aria-label="Tabela skrótów klawiaturowych">
             <table className="w-full border-collapse text-sm">
               <caption className="sr-only">Skróty klawiaturowe</caption>
               <thead>

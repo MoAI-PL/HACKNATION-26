@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { CalendarCheck2, CalendarDays, ChevronRight, FileText, MessagesSquare, NotebookPen, UserStar, Users, type LucideIcon } from "lucide-react";
+import { AlarmClock, CalendarCheck2, CalendarClock, CalendarDays, ChevronRight, ClipboardList, FileText, MessagesSquare, NotebookPen, UserStar, Users, type LucideIcon } from "lucide-react";
+import { Avatar } from "@/components/ui/avatar";
+import { URGENCY_TONE } from "@/lib/ui/status";
+import { cn } from "@/lib/utils";
+import { rules } from "@/lib/domain/przepisy";
 import { PageHeader } from "@/components/layout/AppShell";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { DeadlineBadge, EvaluationStatusBadge, StatusBadge } from "@/components/ui/status-badge";
@@ -21,6 +25,15 @@ import { buildDashboardTodo, employeeHref, employeeRow, formatDay, journalLinks,
 export const metadata: Metadata = { title: "Pulpit – Kompas Kompetencji" };
 export const dynamic = "force-dynamic";
 
+const MONTHS_SHORT = ["sty", "lut", "mar", "kwi", "maj", "cze", "lip", "sie", "wrz", "paź", "lis", "gru"];
+const URGENCY_BAR: Record<string, string> = {
+  danger: "border-l-danger",
+  warning: "border-l-warning-strong",
+  success: "border-l-success",
+  info: "border-l-info",
+  neutral: "border-l-border",
+};
+
 // Pulpit przełożonego (Z11): „co mam dziś zrobić”, a pod spodem lista ludzi (sekcja 4.1 pkt 1).
 export default async function PulpitPage() {
   const user = await requirePageRole("PRZELOZONY");
@@ -30,6 +43,17 @@ export default async function PulpitPage() {
   const rows = sortRows(employees.map((e) => employeeRow(e, today)));
   const paths = pathEntries(employees);
   const reminders = noteReminders(employees, today);
+  // Podsumowanie na górze pulpitu – te same dane co lista „Do zrobienia” i karty pracowników.
+  const urgent = todo.filter((t) => t.urgency === "PILNE" || t.urgency === "PO_TERMINIE").length;
+  const soon = todo.filter((t) => t.urgency === "WKROTCE").length;
+  const inProgress = rows.filter((r) => r.evaluation && r.evaluation.status !== "ZAKONCZONA").length;
+  const notes = employees.reduce((sum, e) => sum + e.observationsCount, 0);
+  const stats: { label: string; value: number; icon: LucideIcon; alert?: boolean }[] = [
+    { label: `Pilne – do ${rules.deadlineUrgency.urgentDays} dni`, value: urgent, icon: AlarmClock, alert: urgent > 0 },
+    { label: `Terminy w ciągu ${rules.deadlineUrgency.soonDays} dni`, value: soon, icon: CalendarClock },
+    { label: "Oceny w toku", value: inProgress, icon: ClipboardList },
+    { label: "Notatki w dzienniku", value: notes, icon: NotebookPen },
+  ];
   const firstName = (user.name ?? "").split(" ")[0];
 
   return (
@@ -41,6 +65,27 @@ export default async function PulpitPage() {
       />
 
       <div className="flex flex-col gap-8">
+        {/* Liczba kolumn z szerokości w rem – przy powiększonym tekście kafelki same przechodzą do nowego wiersza. */}
+        <ul aria-label="Podsumowanie" className="grid grid-cols-[repeat(auto-fit,minmax(12rem,1fr))] gap-3">
+          {stats.map(({ label, value, icon: Icon, alert }) => (
+            <li
+              key={label}
+              className={cn("flex items-center gap-3 rounded-xl border bg-card p-4 shadow-xs", alert && "border-l-4 border-l-danger")}
+            >
+              <span
+                aria-hidden
+                className={cn("flex size-10 shrink-0 items-center justify-center rounded-lg", alert ? "bg-danger-soft text-danger" : "bg-secondary text-primary")}
+              >
+                <Icon className="size-5" />
+              </span>
+              <span className="flex flex-col leading-tight">
+                <span className="text-2xl font-semibold tabular-nums">{value}</span>
+                <span className="text-sm text-muted-foreground">{label}</span>
+              </span>
+            </li>
+          ))}
+        </ul>
+
         <Card>
           <CardHeader>
             <div className="flex flex-wrap items-center justify-between gap-2">
@@ -63,6 +108,14 @@ export default async function PulpitPage() {
               <ol className="flex flex-col divide-y">
                 {todo.map((item) => (
                   <li key={`${item.employeeId}-${item.deadline.kind}`} className="flex flex-wrap items-center justify-between gap-3 py-3">
+                    {/* Blok daty: dzień i miesiąc terminu; pasek z lewej w kolorze pilności (obok jest też tekst „Zostało …”). */}
+                    <span
+                      aria-hidden
+                      className={cn("flex w-14 shrink-0 flex-col items-center rounded-lg border border-l-4 bg-card py-1 leading-tight", URGENCY_BAR[URGENCY_TONE[item.urgency]])}
+                    >
+                      <span className="text-xl font-semibold tabular-nums">{Number(item.deadline.date.slice(8, 10))}</span>
+                      <span className="text-xs text-muted-foreground uppercase">{MONTHS_SHORT[Number(item.deadline.date.slice(5, 7)) - 1]}</span>
+                    </span>
                     <div className="flex min-w-0 flex-[1_1_14rem] flex-col gap-1.5">
                       <span className="font-medium">{item.title}</span>
                       <DeadlineBadge
@@ -185,7 +238,7 @@ export default async function PulpitPage() {
               action={<DodajPracownika />}
             />
           ) : (
-            <ul className="grid gap-3 lg:grid-cols-2">
+            <ul className="grid gap-3 lg:grid-cols-2 [&>li]:min-w-0">
               {rows.map((r) => {
                 const journal = journalLinks(r.id);
                 const obsText =
@@ -200,7 +253,9 @@ export default async function PulpitPage() {
                         a linia z obserwacjami – osobny link do dziennika (bez zagnieżdżania linków). */}
                     <div className="relative flex h-full flex-col gap-2 rounded-xl border bg-card p-4 shadow-xs transition-colors hover:border-primary/50">
                       <div className="flex flex-wrap items-start justify-between gap-2">
-                        <div className="flex min-w-0 flex-col">
+                        <div className="flex min-w-0 items-center gap-3">
+                          <Avatar name={r.name} />
+                          <div className="flex min-w-0 flex-col">
                           <Link
                             href={employeeHref(r.id)}
                             className="font-semibold text-foreground no-underline after:absolute after:inset-0 after:rounded-xl"
@@ -210,6 +265,7 @@ export default async function PulpitPage() {
                           <span className="text-sm text-muted-foreground">
                             {[r.positionTitle, r.orgUnit].filter(Boolean).join(" · ") || "Stanowisko nieuzupełnione"}
                           </span>
+                          </div>
                         </div>
                         {r.evaluation && <EvaluationStatusBadge type={r.evaluation.type} status={r.evaluation.status} />}
                       </div>

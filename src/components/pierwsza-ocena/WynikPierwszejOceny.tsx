@@ -40,7 +40,7 @@ export function WynikPierwszej({ elements, result }: { elements: ElementRow[]; r
         </CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
-        <div className="overflow-x-auto">
+        <div className="relative overflow-x-auto">
           <table className="w-full text-left text-sm">
             <caption className="sr-only">Oceny cząstkowe elementów pierwszej oceny</caption>
             <thead>

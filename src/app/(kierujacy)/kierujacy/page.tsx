@@ -87,7 +87,7 @@ function PierwszaOcena({ r }: { r: FirstEvaluationRow }) {
             <ol className="flex flex-col gap-1 text-sm">
               {r.calendar.map((c) => (
                 <li key={c.label} className={cn("flex flex-wrap gap-x-2", c.past && "text-muted-foreground")}>
-                  <span className="min-w-56">{c.label}</span>
+                  <span className="min-w-[min(100%,14rem)]">{c.label}</span>
                   <span className="font-medium">{formatDatePl(c.date)}</span>
                   {c.legalBasis && <span className="text-xs text-muted-foreground">({c.legalBasis})</span>}
                 </li>

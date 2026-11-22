@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
-import { Noto_Sans } from "next/font/google";
+import { Open_Sans } from "next/font/google";
 import "./globals.css";
 import { DISPLAY_INIT_SCRIPT } from "@/lib/ui/dostepnosc";
 
-// Noto Sans z zestawem latin-ext – poprawne polskie znaki (licencja OFL).
-const notoSans = Noto_Sans({
+// Open Sans – ta sama czcionka co portal gov.pl (strona Ministerstwa Cyfryzacji); latin-ext – polskie znaki (licencja OFL).
+const openSans = Open_Sans({
   variable: "--font-sans",
   subsets: ["latin", "latin-ext"],
+  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -26,7 +27,7 @@ export default function RootLayout({
       <head>
         <script dangerouslySetInnerHTML={{ __html: DISPLAY_INIT_SCRIPT }} />
       </head>
-      <body className={`${notoSans.variable} font-sans antialiased`}>
+      <body className={`${openSans.variable} font-sans antialiased`}>
         {children}
       </body>
     </html>

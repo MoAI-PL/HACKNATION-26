@@ -1,16 +1,27 @@
 "use client";
 
 import * as React from "react";
-import { Accessibility, Check } from "lucide-react";
+import { Accessibility, Check, Monitor, Moon, Sun } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   DEFAULT_DISPLAY,
   DISPLAY_STORAGE_KEY,
   TEXT_SIZES,
+  THEMES,
   applyDisplaySettings,
   parseDisplaySettings,
   type DisplaySettings,
 } from "@/lib/ui/dostepnosc";
+
+const THEME_ICONS = { jasny: Sun, ciemny: Moon, systemowy: Monitor } as const;
+
+function systemPrefersDark(): boolean {
+  try {
+    return window.matchMedia("(prefers-color-scheme: dark)").matches;
+  } catch {
+    return false;
+  }
+}
 
 function readStored(): DisplaySettings {
   try {
@@ -30,6 +41,20 @@ export function UstawieniaWyswietlania({ className }: { className?: string }) {
   const ref = React.useRef<HTMLDetailsElement>(null);
 
   React.useEffect(() => setSettings(readStored()), []);
+
+  // „Jak w systemie”: zmiana motywu systemu w trakcie pracy przełącza stronę od razu.
+  React.useEffect(() => {
+    if (settings.theme !== "systemowy") return;
+    let mq: MediaQueryList;
+    try {
+      mq = window.matchMedia("(prefers-color-scheme: dark)");
+    } catch {
+      return;
+    }
+    const onChange = () => applyDisplaySettings(document.documentElement, settings, mq.matches);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, [settings]);
 
   // Zamknięcie panelu klawiszem Escape (fokus wraca na przycisk) i kliknięciem poza nim.
   React.useEffect(() => {
@@ -52,7 +77,7 @@ export function UstawieniaWyswietlania({ className }: { className?: string }) {
 
   const update = (next: DisplaySettings, message: string) => {
     setSettings(next);
-    applyDisplaySettings(document.documentElement, next);
+    applyDisplaySettings(document.documentElement, next, systemPrefersDark());
     try {
       window.localStorage.setItem(DISPLAY_STORAGE_KEY, JSON.stringify(next));
     } catch {
@@ -61,7 +86,8 @@ export function UstawieniaWyswietlania({ className }: { className?: string }) {
     setStatus(message);
   };
 
-  const isDefault = settings.textSize === DEFAULT_DISPLAY.textSize && settings.highContrast === DEFAULT_DISPLAY.highContrast;
+  const isDefault =
+    settings.textSize === DEFAULT_DISPLAY.textSize && settings.highContrast === DEFAULT_DISPLAY.highContrast && settings.theme === DEFAULT_DISPLAY.theme;
 
   return (
     <details ref={ref} className={cn("relative", className)}>
@@ -95,6 +121,31 @@ export function UstawieniaWyswietlania({ className }: { className?: string }) {
                     {" "}
                     – {s.label.toLowerCase()} tekst, {s.value}%
                   </span>
+                </button>
+              );
+            })}
+          </div>
+        </fieldset>
+
+        <fieldset className="flex flex-col gap-2">
+          <legend className="mb-1 text-sm font-semibold">Motyw</legend>
+          <div className="grid grid-cols-3 gap-2">
+            {THEMES.map((t) => {
+              const active = settings.theme === t.value;
+              const Icon = THEME_ICONS[t.value];
+              return (
+                <button
+                  key={t.value}
+                  type="button"
+                  aria-pressed={active}
+                  onClick={() => update({ ...settings, theme: t.value }, `Motyw: ${t.label.toLowerCase()}.`)}
+                  className={cn(
+                    "flex min-h-14 flex-col items-center justify-center gap-1 rounded-lg border px-1 py-1.5 text-xs font-medium leading-tight",
+                    active ? "border-primary bg-primary text-primary-foreground" : "border-input bg-card hover:bg-muted",
+                  )}
+                >
+                  <Icon className="size-4" aria-hidden />
+                  {t.label}
                 </button>
               );
             })}

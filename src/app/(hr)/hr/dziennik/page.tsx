@@ -65,11 +65,11 @@ export default async function DziennikDecyzjiPage({ searchParams }: { searchPara
       />
 
       <form method="get" className="mb-6 flex flex-wrap items-end gap-4 rounded-xl border bg-card p-4" aria-label="Filtry dziennika">
-        <Field label="Rodzaj wpisów" className="min-w-56">
+        <Field label="Rodzaj wpisów" className="max-w-full min-w-[min(100%,14rem)]">
           <select
             name="rodzaj"
             defaultValue={filters.rodzaj}
-            className="h-10 rounded-md border border-input bg-card px-3 text-base"
+            className="h-10 max-w-full min-w-0 rounded-md border border-input bg-card px-3 text-base"
           >
             {AUDIT_KINDS.map((k) => (
               <option key={k} value={k}>
@@ -97,7 +97,7 @@ export default async function DziennikDecyzjiPage({ searchParams }: { searchPara
         />
       ) : (
         <Card>
-          <CardContent className="overflow-x-auto py-4">
+          <CardContent className="relative overflow-x-auto py-4" tabIndex={0} role="region" aria-label="Tabela dziennika decyzji">
             <p className="mb-3 text-sm text-muted-foreground" aria-live="polite">
               {rows.length === SCREEN_LIMIT ? `Pokazano ${SCREEN_LIMIT} najnowszych wpisów – pełna lista w pliku CSV.` : `Wpisów: ${rows.length}.`} Długie
               treści są skrócone – pełne dane są w pliku CSV.

@@ -29,13 +29,16 @@ const ICONS: Record<NavIcon, LucideIcon> = {
   podpis: FileSignature,
 };
 
-/** Menu główne – poziome, zawija się przy 768 px. Aktywna pozycja ma aria-current="page". */
+/**
+ * Menu główne – poziome; na wąskim ekranie przewija się w bok (jeden wiersz zamiast kilku).
+ * Aktywna pozycja: granatowy tekst i podkreślenie (aria-current="page" – nie sam kolor).
+ */
 export function MainNav({ items }: { items: NavItem[] }) {
   const pathname = usePathname();
   const current = activeHref(pathname, items);
   return (
     <nav aria-label="Menu główne" className="border-t bg-card">
-      <ul className="mx-auto flex max-w-7xl flex-wrap gap-1 px-4 py-1.5 md:px-6">
+      <ul className="relative mx-auto flex max-w-7xl gap-1 overflow-x-auto px-4 [scrollbar-width:thin] md:px-6">
         {items.map((item) => {
           const Icon = ICONS[item.icon];
           const active = item.href === current;
@@ -46,10 +49,11 @@ export function MainNav({ items }: { items: NavItem[] }) {
                 aria-current={active ? "page" : undefined}
                 title={item.description}
                 className={cn(
-                  "flex min-h-10 items-center gap-2 rounded-md px-3 text-sm font-medium no-underline transition-colors",
+                  "relative flex min-h-11 items-center gap-2 px-3 text-sm font-medium whitespace-nowrap no-underline transition-colors",
+                  "after:absolute after:inset-x-2 after:bottom-0 after:h-[3px] after:rounded-t-sm",
                   active
-                    ? "bg-secondary text-primary"
-                    : "text-muted-foreground hover:bg-muted hover:text-foreground",
+                    ? "text-primary after:bg-primary"
+                    : "text-muted-foreground hover:text-foreground hover:after:bg-border",
                 )}
               >
                 <Icon className="size-4" aria-hidden />

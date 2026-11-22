@@ -1,6 +1,5 @@
 import * as React from "react";
 import Link from "next/link";
-import { Compass } from "lucide-react";
 import type { Role } from "@/lib/domain/types";
 import { ROLE_LABELS } from "@/lib/domain/slownik";
 import { navForRole, roleHasAssistant, roleHasQuickNote } from "@/lib/ui/nav";
@@ -8,6 +7,9 @@ import { MainNav } from "./MainNav";
 import { HeaderActions } from "./HeaderActions";
 import { GlobalShortcuts } from "./Shortcuts";
 import { UstawieniaWyswietlania } from "./UstawieniaWyswietlania";
+import { Brand, ServiceBar } from "./Brand";
+import { Avatar } from "@/components/ui/avatar";
+import { isDemoMode } from "@/lib/auth/demo";
 import { SzybkaNotatka } from "@/components/asystent/SzybkaNotatka";
 import { ZastosujKonfiguracje } from "@/components/konfiguracja/ZastosujKonfiguracje";
 import { currentRuntimeConfig } from "@/lib/konfiguracja/stan";
@@ -50,18 +52,17 @@ export function AppShell({
         Przejdź do treści
       </a>
 
-      <header className="sticky top-0 z-30 bg-card shadow-xs print:hidden">
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-4 py-3 md:px-6">
-          <Link href="/" className="flex items-center gap-2 text-foreground no-underline">
-            <Compass className="size-7 text-primary" aria-hidden />
-            <span className="text-lg font-semibold tracking-tight">Kompas Kompetencji</span>
-          </Link>
+      <ServiceBar demo={isDemoMode()} />
+      <header className="sticky top-0 z-30 border-b bg-card shadow-xs print:hidden">
+        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-4 py-2.5 md:px-6">
+          <Brand />
 
           <div className="flex flex-wrap items-center gap-2">
             <HeaderActions quickNote={quickNote} assistant={assistant} />
             <UstawieniaWyswietlania />
-            <div className="flex items-center gap-2 border-l pl-3">
-              <div className="flex flex-col text-right leading-tight">
+            <div className="flex min-w-0 flex-wrap items-center gap-2 border-l pl-3">
+              <Avatar name={user.name} size="sm" />
+              <div className="flex flex-col leading-tight">
                 <span className="text-sm font-medium">{user.name}</span>
                 <span className="text-xs text-muted-foreground">{ROLE_LABELS[user.role]}</span>
               </div>

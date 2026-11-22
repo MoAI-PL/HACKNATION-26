@@ -8,7 +8,7 @@ Rozwiązanie zadania Ministerstwa Cyfryzacji (Biuro Dyrektora Generalnego) „Ko
 
 ## Demo
 
-**https://hacknation-26.vercel.app** – logowanie jednym kliknięciem na karcie konta demo (dane są fikcyjne).
+**https://sprawdz-my-kompetencje.vercel.app** – logowanie jednym kliknięciem na karcie konta demo (dane są fikcyjne).
 
 | Rola | E-mail | Hasło | Co zobaczyć |
 |---|---|---|---|
@@ -41,7 +41,7 @@ Scenariusz krok po kroku dla jury (ok. 12 minut): **[`docs/DEMO.md`](docs/DEMO.m
 | 🧑‍💼 | **Kierujący komórką** | pierwsze oceny nowych pracowników komórki z kalendarzem terminów i opisem roli kierującego (porozumienie, rozmowa, podpis, wniosek do dyrektora generalnego) |
 | 🔌 | **REST API** | eksport oceny w JSON pod EZD i system kadrowy (`/api/v1/oceny/{id}`), lista ocen i pracowników z tymi samymi uprawnieniami co ekrany – [`docs/openapi.yaml`](docs/openapi.yaml) |
 | 👤 | **Moje oceny (oceniany)** | pracownik widzi kryteria i termin bieżącej oceny (część I arkusza), a po sporządzeniu – wynik z wyjaśnieniem, uzasadnienie, IPRZ i termin sprzeciwu; sam potwierdza zapoznanie się z oceną |
-| ♿ | **Dostępność** | WCAG 2.1 AA (0 naruszeń axe na ekranach ścieżki demo), przycisk „Dostępność” w nagłówku: większy tekst (125%, 150%) i wysoki kontrast, zapamiętane w przeglądarce; [deklaracja dostępności](https://hacknation-26.vercel.app/deklaracja-dostepnosci) zgodna z ustawą o dostępności cyfrowej |
+| ♿ | **Dostępność** | WCAG 2.1 AA (0 naruszeń axe na ekranach ścieżki demo), przycisk „Dostępność” w nagłówku: większy tekst (125%, 150%), wysoki kontrast i motyw jasny / ciemny / jak w systemie, zapamiętane w przeglądarce; [deklaracja dostępności](https://sprawdz-my-kompetencje.vercel.app/deklaracja-dostepnosci) zgodna z ustawą o dostępności cyfrowej |
 | 🔐 | **Role i bezpieczeństwo** | przełożony, HR, oceniany, kierujący; autoryzacja w każdym API i akcji serwerowej (401/403), przełożony widzi wyłącznie swoich podwładnych |
 
 | ![Ocena wskaźników kartami zachowań](docs/zrzuty/03-ocena-wskaznikow.jpg) | ![Asystent formalny ze źródłami](docs/zrzuty/04-asystent.jpg) |
@@ -133,5 +133,5 @@ docs/        dokumentacja
 
 - Pliki w `materialy/` pochodzą od organizatora zadania (Ministerstwo Cyfryzacji) i zostały udostępnione na potrzeby hackathonu: rozporządzenie Prezesa Rady Ministrów z 4.04.2016 r. w sprawie ocen okresowych (Dz.U. 2016 poz. 470), rozporządzenie Prezesa Rady Ministrów z 23.07.2015 r. w sprawie pierwszej oceny (Dz.U. 2015 poz. 1144), poradniki Departamentu Służby Cywilnej KPRM (wrzesień 2016), wzory arkuszy, model kompetencji i przykładowe opisy stanowisk pracy.
 - Baza wiedzy asystenta to fragmenty tych dokumentów z oznaczeniem źródła (dokument, jednostka redakcyjna, strona).
-- Zależności – wyłącznie licencje permisywne (MIT, Apache-2.0, BSD, ISC; czcionka Noto Sans – OFL): [`docs/LICENCJE.md`](docs/LICENCJE.md).
+- Zależności – wyłącznie licencje permisywne (MIT, Apache-2.0, BSD, ISC; czcionki Open Sans i Noto Sans – OFL): [`docs/LICENCJE.md`](docs/LICENCJE.md).
 - Wszystkie osoby w danych demo są fikcyjne.

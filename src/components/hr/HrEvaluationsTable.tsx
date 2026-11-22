@@ -12,7 +12,7 @@ import { addReminderAction } from "@/lib/hr/actions";
 
 export function HrEvaluationsTable({ rows, reminderFor }: { rows: HrRow[]; reminderFor: (row: HrRow) => boolean }) {
   return (
-    <div className="overflow-x-auto rounded-lg border bg-card" role="region" aria-label="Tabela ocen" tabIndex={0}>
+    <div className="relative overflow-x-auto rounded-lg border bg-card" role="region" aria-label="Tabela ocen" tabIndex={0}>
       <table className="w-full min-w-[36rem] border-collapse text-sm">
         <caption className="sr-only">Oceny w urzędzie: pracownik, etap, najbliższy termin i działania komórki kadr</caption>
         <thead className="bg-muted/60 text-left">
@@ -38,7 +38,7 @@ export function HrEvaluationsTable({ rows, reminderFor }: { rows: HrRow[]; remin
                 {r.orgUnit && <span className="block text-xs text-muted-foreground">{r.orgUnit}</span>}
               </th>
               <td className="px-3 py-3">
-                <EvaluationStatusBadge type={r.type} status={r.status} className="whitespace-normal" />
+                <EvaluationStatusBadge type={r.type} status={r.status} />
               </td>
               <td className="px-3 py-3">
                 {r.deadline && r.urgency && r.daysLeft !== null ? (
@@ -62,7 +62,7 @@ export function HrEvaluationsTable({ rows, reminderFor }: { rows: HrRow[]; remin
                   <span className="text-muted-foreground">{r.status === "ZAKONCZONA" ? "Ocena zakończona" : "Czeka na zapoznanie się ocenianego"}</span>
                 )}
                 {r.warnings.map((w) => (
-                  <StatusBadge key={w} tone="danger" className="mt-2 whitespace-normal">
+                  <StatusBadge key={w} tone="danger" className="mt-2 rounded-lg whitespace-normal">
                     {w}
                   </StatusBadge>
                 ))}

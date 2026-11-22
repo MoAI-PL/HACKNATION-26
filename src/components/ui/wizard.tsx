@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import { Progress } from "radix-ui";
 import { AlertCircle, Check, CheckCircle2, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { autosaveText, wizardStepLabel, type AutosaveState } from "@/lib/ui/status";
@@ -24,23 +23,13 @@ export function WizardProgress({
   className?: string;
 }) {
   const total = steps.length;
-  const percent = Math.round(((current - 1) / Math.max(total - 1, 1)) * 100);
   const label = wizardStepLabel(current, total, steps[current - 1] ?? "");
 
   return (
     <nav aria-label="Postęp kreatora" className={cn("flex flex-col gap-3", className)}>
       <p className="text-sm font-medium text-muted-foreground">{label}</p>
-      <Progress.Root
-        value={percent}
-        aria-label={label}
-        className="h-2 w-full overflow-hidden rounded-full bg-muted"
-      >
-        <Progress.Indicator
-          className="h-full bg-primary transition-[width]"
-          style={{ width: `${percent}%` }}
-        />
-      </Progress.Root>
-      <ol className="flex flex-wrap gap-x-4 gap-y-1 text-sm">
+      {/* Kroki jako odcinki jednej osi: kolumny z szerokości w rem (zawijają się przy wąskim ekranie i większym tekście). */}
+      <ol className="grid grid-cols-[repeat(auto-fit,minmax(7.5rem,1fr))] gap-x-2 gap-y-3 text-sm">
         {steps.map((name, i) => {
           const n = i + 1;
           const done = n < current;
@@ -58,24 +47,25 @@ export function WizardProgress({
               >
                 {done ? <Check className="size-3.5" strokeWidth={3} /> : n}
               </span>
-              <span className={cn(active ? "font-medium text-foreground" : "text-muted-foreground")}>
+              <span className={cn("line-clamp-2 leading-snug", active ? "font-semibold text-foreground" : "text-muted-foreground")}>
                 {name}
                 {done && <span className="sr-only"> (ukończony)</span>}
               </span>
             </>
           );
           return (
-            <li key={name} aria-current={active ? "step" : undefined}>
+            <li key={name} aria-current={active ? "step" : undefined} className="flex flex-col gap-2" title={name}>
+              <span aria-hidden className={cn("h-1 rounded-full", done || active ? "bg-primary" : "bg-muted")} />
               {done && onStepClick ? (
                 <button
                   type="button"
                   onClick={() => onStepClick(n)}
-                  className="flex min-h-6 items-center gap-2 rounded-md hover:underline"
+                  className="flex min-h-6 items-start gap-2 rounded-md text-left hover:underline"
                 >
                   {content}
                 </button>
               ) : (
-                <span className="flex min-h-6 items-center gap-2">{content}</span>
+                <span className="flex min-h-6 items-start gap-2">{content}</span>
               )}
             </li>
           );

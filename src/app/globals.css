@@ -46,6 +46,10 @@
   --color-warning: var(--warning);
   --color-warning-soft: var(--warning-soft);
   --color-warning-strong: var(--warning-strong);
+  --color-success-strong: var(--success-strong);
+  --color-danger-strong: var(--danger-strong);
+  --color-info-strong: var(--info-strong);
+  --color-neutral-strong: var(--neutral-strong);
   --color-danger: var(--danger);
   --color-danger-soft: var(--danger-soft);
   --color-info: var(--info);
@@ -88,14 +92,20 @@
 
   --success: #166534;
   --success-soft: #e7f4ea;
-  --warning: #8a4b00;
-  --warning-soft: #fff3dc;
+  /* Ostrzeżenie: jeden odcień pomarańczu – tekst #9a3412 (7,3:1 na białym), tło odznak #c2410c, jasne tło #fff1e8. */
+  --warning: #9a3412;
+  --warning-soft: #fff1e8;
   /* Pomarańcz jako tło odznaki pilności z białym tekstem (5,2:1); jako kolor tekstu używamy --warning. */
   --warning-strong: #c2410c;
   --danger: #a61b1b;
   --danger-soft: #fdeceb;
   --info: #1f4e8c;
   --info-soft: #e8f0fa;
+  /* Tła odznak z pełnym tłem (biały tekst) – takie same w obu motywach. */
+  --success-strong: #166534;
+  --danger-strong: #a61b1b;
+  --info-strong: #1f4e8c;
+  --neutral-strong: #4f5b67;
 
   --radius: 0.625rem;
 }
@@ -111,6 +121,99 @@ html.tekst-125 {
 }
 html.tekst-150 {
   font-size: 150%;
+}
+/*
+ * Tryb ciemny (przycisk „Dostępność” → Motyw). Klasa .dark na <html> – działają też warianty dark: z shadcn/ui.
+ * Kontrast tekstu ≥ 4,5:1 na tle i na kartach; jaśniejsze odcienie kolorów statusu, nasycone tła odznak bez zmian.
+ */
+html.dark {
+  color-scheme: dark;
+  --background: #0f1720;
+  --foreground: #e6edf5;
+  --card: #17212c;
+  --card-foreground: #e6edf5;
+  --popover: #17212c;
+  --popover-foreground: #e6edf5;
+  --primary: #8ab4f8;
+  --primary-foreground: #0b1b33;
+  --secondary: #1f2c3a;
+  --secondary-foreground: #dbe7f5;
+  --muted: #1b2633;
+  --muted-foreground: #aab7c5;
+  --accent: #1f2c3a;
+  --accent-foreground: #e6edf5;
+  --destructive: #f2867d;
+  --border: #2c3a4a;
+  --input: #7a8a9c;
+  --ring: #8ab4f8;
+  --ai: #c4b5fd;
+  --ai-foreground: #1e1238;
+  --ai-soft: #221a33;
+  --ai-border: #8b5cf6;
+  --success: #74d39f;
+  --success-soft: #12281d;
+  --warning: #fdba8c;
+  --warning-soft: #2c1a10;
+  --danger: #f59a93;
+  --danger-soft: #2d1616;
+  --info: #8ab4f8;
+  --info-soft: #15243a;
+}
+/* Wysoki kontrast w trybie ciemnym: biały tekst na czarnym tle. */
+html.dark.wysoki-kontrast {
+  --background: #000000;
+  --foreground: #ffffff;
+  --card: #000000;
+  --card-foreground: #ffffff;
+  --popover: #000000;
+  --popover-foreground: #ffffff;
+  --primary: #9cc3ff;
+  --primary-foreground: #000000;
+  --secondary: #000000;
+  --secondary-foreground: #ffffff;
+  --muted: #141414;
+  --muted-foreground: #e6e6e6;
+  --accent: #000000;
+  --accent-foreground: #ffffff;
+  --border: #ffffff;
+  --input: #ffffff;
+  --ring: #ffd400;
+  --ai: #d8ccff;
+  --ai-soft: #000000;
+  --success: #8ee5b4;
+  --success-soft: #000000;
+  --warning: #ffc9a3;
+  --warning-soft: #000000;
+  --danger: #ffb3ad;
+  --danger-soft: #000000;
+  --info: #9cc3ff;
+  --info-soft: #000000;
+}
+html.dark.wysoki-kontrast :focus-visible {
+  outline-color: #ffd400;
+  box-shadow: 0 0 0 6px #000000;
+}
+/* Wydruk zawsze jasny. */
+@media print {
+  html.dark {
+    color-scheme: light;
+    --background: #ffffff;
+    --foreground: #1b1f24;
+    --card: #ffffff;
+    --card-foreground: #1b1f24;
+    --muted-foreground: #4f5b67;
+    --border: #d5dbe1;
+  }
+}
+
+/* Przy powiększonym tekście długie napisy na przyciskach zawijają się zamiast wypychać stronę w bok. */
+html:is(.tekst-125, .tekst-150) [data-slot="button"] {
+  height: auto;
+  min-height: 2.25rem;
+  max-width: 100%;
+  flex-shrink: 1;
+  white-space: normal;
+  text-align: center;
 }
 html.wysoki-kontrast {
   --background: #ffffff;

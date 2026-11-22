@@ -4,6 +4,8 @@ Demo: **Vercel** (aplikacja Next.js, darmowy plan Hobby, logowanie kontem GitHub
 
 ## Jak to działa
 
+- Adres demo: **https://sprawdz-my-kompetencje.vercel.app** (nazwa projektu: sprawdz.my.kompetencje). Poprzedni adres `hacknation-26.vercel.app` wskazuje na to samo wdrożenie – stare linki działają.
+
 - `vercel.json` ustawia build na `node scripts/build-produkcja.mjs`.
 - **Wdrożenie produkcyjne** (gałąź `main`): `prisma migrate deploy` → `npm run seed` (konta i dane demo od nowa, daty liczone od dnia wdrożenia) → `next build`. Migracje i seed idą połączeniem bezpośrednim (`DATABASE_URL_UNPOOLED` z integracji Neon), aplikacja – pulą połączeń (`DATABASE_URL`).
 - **Wdrażana jest tylko gałąź `main`.** `git.deploymentEnabled` w `vercel.json` sprawia, że push na inną gałąź w ogóle nie tworzy wdrożenia (nie liczy się do limitu). Dodatkowo `ignoreCommand` uruchamia [`scripts/vercel-ignore.sh`](../scripts/vercel-ignore.sh): pomija build gałęzi innej niż `main` (zabezpieczenie dla starszych gałęzi, ta sama reguła jest w **Settings → Build and Deployment → Ignored Build Step**) oraz push, który od ostatniego wdrożenia zmienił tylko `docs/`, `README.md`, `e2e/` albo `tests/`. Przy każdej wątpliwości skrypt buduje, żeby nie zablokować produkcji; pierwsza linia logu buildu pokazuje jego decyzję. Gdyby ktoś wdrożył gałąź ręcznie, `build-produkcja.mjs` i tak nie dotknie bazy (tylko `VERCEL_ENV=production`).

@@ -39,7 +39,7 @@ Prawa do kodu: zespół jest autorem całego kodu aplikacji; użyte biblioteki s
 | vite-tsconfig-paths | 6 | MIT | aliasy `@/` w testach |
 | tsx | 4 | MIT | uruchamianie skryptów TS |
 | eslint, eslint-config-next, @eslint/eslintrc | 9 / 15.5 / 3 | MIT | lint |
-| Noto Sans (przez `next/font`) | — | OFL-1.1 | czcionka z polskimi znakami |
+| Open Sans (przez `next/font`) | — | OFL-1.1 | czcionka interfejsu z polskimi znakami (jak portal gov.pl) |
 | @react-pdf/renderer | 4.9 | MIT | PDF arkuszy B i C (Z16); zależności przechodnie (pdfkit, fontkit i in.) – MIT/ISC |
 | Noto Sans – pliki TTF w `src/lib/pdf/czcionki/` | — | OFL-1.1 (`OFL.txt` obok plików) | czcionka arkusza PDF z polskimi znakami (Z16) |
 

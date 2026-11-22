@@ -65,6 +65,7 @@ Kolejność: najpierw ★, potem pozostałe P0, potem P1 (w kolejności z tabeli
 | ★Z29 | Publiczne demo | Z04, Z26 | gotowe | suzanne0401 | `z29-publiczne-demo` |
 | ★Z44 | Reset danych demo i działanie bez AI | Z20, Z26 | gotowe | Nadia | `z44-zabezpieczenia-demo` |
 | Z30 | Testy ręczne, Playwright, dostępność, pomiar czasu oceny | Z15, Z16 | gotowe | bartektymochowicz-collab | `bartek/z30-testy` |
+| Z47 | Dostępność: ustawienia wyświetlania (tekst 125/150%, wysoki kontrast), deklaracja dostępności, poprawki układu przy powiększonym tekście | Z10, Z30 | gotowe | suzanne0401 | `main` |
 | Z31 | Dokumentacja (`README`, `docs/`) | całość | gotowe (aktualizacja przed zgłoszeniem) | suzanne0401 | `z31-dokumentacja` |
 | Z32 | Prezentacja, film, pitch | Z25, Z30 | wolne | | |
 | ★Z33 | Zgłoszenie finalne w HackTribe (ok. 08:00) | Z29, Z31, Z32 | wolne | | |

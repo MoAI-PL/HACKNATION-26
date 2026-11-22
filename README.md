@@ -41,6 +41,7 @@ Scenariusz krok po kroku dla jury (ok. 12 minut): **[`docs/DEMO.md`](docs/DEMO.m
 | 🧑‍💼 | **Kierujący komórką** | pierwsze oceny nowych pracowników komórki z kalendarzem terminów i opisem roli kierującego (porozumienie, rozmowa, podpis, wniosek do dyrektora generalnego) |
 | 🔌 | **REST API** | eksport oceny w JSON pod EZD i system kadrowy (`/api/v1/oceny/{id}`), lista ocen i pracowników z tymi samymi uprawnieniami co ekrany – [`docs/openapi.yaml`](docs/openapi.yaml) |
 | 👤 | **Moje oceny (oceniany)** | pracownik widzi kryteria i termin bieżącej oceny (część I arkusza), a po sporządzeniu – wynik z wyjaśnieniem, uzasadnienie, IPRZ i termin sprzeciwu; sam potwierdza zapoznanie się z oceną |
+| ♿ | **Dostępność** | WCAG 2.1 AA (0 naruszeń axe na ekranach ścieżki demo), przycisk „Dostępność” w nagłówku: większy tekst (125%, 150%) i wysoki kontrast, zapamiętane w przeglądarce; [deklaracja dostępności](https://hacknation-26.vercel.app/deklaracja-dostepnosci) zgodna z ustawą o dostępności cyfrowej |
 | 🔐 | **Role i bezpieczeństwo** | przełożony, HR, oceniany, kierujący; autoryzacja w każdym API i akcji serwerowej (401/403), przełożony widzi wyłącznie swoich podwładnych |
 
 | ![Ocena wskaźników kartami zachowań](docs/zrzuty/03-ocena-wskaznikow.jpg) | ![Asystent formalny ze źródłami](docs/zrzuty/04-asystent.jpg) |

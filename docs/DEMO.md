@@ -86,5 +86,7 @@ Każde źródło można rozwinąć – widać cytat i miejsce w dokumencie (para
 
 ## Dla ciekawych
 
+- Dostępność: przycisk **„Dostępność”** w nagłówku (i na ekranie logowania) – tekst 125% albo 150% i wysoki kontrast, zapamiętane w przeglądarce; w stopce **„Deklaracja dostępności”** zgodna z ustawą o dostępności cyfrowej. Ekrany ścieżki demo: 0 naruszeń WCAG 2.1 A/AA (axe).
+
 - Zestaw testowy asystenta: **25/25 trafnych odpowiedzi ze źródłem i 5/5 poprawnych odmów** – [`eval/wynik.md`](../eval/wynik.md).
 - Jak działa AI i gdzie celowo go nie ma: [`AI.md`](AI.md). Architektura: [`ARCHITEKTURA.md`](ARCHITEKTURA.md). Bezpieczeństwo: [`BEZPIECZENSTWO.md`](BEZPIECZENSTWO.md).

@@ -59,7 +59,8 @@ const OBS_PIOTR: Obs[] = [
   [330, "LUDZIE.4", 2, "Błędy w rozliczeniu dotacji przygotowanym przez pracownika.", "Poprawił dokument sam, nie omawiając błędów z pracownikiem.", "Podobne błędy powtórzyły się w następnym rozliczeniu."],
   [210, "ORGANIZACJA.4", 4, "Przesunięcie wizyty delegacji zagranicznej o tydzień.", "W ciągu jednego dnia przebudował plan wizyty i rezerwacje.", "Wizyta odbyła się bez kosztów dodatkowych."],
   [120, "LUDZIE.5", 4, "Konflikt dwóch pracowników o podział obsługi delegacji.", "Przeprowadził rozmowę z obiema osobami i ustalił zasady rotacji.", "Konflikt nie powrócił, zasady stosowane w całym wydziale."],
-  [40, "NEGOCJOWANIE.3", 4, "Renegocjacja warunków umowy na bilety lotnicze.", "Przygotował stanowisko z wariantami ustępstw i uzgodnił je z dyrektorem.", "Uzyskał niższe opłaty serwisowe akceptowane przez kierownictwo."],
+  // 100 dni temu: od ponad 3 miesięcy brak notatki – pulpit pokazuje przypomnienie o regularnych notatkach (Z45).
+  [100, "NEGOCJOWANIE.3", 4, "Renegocjacja warunków umowy na bilety lotnicze.", "Przygotował stanowisko z wariantami ustępstw i uzgodnił je z dyrektorem.", "Uzyskał niższe opłaty serwisowe akceptowane przez kierownictwo."],
 ];
 
 const OBS_JAN: Obs[] = [

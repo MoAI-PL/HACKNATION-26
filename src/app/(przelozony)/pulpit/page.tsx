@@ -15,6 +15,7 @@ import { DEADLINE_KIND_LABELS } from "@/lib/rules/terminy";
 import { daysBetween, formatDatePl, weekdayName } from "@/lib/rules/kalendarz";
 import { plural } from "@/lib/rules/tekst";
 import { loadSubordinates } from "@/lib/dashboard/dane";
+import { NOTE_REMINDER_DAYS, NOTE_REMINDER_LIMIT, monthsAgoText, noteReminders } from "@/lib/dashboard/notatki";
 import { buildDashboardTodo, employeeHref, employeeRow, formatDay, journalLinks, pathEntries, sortRows, type PathKey } from "@/lib/dashboard/pulpit";
 
 export const metadata: Metadata = { title: "Pulpit – Kompas Kompetencji" };
@@ -28,6 +29,7 @@ export default async function PulpitPage() {
   const todo = buildDashboardTodo(employees, today);
   const rows = sortRows(employees.map((e) => employeeRow(e, today)));
   const paths = pathEntries(employees);
+  const reminders = noteReminders(employees, today);
   const firstName = (user.name ?? "").split(" ")[0];
 
   return (
@@ -83,6 +85,57 @@ export default async function PulpitPage() {
             )}
           </CardContent>
         </Card>
+
+        {reminders.length > 0 && (
+          <Card>
+            <CardHeader>
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <CardTitle>Regularne notatki</CardTitle>
+                <InfoTip label="Dlaczego to przypomnienie?" legalBasis="§ 10 rozporządzenia w sprawie ocen okresowych">
+                  Ocena obejmuje cały okres. Gdy notatki pochodzą tylko z ostatnich tygodni, łatwo ocenić świeże wrażenie zamiast
+                  całego okresu (efekt świeżości). Przypominamy o osobach bez notatki od ponad {NOTE_REMINDER_DAYS} dni.
+                </InfoTip>
+              </div>
+              <CardDescription>Osoby w okresie oceny, o których od dawna nie ma notatki w dzienniku obserwacji.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ul className="flex flex-col divide-y">
+                {reminders.slice(0, NOTE_REMINDER_LIMIT).map((r) => {
+                  const links = journalLinks(r.employeeId);
+                  return (
+                    <li key={r.employeeId} className="flex flex-wrap items-center justify-between gap-3 py-3">
+                      <div className="flex min-w-0 flex-[1_1_14rem] flex-col gap-0.5">
+                        <span className="font-medium">
+                          {r.employeeName} – bez notatki od {monthsAgoText(r.days)}
+                        </span>
+                        <span className="text-sm text-muted-foreground">
+                          {r.lastNote
+                            ? `Ostatnia notatka: ${formatDatePl(r.lastNote)} (${r.days} ${plural(r.days, ["dzień", "dni", "dni"])} temu).`
+                            : `Brak notatek od początku okresu oceny (${formatDatePl(r.periodStart)}).`}
+                        </span>
+                      </div>
+                      {links && (
+                        <Button variant="outline" asChild>
+                          <Link href={links.add} className="no-underline">
+                            <NotebookPen aria-hidden />
+                            Dodaj notatkę
+                            <span className="sr-only">: {r.employeeName}</span>
+                          </Link>
+                        </Button>
+                      )}
+                    </li>
+                  );
+                })}
+              </ul>
+              {reminders.length > NOTE_REMINDER_LIMIT && (
+                <p className="mt-2 text-sm text-muted-foreground">
+                  I jeszcze {reminders.length - NOTE_REMINDER_LIMIT} {plural(reminders.length - NOTE_REMINDER_LIMIT, ["osoba", "osoby", "osób"])} – zobacz{" "}
+                  <Link href="/obserwacje">dziennik obserwacji</Link>.
+                </p>
+              )}
+            </CardContent>
+          </Card>
+        )}
 
         {paths.length > 0 && (
           <nav aria-labelledby="sciezki" className="flex flex-col gap-3">

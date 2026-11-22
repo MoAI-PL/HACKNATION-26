@@ -8,8 +8,16 @@ import { competencyModel } from "@/lib/domain/model-kompetencji-dane";
 import { rules } from "@/lib/domain/przepisy";
 import { fromDbDate } from "@/lib/domain/daty";
 import { addDays } from "@/lib/rules/kalendarz";
+import { NOTE_REMINDER_DAYS } from "@/lib/dashboard/notatki";
 
 describe("dane demo – definicje", () => {
+  it("Piotr Lewandowski bez notatki od ponad 3 miesięcy – pulpit pokazuje przypomnienie o regularnych notatkach (Z45)", () => {
+    const newest = Math.min(...DEMO_OBSERVATIONS.PIOTR.map(([ago]) => ago));
+    expect(newest).toBeGreaterThanOrEqual(NOTE_REMINDER_DAYS);
+    // Pozostałe osoby w okresie oceny mają świeże notatki – przypomnienie jest jedno, czytelne.
+    for (const key of ["JAN", "MARCIN"] as const) expect(Math.min(...DEMO_OBSERVATIONS[key].map(([ago]) => ago))).toBeLessThan(NOTE_REMINDER_DAYS);
+  });
+
   it("stanowiska z OSP dają właściwy arkusz: naczelnik B, radca i starszy specjalista C", () => {
     expect(rules.periodic.sheetBySubordinates[DEMO_OSP.NACZELNIK.subordinates]).toBe("B");
     expect(rules.periodic.sheetBySubordinates[DEMO_OSP.RADCA.subordinates]).toBe("C");

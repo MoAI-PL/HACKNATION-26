@@ -310,6 +310,12 @@ Przełożony widzi wyłącznie swoich podwładnych: zapytania filtrujemy po `sup
 
 **Zmiana w silniku terminów (Z08) – informacja dla właściciela Z08:** `buildTodoItems` w `src/lib/rules/terminy.ts` dopisuje rok do daty w tytule karty, gdy termin wypada w innym roku niż dzisiejszy: „termin minął 22.12.2025”, „do 05.01.2027”. W bieżącym roku format się nie zmienia („do pt. 27.11”), więc dotychczasowe testy Z08 przechodzą bez zmian. Powód: przy terminie sprzed roku sama data „22.12” była niejednoznaczna (wyszło przy dodaniu pracownika z datą zatrudnienia na czas nieokreślony sprzed roku). Ta sama zasada działa na liście pracowników na pulpicie (`formatDay` w `pulpit.ts`).
 
+## Przypomnienia o regularnych notatkach (Z45)
+
+- Karta „Regularne notatki” na pulpicie, pod „Do zrobienia”; widoczna tylko, gdy jest kogo przypomnieć (najwyżej 3 osoby, reszta jako „i jeszcze N”).
+- Logika: `src/lib/dashboard/notatki.ts` (`noteReminders`) – czysta funkcja na danych z `loadSubordinates` (data ostatniej notatki już tam jest – bez dodatkowego zapytania). Tylko osoby w okresie oceny (`W_OKRESIE_OCENY`); próg 90 dni od ostatniej notatki z okresu albo od jego początku (założenie #24). Przycisk „Dodaj notatkę” – `/obserwacje/nowa?osoba=…` z wybraną osobą.
+- Uzasadnienie w „Dlaczego to przypomnienie?”: ocena obejmuje cały okres (§ 10), notatki tylko z końca okresu to efekt świeżości (Lustro, Z36).
+
 ## Dziennik decyzji (Z35)
 
 - Ekran `/hr/dziennik` (rola HR): wpisy `AuditLog` od najnowszych – propozycja AI obok decyzji człowieka, zmiany sugestii z powodem, zmiana arkusza, ustalenie kryteriów, sporządzenie i zapoznanie się z oceną. Filtry: rodzaj wpisów (decyzje / tylko AI / logowania / wszystkie) i okres.

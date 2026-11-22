@@ -14,6 +14,7 @@ Adres: **https://hacknation-26.vercel.app** · wszystkie dane są fikcyjne · na
    - „Ocena okresowa – K. Wójcik – do … (art. 81 ust. 4 ustawy)” – termin za kilka dni;
    - „Rozmowa rozpoczynająca – M. Kamińska – do … (§ 7 pkt 1)” – 30 dni od zatrudnienia na czas nieokreślony.
 3. **„Skąd te terminy?”** wyjaśnia, jak liczone są terminy (KC art. 111–115, święta, przesunięcie z weekendu).
+4. Pod spodem karta **„Regularne notatki”**: „Piotr Lewandowski – bez notatki od ponad 3 miesiące” – ocena za półtora miesiąca, a notatki urwały się w sierpniu. „Dodaj notatkę” otwiera formularz z wybraną osobą.
 
 ## 2. Rozpoczęcie oceny od opisu stanowiska (2 min)
 

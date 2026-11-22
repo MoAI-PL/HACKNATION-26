@@ -49,7 +49,7 @@ describe("CSV", () => {
     expect(csv.startsWith("﻿Data i godzina;Kto;Rola;Działanie;")).toBe(true);
     expect(csv.endsWith("\r\n")).toBe(true);
     const linia = csv.split("\r\n")[1]!;
-    expect(linia).toContain("21.11.2026 14:32;Ewa Kowalczyk;PRZELOZONY;Propozycja AI wstawiona;AI_WSTAW;Evaluation;ev1;");
+    expect(linia).toContain("21.11.2026 14:32;Ewa Kowalczyk;PRZELOZONY;Przyjęto propozycję AI;AI_WSTAW;Evaluation;ev1;");
     expect(linia).toContain('"{""funkcja"":""KRYTERIA_DODATKOWE_Z_OSP""');
   });
 
@@ -97,6 +97,6 @@ describe("GET /hr/dziennik/csv", () => {
     expect(res.headers.get("Content-Type")).toBe("text/csv; charset=utf-8");
     expect(res.headers.get("Content-Disposition")).toMatch(/attachment; filename="dziennik-decyzji-\d{4}-\d{2}-\d{2}\.csv"/);
     expect(findManyMock.mock.calls[0][0].where).toEqual({ action: { in: ["AI_WSTAW", "AI_ODRZUC"] } });
-    expect(await res.text()).toContain("Propozycja AI wstawiona");
+    expect(await res.text()).toContain("Przyjęto propozycję AI");
   });
 });

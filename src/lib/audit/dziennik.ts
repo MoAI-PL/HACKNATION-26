@@ -8,8 +8,8 @@ import { addDays } from "@/lib/rules/kalendarz";
 
 /** Nazwy działań w dzienniku (AuditLog.action) zwykłym językiem. Nieznane kody pokazujemy bez zmian. */
 export const AUDIT_ACTION_LABELS: Record<string, string> = {
-  AI_WSTAW: "Propozycja AI wstawiona",
-  AI_ODRZUC: "Propozycja AI odrzucona",
+  AI_WSTAW: "Przyjęto propozycję AI",
+  AI_ODRZUC: "Odrzucono propozycję AI",
   ZMIANA_SUGESTII: "Ocena cząstkowa inna niż sugestia",
   ZMIANA_ARKUSZA: "Zmiana arkusza wskazanego przez OSP",
   USTALENIE_KRYTERIOW: "Ustalenie kryteriów (część I)",

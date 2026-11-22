@@ -17,11 +17,14 @@ import {
 import { describeChange } from "@/lib/konfiguracja/pola";
 import type { AuditRow } from "./dziennik";
 
+/** Linia opisu: zwykły tekst albo nagłówek z listą (każdy element w osobnej linijce, np. oceny kryteriów). */
+export type DescLine = string | { label: string; items: string[] };
+
 export interface AuditDescription {
-  /** Propozycja AI – linie tekstu (puste, gdy wpis nie dotyczy AI). */
-  ai: string[];
-  /** Decyzja człowieka albo zmiana – linie tekstu. */
-  decision: string[];
+  /** Propozycja AI (pusta, gdy wpis nie dotyczy AI). */
+  ai: DescLine[];
+  /** Decyzja człowieka albo zmiana. */
+  decision: DescLine[];
 }
 
 const AI_FUNCTIONS: Record<string, string> = {
@@ -134,23 +137,21 @@ const comp = (code: unknown) => (typeof code === "string" ? (COMPETENCY_NAMES[co
 const pts = (n: unknown) => `${plainValue(n)} pkt`;
 
 /** Lista kryteriów: kody albo {kryterium, rodzaj} → nazwy, dodatkowe oznaczone. */
-function criteriaList(list: unknown): string {
-  if (!Array.isArray(list)) return plainValue(list);
-  return list
-    .map((c) => (isObject(c) ? `${comp(c.kryterium)}${c.rodzaj === "DODATKOWE" ? " (dodatkowe)" : ""}` : comp(c)))
-    .join(", ");
+function criteriaItems(list: unknown): string[] {
+  if (!Array.isArray(list)) return [plainValue(list)];
+  return list.map((c) => (isObject(c) ? `${comp(c.kryterium)}${c.rodzaj === "DODATKOWE" ? " (dodatkowe)" : ""}` : comp(c)));
 }
 
-function scoreList(list: unknown): string {
-  if (!Array.isArray(list)) return plainValue(list);
-  return list.map((o) => (isObject(o) ? `${comp(o.kryterium ?? o.element)} ${pts(o.punkty)}` : plainValue(o))).join("; ");
+function scoreItems(list: unknown): string[] {
+  if (!Array.isArray(list)) return [plainValue(list)];
+  return list.map((o) => (isObject(o) ? `${comp(o.kryterium ?? o.element)} – ${pts(o.punkty)}` : plainValue(o)));
 }
 
 // ---------------------------------------------------------------------------
 // Propozycje AI
 // ---------------------------------------------------------------------------
 
-function describeAiProposal(raw: unknown): string[] {
+function describeAiProposal(raw: unknown): DescLine[] {
   if (!isObject(raw)) return plainLines(raw);
   const fn = typeof raw.funkcja === "string" ? raw.funkcja : "";
   const name = AI_FUNCTIONS[fn] ?? (fn ? fn.toLocaleLowerCase("pl").replace(/_/g, " ") : "Propozycja AI");
@@ -170,32 +171,32 @@ function describeAiProposal(raw: unknown): string[] {
   return [head, ...body];
 }
 
-function describeAiDecision(raw: unknown, action: string): string[] {
+function describeAiDecision(raw: unknown, action: string): DescLine[] {
   const rejected = action === "AI_ODRZUC";
-  if (!isObject(raw)) return rejected ? ["Odrzucono"] : raw ? ["Wstawiono", ...plainLines(raw)] : ["Wstawiono"];
+  if (!isObject(raw)) return rejected ? ["Odrzucono"] : raw ? ["Przyjęto", ...plainLines(raw)] : ["Przyjęto"];
   // Wspólny format {decyzja, wstawiono}; szybka notatka zapisuje od razu treść notatki po edycji.
   if ("decyzja" in raw) {
     if (raw.decyzja === "ODRZUC") return ["Odrzucono"];
     const w = raw.wstawiono;
-    if (w === null || w === undefined) return ["Wstawiono bez zmian"];
-    if (Array.isArray(w)) return [`Wstawiono: ${w.map((x) => (typeof x === "string" ? comp(x) : plainValue(x))).join(", ")}`];
-    return ["Wstawiono po edycji:", typeof w === "string" ? shorten(w) : plainValue(w)];
+    if (w === null || w === undefined) return ["Przyjęto bez zmian"];
+    if (Array.isArray(w)) return [{ label: "Przyjęto", items: w.map((x) => (typeof x === "string" ? comp(x) : plainValue(x))) }];
+    return ["Przyjęto po poprawkach:", typeof w === "string" ? shorten(w) : plainValue(w)];
   }
-  return [rejected ? "Odrzucono" : "Wstawiono", ...plainFields(raw)];
+  return [rejected ? "Odrzucono" : "Przyjęto", ...plainFields(raw)];
 }
 
 // ---------------------------------------------------------------------------
 // Pozostałe działania
 // ---------------------------------------------------------------------------
 
-function describeChangeRow(action: string, oldV: unknown, newV: unknown): string[] {
+function describeChangeRow(action: string, oldV: unknown, newV: unknown): DescLine[] {
   const o = isObject(oldV) ? oldV : {};
   const n = isObject(newV) ? newV : {};
   switch (action) {
     case "USTALENIE_KRYTERIOW":
       return [
         ...(n.arkusz ? [`Arkusz ${n.arkusz}`] : []),
-        ...(n.kryteria ? [`Kryteria: ${criteriaList(n.kryteria)}`] : []),
+        ...(n.kryteria ? [{ label: "Kryteria", items: criteriaItems(n.kryteria) }] : []),
         ...(n.dataRozmowy ? [`Rozmowa: ${plainValue(n.dataRozmowy)}`] : []),
         ...(n.terminOceny ? [`Termin oceny: ${plainValue(n.terminOceny)}`] : []),
       ];
@@ -212,7 +213,7 @@ function describeChangeRow(action: string, oldV: unknown, newV: unknown): string
       return [
         ...(n.rodzaj === "PIERWSZA" ? ["Pierwsza ocena"] : []),
         ...(result.length ? [`Wynik: ${result.join(", ")}`] : []),
-        ...(n.oceny ? [`Oceny: ${scoreList(n.oceny)}`] : []),
+        ...(n.oceny ? [{ label: "Oceny", items: scoreItems(n.oceny) }] : []),
         ...plainFields(rest),
       ];
     }

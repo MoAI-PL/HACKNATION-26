@@ -10,7 +10,7 @@ const row = (action: string, v: { aiProposal?: unknown; humanDecision?: unknown;
   newValue: v.newValue ?? null,
 });
 
-const noJson = (lines: string[]) => lines.forEach((l) => expect(l).not.toMatch(/[{}"]|[A-Z]{4,}_[A-Z]/));
+const noJson = (lines: unknown[]) => lines.forEach((l) => expect(String(l)).not.toMatch(/[{}"]|[A-Z]{4,}_[A-Z]/));
 
 describe("opis wpisów dziennika decyzji", () => {
   it("kryteria dodatkowe z OSP: nazwy kompetencji i skrócony cytat, decyzja z nazwami", () => {
@@ -29,20 +29,20 @@ describe("opis wpisów dziennika decyzji", () => {
     );
     expect(d.ai[0]).toBe("Kryteria dodatkowe z opisu stanowiska");
     expect(d.ai[1]).toMatch(/^Myślenie analityczne – OSP, zadanie dominujące 1: .*…$/);
-    expect(d.ai[1]!.length).toBeLessThan(140);
+    expect((d.ai[1] as string).length).toBeLessThan(140);
     expect(d.ai[2]).toBe("Kreatywność – OSP, zadanie 4: „Analizuje bariery prawne”");
-    expect(d.decision).toEqual(["Wstawiono: Myślenie analityczne, Kreatywność"]);
+    expect(d.decision).toEqual([{ label: "Przyjęto", items: ["Myślenie analityczne", "Kreatywność"] }]);
   });
 
   it("ustalenie kryteriów: arkusz, nazwy kryteriów, daty po polsku – oba zapisywane formaty", () => {
     const demo = describeAudit(row("USTALENIE_KRYTERIOW", { newValue: { arkusz: "C", kryteria: ["WIEDZA", "RZETELNOSC"], dataRozmowy: "2024-12-15" } }));
-    expect(demo.decision).toEqual(["Arkusz C", "Kryteria: Wykorzystywanie wiedzy i doskonalenie zawodowe, Rzetelność", "Rozmowa: 15.12.2024"]);
+    expect(demo.decision).toEqual(["Arkusz C", { label: "Kryteria", items: ["Wykorzystywanie wiedzy i doskonalenie zawodowe", "Rzetelność"] }, "Rozmowa: 15.12.2024"]);
     const app = describeAudit(
       row("USTALENIE_KRYTERIOW", {
         newValue: { arkusz: "B", kryteria: [{ kryterium: "LUDZIE", rodzaj: "OBOWIAZKOWE" }, { kryterium: "KREATYWNOSC", rodzaj: "DODATKOWE" }], dataRozmowy: "2026-11-21", terminOceny: "2028-11-20" },
       }),
     );
-    expect(app.decision).toEqual(["Arkusz B", "Kryteria: Zarządzanie ludźmi, Kreatywność (dodatkowe)", "Rozmowa: 21.11.2026", "Termin oceny: 20.11.2028"]);
+    expect(app.decision).toEqual(["Arkusz B", { label: "Kryteria", items: ["Zarządzanie ludźmi", "Kreatywność (dodatkowe)"] }, "Rozmowa: 21.11.2026", "Termin oceny: 20.11.2028"]);
     expect(app.ai).toEqual([]);
   });
 
@@ -52,9 +52,9 @@ describe("opis wpisów dziennika decyzji", () => {
         newValue: { oceny: [{ punkty: 7, kryterium: "WIEDZA" }, { punkty: 5, kryterium: "RZETELNOSC" }], wynik: "POZYTYWNA", poziom: "NA_POZIOMIE", srednia: 6 },
       }),
     );
-    expect(d.decision).toEqual(["Wynik: ocena pozytywna (na poziomie oczekiwań), średnia 6", "Oceny: Wykorzystywanie wiedzy i doskonalenie zawodowe 7 pkt; Rzetelność 5 pkt"]);
+    expect(d.decision).toEqual(["Wynik: ocena pozytywna (na poziomie oczekiwań), średnia 6", { label: "Oceny", items: ["Wykorzystywanie wiedzy i doskonalenie zawodowe – 7 pkt", "Rzetelność – 5 pkt"] }]);
     const first = describeAudit(row("SPORZADZENIE_OCENY", { newValue: { rodzaj: "PIERWSZA", wynik: "POZYTYWNA", ocenaLaczna: 5.4, oceny: [{ element: "WIEDZA", punkty: 5 }], egzamin: "ZDANY", sprawozdanieWTerminie: true } }));
-    expect(first.decision).toEqual(["Pierwsza ocena", "Wynik: ocena pozytywna, średnia 5,4", "Oceny: Wykorzystywanie wiedzy i doskonalenie zawodowe 5 pkt", "Egzamin: tak", "Sprawozdanie w terminie: tak"]);
+    expect(first.decision).toEqual(["Pierwsza ocena", "Wynik: ocena pozytywna, średnia 5,4", { label: "Oceny", items: ["Wykorzystywanie wiedzy i doskonalenie zawodowe – 5 pkt"] }, "Egzamin: tak", "Sprawozdanie w terminie: tak"]);
   });
 
   it("zapoznanie, zmiana sugestii, zmiana arkusza, przypomnienie", () => {
@@ -71,8 +71,8 @@ describe("opis wpisów dziennika decyzji", () => {
   it("asystent rozmowy i języka: rodzaj, skrócona treść, odrzucenie", () => {
     const d = describeAudit(row("AI_WSTAW", { aiProposal: { funkcja: "ASYSTENT_ROZMOWY", tryb: "AI", rozmowa: "OCENIAJACA", propozycja: "Otwarcie:\n" + "Dzień dobry. ".repeat(40) }, humanDecision: { decyzja: "WSTAW", wstawiono: "Tekst po edycji" } }));
     expect(d.ai.slice(0, 2)).toEqual(["Asystent rozmowy", "Rozmowa oceniająca"]);
-    expect(d.ai[2]!.endsWith("…")).toBe(true);
-    expect(d.decision).toEqual(["Wstawiono po edycji:", "Tekst po edycji"]);
+    expect((d.ai[2] as string).endsWith("…")).toBe(true);
+    expect(d.decision).toEqual(["Przyjęto po poprawkach:", "Tekst po edycji"]);
     const j = describeAudit(row("AI_ODRZUC", { aiProposal: { funkcja: "ASYSTENT_JEZYKA", tryb: "BEZ_AI", propozycja: { pole: "uzasadnienie", oryginal: "Jest leniwy.", propozycja: "Dwa raporty po terminie." } }, humanDecision: { decyzja: "ODRZUC", wstawiono: null } }));
     expect(j).toEqual({ ai: ["Asystent języka (bez AI – z reguł)", "Pole: uzasadnienie", "Było: Jest leniwy.", "Propozycja: Dwa raporty po terminie."], decision: ["Odrzucono"] });
   });
@@ -85,7 +85,7 @@ describe("opis wpisów dziennika decyzji", () => {
       }),
     );
     expect(d.ai).toEqual(["Szybka notatka", "Wskaźnik: Komunikacja, wskaźnik 3", "Poziom: 4"]);
-    expect(d.decision).toEqual(["Wstawiono", "Wskaźnik: Komunikacja, wskaźnik 3", "Poziom: 4", "Sytuacja: Pismo", "Działanie: Napisała prosto", "Rezultat: Bez pytań"]);
+    expect(d.decision).toEqual(["Przyjęto", "Wskaźnik: Komunikacja, wskaźnik 3", "Poziom: 4", "Sytuacja: Pismo", "Działanie: Napisała prosto", "Rezultat: Bez pytań"]);
     expect(d.decision.join(" ")).not.toContain("cmwr123");
   });
 

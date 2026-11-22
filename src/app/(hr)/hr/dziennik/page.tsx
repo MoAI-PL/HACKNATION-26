@@ -10,7 +10,7 @@ import { requirePageRole } from "@/lib/auth/guard";
 import { ROLE_LABELS } from "@/lib/domain/slownik";
 import type { Role } from "@/lib/domain/types";
 import { AUDIT_KINDS, AUDIT_KIND_LABELS, actionLabel, auditQuery, formatDateTimePl, parseAuditFilters } from "@/lib/audit/dziennik";
-import { describeAudit, plainReason } from "@/lib/audit/opis";
+import { describeAudit, plainReason, type DescLine } from "@/lib/audit/opis";
 import { listAudit } from "@/lib/audit/repo";
 
 export const metadata: Metadata = { title: "Dziennik decyzji – Kompas Kompetencji" };
@@ -18,21 +18,31 @@ export const dynamic = "force-dynamic";
 
 const SCREEN_LIMIT = 200;
 
-/** Opis wpisu – pierwsza linia wyróżniona, kolejne pod nią; pusty opis = „—”. */
-function Lines({ lines }: { lines: string[] }) {
+/** Opis wpisu – pierwsza linia wyróżniona; listy (oceny, kryteria) pozycja pod pozycją; pusty opis = „—”. */
+function Lines({ lines }: { lines: DescLine[] }) {
   if (lines.length === 0) return <>—</>;
   return (
-    <ul className="flex flex-col gap-1">
-      {lines.map((l, i) => (
-        <li key={i} className={i === 0 ? "font-medium text-foreground" : undefined}>
-          {l}
-        </li>
-      ))}
+    <ul className="flex flex-col gap-1.5">
+      {lines.map((l, i) =>
+        typeof l === "string" ? (
+          <li key={i} className={i === 0 ? "font-medium text-foreground" : undefined}>
+            {l}
+          </li>
+        ) : (
+          <li key={i}>
+            <span className={i === 0 ? "font-medium text-foreground" : undefined}>{l.label}:</span>
+            <ul className="mt-0.5 flex flex-col gap-0.5 border-l-2 border-border pl-2">
+              {l.items.map((item, j) => (
+                <li key={j}>{item}</li>
+              ))}
+            </ul>
+          </li>
+        ),
+      )}
     </ul>
   );
 }
 
-// Dziennik decyzji (Z35): kto, co i kiedy – propozycje AI obok decyzji człowieka, zmiany sugestii i arkusza.
 export default async function DziennikDecyzjiPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   await requirePageRole("HR");
   const filters = parseAuditFilters(await searchParams);

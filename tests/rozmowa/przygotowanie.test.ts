@@ -161,6 +161,15 @@ describe("następna rozmowa według etapu oceny", () => {
     expect(suggestedKind(type, status)).toBe(kind);
   });
 
+  it("rozmowa wstępna po jej zapisaniu (Z17): informacja zamiast terminu innego etapu", () => {
+    const stage = { status: "W_OCENIE" as const, suggested: "WSTEPNA" as const, criteriaSetAt: "2026-02-12" };
+    const p = buildConversationPrep({ ...base, kind: "WSTEPNA", stage, deadline: { date: "2026-12-01", label: "pierwsza ocena do wt. 1.12" } });
+    expect(p.notes.join(" ")).toMatch(/Rozmowa wstępna odbyła się 12 lutego 2026/);
+    expect(p.checklist.join(" ")).not.toContain("Termin:");
+    const before = buildConversationPrep({ ...base, kind: "WSTEPNA", stage: { ...stage, status: "DO_ROZPOCZECIA" }, deadline: { date: "2026-02-23", label: "rozmowa wstępna do pon. 23.02" } });
+    expect(before.checklist.join(" ")).toContain("Termin: rozmowa wstępna do pon. 23.02.");
+  });
+
   it("pierwsza ocena: tylko rozmowa wstępna (§ 10 rozp. o ocenach okresowych jej nie dotyczy)", () => {
     expect(allowedKinds("PIERWSZA")).toEqual(["WSTEPNA"]);
     expect(allowedKinds("OKRESOWA")).toEqual(["ROZPOCZYNAJACA", "OCENIAJACA"]);

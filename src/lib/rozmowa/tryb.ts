@@ -139,8 +139,9 @@ export type SavePlan = { action: "CREATE" } | { action: "APPEND"; conversationId
 
 /**
  * Jak zapisać przebieg rozmowy, żeby nie dublować zapisów:
- *  - rozmowę rozpoczynającą zapisuje kreator oceny okresowej (Z12) razem z kryteriami – tryb rozmowy tylko dopisuje
- *    notatki do istniejącego zapisu, a bez niego odsyła do kreatora;
+ *  - rozmowę rozpoczynającą zapisuje kreator oceny okresowej (Z12) razem z kryteriami, a rozmowę wstępną – przebieg
+ *    pierwszej oceny (Z17) razem z terminem sprawozdania; tryb rozmowy tylko dopisuje notatki do istniejącego zapisu,
+ *    a bez niego odsyła do właściwego formularza;
  *  - ten sam rodzaj rozmowy w tej samej ocenie tego samego dnia (np. dokończona po przerwie) – dopisujemy do zapisu;
  *  - w pozostałych przypadkach – nowy zapis.
  */
@@ -150,7 +151,7 @@ export function conversationSavePlan(
   today: string,
 ): SavePlan {
   const sameType = existing.filter((c) => c.type === kind);
-  if (kind === "ROZPOCZYNAJACA") {
+  if (kind === "ROZPOCZYNAJACA" || kind === "WSTEPNA") {
     const latest = [...sameType].sort((a, b) => b.date.localeCompare(a.date))[0];
     return latest ? { action: "APPEND", conversationId: latest.id } : { action: "KREATOR" };
   }

@@ -323,7 +323,7 @@ export function TrybRozmowy({ employeeId, kind, title, steps, prepHref }: TrybRo
                 </Button>
                 {result.href && (
                   <Link href={result.href} className={cn(buttonVariants(), "h-10")}>
-                    Przejdź do kreatora oceny
+                    {kind === "WSTEPNA" ? "Przejdź do pierwszej oceny" : "Przejdź do kreatora oceny"}
                   </Link>
                 )}
               </>

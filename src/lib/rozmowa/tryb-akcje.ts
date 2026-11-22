@@ -48,6 +48,13 @@ export async function saveConversationAction(employeeId: string, raw: unknown): 
   );
 
   if (plan.action === "KREATOR") {
+    if (kind === "WSTEPNA") {
+      return {
+        ok: false,
+        reason: "Rozmowę wstępną zapisuje przebieg pierwszej oceny razem z terminem sprawozdania. Skopiuj notatki i dokończ zapis w pierwszej ocenie.",
+        href: data.evaluationId ? `/ocena/pierwsza/${encodeURIComponent(data.evaluationId)}` : "/ocena/pierwsza",
+      };
+    }
     return {
       ok: false,
       reason: "Rozmowę rozpoczynającą zapisuje kreator oceny okresowej razem z kryteriami, oczekiwaniami i celami. Skopiuj notatki i dokończ zapis w kreatorze.",

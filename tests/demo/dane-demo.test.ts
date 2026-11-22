@@ -65,12 +65,12 @@ describe.skipIf(!url)("dane demo – seed na PostgreSQL", () => {
     const before = await prisma.employee.count();
     const summary = await seedDemoData(prisma, today);
     expect(await prisma.employee.count()).toBe(before);
-    expect(summary).toMatchObject({ employees: 6, evaluations: 11, observations: 32 });
+    expect(summary).toMatchObject({ employees: 7, evaluations: 12, observations: 37 });
   });
 
-  it("przełożona ma 6 podwładnych, a konto ocenianego jest powiązane z Janem Nowakiem", async () => {
+  it("przełożona ma 7 podwładnych, a konto ocenianego jest powiązane z Janem Nowakiem", async () => {
     const ewa = await prisma.user.findUniqueOrThrow({ where: { email: "ewa.kowalczyk@demo.kompas.test" }, include: { subordinates: true } });
-    expect(ewa.subordinates).toHaveLength(6);
+    expect(ewa.subordinates).toHaveLength(7);
     const jan = await prisma.user.findUniqueOrThrow({ where: { email: "jan.nowak@demo.kompas.test" }, include: { employee: true } });
     expect(jan.employee?.lastName).toBe("Nowak");
   });

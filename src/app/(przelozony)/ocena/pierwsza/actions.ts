@@ -16,6 +16,7 @@ import { readReportFile } from "@/lib/pierwsza-ocena/plik";
 import {
   completionFormSchema,
   completionIssues,
+  firstEvalCriteria,
   initialConversationIssues,
   initialConversationSchema,
   reportFormSchema,
@@ -70,6 +71,7 @@ export async function saveInitialConversation(evaluationId: string, input: unkno
       data: { status: "W_OKRESIE_OCENY", criteriaSetAt: toDbDate(f.date) },
     });
     if (updated.count === 0) return false;
+    await tx.evaluationCriterion.createMany({ data: firstEvalCriteria().map((c) => ({ ...c, evaluationId: ev.id })), skipDuplicates: true });
     await tx.conversation.create({
       data: { employeeId: ev.employeeId, evaluationId: ev.id, type: "WSTEPNA", date: toDbDate(f.date), notes: f.notes.trim() || null },
     });
@@ -96,7 +98,7 @@ export async function saveInitialConversation(evaluationId: string, input: unkno
 
 /**
  * Sprawozdanie (wpisane albo wgrane z pliku) i egzamin ze służby przygotowawczej → „Do oceny”.
- * Do czasu sporządzenia oceny można je poprawić (np. gdy wynik egzaminu przyjdzie później).
+ * Wynik egzaminu nie jest wymagany na tym etapie (egzamin bywa później) – do czasu sporządzenia oceny można go uzupełnić.
  */
 export async function saveReport(evaluationId: string, formData: FormData): Promise<StepResult> {
   const { user, ev, person } = await own(evaluationId);
@@ -127,11 +129,13 @@ export async function saveReport(evaluationId: string, formData: FormData): Prom
       where: { id: ev.id, status: { in: ["W_OKRESIE_OCENY", "W_OCENIE"] } },
       data: {
         status: "W_OCENIE",
-        examResult: f.exam!,
+        // Egzamin może się jeszcze nie odbyć – wtedy zostaje pusty i blokuje dopiero sporządzenie oceny.
+        examResult: f.exam ?? null,
         examExemption: f.exam === "NIE_DOTYCZY" ? f.examExemption! : null,
       },
     });
     if (updated.count === 0) return false;
+    await tx.evaluationCriterion.createMany({ data: firstEvalCriteria().map((c) => ({ ...c, evaluationId: ev.id })), skipDuplicates: true });
     await tx.firstEvalReport.update({
       where: { evaluationId: ev.id },
       data: {
@@ -149,7 +153,7 @@ export async function saveReport(evaluationId: string, formData: FormData): Prom
         newValue: {
           sprawozdanie: submitted ? f.submittedAt : "nie złożono",
           plik: submitted ? f.fileName || null : null,
-          egzamin: f.exam,
+          egzamin: f.exam ?? "jeszcze się nie odbył",
           zwolnienie: f.exam === "NIE_DOTYCZY" ? f.examExemption : null,
         },
       },

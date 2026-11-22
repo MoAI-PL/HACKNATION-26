@@ -13,7 +13,7 @@ import { PobierzArkuszPierwszej } from "@/components/pierwsza-ocena/PobierzArkus
 import { requirePageRole } from "@/lib/auth/guard";
 import { EXAM_EXEMPTION_LABELS, EXAM_RESULT_LABELS } from "@/lib/domain/slownik";
 import { loadFirstEval, type FirstEvalData } from "@/lib/pierwsza-ocena/dane";
-import { FIRST_EVAL_STEPS, proposedReportWindow, stepNumber } from "@/lib/pierwsza-ocena/przebieg";
+import { FIRST_EVAL_STEPS, examMissing, proposedReportWindow, stepNumber } from "@/lib/pierwsza-ocena/przebieg";
 import { formatDatePl } from "@/lib/rules/kalendarz";
 
 export const dynamic = "force-dynamic";
@@ -29,6 +29,8 @@ export default async function PierwszaOcenaPrzebiegPage({ params }: { params: Pr
   const person = { employmentStart: e.employmentStart, contractEnd: e.contractEnd, absences: e.absences };
   const reportCtx = { ...person, conversationDate: data.conversation?.date, dueFrom: data.report.dueFrom, dueTo: data.report.dueTo };
   const rated = data.elements.filter((x) => x.score !== null).length;
+  const allRated = data.elements.length > 0 && rated === data.elements.length;
+  const noExam = examMissing(data.exam, data.examExemption);
   const done = data.stage === "ZAPOZNANIE" || data.stage === "ZAKONCZONA";
 
   return (
@@ -76,7 +78,12 @@ export default async function PierwszaOcenaPrzebiegPage({ params }: { params: Pr
 
         {data.stage === "OCENA" && (
           <>
-            {!data.summary.complete ? (
+            {!data.summary.complete && allRated && noExam ? (
+              <Notice tone="warning" title="Brakuje wyniku egzaminu ze służby przygotowawczej" legalBasis="§ 10 ust. 1 pkt 1, § 10 ust. 3">
+                Elementy są ocenione, ale wynik pierwszej oceny zależy też od egzaminu. Uzupełnij go poniżej („Uzupełnij wynik egzaminu”) – potem
+                pojawi się wynik i sporządzenie oceny.
+              </Notice>
+            ) : !data.summary.complete ? (
               <Notice
                 tone="info"
                 title={`Oceń pięć elementów kartami zachowań (ocenione: ${rated} z ${data.elements.length})`}
@@ -113,8 +120,8 @@ export default async function PierwszaOcenaPrzebiegPage({ params }: { params: Pr
                 />
               </>
             )}
-            <details className="rounded-lg border bg-card p-4">
-              <summary className="cursor-pointer font-medium text-primary">Popraw sprawozdanie lub wynik egzaminu</summary>
+            <details className="rounded-lg border bg-card p-4" open={noExam}>
+              <summary className="cursor-pointer font-medium text-primary">{noExam ? "Uzupełnij wynik egzaminu" : "Popraw sprawozdanie lub wynik egzaminu"}</summary>
               <div className="mt-4">
                 <SprawozdanieIEgzamin
                   evaluationId={data.evaluationId}

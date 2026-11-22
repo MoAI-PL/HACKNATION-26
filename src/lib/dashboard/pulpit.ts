@@ -233,7 +233,6 @@ export interface TodoTarget {
   label: string;
 }
 
-/** Zakończenie oceny okresowej – karty zachowań, sugestia i decyzja przełożonego (Z14). */
 /** Przebieg pierwszej oceny (Z17): rozmowa wstępna, sprawozdanie i egzamin, wynik, zapoznanie. */
 export function firstEvalHref(evaluationId: string): string {
   return `/ocena/pierwsza/${encodeURIComponent(evaluationId)}`;
@@ -248,6 +247,7 @@ const FIRST_EVAL_LABELS: Partial<Record<EvaluationStatus, string>> = {
   W_OCENIE: "Oceń elementy",
 };
 
+/** Zakończenie oceny okresowej – karty zachowań, sugestia i decyzja przełożonego (Z14). */
 export function periodicAssessmentHref(evaluationId: string): string {
   return `${periodicEvaluationHref(evaluationId)}/ocena`;
 }

@@ -40,6 +40,13 @@ Adres: **https://hacknation-26.vercel.app** · wszystkie dane są fikcyjne · na
 5. **Zmień decyzję na inną niż sugestia** – system wymaga jednego zdania powodu. Sugestia i decyzja trafiają do dziennika decyzji.
 6. **Krok 8 – Przegląd ocen** – wszystkie oceny cząstkowe i **Lustro oceniającego** (łagodne sygnały, np. większość notatek z ostatniego miesiąca – efekt świeżości; nie blokują oceny); potem **podsumowanie**: średnia, poziom ogólny i **wynik z wyjaśnieniem i podstawą prawną** (§ 11). Wypróbuj ocenę negatywną (np. jedno kryterium „znacznie poniżej oczekiwań”) – nie da się jej zamknąć bez uzasadnienia; podsumowanie pokazuje też wnioski do IPRZ, część III (dla urzędnika) i termin sprzeciwu.
 
+## 4a. Pierwsza ocena (2 min)
+
+1. Menu **Pierwsza ocena** – dwie osoby na różnych etapach: **Aleksandra Mazur** (nowa pracownica, przed rozmową wstępną) i **Joanna Lewandowska** (po sprawozdaniu, do oceny).
+2. Przy Aleksandrze: **rozmowa wstępna** (§ 3) – data, notatka i termin sprawozdania zaproponowany przez silnik terminów (po upływie 8 miesięcy, w oknie oceny z art. 38 ust. 1 ustawy).
+3. Przy Joannie: ustalenia (rozmowa, sprawozdanie w terminie, egzamin zdany) → **„Oceń elementy”** – pięć elementów z § 2 pkt 1 tymi samymi kartami zachowań co w ocenie okresowej, ale w skali **3 / 5 / 7 pkt**.
+4. Po ocenie elementów: **wynik według § 10** (ocena łączna, warunki oceny pozytywnej: egzamin, sprawozdanie w terminie, najwyżej jedna „3”, średnia ≥ 5) → **„Sporządź ocenę”** → arkusz pierwszej oceny w **PDF** i zapoznanie się z oceną.
+
 ## 5. Asystent rozmowy (1 min)
 
 1. Menu **Asystent rozmowy** – podwładni z rozmową, która jest następna według etapu oceny, i jej terminem.
@@ -74,7 +81,7 @@ Każde źródło można rozwinąć – widać cytat i miejsce w dokumencie (para
 
 1. Wyloguj → **„Zaloguj jako Jan Nowak”** (oceniany) – trafia na **„Moje oceny”**: bieżąca ocena pokazuje tylko kryteria z uzasadnieniem wyboru i termin (bez roboczych punktów przełożonego), zakończona – pełny wynik z wyjaśnieniem.
 2. Próba wejścia na `/pulpit`, `/hr` albo `/asystent` przenosi z powrotem na własny ekran; wywołanie API `/api/v1/pracownicy` zwraca **403**, a bez zalogowania – **401**. Adres cudzej oceny daje stronę „Nie znaleziono strony” – bez ujawniania, że taka ocena istnieje.
-3. Wyloguj → **„Zaloguj jako Tomasz Wiśniewski”** (kierujący komórką) – **pierwsze oceny** nowych pracowników komórki (Aleksandra Mazur): etap, najbliższy termin, kalendarz pierwszej oceny i opis roli kierującego z podstawą prawną.
+3. Wyloguj → **„Zaloguj jako Tomasz Wiśniewski”** (kierujący komórką) – **pierwsze oceny** nowych pracowników komórki (Aleksandra Mazur, Joanna Lewandowska): etap, najbliższy termin, kalendarz pierwszej oceny i opis roli kierującego z podstawą prawną.
 
 ## Dla ciekawych
 

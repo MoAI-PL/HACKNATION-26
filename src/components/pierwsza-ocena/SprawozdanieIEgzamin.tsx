@@ -183,6 +183,9 @@ export function SprawozdanieIEgzamin({
 
           <fieldset className="flex flex-col gap-3">
             <legend className="mb-1 font-semibold">Czy oceniany zdał egzamin ze służby przygotowawczej?</legend>
+            <p className="text-sm text-muted-foreground">
+              Jeśli egzamin jeszcze się nie odbył, zostaw bez wyboru – sprawozdanie zapisze się, a wynik egzaminu uzupełnisz przed sporządzeniem oceny.
+            </p>
             <ChoiceCardGroup<ExamResult>
               label="Egzamin ze służby przygotowawczej"
               columns={3}

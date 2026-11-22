@@ -5,6 +5,8 @@ import {
   completionIssues,
   defaultEvaluationDate,
   earliestReportDay,
+  examMissing,
+  firstEvalCriteria,
   firstEvalSummary,
   initialConversationIssues,
   lateConversationWarning,
@@ -74,13 +76,13 @@ describe("sprawozdanie i egzamin", () => {
     expect(reportOnTime(undefined, ctx)).toBe(false);
   });
 
-  it("wymaga daty, treści albo pliku i wyniku egzaminu z powodem przy „nie dotyczy”", () => {
+  it("wymaga daty i treści albo pliku; egzamin może poczekać, ale „nie dotyczy” wymaga powodu", () => {
     const fields = (f: Partial<ReportForm>) => reportIssues({ ...form, ...f }, ctx, "2026-10-20").map((i) => i.field);
     expect(fields({ submittedAt: "" })).toContain("submittedAt");
     expect(fields({ submittedAt: "2026-10-01" })).toContain("submittedAt"); // przed terminem – mniej niż 7 miesięcy
     expect(fields({ content: "", fileName: "" })).toContain("content");
     expect(fields({ content: "", fileName: "sprawozdanie.docx" })).not.toContain("content");
-    expect(fields({ exam: undefined })).toContain("exam");
+    expect(fields({ exam: undefined })).toEqual([]); // egzamin jeszcze się nie odbył – sprawozdanie i tak się zapisze
     expect(fields({ exam: "NIE_DOTYCZY" })).toContain("examExemption");
     expect(fields({ exam: "NIE_DOTYCZY", examExemption: "ZASTEPSTWO" })).toEqual([]);
   });
@@ -97,6 +99,22 @@ describe("sprawozdanie i egzamin", () => {
     expect(reportFileProblem({ name: "s.pdf", size: 10 })).toContain(".docx");
     expect(reportFileProblem({ name: "s.docx", size: 0 })).toContain("pusty");
     expect(reportFileProblem({ name: "s.docx", size: 6 * 1024 * 1024 })).toContain("za duży");
+  });
+});
+
+describe("kryteria i egzamin", () => {
+  it("pięć elementów pierwszej oceny jako kryteria obowiązkowe w kolejności z § 2 pkt 1", () => {
+    expect(firstEvalCriteria()).toEqual(ELEMENTS.map((competency, order) => ({ competency, kind: "OBOWIAZKOWE", order })));
+  });
+
+  it("brak egzaminu blokuje wynik, a nie zapis sprawozdania", () => {
+    expect(examMissing(undefined, undefined)).toBe(true);
+    expect(examMissing("NIE_DOTYCZY", undefined)).toBe(true);
+    expect(examMissing("NIE_DOTYCZY", "ZASTEPSTWO")).toBe(false);
+    expect(examMissing("ZDANY", undefined)).toBe(false);
+    const s = firstEvalSummary({ scores: scores(5, 5, 5, 7, 7), reportSubmittedOnTime: true });
+    expect(s.complete).toBe(false);
+    if (!s.complete) expect(s.missing).toEqual(["wynik egzaminu ze służby przygotowawczej"]);
   });
 });
 

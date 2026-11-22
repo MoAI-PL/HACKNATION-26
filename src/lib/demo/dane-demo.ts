@@ -4,7 +4,7 @@
 // Daty liczymy względem dnia uruchomienia (`today`), więc karta „Do zrobienia” zawsze pokazuje aktualne terminy.
 // Terminy liczy silnik Z08, a wyniki poprzednich ocen silnik Z07 – dane są spójne z przepisami.
 //
-// ZAŁOŻENIE: dla jednego konta demo Ewa Kowalczyk jest bezpośrednią przełożoną wszystkich sześciu osób,
+// ZAŁOŻENIE: dla jednego konta demo Ewa Kowalczyk jest bezpośrednią przełożoną wszystkich siedmiu osób,
 // choć w OSP stanowiska podlegają różnym przełożonym (uproszczenie demo, opisane w docs/ZALOZENIA.md).
 //
 // Użycie: seedDemoData(prisma) – usuwa poprzednie dane demo (poza kontami) i tworzy je od nowa. Z44 (reset demo) woła to samo.
@@ -15,6 +15,7 @@ import { DEMO_ACCOUNTS } from "@/lib/auth/demo";
 import { fromDbDate, toDbDate, todayIso } from "@/lib/domain/daty";
 import type { CompetencyCode, IsoDate, PartialScore, PeriodicPoints, PositionDescription } from "@/lib/domain/types";
 import { addDays, addMonths } from "@/lib/rules/kalendarz";
+import { firstEvalCriteria, proposedReportWindow } from "@/lib/pierwsza-ocena/przebieg";
 import { mandatoryCriteria } from "@/lib/rules/kryteria";
 import { scorePeriodic } from "@/lib/rules/punktacja";
 import {
@@ -84,6 +85,15 @@ const OBS_ALEKSANDRA: Obs[] = [
   [3, "WIEDZA.3", 3, "Pierwsza analiza zgłoszenia incydentu.", "Skorzystała z bazy wiedzy wydziału i wzorów dokumentów.", "Analiza poprawna, z drobnymi uzupełnieniami."],
 ];
 
+// Joanna Lewandowska – pierwsza ocena po sprawozdaniu: notatki do pięciu elementów z § 2 pkt 1 (pełna ścieżka Z17 na demo).
+const OBS_JOANNA: Obs[] = [
+  [200, "RZETELNOSC.1", 3, "Przygotowanie odpowiedzi na wniosek o udostępnienie informacji publicznej.", "Sprawdziła podstawę prawną i terminy, poprosiła radcę o weryfikację.", "Odpowiedź wysłana w terminie, bez uwag radcy."],
+  [150, "WIEDZA.2", 4, "Nowe wytyczne dotyczące rejestru umów w wydziale.", "Sama zapisała się na szkolenie i przygotowała notatkę dla zespołu.", "Zespół stosuje nowe zasady od pierwszego dnia ich obowiązywania."],
+  [90, "ORGANIZACJA.2", 2, "Kilka pilnych zadań w jednym tygodniu przed końcem kwartału.", "Zajęła się najpierw zadaniem najmniej pilnym, nie zgłosiła ryzyka opóźnienia.", "Zestawienie kwartalne wpłynęło dwa dni po terminie."],
+  [60, "KOMUNIKACJA.2", 4, "Prezentacja wyników ankiety na spotkaniu wydziału.", "Przedstawiła wnioski na trzech slajdach i odpowiedziała na pytania.", "Wydział przyjął dwie z jej rekomendacji."],
+  [30, "WSPOLPRACA.1", 3, "Wspólne przygotowanie raportu z innym wydziałem.", "Przekazywała swoje części w umówionych terminach.", "Raport gotowy zgodnie z harmonogramem."],
+];
+
 /** Obserwacje demo według osoby (do testów spójności). */
 export const DEMO_OBSERVATIONS = {
   KATARZYNA: OBS_KATARZYNA,
@@ -91,6 +101,7 @@ export const DEMO_OBSERVATIONS = {
   JAN: OBS_JAN,
   MARCIN: OBS_MARCIN,
   ALEKSANDRA: OBS_ALEKSANDRA,
+  JOANNA: OBS_JOANNA,
 } as const;
 
 // ---------------------------------------------------------------------------
@@ -400,6 +411,31 @@ export async function seedDemoData(prisma: PrismaClient, today: IsoDate = todayI
         body: `${wstepna.explanation.text}`,
       },
     });
+  }
+
+  // --- 5a. Joanna Lewandowska – pierwsza ocena po sprawozdaniu (pełna ścieżka Z17 na demo) ------------------
+  // Zatrudniona ok. 9 miesięcy temu na 12 miesięcy: rozmowa wstępna i sprawozdanie za nią, egzamin zdany,
+  // okno pierwszej oceny otwarte – przełożona ocenia pięć elementów kartami zachowań i sporządza ocenę.
+  {
+    const start = addDays(addMonths(today, -9), -5);
+    const contractEnd = addDays(addMonths(start, 12), -1);
+    const e = await employee({ firstName: "Joanna", lastName: "Lewandowska", osp: "STARSZY_SPECJALISTA", employmentStart: start, contractEnd, unitHead: true });
+    const window = firstEvalWindow({ employmentStart: start, contractEnd });
+    const latest = window.find((w) => w.kind === "PIERWSZA_OCENA_DO") ?? window[window.length - 1]!;
+    const report = proposedReportWindow({ employmentStart: start, contractEnd });
+    const conversationDate = addDays(start, 10);
+    const submittedAt = addDays(report.dueFrom, 3) <= today ? addDays(report.dueFrom, 3) : report.dueFrom;
+    await prisma.evaluation.create({
+      data: {
+        employeeId: e.id, evaluatorId: ewa.id, type: "PIERWSZA", sheet: "PIERWSZA", status: "W_OCENIE",
+        periodStart: db(start), dueDate: db(latest.date), criteriaSetAt: db(conversationDate), examResult: "ZDANY",
+        criteria: { create: firstEvalCriteria() },
+        report: { create: { dueFrom: db(report.dueFrom), dueTo: db(report.dueTo), submittedAt: db(submittedAt), content: "Sprawozdanie z pierwszego okresu pracy: obsługa rejestru umów, odpowiedzi na wnioski o informację publiczną, udział w przygotowaniu raportu kwartalnego." } },
+        conversations: { create: [{ employeeId: e.id, type: "WSTEPNA", date: db(conversationDate), notes: "Omówiono zasady pierwszej oceny, obowiązki z opisu stanowiska i oczekiwania; wyznaczono termin sprawozdania." }] },
+      },
+    });
+    observations += (await addObservations(e.id, OBS_JOANNA)).count;
+    evaluations += 1;
   }
 
   // --- 6. Marta Kamińska – radca, zatrudniona na czas nieokreślony 12 dni temu: ocena do rozpoczęcia -----

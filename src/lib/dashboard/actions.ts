@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/db";
 import { requireRole, AccessError } from "@/lib/auth/guard";
 import { toDbDate } from "@/lib/domain/daty";
+import { firstEvalCriteria } from "@/lib/pierwsza-ocena/przebieg";
 import { fieldErrors, parseNewEmployeeForm, sheetForSubordinates, type FieldErrors } from "./nowy-pracownik";
 import { ospPreview, readOspFile, type OspPreview } from "./osp-plik";
 
@@ -99,7 +100,15 @@ export async function addEmployeeAction(_prev: AddEmployeeState, form: FormData)
         });
       }
       const evaluation = await tx.evaluation.create({
-        data: { employeeId: created.id, evaluatorId: user.id, type: v.evaluationType, sheet, status: "DO_ROZPOCZECIA" },
+        data: {
+          employeeId: created.id,
+          evaluatorId: user.id,
+          type: v.evaluationType,
+          sheet,
+          status: "DO_ROZPOCZECIA",
+          // Pierwsza ocena: pięć elementów z § 2 pkt 1 od razu (kryteria oceny okresowej ustala się w rozmowie rozpoczynającej, Z12).
+          ...(v.evaluationType === "PIERWSZA" ? { criteria: { create: firstEvalCriteria() } } : {}),
+        },
       });
       await tx.auditLog.create({
         data: {

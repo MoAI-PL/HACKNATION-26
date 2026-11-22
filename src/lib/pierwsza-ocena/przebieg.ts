@@ -44,6 +44,15 @@ export function stepNumber(stage: FirstEvalStage): number {
   return { ROZMOWA_WSTEPNA: 1, SPRAWOZDANIE: 2, OCENA: 3, ZAPOZNANIE: 4, ZAKONCZONA: 4 }[stage];
 }
 
+/**
+ * Pięć elementów pierwszej oceny jako kryteria oceny (§ 2 pkt 1) – bez nich nie ma kart zachowań ani wyniku.
+ * Tworzymy je przy zakładaniu oceny (dodanie pracownika) i – na wypadek ocen założonych wcześniej – przy rozmowie
+ * wstępnej i sprawozdaniu (`createMany` z `skipDuplicates`: istniejące kryteria zostają bez zmian).
+ */
+export function firstEvalCriteria(r: Rules = defaultRules): { competency: CompetencyCode; kind: "OBOWIAZKOWE"; order: number }[] {
+  return r.firstEval.elements.map((competency, order) => ({ competency, kind: "OBOWIAZKOWE" as const, order }));
+}
+
 // ---------------------------------------------------------------------------
 // Terminy
 // ---------------------------------------------------------------------------
@@ -185,8 +194,9 @@ export function reportIssues(f: ReportForm, c: ReportContext, today: IsoDate, r:
       legalBasis: lb.reportDue,
     });
   }
-  if (!f.exam) issues.push({ field: "exam", text: "Wskaż wynik egzaminu ze służby przygotowawczej." });
-  else if (f.exam === "NIE_DOTYCZY" && !f.examExemption) {
+  // Egzamin ze służby przygotowawczej często odbywa się po sprawozdaniu – jego brak blokuje dopiero sporządzenie oceny
+  // (firstEvalSummary), a nie zapis sprawozdania.
+  if (f.exam === "NIE_DOTYCZY" && !f.examExemption) {
     issues.push({ field: "examExemption", text: "Wskaż, dlaczego egzamin nie dotyczy ocenianego.", legalBasis: lb.examExemption });
   }
   return issues;
@@ -223,6 +233,11 @@ export interface FirstEvalSummaryInput {
 export type FirstEvalSummary =
   | { complete: true; result: FirstEvalScoreResult }
   | { complete: false; missing: string[] };
+
+/** Czy brakuje wyniku egzaminu (albo powodu „nie dotyczy”) – wtedy wyniku oceny nie da się policzyć. */
+export function examMissing(exam: ExamResult | undefined, exemption: ExamExemption | undefined): boolean {
+  return !exam || (exam === "NIE_DOTYCZY" && !exemption);
+}
 
 /** Wynik z silnika Z07 – gdy brakuje ocen elementów albo egzaminu, zwraca listę braków zamiast wyjątku. */
 export function firstEvalSummary(input: FirstEvalSummaryInput, r: Rules = defaultRules): FirstEvalSummary {

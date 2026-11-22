@@ -159,7 +159,12 @@ describe("zapis bez dublowania rozmów", () => {
       action: "APPEND",
       conversationId: "dzis",
     });
-    expect(conversationSavePlan("WSTEPNA", existing, today)).toEqual({ action: "CREATE" });
+    expect(conversationSavePlan("WSTEPNA", existing, today)).toEqual({ action: "KREATOR" });
+  });
+
+  it("rozmowa wstępna: dopisanie do zapisu z pierwszej oceny (Z17), bez niego – odesłanie do pierwszej oceny", () => {
+    expect(conversationSavePlan("WSTEPNA", [], today)).toEqual({ action: "KREATOR" });
+    expect(conversationSavePlan("WSTEPNA", [{ id: "w", type: "WSTEPNA", date: "2026-03-01" }], today)).toEqual({ action: "APPEND", conversationId: "w" });
   });
 
   it("dopisanie oddziela przebiegi pustą linią i pilnuje długości pola", () => {
@@ -206,6 +211,14 @@ describe("akcja zapisu przebiegu rozmowy", () => {
     prismaMock.conversation.findMany.mockResolvedValue([]);
     const r = await saveConversationAction("kasia", { kind: "ROZPOCZYNAJACA", notes: "Ustalenia" });
     expect(r).toMatchObject({ ok: false, href: "/ocena/okresowa/ev1" });
+    expect(prismaMock.conversation.create).not.toHaveBeenCalled();
+  });
+
+  it("rozmowa wstępna bez zapisu z pierwszej oceny – odesłanie do przebiegu pierwszej oceny", async () => {
+    zalogowany("PRZELOZONY");
+    loadPrepDataMock.mockResolvedValue({ evaluationId: "p1", allowed: ["WSTEPNA"], suggested: "WSTEPNA", input: {} });
+    prismaMock.conversation.findMany.mockResolvedValue([]);
+    expect(await saveConversationAction("ola", { kind: "WSTEPNA", notes: "Ustalenia" })).toMatchObject({ ok: false, href: "/ocena/pierwsza/p1" });
     expect(prismaMock.conversation.create).not.toHaveBeenCalled();
   });
 

@@ -287,6 +287,16 @@ export function buildConversationPrep(input: PrepInput, model: CompetencyModelIn
     }
   }
 
+  // Pierwsza ocena ma tylko rozmowę wstępną – po jej zapisaniu (Z17: etap sprawozdania albo oceny) ściąga to mówi.
+  const initialDone = input.kind === "WSTEPNA" && !!input.stage && input.stage.status !== "DO_ROZPOCZECIA";
+  if (initialDone && input.stage) {
+    notes.push(
+      input.stage.criteriaSetAt
+        ? `Rozmowa wstępna odbyła się ${formatDatePl(input.stage.criteriaSetAt)} – ten widok przypomina jej zakres. Dalsze kroki pierwszej oceny są w menu „Pierwsza ocena”.`
+        : "Rozmowa wstępna już się odbyła – ten widok przypomina jej zakres. Dalsze kroki pierwszej oceny są w menu „Pierwsza ocena”.",
+    );
+  }
+
   if (input.isReevaluation || input.previousResult === "NEGATYWNA") {
     difficult.unshift({
       situation: "Poprzednia ocena była negatywna",
@@ -325,7 +335,8 @@ export function buildConversationPrep(input: PrepInput, model: CompetencyModelIn
       "Zarezerwuj 45–60 minut w spokojnym miejscu, bez telefonów i poczty.",
       input.kind === "OCENIAJACA" ? "Przejrzyj notatki z całego okresu oceny, nie tylko z ostatnich tygodni." : "Miej pod ręką opis stanowiska pracy (OSP).",
       // Termin dotyczy bieżącego etapu – pokazujemy go tylko przy rozmowie, która jest teraz następna.
-      ...(input.deadline && (!input.stage || input.stage.suggested === input.kind) ? [`Termin: ${input.deadline.label}.`] : []),
+      // Po rozmowie wstępnej termin z karty dotyczy już sprawozdania albo oceny, a nie tej rozmowy.
+      ...(input.deadline && (!input.stage || input.stage.suggested === input.kind) && !initialDone ? [`Termin: ${input.deadline.label}.`] : []),
       input.kind === "OCENIAJACA" ? "Po rozmowie zapisz ustalenia – przydadzą się w ocenie i we wnioskach do IPRZ." : "Po rozmowie zapisz ustalenia – przydadzą się w ocenie.",
     ],
     notes,

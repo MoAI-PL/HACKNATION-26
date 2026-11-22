@@ -83,10 +83,10 @@ export default async function PracownikPage({ params }: { params: Promise<{ id: 
             ) : (
               <ul className="flex flex-col gap-4">
                 {deadlines.map((d) => (
-                  <li key={d.kind} className="flex flex-col gap-2 rounded-xl border p-4">
+                  <li key={d.kind} className="flex flex-col gap-2 rounded-lg border p-4">
                     <div className="flex flex-wrap items-center justify-between gap-2">
                       <h3 className="text-base font-semibold">{DEADLINE_KIND_LABELS[d.kind]}</h3>
-                      <DeadlineBadge variant="solid" size="md" daysLeft={daysUntil(d, today)} urgency={deadlineUrgency(d, today)} />
+                      <DeadlineBadge daysLeft={daysUntil(d, today)} urgency={deadlineUrgency(d, today)} />
                     </div>
                     <p className="text-lg">
                       {d.earliest && d.earliest !== d.date ? `od ${formatDatePl(d.earliest)} do ${formatDatePl(d.date)}` : `do ${formatDatePl(d.date)}`}

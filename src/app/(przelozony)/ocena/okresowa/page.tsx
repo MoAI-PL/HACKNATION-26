@@ -59,27 +59,28 @@ export default async function OcenaOkresowaPage() {
         <ul className="flex flex-col gap-3">
           {items.map((i) => {
             const date = i.status === "DO_ROZPOCZECIA" ? i.conversationDue : i.dueDate;
-            const what = i.status === "DO_ROZPOCZECIA" ? "Rozmowa rozpoczynająca do" : "Ocena do";
+            const what = i.status === "DO_ROZPOCZECIA" ? "rozmowa do" : "ocena do";
             const deadline = date ? { kind: "OCENA_OKRESOWA" as const, date, extensions: [], explanation: { text: "" } } : null;
             return (
               <li key={i.evaluationId}>
                 <Card>
                   <CardContent className="flex flex-wrap items-center justify-between gap-3 py-4">
                     <div className="flex min-w-0 flex-col gap-1">
-                      <span className="font-semibold">{i.employeeName}</span>
+                      <span className="font-medium">{i.employeeName}</span>
                       <span className="text-sm text-muted-foreground">
                         {i.positionTitle ?? "bez opisu stanowiska"}
                         {i.isReevaluation ? " · ponowna ocena po ocenie negatywnej" : ""}
                       </span>
                       <span className="flex flex-wrap items-center gap-2">
                         <EvaluationStatusBadge type="OKRESOWA" status={i.status} />
+                        {deadline && (
+                          <DeadlineBadge
+                            daysLeft={daysBetween(today, deadline.date)}
+                            urgency={deadlineUrgency(deadline, today)}
+                            label={`${what} ${deadline.date.slice(0, 4) === today.slice(0, 4) ? formatDateShortPl(deadline.date) : formatDatePl(deadline.date)}`}
+                          />
+                        )}
                       </span>
-                      {deadline && (
-                        <span className="flex flex-wrap items-center gap-2 text-sm">
-                          {what} {deadline.date.slice(0, 4) === today.slice(0, 4) ? formatDateShortPl(deadline.date) : formatDatePl(deadline.date)}
-                          <DeadlineBadge variant="solid" size="md" daysLeft={daysBetween(today, deadline.date)} urgency={deadlineUrgency(deadline, today)} />
-                        </span>
-                      )}
                     </div>
                     <Button asChild variant={i.status === "W_OKRESIE_OCENY" ? "outline" : "default"}>
                       <Link href={actionHref(i.evaluationId, i.status)}>{ACTION_LABEL[i.status]}</Link>

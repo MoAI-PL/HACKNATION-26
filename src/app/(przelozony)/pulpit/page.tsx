@@ -178,7 +178,7 @@ export default async function PulpitPage() {
                           <span>
                             {DEADLINE_KIND_LABELS[r.next.deadline.kind]}: do {formatDay(r.next.deadline.date, today)}
                           </span>
-                          <DeadlineBadge variant="solid" size="md" daysLeft={r.next.daysLeft} urgency={r.next.urgency} />
+                          <DeadlineBadge daysLeft={r.next.daysLeft} urgency={r.next.urgency} />
                         </div>
                       ) : (
                         <span className="text-sm text-muted-foreground">Brak terminów do pilnowania.</span>

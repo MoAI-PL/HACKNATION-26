@@ -38,7 +38,7 @@ function Evidence({ items, empty }: { items: IndicatorEvidence[]; empty: string 
 
 function Section({ id, title, children }: { id: string; title: string; children: React.ReactNode }) {
   return (
-    <section aria-labelledby={id} className="flex flex-col gap-3 rounded-xl border bg-card p-4 shadow-xs print:break-inside-avoid print:border-0 print:p-0 print:shadow-none">
+    <section aria-labelledby={id} className="flex flex-col gap-3 rounded-lg border bg-card p-4 print:break-inside-avoid print:border-0 print:p-0">
       <h2 id={id} className="text-lg">
         {title}
       </h2>

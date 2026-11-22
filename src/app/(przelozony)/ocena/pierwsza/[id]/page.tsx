@@ -120,7 +120,7 @@ export default async function PierwszaOcenaPrzebiegPage({ params }: { params: Pr
                 />
               </>
             )}
-            <details className="rounded-xl border bg-card p-4 shadow-xs" open={noExam}>
+            <details className="rounded-lg border bg-card p-4" open={noExam}>
               <summary className="cursor-pointer font-medium text-primary">{noExam ? "Uzupełnij wynik egzaminu" : "Popraw sprawozdanie lub wynik egzaminu"}</summary>
               <div className="mt-4">
                 <SprawozdanieIEgzamin

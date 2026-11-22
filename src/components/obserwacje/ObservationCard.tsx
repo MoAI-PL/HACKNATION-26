@@ -35,7 +35,7 @@ export function ObservationCard({
   const behavior = o.behaviorLevel && indicator ? indicator.levels[o.behaviorLevel] : null;
 
   return (
-    <article className="flex flex-col gap-3 rounded-lg border bg-card p-4">
+    <article className="flex flex-col gap-3 rounded-xl border bg-card p-4 shadow-xs">
       <header className="flex flex-wrap items-start justify-between gap-2">
         <div className="flex min-w-0 flex-col gap-0.5">
           <Heading className="text-base font-medium">

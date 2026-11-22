@@ -19,7 +19,7 @@ export default async function RozmowaPage() {
   const user = await requirePageRole("PRZELOZONY");
   const targets = await listConversationTargets(user.id);
   return (
-    <div className="mx-auto flex w-full max-w-4xl flex-col gap-6">
+    <div className="flex w-full flex-col gap-6">
       <PageHeader
         title="Asystent rozmowy"
         description="Przygotuj rozmowę wstępną, rozpoczynającą albo oceniającą: agenda według przepisów, pytania oparte na notatkach z dziennika, informacja zwrotna i pomysły na rozwój. Ściągę możesz wydrukować."
@@ -29,16 +29,16 @@ export default async function RozmowaPage() {
       ) : (
         <ul className="flex flex-col gap-3">
           {targets.map((t) => (
-            <li key={t.employeeId} className="flex flex-wrap items-center justify-between gap-3 rounded-lg border bg-card p-4">
+            <li key={t.employeeId} className="flex flex-wrap items-center justify-between gap-3 rounded-xl border bg-card p-4 shadow-xs">
               <div className="flex min-w-0 flex-col gap-1">
-                <h2 className="text-base font-medium">{t.employeeName}</h2>
+                <h2 className="text-base font-semibold">{t.employeeName}</h2>
                 <p className="text-sm text-muted-foreground">
                   {t.positionTitle ?? "stanowisko nieuzupełnione"} · następna: {CONVERSATION_LABELS[t.suggested].toLocaleLowerCase("pl")}
                 </p>
                 {t.deadlineText && t.daysLeft !== null && t.urgency && (
                   <span className="flex flex-wrap items-center gap-2 text-sm">
                     {t.deadlineText}
-                    <DeadlineBadge daysLeft={t.daysLeft} urgency={t.urgency} />
+                    <DeadlineBadge variant="solid" size="md" daysLeft={t.daysLeft} urgency={t.urgency} />
                   </span>
                 )}
               </div>

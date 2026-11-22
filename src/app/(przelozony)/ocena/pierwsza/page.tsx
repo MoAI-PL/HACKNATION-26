@@ -47,18 +47,19 @@ export default async function PierwszaOcenaPage() {
               <Card>
                 <CardContent className="flex flex-wrap items-center justify-between gap-3 py-4">
                   <div className="flex min-w-0 flex-col gap-1">
-                    <span className="font-medium">{i.employeeName}</span>
+                    <span className="font-semibold">{i.employeeName}</span>
                     <span className="text-sm text-muted-foreground">{i.positionTitle ?? "bez opisu stanowiska"}</span>
                     <span className="flex flex-wrap items-center gap-2">
                       <EvaluationStatusBadge type="PIERWSZA" status={i.status} />
-                      {i.next && (
-                        <DeadlineBadge
-                          daysLeft={daysBetween(today, i.next.deadline.date)}
-                          urgency={deadlineUrgency(i.next.deadline, today)}
-                          label={`${i.next.label} ${i.next.deadline.date.slice(0, 4) === today.slice(0, 4) ? formatDateShortPl(i.next.deadline.date) : formatDatePl(i.next.deadline.date)}`}
-                        />
-                      )}
                     </span>
+                    {i.next && (
+                      <span className="flex flex-wrap items-center gap-2 text-sm">
+                        {i.next.label.charAt(0).toLocaleUpperCase("pl")}
+                        {i.next.label.slice(1)}{" "}
+                        {i.next.deadline.date.slice(0, 4) === today.slice(0, 4) ? formatDateShortPl(i.next.deadline.date) : formatDatePl(i.next.deadline.date)}
+                        <DeadlineBadge variant="solid" size="md" daysLeft={daysBetween(today, i.next.deadline.date)} urgency={deadlineUrgency(i.next.deadline, today)} />
+                      </span>
+                    )}
                   </div>
                   <Button asChild variant={i.stage === "SPRAWOZDANIE" ? "outline" : "default"}>
                     <Link href={`/ocena/pierwsza/${i.evaluationId}`}>{ACTION_LABEL[i.stage]}</Link>

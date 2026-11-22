@@ -6,7 +6,7 @@
 
 import { prisma } from "@/lib/db";
 import { fromDbDate, todayIso } from "@/lib/domain/daty";
-import type { CompetencyCode, DeadlineUrgency, EvaluationResult, EvaluationStatus, EvaluationType } from "@/lib/domain/types";
+import type { CompetencyCode, ConversationType, DeadlineUrgency, EvaluationResult, EvaluationStatus, EvaluationType } from "@/lib/domain/types";
 import { currentDeadline, type HrEvaluationRecord } from "@/lib/hr/panel";
 import { listHrRecords } from "@/lib/hr/repo";
 import { fromDbLevel } from "@/lib/ocena/zakonczenie-oceny";
@@ -77,6 +77,24 @@ export async function listConversationTargets(supervisorId: string): Promise<Con
       urgency: info?.urgency ?? null,
     };
   });
+}
+
+export interface PastConversation {
+  id: string;
+  type: ConversationType;
+  date: string;
+  notes: string | null;
+}
+
+/** Zapisane rozmowy z pracownikiem (tryb rozmowy Z43, kreator Z12, pierwsza ocena Z17), od najnowszej. */
+export async function listPastConversations(supervisorId: string, employeeId: string, limit = 10): Promise<PastConversation[]> {
+  const rows = await prisma.conversation.findMany({
+    where: { employeeId, employee: { supervisorId } },
+    orderBy: [{ date: "desc" }, { createdAt: "desc" }],
+    take: limit,
+    select: { id: true, type: true, date: true, notes: true },
+  });
+  return rows.map((r) => ({ id: r.id, type: r.type as ConversationType, date: fromDbDate(r.date), notes: r.notes }));
 }
 
 export interface PrepData {

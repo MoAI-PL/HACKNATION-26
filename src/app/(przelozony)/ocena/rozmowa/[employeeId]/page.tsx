@@ -11,7 +11,8 @@ import { getFragment } from "@/lib/ai/rag/search";
 import { requirePageRole } from "@/lib/auth/guard";
 import { formatDatePl } from "@/lib/obserwacje/dziennik";
 import { buildConversationPrep, CONVERSATION_LABELS, type ConversationKind, type IndicatorEvidence } from "@/lib/rozmowa/przygotowanie";
-import { loadPrepData } from "@/lib/rozmowa/repo";
+import { listPastConversations, loadPrepData } from "@/lib/rozmowa/repo";
+import { CONVERSATION_TYPE_LABELS } from "@/lib/domain/slownik";
 import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = { title: "Przygotowanie rozmowy – Kompas Kompetencji" };
@@ -37,7 +38,7 @@ function Evidence({ items, empty }: { items: IndicatorEvidence[]; empty: string 
 
 function Section({ id, title, children }: { id: string; title: string; children: React.ReactNode }) {
   return (
-    <section aria-labelledby={id} className="flex flex-col gap-3 rounded-lg border bg-card p-4 print:break-inside-avoid print:border-0 print:p-0">
+    <section aria-labelledby={id} className="flex flex-col gap-3 rounded-xl border bg-card p-4 shadow-xs print:break-inside-avoid print:border-0 print:p-0 print:shadow-none">
       <h2 id={id} className="text-lg">
         {title}
       </h2>
@@ -61,6 +62,7 @@ export default async function PrzygotowanieRozmowyPage({
   // Rodzaj z adresu tylko, jeśli dotyczy oceny tego pracownika (np. pierwsza ocena ma wyłącznie rozmowę wstępną).
   const kind: ConversationKind = data.allowed.includes(typ as ConversationKind) ? (typ as ConversationKind) : data.suggested;
   const prep = buildConversationPrep({ ...data.input, kind });
+  const past = await listPastConversations(user.id, employeeId);
   const source = getFragment(prep.sourceFragmentId);
 
   return (
@@ -217,6 +219,27 @@ export default async function PrzygotowanieRozmowyPage({
             <li key={c}>{c}</li>
           ))}
         </ul>
+      </Section>
+
+      <Section id="odbyte" title="Odbyte rozmowy">
+        {past.length === 0 ? (
+          <p className="text-sm text-muted-foreground">
+            Nie ma jeszcze zapisanych rozmów. Przebieg zapiszesz na końcu trybu rozmowy.
+          </p>
+        ) : (
+          <ul className="flex flex-col gap-2">
+            {past.map((c, i) => (
+              <li key={c.id}>
+                <details className="rounded-lg border bg-muted/30 px-3 py-2" open={i === 0}>
+                  <summary className="cursor-pointer font-medium">
+                    {CONVERSATION_TYPE_LABELS[c.type]} <span className="font-normal text-muted-foreground">· {formatDatePl(c.date)}</span>
+                  </summary>
+                  <p className="mt-2 text-sm whitespace-pre-wrap">{c.notes?.trim() || "Bez notatek."}</p>
+                </details>
+              </li>
+            ))}
+          </ul>
+        )}
       </Section>
 
       <RozmowaAI key={kind} employeeId={employeeId} kind={kind} />

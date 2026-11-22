@@ -19,7 +19,7 @@ export const dynamic = "force-dynamic";
 
 function Block({ id, title, icon, children }: { id: string; title: string; icon: React.ReactNode; children: React.ReactNode }) {
   return (
-    <section aria-labelledby={id} className="flex flex-col gap-3 rounded-lg border bg-card p-4 print:break-inside-avoid print:border-0 print:p-0">
+    <section aria-labelledby={id} className="flex flex-col gap-3 rounded-xl border bg-card p-4 shadow-xs print:break-inside-avoid print:border-0 print:p-0 print:shadow-none">
       <h2 id={id} className="flex items-center gap-2 text-lg">
         {icon}
         {title}

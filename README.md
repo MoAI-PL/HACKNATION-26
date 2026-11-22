@@ -25,7 +25,7 @@ Scenariusz krok po kroku dla jury (ok. 12 minut): **[`docs/DEMO.md`](docs/DEMO.m
 
 | | Funkcja | Jak działa |
 |---|---|---|
-| 🗂 | **Pulpit „Do zrobienia”** | najpilniejsze sprawy z terminami liczonymi z przepisów (art. 81 ustawy, § 7, KC 112/115, święta), kolor + tekst pilności, jeden przycisk akcji |
+| 🗂 | **Pulpit „Do zrobienia”** | najpilniejsze sprawy z terminami liczonymi z przepisów (art. 81 ustawy, § 7, KC 112/115, święta), kolor + tekst pilności, jeden przycisk akcji; przypomnienie o osobach bez notatki od ponad 3 miesięcy z przyciskiem „Dodaj notatkę” |
 | 📄 | **Opis stanowiska → arkusz** | wgranie OSP (.docx) – system odczytuje cel, zadania i liczbę podległych i sam wybiera arkusz B lub C z wyjaśnieniem (§ 3) |
 | ✨ | **Kryteria dodatkowe z OSP** | AI proponuje do 3 kryteriów z uzasadnieniem i **dosłownym cytatem zadania z OSP**; kod sprawdza listę, limit i cytat; przełożony wstawia albo odrzuca |
 | 📝 | **Dziennik obserwacji (SDR)** | notatki Sytuacja – Działanie – Rezultat przypięte do wskaźnika, przez cały okres oceny |

@@ -87,5 +87,5 @@ Kolejność: najpierw ★, potem pozostałe P0, potem P1 (w kolejności z tabeli
 | ID | Zadanie | Status | Kto | Gałąź |
 |---|---|---|---|---|
 | Z39 | Tryb „5 minut przed rozmową” | gotowe | suzanne0401 | `main` |
-| Z45 | Przypomnienia o regularnych notatkach | wolne | | |
+| Z45 | Przypomnienia o regularnych notatkach | gotowe | suzanne0401 | `main` |
 | Z46 | Ekran ocenianego „Moje oceny” – lista i podgląd własnych ocen, potwierdzenie zapoznania się (dodane: luka widoczna dla jury) | gotowe | suzanne0401 | `z46-moje-oceny` |

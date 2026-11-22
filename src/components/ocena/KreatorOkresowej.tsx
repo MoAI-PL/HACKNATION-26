@@ -18,6 +18,8 @@ import type { CompetencyCode, PositionDescription, SheetSelection } from "@/lib/
 import type { CriteriaProposalResult } from "@/lib/ai/funkcje/kryteria-z-osp";
 import type { AutosaveState } from "@/lib/ui/status";
 import { availableAdditionalCriteria, mandatoryCriteria } from "@/lib/rules/kryteria";
+import { rules } from "@/lib/domain/przepisy";
+import { plural } from "@/lib/rules/tekst";
 import { formatDatePl } from "@/lib/rules/kalendarz";
 import {
   CHECKLIST_ITEMS,
@@ -33,7 +35,6 @@ import {
 import type { WizardData } from "@/lib/ocena/dane-kreatora";
 import { completePartOne, logAiDecision, saveDraft, uploadOsp } from "@/app/(przelozony)/ocena/okresowa/actions";
 
-const MAX_ADDITIONAL = 3;
 const AUTOSAVE_DELAY_MS = 800;
 
 const QUOTE_SOURCE_LABEL = {
@@ -454,8 +455,10 @@ function KrokKryteria({
     }
   };
 
+  // Limit z przepisów (§ 5 ust. 2) – panel HR (Z19) może go zmienić bez zmian w kodzie.
+  const maxAdditional = rules.periodic.maxAdditionalCriteria;
   const result = ai.status === "gotowa" ? ai.result : undefined;
-  const proposals = (result?.proposals ?? []).filter((p) => available.includes(p.competency)).slice(0, MAX_ADDITIONAL);
+  const proposals = (result?.proposals ?? []).filter((p) => available.includes(p.competency)).slice(0, maxAdditional);
   const reasonFromProposal = (p: (typeof proposals)[number]) => `${p.justification} OSP: „${p.quote.text}”`;
 
   return (
@@ -477,7 +480,7 @@ function KrokKryteria({
       <section aria-labelledby="kryteria-dodatkowe" className="flex flex-col gap-3">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <h3 id="kryteria-dodatkowe" className="flex items-center gap-2 font-semibold">
-            Kryteria dodatkowe (nieobowiązkowe, najwyżej 3)
+            Kryteria dodatkowe (nieobowiązkowe, najwyżej {maxAdditional})
             <Dlaczego id="KRYTERIA_DODATKOWE" />
           </h3>
           {ai.status === "brak" && (
@@ -535,8 +538,8 @@ function KrokKryteria({
         <ChoiceCardMulti
           label="Kryteria dodatkowe"
           columns={3}
-          max={MAX_ADDITIONAL}
-          maxReachedText="To maksimum – można wybrać najwyżej 3 kryteria dodatkowe (§ 5 ust. 2)."
+          max={maxAdditional}
+          maxReachedText={`To maksimum – można wybrać najwyżej ${maxAdditional} ${plural(maxAdditional, ["kryterium dodatkowe", "kryteria dodatkowe", "kryteriów dodatkowych"])} (${rules.periodic.legalBasis.maxAdditionalCriteria}).`}
           options={available.map((c) => ({
             value: c,
             label: COMPETENCY_NAMES[c],

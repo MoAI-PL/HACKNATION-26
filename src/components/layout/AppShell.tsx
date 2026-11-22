@@ -8,6 +8,8 @@ import { MainNav } from "./MainNav";
 import { HeaderActions } from "./HeaderActions";
 import { GlobalShortcuts } from "./Shortcuts";
 import { SzybkaNotatka } from "@/components/asystent/SzybkaNotatka";
+import { ZastosujKonfiguracje } from "@/components/konfiguracja/ZastosujKonfiguracje";
+import { currentRuntimeConfig } from "@/lib/konfiguracja/stan";
 
 // Układ aplikacji po zalogowaniu (Z10): link „Przejdź do treści”, nagłówek z nazwą, rolą i akcjami,
 // menu według grafiki MC, treść z jednym <main>.
@@ -38,7 +40,7 @@ export function AppShell({
 }) {
   const quickNote = roleHasQuickNote(user.role);
   const assistant = roleHasAssistant(user.role);
-  return (
+  const shell = (
     <div className="flex min-h-screen flex-col">
       <a
         href="#tresc"
@@ -76,6 +78,8 @@ export function AppShell({
       {quickNote && <SzybkaNotatka />}
     </div>
   );
+  // Zmiany przepisów i modelu z panelu HR (Z19) – także w obliczeniach w przeglądarce.
+  return <ZastosujKonfiguracje config={currentRuntimeConfig()}>{shell}</ZastosujKonfiguracje>;
 }
 
 /** Nagłówek ekranu: jeden tytuł (h1), opis i miejsce na jedną główną akcję (sekcja 4.1 pkt 2). */

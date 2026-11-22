@@ -1,7 +1,8 @@
 "use server";
 
-// Akcje serwerowe zakończenia oceny (Z14). Każda sprawdza rolę i dostęp do oceny (Z04),
-// a decyzję o ocenie cząstkowej waliduje z sugestią policzoną od nowa z ocen zapisanych w bazie.
+// Akcje serwerowe zakończenia oceny (Z14) – wspólne z oceną elementów pierwszej oceny (Z17, skala 3/5/7).
+// Każda sprawdza rolę i dostęp do oceny (Z04), a decyzję o ocenie cząstkowej waliduje z sugestią
+// policzoną od nowa z ocen zapisanych w bazie.
 
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/db";
@@ -12,7 +13,7 @@ import type { CompetencyCode, Explanation } from "@/lib/domain/types";
 import { listObservations } from "@/lib/obserwacje/repo";
 import { noteCountsByIndicator } from "@/lib/obserwacje/dziennik";
 import { evaluationAccess } from "@/lib/ocena/dane-kreatora";
-import { ASSESSABLE } from "@/lib/ocena/dane-oceny";
+import { assessableStatuses } from "@/lib/ocena/dane-oceny";
 import {
   checkDecision,
   decisionInputSchema,
@@ -29,19 +30,22 @@ const NOT_ASSESSABLE = "Tej oceny nie można teraz zmieniać – sprawdź jej et
 async function assessable(evaluationId: string) {
   const user = await requireRole("PRZELOZONY");
   const ev = await prisma.evaluation.findFirst({
-    where: { id: evaluationId, type: "OKRESOWA", ...evaluationAccess(user.id) },
-    select: { id: true, status: true, employeeId: true, periodStart: true },
+    where: { id: evaluationId, type: { in: ["OKRESOWA", "PIERWSZA"] }, ...evaluationAccess(user.id) },
+    select: { id: true, type: true, status: true, employeeId: true, periodStart: true },
   });
-  return { user, ev };
+  return { user, ev, open: ev ? assessableStatuses(ev.type).includes(ev.status) : false };
 }
+
+const pathFor = (ev: { id: string; type: "OKRESOWA" | "PIERWSZA" }) =>
+  ev.type === "PIERWSZA" ? `/ocena/pierwsza/${ev.id}` : `/ocena/okresowa/${ev.id}`;
 
 export type RatingResult = { ok: true; savedAt: string } | { ok: false; error: string };
 
 /** Autozapis wyboru karty zachowania przy wskaźniku. Zmiana oceny wskaźnika kasuje decyzję kryterium (trzeba ją potwierdzić). */
 export async function saveRating(evaluationId: string, input: unknown): Promise<RatingResult> {
-  const { ev } = await assessable(evaluationId);
+  const { ev, open } = await assessable(evaluationId);
   if (!ev) return { ok: false, error: NOT_FOUND };
-  if (!ASSESSABLE.includes(ev.status)) return { ok: false, error: NOT_ASSESSABLE };
+  if (!open) return { ok: false, error: NOT_ASSESSABLE };
   const parsed = ratingInputSchema.safeParse(input);
   if (!parsed.success) return { ok: false, error: "Niepoprawne dane wskaźnika." };
   const { competency, indicatorId, value } = parsed.data;
@@ -74,9 +78,9 @@ export type DecisionResult = { ok: true } | { ok: false; error: string; errors?:
 
 /** Decyzja przełożonego: ocena cząstkowa kryterium; przy różnicy od sugestii – powód i wpis w dzienniku decyzji. */
 export async function saveDecision(evaluationId: string, input: unknown, nextStep: number): Promise<DecisionResult> {
-  const { user, ev } = await assessable(evaluationId);
+  const { user, ev, open } = await assessable(evaluationId);
   if (!ev) return { ok: false, error: NOT_FOUND };
-  if (!ASSESSABLE.includes(ev.status)) return { ok: false, error: NOT_ASSESSABLE };
+  if (!open) return { ok: false, error: NOT_ASSESSABLE };
   const parsed = decisionInputSchema.safeParse(input);
   if (!parsed.success) return { ok: false, error: "Niepoprawne dane decyzji." };
   const { competency, points, justification } = parsed.data;
@@ -97,6 +101,8 @@ export async function saveDecision(evaluationId: string, input: unknown, nextSte
   const suggestion = suggestionFor(
     { competency: criterion.competency, indicatorIds: def.indicators.map((i) => i.id), ratings },
     noteCountsByIndicator(observations, ev.employeeId),
+    undefined,
+    ev.type,
   );
   const check = checkDecision(suggestion, points, justification);
   if (!check.valid) return { ok: false, error: "Popraw decyzję.", errors: check.errors };
@@ -125,13 +131,13 @@ export async function saveDecision(evaluationId: string, input: unknown, nextSte
       });
     }
   });
-  revalidatePath(`/ocena/okresowa/${ev.id}`);
+  revalidatePath(pathFor(ev));
   return { ok: true };
 }
 
 /** Zapamiętanie kryterium, na którym przełożony skończył (wznowienie pracy). */
 export async function saveStep(evaluationId: string, step: number): Promise<void> {
-  const { ev } = await assessable(evaluationId);
-  if (!ev || !ASSESSABLE.includes(ev.status)) return;
+  const { ev, open } = await assessable(evaluationId);
+  if (!ev || !open) return;
   await prisma.evaluation.update({ where: { id: ev.id }, data: { lastWizardStep: `ocena:${Math.max(0, Math.floor(step))}` } });
 }

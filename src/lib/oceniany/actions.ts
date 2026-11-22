@@ -33,6 +33,7 @@ export async function acknowledgeOwnEvaluation(evaluationId: string): Promise<Ow
   revalidatePath("/moje-oceny");
   revalidatePath(`/moje-oceny/${ev.id}`);
   revalidatePath("/ocena/okresowa");
+  revalidatePath("/ocena/pierwsza");
   revalidatePath("/pulpit");
   return { ok: true };
 }

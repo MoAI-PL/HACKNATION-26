@@ -1,9 +1,9 @@
-// Odczyt danych do zakończenia oceny okresowej (Z14) – tylko po stronie serwera.
+// Odczyt danych do zakończenia oceny okresowej (Z14) i oceny elementów pierwszej oceny (Z17) – tylko po stronie serwera.
 
 import { prisma } from "@/lib/db";
 import { fromDbDate, todayIso } from "@/lib/domain/daty";
 import { competencyModel } from "@/lib/domain/model-kompetencji-dane";
-import type { BehaviorLevel, CompetencyCode, EvaluationStatus, IsoDate } from "@/lib/domain/types";
+import type { BehaviorLevel, CompetencyCode, EvaluationStatus, EvaluationType, IsoDate } from "@/lib/domain/types";
 import { listObservations } from "@/lib/obserwacje/repo";
 import type { ObservationView } from "@/lib/obserwacje/dziennik";
 import { evaluationAccess } from "./dane-kreatora";
@@ -26,6 +26,8 @@ export interface CriterionData extends CriterionForAssessment {
 
 export interface AssessmentData {
   evaluationId: string;
+  /** OKRESOWA (Z14, skala 1–9) albo PIERWSZA (Z17, skala 3/5/7). */
+  evaluationType: EvaluationType;
   status: EvaluationStatus;
   today: IsoDate;
   employee: { id: string; name: string; positionTitle?: string };
@@ -43,9 +45,12 @@ export interface AssessmentData {
   mirror: { supervisorAverages: number[]; unitAverages: number[] };
 }
 
-/** Średnie sporządzonych ocen okresowych: przełożonego (oceniającego) i w komórce ocenianego – bez bieżącej oceny. */
-async function mirrorContext(evaluationId: string, evaluatorId: string, orgUnitId: string | null) {
-  const done = { type: "OKRESOWA" as const, id: { not: evaluationId }, average: { not: null }, evaluatedAt: { not: null } };
+/**
+ * Średnie sporządzonych ocen tego samego rodzaju (skale okresowej i pierwszej oceny są różne):
+ * przełożonego (oceniającego) i w komórce ocenianego – bez bieżącej oceny.
+ */
+async function mirrorContext(evaluationId: string, evaluatorId: string, orgUnitId: string | null, type: EvaluationType) {
+  const done = { type, id: { not: evaluationId }, average: { not: null }, evaluatedAt: { not: null } };
   const [own, unit] = await Promise.all([
     prisma.evaluation.findMany({ where: { ...done, evaluatorId }, select: { average: true } }),
     orgUnitId ? prisma.evaluation.findMany({ where: { ...done, employee: { orgUnitId } }, select: { average: true } }) : Promise.resolve([]),
@@ -57,9 +62,21 @@ async function mirrorContext(evaluationId: string, evaluatorId: string, orgUnitI
 /** Statusy, w których można oceniać wskaźniki. */
 export const ASSESSABLE: EvaluationStatus[] = ["W_OKRESIE_OCENY", "W_OCENIE"];
 
-export async function loadAssessment(evaluationId: string, userId: string): Promise<AssessmentData | null> {
+/**
+ * Statusy, w których można oceniać wskaźniki – zależnie od rodzaju oceny. Elementy pierwszej oceny (Z17) ocenia się
+ * po odnotowaniu sprawozdania (etap „Do oceny”), bo jego złożenie w terminie jest warunkiem wyniku (§ 10 ust. 1 pkt 2).
+ */
+export function assessableStatuses(type: EvaluationType): EvaluationStatus[] {
+  return type === "PIERWSZA" ? ["W_OCENIE"] : ASSESSABLE;
+}
+
+export async function loadAssessment(
+  evaluationId: string,
+  userId: string,
+  type: EvaluationType = "OKRESOWA",
+): Promise<AssessmentData | null> {
   const ev = await prisma.evaluation.findFirst({
-    where: { id: evaluationId, type: "OKRESOWA", ...evaluationAccess(userId) },
+    where: { id: evaluationId, type, ...evaluationAccess(userId) },
     include: {
       employee: { include: { position: { select: { title: true } } } },
       criteria: { orderBy: { order: "asc" }, include: { ratings: true } },
@@ -95,6 +112,7 @@ export async function loadAssessment(evaluationId: string, userId: string): Prom
 
   return {
     evaluationId: ev.id,
+    evaluationType: ev.type,
     status: ev.status,
     today: todayIso(),
     employee: { id: ev.employeeId, name: `${ev.employee.firstName} ${ev.employee.lastName}`, positionTitle: ev.employee.position?.title },
@@ -105,6 +123,6 @@ export async function loadAssessment(evaluationId: string, userId: string): Prom
     observations,
     guidance: competencyModel.model.guidance ?? [],
     resumeCriterion,
-    mirror: await mirrorContext(ev.id, ev.evaluatorId, ev.employee.orgUnitId),
+    mirror: await mirrorContext(ev.id, ev.evaluatorId, ev.employee.orgUnitId, ev.type),
   };
 }

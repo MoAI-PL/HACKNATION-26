@@ -136,8 +136,8 @@ function KryteriumKrok({
 }) {
   const [current, setCurrent] = React.useState(() => firstUnratedIndex(c));
   const indicator = c.indicators[current]!;
-  const suggestion = suggestionFor(c, noteCounts);
-  const options = decisionOptions();
+  const suggestion = suggestionFor(c, noteCounts, undefined, data.evaluationType);
+  const options = decisionOptions(undefined, data.evaluationType);
   const [points, setPoints] = React.useState<number | null>(c.score ?? suggestion.suggestedPoints);
   const [reason, setReason] = React.useState(c.overrideReason ?? "");
   const [errors, setErrors] = React.useState<Explanation[]>([]);
@@ -297,7 +297,7 @@ function KryteriumKrok({
         </h3>
         <ChoiceCardGroup
           label={`Ocena cząstkowa: ${c.name}`}
-          columns={5}
+          columns={options.length === 3 ? 3 : 5}
           value={points === null ? undefined : String(points)}
           onValueChange={(v) => {
             setPoints(Number(v));
@@ -434,6 +434,7 @@ function Przeglad({
   onGoTo: (step: number) => void;
 }) {
   const evaluationId = data.evaluationId;
+  const first = data.evaluationType === "PIERWSZA";
   const issues = assessmentIssues(criteria);
   const signals = React.useMemo(() => {
     const indicators = criteria.flatMap((c) =>
@@ -459,7 +460,7 @@ function Przeglad({
         <h2 ref={headingRef} tabIndex={-1} className="text-xl font-semibold outline-none">
           Przegląd ocen cząstkowych
         </h2>
-        <Dlaczego id="ROZMOWA_OCENIAJACA" label="Przed sporządzeniem: rozmowa oceniająca" />
+        {!first && <Dlaczego id="ROZMOWA_OCENIAJACA" label="Przed sporządzeniem: rozmowa oceniająca" />}
       </div>
       <Lustro signals={signals} />
       <Card>
@@ -478,7 +479,7 @@ function Przeglad({
             </thead>
             <tbody>
               {criteria.map((c, k) => {
-                const s = suggestionFor(c, noteCounts);
+                const s = suggestionFor(c, noteCounts, undefined, data.evaluationType);
                 return (
                   <tr key={c.competency} className="border-b align-top last:border-0">
                     <td className="py-2 pr-3">
@@ -527,11 +528,15 @@ function Przeglad({
           title="Wszystkie oceny cząstkowe są gotowe"
           action={
             <Button asChild>
-              <Link href={`/ocena/okresowa/${evaluationId}/podsumowanie`}>Dalej: podsumowanie i wynik</Link>
+              <Link href={first ? `/ocena/pierwsza/${evaluationId}` : `/ocena/okresowa/${evaluationId}/podsumowanie`}>
+                Dalej: podsumowanie i wynik
+              </Link>
             </Button>
           }
         >
-          Kolejny krok to podsumowanie: średnia, poziom ogólny, wynik oceny, uzasadnienie i wnioski do IPRZ.
+          {first
+            ? "Kolejny krok to wynik według § 10: ocena łączna, warunki oceny pozytywnej, uzasadnienie i wnioski dotyczące rozwoju."
+            : "Kolejny krok to podsumowanie: średnia, poziom ogólny, wynik oceny, uzasadnienie i wnioski do IPRZ."}
         </Notice>
       )}
     </div>

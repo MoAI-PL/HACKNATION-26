@@ -11,8 +11,8 @@ import type {
   IndicatorRatingInput,
   IndicatorRatingValue,
   Level,
+  EvaluationType,
   LevelSuggestion,
-  PeriodicPoints,
 } from "@/lib/domain/types";
 import { suggestLevel, validateFinalDecision } from "@/lib/rules/sugestia";
 
@@ -37,18 +37,26 @@ export function ratingInputs(c: Pick<CriterionForAssessment, "indicatorIds" | "r
   }));
 }
 
-/** Sugestia dla kryterium oceny okresowej. */
+/** Sugestia dla kryterium oceny okresowej albo elementu pierwszej oceny (skala 3/5/7 – Z17). */
 export function suggestionFor(
   c: Pick<CriterionForAssessment, "competency" | "indicatorIds" | "ratings">,
   noteCounts: Map<string, number>,
   r: Rules = defaultRules,
+  evaluationType: EvaluationType = "OKRESOWA",
 ): LevelSuggestion {
-  return suggestLevel(c.competency, ratingInputs(c, noteCounts), { evaluationType: "OKRESOWA", rules: r });
+  return suggestLevel(c.competency, ratingInputs(c, noteCounts), { evaluationType, rules: r });
 }
 
-/** Opcje decyzji: 5 poziomów z punktami (§ 11 ust. 1 pkt 1). */
-export function decisionOptions(r: Rules = defaultRules): { level: Level; points: PeriodicPoints; label: string }[] {
-  return r.periodic.partialScores.map((s) => ({ level: s.level, points: s.points, label: `${LEVEL_LABELS[s.level]} – ${s.points} pkt` }));
+/**
+ * Opcje decyzji: okresowa – 5 poziomów 1/3/5/7/9 (§ 11 ust. 1 pkt 1),
+ * pierwsza ocena – 3 poziomy 3/5/7 (§ 10 rozp. o pierwszej ocenie).
+ */
+export function decisionOptions(
+  r: Rules = defaultRules,
+  evaluationType: EvaluationType = "OKRESOWA",
+): { level: Level; points: number; label: string }[] {
+  const scale = evaluationType === "PIERWSZA" ? r.firstEval.partialScores : r.periodic.partialScores;
+  return scale.map((s) => ({ level: s.level, points: s.points, label: `${LEVEL_LABELS[s.level]} – ${s.points} pkt` }));
 }
 
 export interface CriterionProgress {

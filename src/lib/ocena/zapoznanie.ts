@@ -32,9 +32,14 @@ export async function applyAcknowledgment(
     data: { status: "ZAKONCZONA", acknowledgedAt: toDbDate(ackDate) },
   });
   if (updated.count === 0) return false;
-  const open = await tx.evaluation.count({
-    where: { employeeId: ev.employeeId, type: "OKRESOWA", status: { not: "ZAKONCZONA" }, id: { not: ev.id } },
-  });
+  // Po pierwszej ocenie (Z17) nie zakładamy oceny okresowej: zależy od dalszego zatrudnienia (umowa na czas
+  // nieokreślony), a arkusz B/C – od stanowiska. Termin oceny okresowej liczy się od zatrudnienia na czas nieokreślony (HR).
+  const open =
+    ev.sheet === "PIERWSZA"
+      ? 1
+      : await tx.evaluation.count({
+          where: { employeeId: ev.employeeId, type: "OKRESOWA", status: { not: "ZAKONCZONA" }, id: { not: ev.id } },
+        });
   if (open === 0) {
     await tx.evaluation.create({
       data: {

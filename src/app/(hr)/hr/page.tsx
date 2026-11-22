@@ -83,7 +83,8 @@ export default async function HrPage({ searchParams }: { searchParams: Promise<R
 
       {message && <Notice tone={message.tone} title={message.text} />}
 
-      <ul className="grid grid-cols-2 gap-3 md:grid-cols-5" aria-label="Podsumowanie">
+      {/* Liczba kolumn z szerokości w rem – przy powiększonym tekście (przycisk „Dostępność”) kafelki same przechodzą do nowego wiersza. */}
+      <ul className="grid grid-cols-[repeat(auto-fit,minmax(9rem,1fr))] gap-3" aria-label="Podsumowanie">
         {stats.map((s) => (
           <li key={s.label}>
             <Card className="h-full">

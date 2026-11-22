@@ -100,6 +100,56 @@
   --radius: 0.625rem;
 }
 
+/*
+ * Ustawienia wyświetlania (przycisk „Dostępność”, src/lib/ui/dostepnosc.ts).
+ * Tekst: cały układ jest w rem, więc większy rozmiar bazowy powiększa tekst, odstępy i cele kliknięcia razem.
+ * Wysoki kontrast: czarny tekst na białym tle (21:1), ciemniejsze obramowania i tekst pomocniczy, podkreślone linki,
+ * wyraźniejszy fokus. Kolory statusów i AI zostają, ale w ciemniejszych odcieniach.
+ */
+html.tekst-125 {
+  font-size: 125%;
+}
+html.tekst-150 {
+  font-size: 150%;
+}
+html.wysoki-kontrast {
+  --background: #ffffff;
+  --foreground: #000000;
+  --card: #ffffff;
+  --card-foreground: #000000;
+  --popover: #ffffff;
+  --popover-foreground: #000000;
+  --primary: #0b2f63;
+  --secondary: #ffffff;
+  --secondary-foreground: #000000;
+  --muted: #f2f2f2;
+  --muted-foreground: #1a1a1a;
+  --accent: #ffffff;
+  --accent-foreground: #000000;
+  --border: #000000;
+  --input: #000000;
+  --ring: #000000;
+  --ai: #4c1d95;
+  --ai-soft: #ffffff;
+  --ai-border: #4c1d95;
+  --success: #0f4a26;
+  --success-soft: #ffffff;
+  --warning: #5c3200;
+  --warning-soft: #ffffff;
+  --danger: #7f1414;
+  --danger-soft: #ffffff;
+  --info: #0b2f63;
+  --info-soft: #ffffff;
+}
+html.wysoki-kontrast a {
+  text-decoration: underline;
+}
+html.wysoki-kontrast :focus-visible {
+  outline: 3px solid #000000;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 6px #ffd400;
+}
+
 @layer base {
   * {
     @apply border-border;

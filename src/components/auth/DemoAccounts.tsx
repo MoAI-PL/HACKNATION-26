@@ -20,7 +20,7 @@ export function DemoAccounts({ accounts, password }: { accounts: readonly DemoAc
           <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-foreground">{password}</code>.
         </p>
       </div>
-      <ul className="grid gap-3 sm:grid-cols-2">
+      <ul className="grid grid-cols-[repeat(auto-fill,minmax(min(100%,15rem),1fr))] gap-3">
         {accounts.map((a) => (
           <li key={a.email}>
             <form action={action} className="flex h-full flex-col gap-3 rounded-xl border bg-card p-4">

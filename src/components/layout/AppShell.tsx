@@ -7,6 +7,7 @@ import { navForRole, roleHasAssistant, roleHasQuickNote } from "@/lib/ui/nav";
 import { MainNav } from "./MainNav";
 import { HeaderActions } from "./HeaderActions";
 import { GlobalShortcuts } from "./Shortcuts";
+import { UstawieniaWyswietlania } from "./UstawieniaWyswietlania";
 import { SzybkaNotatka } from "@/components/asystent/SzybkaNotatka";
 import { ZastosujKonfiguracje } from "@/components/konfiguracja/ZastosujKonfiguracje";
 import { currentRuntimeConfig } from "@/lib/konfiguracja/stan";
@@ -58,6 +59,7 @@ export function AppShell({
 
           <div className="flex flex-wrap items-center gap-2">
             <HeaderActions quickNote={quickNote} assistant={assistant} />
+            <UstawieniaWyswietlania />
             <div className="flex items-center gap-2 border-l pl-3">
               <div className="flex flex-col text-right leading-tight">
                 <span className="text-sm font-medium">{user.name}</span>
@@ -73,6 +75,13 @@ export function AppShell({
       <main id="tresc" tabIndex={-1} className="mx-auto w-full max-w-7xl flex-1 px-4 py-6 md:px-6 md:py-8">
         {children}
       </main>
+
+      <footer className="border-t bg-card print:hidden">
+        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-2 px-4 py-3 text-sm text-muted-foreground md:px-6">
+          <span>Kompas Kompetencji – dane fikcyjne, wersja demonstracyjna</span>
+          <Link href="/deklaracja-dostepnosci">Deklaracja dostępności</Link>
+        </div>
+      </footer>
 
       <GlobalShortcuts quickNote={quickNote} assistant={assistant} />
       {quickNote && <SzybkaNotatka />}

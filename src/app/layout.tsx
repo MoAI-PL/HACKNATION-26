@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Noto_Sans } from "next/font/google";
 import "./globals.css";
+import { DISPLAY_INIT_SCRIPT } from "@/lib/ui/dostepnosc";
 
 // Noto Sans z zestawem latin-ext – poprawne polskie znaki (licencja OFL).
 const notoSans = Noto_Sans({
@@ -20,7 +21,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pl">
+    // suppressHydrationWarning: klasy ustawień wyświetlania nakłada skrypt przed hydratacją (src/lib/ui/dostepnosc.ts).
+    <html lang="pl" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: DISPLAY_INIT_SCRIPT }} />
+      </head>
       <body className={`${notoSans.variable} font-sans antialiased`}>
         {children}
       </body>

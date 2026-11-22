@@ -25,8 +25,11 @@ export const PROTECTED_AREAS: ReadonlyArray<{ prefix: string; roles: readonly Ro
   { prefix: "/kierujacy", roles: ["KIERUJACY_KOMORKA"] },
 ];
 
-/** Ścieżki dostępne bez logowania. */
+/** Ścieżki dostępne bez logowania (zalogowany trafia z nich na swój ekran startowy). */
 export const PUBLIC_PATHS = ["/logowanie"] as const;
+
+/** Ścieżki otwarte dla wszystkich – bez logowania i po zalogowaniu, bez przekierowania (deklaracja dostępności). */
+export const OPEN_PATHS = ["/deklaracja-dostepnosci"] as const;
 
 export function isRole(value: unknown): value is Role {
   return typeof value === "string" && (ROLES as readonly string[]).includes(value);
@@ -38,6 +41,10 @@ function matchesPrefix(pathname: string, prefix: string): boolean {
 
 export function isPublicPath(pathname: string): boolean {
   return PUBLIC_PATHS.some((p) => matchesPrefix(pathname, p));
+}
+
+export function isOpenPath(pathname: string): boolean {
+  return OPEN_PATHS.some((p) => matchesPrefix(pathname, p));
 }
 
 /** Role uprawnione do ścieżki albo `null`, gdy ścieżka nie należy do żadnego obszaru roli. */

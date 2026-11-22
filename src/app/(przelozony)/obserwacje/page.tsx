@@ -76,7 +76,7 @@ export default async function ObserwacjePage({ searchParams }: { searchParams: P
               {observations.length === 0 ? "Brak obserwacji" : `Obserwacje: ${observations.length}`}
               {person ? ` · ${person.name}` : ""}
             </p>
-            <nav aria-label="Widok dziennika" className="flex gap-1 rounded-lg border bg-card p-1">
+            <nav aria-label="Widok dziennika" className="flex flex-wrap gap-1 rounded-lg border bg-card p-1">
               {viewLink("os", "Oś czasu")}
               {viewLink("wskazniki", "Według wskaźników")}
             </nav>

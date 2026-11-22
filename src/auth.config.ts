@@ -1,7 +1,7 @@
 // Konfiguracja Auth.js bez bazy danych i bcrypt (Z04) – bezpieczna dla middleware (edge).
 // Pełna konfiguracja z dostawcą logowania jest w src/auth.ts.
 import type { NextAuthConfig } from "next-auth";
-import { canAccessPath, isPublicPath, isRole, ROLE_HOME } from "@/lib/auth/role";
+import { canAccessPath, isOpenPath, isPublicPath, isRole, ROLE_HOME } from "@/lib/auth/role";
 
 /** Czas życia sesji: 8 godzin (jeden dzień pracy). */
 const SESSION_MAX_AGE = 8 * 60 * 60;
@@ -18,6 +18,7 @@ export const authConfig = {
       const { pathname } = request.nextUrl;
       const role = auth?.user?.role;
 
+      if (isOpenPath(pathname)) return true;
       if (isPublicPath(pathname)) {
         // Zalogowany na ekranie logowania → od razu do swojego ekranu.
         if (role) return Response.redirect(new URL(ROLE_HOME[role], request.nextUrl));

@@ -10,7 +10,7 @@ import { dispatchShortcut } from "./useShortcut";
 /** Przyciski w nagłówku: te same akcje, co skróty N, / i ? (dla myszy i czytników ekranu). */
 export function HeaderActions({ quickNote, assistant }: { quickNote: boolean; assistant: boolean }) {
   return (
-    <div className="flex items-center gap-1">
+    <div className="flex flex-wrap items-center gap-1">
       {quickNote && (
         <Button variant="outline" onClick={() => dispatchShortcut(SHORTCUT_EVENTS.quickNote)}>
           <NotebookPen aria-hidden />

@@ -60,8 +60,8 @@ export default async function PulpitPage() {
             ) : (
               <ol className="flex flex-col divide-y">
                 {todo.map((item) => (
-                  <li key={`${item.employeeId}-${item.deadline.kind}`} className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 py-3">
-                    <div className="flex min-w-0 flex-col gap-1.5">
+                  <li key={`${item.employeeId}-${item.deadline.kind}`} className="flex flex-wrap items-center justify-between gap-3 py-3">
+                    <div className="flex min-w-0 flex-[1_1_14rem] flex-col gap-1.5">
                       <span className="font-medium">{item.title}</span>
                       <DeadlineBadge
                         className="self-start"

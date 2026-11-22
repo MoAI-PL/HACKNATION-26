@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { ROLES } from "@/lib/domain/types";
-import { canAccessPath, isPublicPath, isRole, ROLE_HOME, rolesForPath, safeRedirectFor } from "@/lib/auth/role";
+import { canAccessPath, isOpenPath, isPublicPath, isRole, ROLE_HOME, rolesForPath, safeRedirectFor } from "@/lib/auth/role";
 
 describe("role i dostęp do ekranów", () => {
   it("każda rola ma ekran startowy, do którego ma dostęp", () => {
@@ -28,6 +28,13 @@ describe("role i dostęp do ekranów", () => {
   it("logowanie jest publiczne", () => {
     expect(isPublicPath("/logowanie")).toBe(true);
     expect(isPublicPath("/pulpit")).toBe(false);
+  });
+
+  it("deklaracja dostępności jest otwarta dla wszystkich i nie należy do żadnej roli", () => {
+    expect(isOpenPath("/deklaracja-dostepnosci")).toBe(true);
+    expect(isOpenPath("/logowanie")).toBe(false);
+    expect(isOpenPath("/pulpit")).toBe(false);
+    expect(rolesForPath("/deklaracja-dostepnosci")).toBeNull();
   });
 
   it("isRole odrzuca wartości spoza kontraktu", () => {

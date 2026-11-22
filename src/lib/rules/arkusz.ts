@@ -1,4 +1,4 @@
-// Automatyczny wybór arkusza oceny okresowej z opisu stanowiska pracy (Z06, sekcja 8.1 master promptu).
+// Automatyczny wybór arkusza oceny okresowej z opisu stanowiska pracy (Z06, § 3 rozporządzenia).
 // § 3 rozporządzenia: arkusz B – stanowisko, na którym praca polega na bezpośrednim kierowaniu pracownikami;
 // arkusz C – pozostałe stanowiska. Rozstrzyga pole OSP „LICZBA PODLEGŁYCH PRACOWNIKÓW” (mapa w data/przepisy.json).
 

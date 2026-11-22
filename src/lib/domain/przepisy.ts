@@ -78,7 +78,7 @@ export const rulesSchema = z.object({
     requireNoteAtLevels: z.array(z.number().int().min(1).max(5)),
   }),
 
-  // ZAŁOŻENIE: progi Lustra oceniającego (Z36) – sekcja 8.5 master promptu, do potwierdzenia z mentorami.
+  // ZAŁOŻENIE: progi Lustra oceniającego (Z36) – docs/ZALOZENIA.md #11.
   mirror: z.object({
     recencyWindowDays: positiveInt,
     recencyMinShare: z.number().min(0).max(1),

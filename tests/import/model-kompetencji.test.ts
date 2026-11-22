@@ -13,7 +13,7 @@ const SOURCE = "materialy/Model_kompetencji.xlsx";
 const fresh = parseCompetencyModel(readFileSync(SOURCE), { source: SOURCE, importedAt: "2026-11-21" });
 const model = fresh.model;
 
-/** Oczekiwana liczba wskaźników (sekcja 8.4 master promptu, zgodna z załącznikiem nr 1). */
+/** Oczekiwana liczba wskaźników (zgodna z załącznikiem nr 1). */
 const EXPECTED_COUNTS: Record<string, number> = {
   RZETELNOSC: 2, KOMUNIKACJA: 4, WIEDZA: 3, ORGANIZACJA: 5, KREATYWNOSC: 2, WSPOLPRACA: 6, ANALITYCZNE: 3,
   NEGOCJOWANIE: 3, WYSTAPIENIA: 4, KLIENT: 2, KRYZYS: 3, STRATEGICZNE: 3, LUDZIE: 6, DECYZJE: 3,

@@ -29,7 +29,7 @@ function fakeLLM(...replies: (string | Error)[]): LLMProvider & { prompts: ChatM
   };
 }
 
-// Zespół Ewy Kowalczyk z danych demo (Z26) + Anna do przykładu z master promptu.
+// Zespół Ewy Kowalczyk z danych demo (Z26) + Anna do przykładu ze scenariusza demo.
 const people: NotePerson[] = [
   { id: "kw", firstName: "Katarzyna", lastName: "Wójcik" },
   { id: "pl", firstName: "Piotr", lastName: "Lewandowski" },
@@ -91,7 +91,7 @@ describe("pseudonimizacja przed modelem", () => {
 describe("propozycja z modelem", () => {
   const note = "Anka świetnie ogarnęła dziś spotkanie z DSI, mimo że się kłócili";
 
-  it("przykład z master promptu: pracownik, wskaźnik, SDR, poziom – bez imion w zapytaniu", async () => {
+  it("przykład ze scenariusza demo: pracownik, wskaźnik, SDR, poziom – bez imion w zapytaniu", async () => {
     const llm = fakeLLM(
       reply({
         osoba: "OSOBA_1",

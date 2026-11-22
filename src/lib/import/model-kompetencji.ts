@@ -1,6 +1,6 @@
 // Import modelu kompetencji (Z05): materialy/Model_kompetencji.xlsx → CompetencyModel.
 //
-// Układ pliku (sekcja 8.4 master promptu, sprawdzony na pliku od MC):
+// Układ pliku (sprawdzony na pliku od MC):
 //  - arkusz „Model kompetencji”: tytuł, wiersz „14 kompetencji • 49 wskaźników • 5 poziomów”, wskazówki,
 //    a niżej tabela „Lp. | Kompetencja | Liczba wskaźników”;
 //  - jeden arkusz na kompetencję (nazwy skrócone przez Excela do 31 znaków – COMPETENCY_XLSX_SHEETS):

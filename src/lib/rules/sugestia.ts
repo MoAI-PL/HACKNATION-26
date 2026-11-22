@@ -1,4 +1,4 @@
-// Sugerowany poziom kompetencji (Z09) i dane do panelu „Dlaczego ten poziom?” (sekcja 8.5 master promptu).
+// Sugerowany poziom kompetencji (Z09) i dane do panelu „Dlaczego ten poziom?”.
 //
 // ZAŁOŻENIE: reguła sugestii jest naszą propozycją, nie przepisem (docs/ZALOZENIA.md #2, #16):
 //  - poziom zachowania 1–5 przeliczamy na punkty skali oceny (data/przepisy.json → behaviorToPoints):

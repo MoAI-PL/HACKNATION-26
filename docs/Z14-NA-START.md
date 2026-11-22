@@ -68,7 +68,7 @@ const v = validateFinalDecision({ suggestion: sugestia, finalPoints: 5, justific
 
 ## 4. Komponenty interfejsu (Z10)
 
-- `ChoiceCardGroup` (`@/components/ui/choice-cards`) – 5 kart zachowań + karta „brak okazji do obserwacji”, **bez liczb na kartach** (wyróżnik ②, sekcja 14 master promptu).
+- `ChoiceCardGroup` (`@/components/ui/choice-cards`) – 5 kart zachowań + karta „brak okazji do obserwacji”, **bez liczb na kartach** (wyróżnik ②).
 - Skróty klawiaturowe: `useShortcut("1", …)` … `useShortcut("5", …)`, `"0"` dla braku obserwacji, `ArrowLeft` / `ArrowRight` – poprzedni/następny wskaźnik (`@/components/layout/useShortcut`, opis w `docs/UX.md`).
 - Kreator: `WizardProgress`, `AutosaveIndicator`, `WizardFooter` (`@/components/ui/wizard`), komunikaty: `Notice`, odznaki: `StatusBadge`.
 - Pozycja menu i strona: ocena okresowa jest pod `/ocena/okresowa/[id]` (Z12); dostęp do oceny: `evaluationAccess(user.id)` z `@/lib/ocena/dane-kreatora`.

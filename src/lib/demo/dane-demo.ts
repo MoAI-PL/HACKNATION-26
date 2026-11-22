@@ -134,6 +134,34 @@ export async function seedDemoData(prisma: PrismaClient, today: IsoDate = todayI
   const ewa = byRole("PRZELOZONY");
   const kierujacy = byRole("KIERUJACY_KOMORKA");
   const janUser = byRole("OCENIANY");
+  const hrUser = byRole("HR");
+
+  // Dziennik decyzji (Z35) zgodny z historią danych demo – po wdrożeniu i po „Resetuj dane demo” nie jest pusty.
+  // Wpisy z datami zdarzeń (sporządzenie, zapoznanie, ustalenie kryteriów, decyzje o propozycjach AI, przypomnienie).
+  const audit: Prisma.AuditLogCreateManyInput[] = [];
+  const log = (at: IsoDate, hour: number, entry: Omit<Prisma.AuditLogCreateManyInput, "createdAt">) =>
+    audit.push({ ...entry, createdAt: new Date(`${at}T${String(hour).padStart(2, "0")}:00:00Z`) });
+  /** Ustalenie kryteriów (część I), a przy kryteriach dodatkowych – wcześniejsza decyzja o propozycji AI z OSP. */
+  const logCriteria = (
+    evaluationId: string,
+    at: IsoDate,
+    sheet: "B" | "C",
+    inserted: { competency: CompetencyCode; reason: string }[],
+    rejected: { competency: CompetencyCode; reason: string }[] = [],
+  ) => {
+    if (inserted.length) {
+      log(at, 9, {
+        userId: ewa.id, action: "AI_WSTAW", entity: "Evaluation", entityId: evaluationId,
+        aiProposal: { funkcja: "KRYTERIA_DODATKOWE_Z_OSP", tryb: "AI", propozycja: [...inserted, ...rejected].map((c) => ({ kryterium: c.competency, cytat: c.reason })) },
+        humanDecision: { decyzja: "WSTAW", wstawiono: inserted.map((c) => c.competency) },
+        ...(rejected.length ? { reason: `Pominięto: ${rejected.map((c) => c.competency).join(", ")} – zadanie poboczne w okresie oceny.` } : {}),
+      });
+    }
+    log(at, 10, {
+      userId: ewa.id, action: "USTALENIE_KRYTERIOW", entity: "Evaluation", entityId: evaluationId,
+      newValue: { arkusz: sheet, kryteria: [...mandatoryCriteria(sheet), ...inserted.map((c) => c.competency)], dataRozmowy: at },
+    });
+  };
 
   await clearDemoData(prisma);
 
@@ -210,7 +238,7 @@ export async function seedDemoData(prisma: PrismaClient, today: IsoDate = todayI
   /** Zakończona ocena okresowa z wynikiem policzonym silnikiem Z07. */
   const pastPeriodic = async (employeeId: string, sheet: "B" | "C", evaluatedAt: IsoDate, codes: CompetencyCode[], points: PeriodicPoints[], justification?: string) => {
     const s = scorePeriodic(periodicScores(codes, points));
-    await prisma.evaluation.create({
+    const past = await prisma.evaluation.create({
       data: {
         employeeId,
         evaluatorId: ewa.id,
@@ -230,6 +258,14 @@ export async function seedDemoData(prisma: PrismaClient, today: IsoDate = todayI
           create: codes.map((competency, i) => ({ competency, kind: i < 5 ? "OBOWIAZKOWE" : "DODATKOWE", score: points[i], order: i })),
         },
       },
+    });
+    log(evaluatedAt, 12, {
+      userId: ewa.id, action: "SPORZADZENIE_OCENY", entity: "Evaluation", entityId: past.id,
+      newValue: { wynik: s.result, poziom: s.overallLevel, srednia: s.average, oceny: codes.map((c, i) => ({ kryterium: c, punkty: points[i] })) },
+    });
+    log(addDays(evaluatedAt, 2), 11, {
+      userId: ewa.id, action: "ZAPOZNANIE_Z_OCENA", entity: "Evaluation", entityId: past.id,
+      newValue: { data: addDays(evaluatedAt, 2), potwierdzil: "PRZELOZONY" },
     });
     return { ...s, evaluatedAt };
   };
@@ -253,7 +289,11 @@ export async function seedDemoData(prisma: PrismaClient, today: IsoDate = todayI
     const due = periodicEvaluationDeadline({ anchor: { kind: "POPRZEDNIA_OCENA", date: prevDate } });
     const criteriaSetAt = addDays(prevDate, 14);
     const r = OSP_TASK(DEMO_OSP.RADCA, 0);
-    await prisma.evaluation.create({
+    const katAdditional = [
+      { competency: "ANALITYCZNE" as const, reason: `OSP, zadanie dominujące 1: „${r}”` },
+      { competency: "KREATYWNOSC" as const, reason: `OSP, zadanie 4: „${OSP_TASK(DEMO_OSP.RADCA, 3)}”` },
+    ];
+    const cur = await prisma.evaluation.create({
       data: {
         employeeId: e.id, evaluatorId: ewa.id, type: "OKRESOWA", sheet: "C", status: "W_OCENIE",
         periodStart: db(criteriaSetAt), dueDate: db(due.date), criteriaSetAt: db(criteriaSetAt),
@@ -263,19 +303,17 @@ export async function seedDemoData(prisma: PrismaClient, today: IsoDate = todayI
         previousResult: prev.result, previousLevel: prev.overallLevel, previousDate: db(prevDate),
         criteria: {
           create: criteriaCreate(
-            currentCriteria("C", [
-              { competency: "ANALITYCZNE", reason: `OSP, zadanie dominujące 1: „${r}”` },
-              { competency: "KREATYWNOSC", reason: `OSP, zadanie 4: „${OSP_TASK(DEMO_OSP.RADCA, 3)}”` },
-            ]),
+            currentCriteria("C", katAdditional),
           ),
         },
         conversations: { create: [{ employeeId: e.id, type: "ROZPOCZYNAJACA", date: db(criteriaSetAt), notes: "Omówiono obowiązki z OSP, kryteria (w tym dodatkowe: myślenie analityczne, kreatywność), oczekiwania i cel." }] },
       },
     });
+    logCriteria(cur.id, criteriaSetAt, "C", katAdditional);
     await prisma.conversation.create({ data: { employeeId: e.id, type: "BIEZACA", date: db(d(-100)), notes: "Informacja zwrotna po spotkaniu z izbami gospodarczymi – bardzo dobra prezentacja." } });
     observations += (await addObservations(e.id, OBS_KATARZYNA)).count;
     evaluations += 2;
-    await prisma.reminder.create({
+    const sent = await prisma.reminder.create({
       data: {
         recipientId: ewa.id, employeeId: e.id, kind: "OCENA_OKRESOWA", dueDate: db(due.date),
         subject: "Zbliża się termin oceny okresowej – Katarzyna Wójcik",
@@ -283,6 +321,7 @@ export async function seedDemoData(prisma: PrismaClient, today: IsoDate = todayI
         sentAt: new Date(`${d(-1)}T08:00:00Z`),
       },
     });
+    log(d(-1), 8, { userId: hrUser.id, action: "PRZYPOMNIENIE_WYSLANE", entity: "Reminder", entityId: sent.id, newValue: { sentAt: `${d(-1)}T08:00:00.000Z`, symulacja: true } });
   }
 
   // --- 2. Piotr Lewandowski – naczelnik (arkusz B, 5–9 podległych) -----------------------------------
@@ -292,7 +331,11 @@ export async function seedDemoData(prisma: PrismaClient, today: IsoDate = todayI
     const prev = await pastPeriodic(e.id, "B", prevDate, ["LUDZIE", "DECYZJE", "ORGANIZACJA", "WSPOLPRACA", "KOMUNIKACJA"], [7, 5, 7, 7, 7]);
     const due = periodicEvaluationDeadline({ anchor: { kind: "POPRZEDNIA_OCENA", date: prevDate } });
     const criteriaSetAt = addDays(prevDate, 10);
-    await prisma.evaluation.create({
+    const piotrAdditional = [
+      { competency: "WYSTAPIENIA" as const, reason: `OSP, zadanie 5: „${OSP_TASK(DEMO_OSP.NACZELNIK, 4)}”` },
+      { competency: "NEGOCJOWANIE" as const, reason: `OSP, zadanie 6: „${OSP_TASK(DEMO_OSP.NACZELNIK, 5)}”` },
+    ];
+    const cur = await prisma.evaluation.create({
       data: {
         employeeId: e.id, evaluatorId: ewa.id, type: "OKRESOWA", sheet: "B", status: "W_OKRESIE_OCENY",
         periodStart: db(criteriaSetAt), dueDate: db(due.date), criteriaSetAt: db(criteriaSetAt),
@@ -300,15 +343,13 @@ export async function seedDemoData(prisma: PrismaClient, today: IsoDate = todayI
         previousResult: prev.result, previousLevel: prev.overallLevel, previousDate: db(prevDate),
         criteria: {
           create: criteriaCreate(
-            currentCriteria("B", [
-              { competency: "WYSTAPIENIA", reason: `OSP, zadanie 5: „${OSP_TASK(DEMO_OSP.NACZELNIK, 4)}”` },
-              { competency: "NEGOCJOWANIE", reason: `OSP, zadanie 6: „${OSP_TASK(DEMO_OSP.NACZELNIK, 5)}”` },
-            ]),
+            currentCriteria("B", piotrAdditional),
           ),
         },
         conversations: { create: [{ employeeId: e.id, type: "ROZPOCZYNAJACA", date: db(criteriaSetAt), notes: "Omówiono kryteria arkusza B i dodatkowe: wystąpienia publiczne, negocjowanie." }] },
       },
     });
+    logCriteria(cur.id, criteriaSetAt, "B", piotrAdditional);
     observations += (await addObservations(e.id, OBS_PIOTR)).count;
     evaluations += 2;
   }
@@ -326,7 +367,11 @@ export async function seedDemoData(prisma: PrismaClient, today: IsoDate = todayI
     for (const a of absences) await prisma.absence.create({ data: { employeeId: e.id, kind: a.kind, from: db(a.from), to: db(a.to) } });
     const due = periodicEvaluationDeadline({ anchor: { kind: "POPRZEDNIA_OCENA", date: prevDate }, absences });
     const criteriaSetAt = addDays(prevDate, 20);
-    await prisma.evaluation.create({
+    const janAdditional = [
+      { competency: "KRYZYS" as const, reason: `OSP, zadanie dominujące 1: „${OSP_TASK(DEMO_OSP.STARSZY_SPECJALISTA, 0)}”` },
+      { competency: "ANALITYCZNE" as const, reason: `OSP, zadanie 6: „${OSP_TASK(DEMO_OSP.STARSZY_SPECJALISTA, 5)}”` },
+    ];
+    const cur = await prisma.evaluation.create({
       data: {
         employeeId: e.id, evaluatorId: ewa.id, type: "OKRESOWA", sheet: "C", status: "W_OKRESIE_OCENY",
         periodStart: db(criteriaSetAt), dueDate: db(due.date), criteriaSetAt: db(criteriaSetAt),
@@ -334,15 +379,15 @@ export async function seedDemoData(prisma: PrismaClient, today: IsoDate = todayI
         previousResult: prev.result, previousLevel: prev.overallLevel, previousDate: db(prevDate),
         criteria: {
           create: criteriaCreate(
-            currentCriteria("C", [
-              { competency: "KRYZYS", reason: `OSP, zadanie dominujące 1: „${OSP_TASK(DEMO_OSP.STARSZY_SPECJALISTA, 0)}”` },
-              { competency: "ANALITYCZNE", reason: `OSP, zadanie 6: „${OSP_TASK(DEMO_OSP.STARSZY_SPECJALISTA, 5)}”` },
-            ]),
+            currentCriteria("C", janAdditional),
           ),
         },
         conversations: { create: [{ employeeId: e.id, type: "ROZPOCZYNAJACA", date: db(criteriaSetAt), notes: "Omówiono kryteria, w tym radzenie sobie w sytuacjach kryzysowych." }] },
       },
     });
+    logCriteria(cur.id, criteriaSetAt, "C", janAdditional, [
+      { competency: "KLIENT", reason: `OSP, zadanie 3: „${OSP_TASK(DEMO_OSP.STARSZY_SPECJALISTA, 2)}”` },
+    ]);
     observations += (await addObservations(e.id, OBS_JAN)).count;
     evaluations += 2;
   }
@@ -361,7 +406,7 @@ export async function seedDemoData(prisma: PrismaClient, today: IsoDate = todayI
     );
     const [conv, reeval] = afterNegativeDeadlines({ evaluatedAt, acknowledgedAt: addDays(evaluatedAt, 2) });
     const criteriaSetAt = d(-35); // w terminie 7 dni od oceny negatywnej (§ 7 pkt 2)
-    await prisma.evaluation.create({
+    const cur = await prisma.evaluation.create({
       data: {
         employeeId: e.id, evaluatorId: ewa.id, type: "OKRESOWA", sheet: "C", status: "W_OKRESIE_OCENY", isReevaluation: true,
         periodStart: db(criteriaSetAt), dueDate: db((reeval ?? conv)!.date), criteriaSetAt: db(criteriaSetAt),
@@ -372,6 +417,7 @@ export async function seedDemoData(prisma: PrismaClient, today: IsoDate = todayI
         conversations: { create: [{ employeeId: e.id, type: "ROZPOCZYNAJACA", date: db(criteriaSetAt), notes: "Rozmowa po ocenie negatywnej: omówiono przyczyny, plan poprawy i cotygodniowe krótkie spotkania." }] },
       },
     });
+    logCriteria(cur.id, criteriaSetAt, "C", []);
     observations += (await addObservations(e.id, OBS_MARCIN)).count;
     evaluations += 3;
   }
@@ -419,6 +465,8 @@ export async function seedDemoData(prisma: PrismaClient, today: IsoDate = todayI
     });
     evaluations += 1;
   }
+
+  await prisma.auditLog.createMany({ data: audit });
 
   await prisma.appInfo.upsert({
     where: { key: "dane-demo" },

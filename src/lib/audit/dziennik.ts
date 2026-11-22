@@ -15,6 +15,8 @@ export const AUDIT_ACTION_LABELS: Record<string, string> = {
   USTALENIE_KRYTERIOW: "Ustalenie kryteriów (część I)",
   SPORZADZENIE_OCENY: "Sporządzenie oceny",
   ZAPOZNANIE_Z_OCENA: "Zapoznanie ocenianego z oceną",
+  ROZMOWA_WSTEPNA: "Rozmowa wstępna (pierwsza ocena)",
+  SPRAWOZDANIE_I_EGZAMIN: "Sprawozdanie i egzamin (pierwsza ocena)",
   IMPORT_OSP: "Wczytanie opisu stanowiska",
   DODANIE_PRACOWNIKA: "Dodanie pracownika",
   PRZYPOMNIENIE_WYSLANE: "Wysłane przypomnienie",
@@ -102,6 +104,8 @@ export interface AuditRow {
   oldValue: unknown;
   newValue: unknown;
   reason: string | null;
+  /** Kogo dotyczy wpis (imię i nazwisko pracownika) – tylko na ekranie. */
+  subject?: string | null;
 }
 
 /** Wartość JSON w jednej linii do tabeli i CSV (puste = ""). */

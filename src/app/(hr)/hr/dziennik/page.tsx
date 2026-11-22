@@ -9,7 +9,8 @@ import { StatusBadge } from "@/components/ui/status-badge";
 import { requirePageRole } from "@/lib/auth/guard";
 import { ROLE_LABELS } from "@/lib/domain/slownik";
 import type { Role } from "@/lib/domain/types";
-import { AUDIT_KINDS, AUDIT_KIND_LABELS, actionLabel, auditQuery, compactJson, formatDateTimePl, parseAuditFilters } from "@/lib/audit/dziennik";
+import { AUDIT_KINDS, AUDIT_KIND_LABELS, actionLabel, auditQuery, formatDateTimePl, parseAuditFilters } from "@/lib/audit/dziennik";
+import { describeAudit, plainReason } from "@/lib/audit/opis";
 import { listAudit } from "@/lib/audit/repo";
 
 export const metadata: Metadata = { title: "Dziennik decyzji – Kompas Kompetencji" };
@@ -17,11 +18,25 @@ export const dynamic = "force-dynamic";
 
 const SCREEN_LIMIT = 200;
 
+/** Opis wpisu – pierwsza linia wyróżniona, kolejne pod nią; pusty opis = „—”. */
+function Lines({ lines }: { lines: string[] }) {
+  if (lines.length === 0) return <>—</>;
+  return (
+    <ul className="flex flex-col gap-1">
+      {lines.map((l, i) => (
+        <li key={i} className={i === 0 ? "font-medium text-foreground" : undefined}>
+          {l}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 // Dziennik decyzji (Z35): kto, co i kiedy – propozycje AI obok decyzji człowieka, zmiany sugestii i arkusza.
 export default async function DziennikDecyzjiPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   await requirePageRole("HR");
   const filters = parseAuditFilters(await searchParams);
-  const rows = await listAudit(filters, SCREEN_LIMIT);
+  const rows = await listAudit(filters, SCREEN_LIMIT, { withSubjects: true });
   const query = auditQuery(filters);
 
   return (
@@ -74,14 +89,16 @@ export default async function DziennikDecyzjiPage({ searchParams }: { searchPara
         <Card>
           <CardContent className="overflow-x-auto py-4">
             <p className="mb-3 text-sm text-muted-foreground" aria-live="polite">
-              {rows.length === SCREEN_LIMIT ? `Pokazano ${SCREEN_LIMIT} najnowszych wpisów – pełna lista w pliku CSV.` : `Wpisów: ${rows.length}.`}
+              {rows.length === SCREEN_LIMIT ? `Pokazano ${SCREEN_LIMIT} najnowszych wpisów – pełna lista w pliku CSV.` : `Wpisów: ${rows.length}.`} Długie
+              treści są skrócone – pełne dane są w pliku CSV.
             </p>
-            <table className="w-full min-w-[56rem] text-left text-sm">
+            <table className="w-full min-w-[64rem] text-left text-sm">
               <caption className="sr-only">Dziennik decyzji – od najnowszych</caption>
               <thead>
                 <tr className="border-b text-muted-foreground">
                   <th scope="col" className="py-2 pr-3 font-medium">Kiedy</th>
                   <th scope="col" className="py-2 pr-3 font-medium">Kto</th>
+                  <th scope="col" className="py-2 pr-3 font-medium">Dotyczy</th>
                   <th scope="col" className="py-2 pr-3 font-medium">Działanie</th>
                   <th scope="col" className="py-2 pr-3 font-medium">Propozycja AI</th>
                   <th scope="col" className="py-2 pr-3 font-medium">Decyzja człowieka / zmiana</th>
@@ -91,7 +108,7 @@ export default async function DziennikDecyzjiPage({ searchParams }: { searchPara
               <tbody>
                 {rows.map((r, i) => {
                   const ai = r.action === "AI_WSTAW" || r.action === "AI_ODRZUC";
-                  const change = [compactJson(r.oldValue), compactJson(r.newValue)].filter(Boolean).join(" → ");
+                  const d = describeAudit(r);
                   return (
                     <tr key={i} className="border-b align-top last:border-0">
                       <td className="py-2 pr-3 whitespace-nowrap">{formatDateTimePl(r.createdAt)}</td>
@@ -99,12 +116,17 @@ export default async function DziennikDecyzjiPage({ searchParams }: { searchPara
                         {r.userName ?? "—"}
                         {r.userRole && <span className="block text-xs text-muted-foreground">{ROLE_LABELS[r.userRole as Role] ?? r.userRole}</span>}
                       </td>
+                      <td className="py-2 pr-3">{r.subject ?? "—"}</td>
                       <td className="py-2 pr-3">
                         {ai ? <StatusBadge tone="ai">{actionLabel(r.action)}</StatusBadge> : actionLabel(r.action)}
                       </td>
-                      <td className="max-w-72 py-2 pr-3 break-words text-muted-foreground">{compactJson(r.aiProposal) || "—"}</td>
-                      <td className="max-w-72 py-2 pr-3 break-words">{compactJson(r.humanDecision) || change || "—"}</td>
-                      <td className="max-w-56 py-2 break-words">{r.reason ?? "—"}</td>
+                      <td className="max-w-80 py-2 pr-3 break-words text-muted-foreground">
+                        <Lines lines={d.ai} />
+                      </td>
+                      <td className="max-w-80 py-2 pr-3 break-words">
+                        <Lines lines={d.decision} />
+                      </td>
+                      <td className="max-w-56 py-2 break-words">{plainReason(r.reason)}</td>
                     </tr>
                   );
                 })}
